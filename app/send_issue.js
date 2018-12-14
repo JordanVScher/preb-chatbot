@@ -2,7 +2,6 @@ const accents = require('remove-accents');
 const chatbotAPI = require('./chatbot_api.js');
 const { issueText } = require('./utils/flow.js');
 
-
 const blacklist = ['sim', 'nao'];
 
 async function formatString(text) {

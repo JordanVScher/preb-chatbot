@@ -32,6 +32,6 @@ const server = createServer(bot, { verifyToken: config.verifyToken });
 
 server.listen(process.env.API_PORT, () => {
 	console.log(`Server is running on ${process.env.API_PORT} port...`);
-	console.log(`App: ${process.env.APP} & Page: ${process.env.PAGE}`);
+	console.log(`App: ${process.env.APP} & Page: ${process.env.PAGE} - ${process.env.SHARE_LINK}`);
 	console.log(`MA User: ${process.env.MA_USER}`);
 });

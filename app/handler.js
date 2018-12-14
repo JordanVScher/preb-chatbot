@@ -1,10 +1,11 @@
 const MaAPI = require('./chatbot_api.js');
-// const opt = require('./utils/options');
+// const opt = require('./util/options');
 const { createIssue } = require('./send_issue');
+const { checkPosition } = require('./dialogFlow');
+const { apiai } = require('./utils/helper');
 const flow = require('./utils/flow');
 const help = require('./utils/helper');
 const timer = require('./utils/timer');
-
 
 module.exports = async (context) => {
 	try {
@@ -12,16 +13,11 @@ module.exports = async (context) => {
 		if (!context.state.dialog || context.state.dialog === '' || (context.event.postback && context.event.postback.payload === 'greetings')) { // because of the message that comes from the comment private-reply
 			await context.resetState();	await context.setState({ dialog: 'greetings' });
 		}
-
 		timer.createFollowUpTimer(context.session.user.id, context);
-
 		// let user = await getUser(context)
 		// we reload politicianData on every useful event
 		// we update context data at every interaction that's not a comment or a post
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) });
-		console.log(context.state.politicianData);
-
-
 		await MaAPI.postRecipient(context.state.politicianData.user_id, {
 			fb_id: context.session.user.id,
 			name: `${context.session.user.first_name} ${context.session.user.last_name}`,
@@ -37,25 +33,16 @@ module.exports = async (context) => {
 			await context.setState({ dialog: context.state.lastQRpayload });
 		} else if (context.event.isText) {
 			await context.setState({ whatWasTyped: context.event.message.text });
-			console.log('context.state.politicianData.use_dialogflow', context.state.politicianData.use_dialogflow);
-
-			if (context.state.politicianData.use_dialogflow === 1) { // check if politician is using dialogFlow
-				// if (context.state.whatWasTyped.length <= 255) { // check if message is short enough for apiai
-				// 	await context.setState({ apiaiResp: await apiai.textRequest(context.state.whatWasTyped, { sessionId: context.session.user.id }) });
-				// 	await context.setState({ resultParameters: context.state.apiaiResp.result.parameters }); // getting the entities
-				// 	await context.setState({ intentName: context.state.apiaiResp.result.metadata.intentName }); // getting the intent
-				// 	await checkPosition(context);
-				// } else {
-				// 	if (await createIssue(context, 'Não entendi sua mensagem pois ela é muito complexa. Você pode escrever novamente, de forma mais direta?')) {
-				// 		await context.sendText('Não consigo entender mensagens tão longas mas já entou enviando para nossas equipe e estaremos te '
-				// 			+ 'respondendo em breve.');
-				// 	}
-				// 	await sendMenu(context, await loadOptionPrompt(context), [opt.aboutPolitician, opt.poll_suaOpiniao, opt.participate, opt.availableIntents]);
-				// }
-			} else { // not using dialogFlow
-				await context.setState({ dialog: 'createIssueDirect' });
+			if (context.state.politicianData.use_dialogflow === 0) { // check if politician is using dialogFlow
+				if (context.state.whatWasTyped.length <= 255) { // check if message is short enough for apiai
+					await context.setState({ apiaiResp: await apiai.textRequest(context.state.whatWasTyped, { sessionId: context.session.user.id }) });
+					await context.setState({ resultParameters: context.state.apiaiResp.result.parameters }); // getting the entities
+					await context.setState({ intentName: context.state.apiaiResp.result.metadata.intentName }); // getting the intent
+					await checkPosition(context);
+				} else { // not using dialogFlow
+					await context.setState({ dialog: 'createIssueDirect' });
+				}
 			}
-
 			// await createIssue(context, 'Não entendi sua mensagem pois ela é muito complexa. Você pode escrever novamente, de forma mais direta?');
 		}
 		switch (context.state.dialog) {
