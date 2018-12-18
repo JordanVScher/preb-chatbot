@@ -39,39 +39,23 @@ module.exports = async (context) => {
 			await context.setState({ whatWasTyped: context.event.message.text });
 			if (context.state.politicianData.use_dialogflow === 0) { // check if politician is using dialogFlow
 				if (context.state.whatWasTyped.length <= 255) { // check if message is short enough for apiai
-					await context.setState({ apiaiResp: await apiai.textRequest(context.state.whatWasTyped, { sessionId: context.session.user.id }) });
-					await context.setState({ resultParameters: context.state.apiaiResp.result.parameters }); // getting the entities
-					await context.setState({ intentName: context.state.apiaiResp.result.metadata.intentName }); // getting the intent
-					await checkPosition(context);
-				} else { // not using dialogFlow
-					await context.setState({ dialog: 'createIssueDirect' });
+					await context.setState({ toSend: context.state.whatWasTyped });
+				} else {
+					await context.setState({ toSend: context.state.whatWasTyped.slice(0, 255) });
 				}
+				await context.setState({ apiaiResp: await apiai.textRequest(context.state.toSend, { sessionId: context.session.user.id }) });
+				await context.setState({ resultParameters: context.state.apiaiResp.result.parameters }); // getting the entities
+				await context.setState({ intentName: context.state.apiaiResp.result.metadata.intentName }); // getting the intent
+				await checkPosition(context);
+			} else { // not using dialogFlow
+				await context.setState({ dialog: 'createIssueDirect' });
 			}
+
 			// await createIssue(context, 'Não entendi sua mensagem pois ela é muito complexa. Você pode escrever novamente, de forma mais direta?');
 		}
 		switch (context.state.dialog) {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
-			await context.sendText(flow.greetings.text2, {
-				quick_replies: [
-					{ content_type: 'user_email' },
-					{
-						content_type: 'text',
-						title: 'Trocar meu e-mail',
-						payload: 'leaveMail',
-					},
-					{
-						content_type: 'text',
-						title: 'Mandar nesse e-mail',
-						payload: 'sendMail',
-					},
-					{
-						content_type: 'text',
-						title: 'Não quero a resposta',
-						payload: 'dontWantAnswer',
-					},
-				],
-			});
 			break;
 		case 'mainMenu':
 			await context.sendText(flow.mainMenu.text1);

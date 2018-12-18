@@ -1,16 +1,12 @@
 const MaAPI = require('./chatbot_api.js');
 const { createIssue } = require('./send_issue');
-// const dictionary = require('./utils/dictionary');
 
 async function sendAnswer(context) { // send answer from posicionamento
 	// await context.setState({ currentTheme: await context.state.knowledge.knowledge_base.find(x => x.type === 'posicionamento') });
 	await context.setState({ currentTheme: await context.state.knowledge.knowledge_base[0] });
 
-	// if (context.state.firstTime === true) { // we log only on the first answer
 	await MaAPI.setIntentStatus(context.state.politicianData.user_id, context.session.user.id, context.state.currentIntent, 1);
 	await MaAPI.logAskedEntity(context.session.user.id, context.state.politicianData.user_id, context.state.currentTheme.entities[0].id);
-	// await context.setState({ firstTime: false });
-	// }
 
 	// console.log('currentTheme', currentTheme);
 	if (context.state.currentTheme && (context.state.currentTheme.answer
