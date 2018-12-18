@@ -28,9 +28,13 @@ module.exports = async (context) => {
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			await context.setState({ dialog: context.state.lastPBpayload });
+			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
+				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
 			await context.setState({ lastQRpayload: context.event.quickReply.payload });
 			await context.setState({ dialog: context.state.lastQRpayload });
+			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
+				context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 		} else if (context.event.isText) {
 			await context.setState({ whatWasTyped: context.event.message.text });
 			if (context.state.politicianData.use_dialogflow === 0) { // check if politician is using dialogFlow
@@ -48,7 +52,26 @@ module.exports = async (context) => {
 		switch (context.state.dialog) {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
-			await context.sendText(flow.greetings.text2);
+			await context.sendText(flow.greetings.text2, {
+				quick_replies: [
+					{ content_type: 'user_email' },
+					{
+						content_type: 'text',
+						title: 'Trocar meu e-mail',
+						payload: 'leaveMail',
+					},
+					{
+						content_type: 'text',
+						title: 'Mandar nesse e-mail',
+						payload: 'sendMail',
+					},
+					{
+						content_type: 'text',
+						title: 'Não quero a resposta',
+						payload: 'dontWantAnswer',
+					},
+				],
+			});
 			break;
 		case 'mainMenu':
 			await context.sendText(flow.mainMenu.text1);
