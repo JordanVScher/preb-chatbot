@@ -71,7 +71,14 @@ function textContext(text, dialog, lastActivity = new Date()) {
 
 module.exports.textContext = textContext;
 
-const help = {
-	formatString: text => text.toLowerCase(),
+module.exports.knowledgeBase = {
+	knowledge_base:
+		[{
+			id: 181,
+			saved_attachment_id: '741993486156717',
+			answer: 'Tenho essa resposta salva nos pontos de vista!',
+			type: 'posicionamento',
+			entities: [Array],
+			saved_attachment_type: 'image',
+		}],
 };
-module.exports.help = help;
