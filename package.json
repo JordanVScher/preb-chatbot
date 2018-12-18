@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon app/index.js",
-    "start": "node app/index.js"
+    "start": "node app/index.js",
+    "test": "jest"
   },
   "dependencies": {
     "@sentry/node": "^4.2.3",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "eslint": "^5.10.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "jest": "^23.6.0"
   }
 }

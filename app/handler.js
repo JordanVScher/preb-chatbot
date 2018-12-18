@@ -37,20 +37,20 @@ module.exports = async (context) => {
 				context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 		} else if (context.event.isText) {
 			await context.setState({ whatWasTyped: context.event.message.text });
-			if (context.state.politicianData.use_dialogflow === 0) { // check if politician is using dialogFlow
+			if (context.state.politicianData.use_dialogflow === 1) { // check if politician is using dialogFlow
 				if (context.state.whatWasTyped.length <= 255) { // check if message is short enough for apiai
 					await context.setState({ toSend: context.state.whatWasTyped });
 				} else {
 					await context.setState({ toSend: context.state.whatWasTyped.slice(0, 255) });
 				}
 				await context.setState({ apiaiResp: await apiai.textRequest(context.state.toSend, { sessionId: context.session.user.id }) });
-				await context.setState({ resultParameters: context.state.apiaiResp.result.parameters }); // getting the entities
+				// await context.setState({ resultParameters: context.state.apiaiResp.result.parameters }); // getting the entities
 				await context.setState({ intentName: context.state.apiaiResp.result.metadata.intentName }); // getting the intent
 				await checkPosition(context);
 			} else { // not using dialogFlow
-				await context.setState({ dialog: 'createIssueDirect' });
+				await context.setState({ dialog: 'prompt' });
+				await createIssue(context);
 			}
-
 			// await createIssue(context, 'Não entendi sua mensagem pois ela é muito complexa. Você pode escrever novamente, de forma mais direta?');
 		}
 		switch (context.state.dialog) {
@@ -59,9 +59,6 @@ module.exports = async (context) => {
 			break;
 		case 'mainMenu':
 			await context.sendText(flow.mainMenu.text1);
-			break;
-		case 'createIssueDirect':
-			await createIssue(context);
 			break;
 		} // end switch case
 	} catch (error) {

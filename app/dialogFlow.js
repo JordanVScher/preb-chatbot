@@ -31,7 +31,7 @@ module.exports.sendAnswer = sendAnswer;
 
 
 async function checkPosition(context) {
-	await context.setState({ dialog: 'prompt' });
+	// await context.setState({ dialog: 'prompt' });
 	switch (context.state.intentName) {
 	// case 'Greetings': // add specific intents here
 	// 	break;
