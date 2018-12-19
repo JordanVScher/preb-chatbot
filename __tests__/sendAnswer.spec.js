@@ -63,5 +63,5 @@ it('send Answer - error case', async () => {
 	// skipping preparation
 	await expect(context.state.currentTheme && (context.state.currentTheme.answer
         || (context.state.currentTheme.saved_attachment_type !== null && context.state.currentTheme.saved_attachment_id !== null))).toBeFalsy();
-	await expect(createIssue).lastCalledWith(context);
+	await expect(createIssue).toBeCalledWith(context);
 });
