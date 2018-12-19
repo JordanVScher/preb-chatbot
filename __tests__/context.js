@@ -23,6 +23,8 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 		setState: jest.fn(),
 		resetState: jest.fn(),
 		sendImage: jest.fn(),
+		sendVideo: jest.fn(),
+		sendAudio: jest.fn(),
 		typingOn: jest.fn(),
 		typingOff: jest.fn(),
 	};
@@ -63,6 +65,8 @@ function textContext(text, dialog, lastActivity = new Date()) {
 		setState: jest.fn(),
 		resetState: jest.fn(),
 		sendImage: jest.fn(),
+		sendVideo: jest.fn(),
+		sendAudio: jest.fn(),
 		typingOn: jest.fn(),
 		typingOff: jest.fn(),
 		sendButtonTemplate: jest.fn(),
