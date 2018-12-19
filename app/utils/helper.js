@@ -1,5 +1,6 @@
 const Sentry = require('@sentry/node');
 const dialogFlow = require('apiai-promise');
+const moment = require('moment');
 
 // Sentry - error reporting
 Sentry.init({
@@ -16,3 +17,13 @@ module.exports.waitTypingEffect = async (context, waitTime = 2500) => {
 		await context.typingOff();
 	}, waitTime);
 };
+
+
+moment.locale('pt-BR');
+module.exports.moment = moment;
+
+function formatDate(date) {
+	return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).format('hh:mm')}`;
+}
+
+module.exports.formatDate = formatDate;

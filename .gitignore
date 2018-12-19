@@ -85,3 +85,6 @@ google-secret-key.json
 
 # for random testing
 test.js
+
+# google calendar apikey
+googleapi-key.json
