@@ -71,3 +71,19 @@ async function createEvent(context) {
 module.exports.createEvent = createEvent;
 module.exports.listAllEvents = listAllEvents;
 module.exports.listUserEvents = listUserEvents;
+
+
+async function getFreeTime() {
+	const timeMin = new Date();
+	const timeMax = new Date(Date.now() + 12096e5);
+
+	const slicedRange = await calendar.divideTimeRange(timeMin, timeMax);
+	console.log(slicedRange);
+
+
+	const busyTimes = await calendar.checkFreeBusy(timeMin, timeMax);
+	console.log('List of busy timings with events within defined time range: ');
+	console.log(busyTimes);
+}
+
+getFreeTime();

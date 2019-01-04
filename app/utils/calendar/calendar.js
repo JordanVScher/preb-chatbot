@@ -108,30 +108,40 @@ function setEvent(usedID) {
 module.exports.setEvent = setEvent;
 
 
-async function checkFreeBusy() {
-	const timeMin = new Date();
-	const timeMax = new Date();
-	timeMax.setHours(timeMax.getDate() + 31);
+async function checkFreeBusy(timeMin, timeMax) {
+	const params = { timeMin, timeMax, items: [{ id: calendarId }] };
 
-	console.log(timeMin);
-	console.log(timeMax);
-
-
-	const params = {
-		timeMin,
-		timeMax,
-		items: [{ id: calendarId }],
-	};
-
-	calendar.FreeBusy.query(calendarId, params)
-		.then((resp) => {
-			console.log('List of busy timings with events within defined time range: ');
-			console.log(resp);
-		})
+	const result = await calendar.FreeBusy.query(calendarId, params)
+		.then(resp => resp)
 		.catch((err) => {
 			console.log(`Error: checkBusy -${err.message}`);
 		});
+
+	return result;
 }
 
-checkFreeBusy();
 module.exports.checkFreeBusy = checkFreeBusy;
+
+// divide the time range in blocks of 1 hour
+async function divideTimeRange(timeMin, finalData) {
+	let currentDate = timeMin;
+	const slices = {};
+	let count = 0;
+
+	while (finalData >= currentDate) { // while currentDate is not out of the bound
+		currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60)); // jump to the next hour
+
+		if (currentDate.getDay() === 0) { // check if day is Sunday
+			currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24)); // skip one day to get to Monday
+		} else if (currentDate.getDay() === 6) { // check if day is Saturday
+			currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24 * 2)); // skip two days to get to Monday
+		} else if ((currentDate.getHours() >= 0 && currentDate.getHours() < 6)) { // || currentDate.getHours() === 22 || currentDate.getHours() === '23'
+			currentDate.setHours(7);
+		}
+		slices[count] = `${currentDate}`;
+		count += 1;
+	}
+	return slices;
+}
+
+module.exports.divideTimeRange = divideTimeRange;
