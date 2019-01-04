@@ -1,11 +1,12 @@
 const MaAPI = require('./chatbot_api.js');
-// const opt = require('./util/options');
 const { createIssue } = require('./send_issue');
 const { checkPosition } = require('./dialogFlow');
 const { apiai } = require('./utils/helper');
 const flow = require('./utils/flow');
+const opt = require('./utils/options');
 const help = require('./utils/helper');
 const timer = require('./utils/timer');
+const calendarBot = require('./utils/calendar/calendarBot');
 
 module.exports = async (context) => {
 	try {
@@ -55,10 +56,16 @@ module.exports = async (context) => {
 		}
 		switch (context.state.dialog) {
 		case 'greetings':
-			await context.sendText(flow.greetings.text1);
+			await context.sendText(flow.greetings.text1, opt.mainMenu);
 			break;
 		case 'mainMenu':
-			await context.sendText(flow.mainMenu.text1);
+			await context.sendText(flow.mainMenu.text1, opt.mainMenu);
+			break;
+		case 'seeEvent':
+			await calendarBot.listAllEvents(context);
+			break;
+		case 'myEvent':
+			await calendarBot.listUserEvents(context);
 			break;
 		} // end switch case
 	} catch (error) {

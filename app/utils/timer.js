@@ -31,7 +31,7 @@ const FollowUps = {};
 // FollowUps -> stores timers for the regular follow-up message
 
 module.exports.createFollowUpTimer = async (userID, context) => {
-	console.log('userID', userID);
+	// console.log('userID', userID);
 	if (FollowUps[userID]) { clearTimeout(FollowUps[userID]); delete FollowUps[userID]; }
 	FollowUps[userID] = setTimeout(async () => { // wait 'MenuTimerlimit' to show options menu
 		await sendFollowUp(context);

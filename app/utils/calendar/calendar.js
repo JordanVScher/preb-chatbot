@@ -21,11 +21,15 @@ module.exports.calendarId = calendarId; // the id of the requested calendar
 // you can also get the values from the json and add then to the .env file
 
 // helper functions
+
+// Gets every event EXCEPT events with Fechado in the name.
+// "Fechada" -> hospital is not open
 async function getAllEvents(param = {}) {
 	const result = await calendar.Events.list(calendarId, param)
-		.then((json) => {
+		.then((allEvents) => {
 			console.log('List of events on calendar within time-range:');
-			return json;
+			const events = allEvents.filter(event => event.summary.includes('Fechado') === false);
+			return events;
 		}).catch((err) => {
 			console.log(`Error: listSingleEvents -${err.message}`);
 		});
@@ -33,15 +37,16 @@ async function getAllEvents(param = {}) {
 	return result;
 }
 
-getAllEvents({});
-// configures the default search param for calendar events
+module.exports.getAllEvents = getAllEvents;
+
+// Configures the default search param for calendar events.
 // timeMin: the first date we should look for (The day the user is interacting)
 // timemax: the limit of time
 function setDefaultSearchParam() {
 	const timeMin = new Date();
 	const paramObj = {
 		timeMin: timeMin.toISOString(),
-		timeMax: '2018-12-31T23:55:00+08:00',
+		timeMax: '2019-12-31T23:55:00+08:00',
 		//   q: 'query-string',
 		singleEvents: true,
 		orderBy: 'startTime',
@@ -50,6 +55,21 @@ function setDefaultSearchParam() {
 	return paramObj;
 }
 module.exports.setDefaultSearchParam = setDefaultSearchParam;
+
+// Uses the userID to find events related only to that user. UsedID can be at the event summary (title) or description
+function setUserSearchParam(userID) {
+	const timeMin = new Date();
+	const paramObj = {
+		timeMin: timeMin.toISOString(),
+		timeMax: '2019-12-31T23:55:00+08:00',
+		q: userID,
+		singleEvents: true,
+		orderBy: 'startTime',
+	};
+
+	return paramObj;
+}
+module.exports.setUserSearchParam = setUserSearchParam;
 
 // creates a new event
 // Obs: your app needs write permission to do that, maybe your g-suite domain won't let you. Talk to your g-suite admin or use a new e-mail.

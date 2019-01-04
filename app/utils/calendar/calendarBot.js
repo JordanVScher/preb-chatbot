@@ -1,10 +1,12 @@
 const calendar = require('./calendar');
 const help = require('../helper');
 
-async function formatEvent(event) {
+async function formatEvent(event, UserId = 'xxx') {
 	let result = '';
+	console.log(UserId);
+
 	if (event.summary) { result += `Título: ${event.summary}\n`; }
-	if (event.description) { result += `Descrição: ${event.description}\n`; }
+	if (event.description) { result += `Descrição: ${event.description.replace(UserId, '')}\n`; }
 	if (event.location) { result += `Local: ${event.location}\n`; }
 	if (event.start && event.start.dateTime) { result += `Início: ${help.formatDate(event.start.dateTime)}\n`; }
 	if (event.end && event.end.dateTime) { result += `Fim: ${help.formatDate(event.end.dateTime)}`; }
@@ -12,16 +14,37 @@ async function formatEvent(event) {
 	return result;
 }
 
+// lists every event on the calendar related to the user, using the userID present in the event description.
+async function listUserEvents(context) {
+	await context.setState({ searchParams: await calendar.setUserSearchParam(context.session.user.id) });
+	await context.setState({ calendarEvents: await calendar.getAllEvents(context.state.searchParams) });
 
+	if (context.state.calendarEvents) {
+		let firstMsgTrigger = false;
+		for (const event of context.state.calendarEvents) { // eslint-disable-line no-restricted-syntax
+			event.summary = event.summary.replace(` - ${context.session.user.id}`, ''); // removing userID from event title
+			const text = await formatEvent(event, context.session.user.id);
+			if (text && text.length > 0) {
+				if (firstMsgTrigger === false) { await context.sendText('Veja seus eventos:'); firstMsgTrigger = true; } // send first msg only once if there's at least one result
+				await context.sendText(text);
+			}
+		}
+	} else {
+		await context.sendText('Você não tem eventos marcados');
+	}
+}
+
+// lists every event on the calendar, using the defeault search params and send them to the user.
 async function listAllEvents(context) {
 	await context.setState({ searchParams: await calendar.setDefaultSearchParam() });
 	await context.setState({ calendarEvents: await calendar.getAllEvents(context.state.searchParams) });
 
 	if (context.state.calendarEvents) {
-		await context.sendText('Veja nossos eventos:');
+		let firstMsgTrigger = false;
 		for (const event of context.state.calendarEvents) { // eslint-disable-line no-restricted-syntax
 			const text = await formatEvent(event);
 			if (text && text.length > 0) {
+				if (firstMsgTrigger === false) { await context.sendText('Veja nossos eventos:'); firstMsgTrigger = true; } // send first msg only once if there's at least one result
 				await context.sendText(text);
 			}
 		}
@@ -29,8 +52,6 @@ async function listAllEvents(context) {
 		await context.sendText('Não temos eventos');
 	}
 }
-
-module.exports.listAllEvents = listAllEvents;
 
 
 async function createEvent(context) {
@@ -48,3 +69,5 @@ async function createEvent(context) {
 }
 
 module.exports.createEvent = createEvent;
+module.exports.listAllEvents = listAllEvents;
+module.exports.listUserEvents = listUserEvents;
