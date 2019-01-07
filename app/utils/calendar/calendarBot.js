@@ -68,14 +68,9 @@ async function createEvent(context) {
 	}
 }
 
-module.exports.createEvent = createEvent;
-module.exports.listAllEvents = listAllEvents;
-module.exports.listUserEvents = listUserEvents;
-
-
 async function getFreeTime() {
 	const timeMin = new Date();
-	const timeMax = new Date(Date.now() + 12096e5);
+	const timeMax = new Date(Date.now() + 12096e5); // two weeks from now
 
 	const slicedRange = await calendar.divideTimeRange(timeMin, timeMax);
 	console.log(slicedRange);
@@ -86,4 +81,8 @@ async function getFreeTime() {
 	console.log(busyTimes);
 }
 
-getFreeTime();
+
+module.exports.createEvent = createEvent;
+module.exports.listAllEvents = listAllEvents;
+module.exports.listUserEvents = listUserEvents;
+module.exports.getFreeTime = getFreeTime;
