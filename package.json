@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon app/index.js",
-    "start": "node app/index.js"
+    "start": "node app/index.js",
+    "test": "jest"
   },
   "dependencies": {
     "@sentry/node": "^4.2.3",
@@ -17,6 +18,9 @@
     "fs-extra": "^7.0.0",
     "get-audio-duration": "0.0.1",
     "grpc": "^1.14.1",
+    "messaging-api-messenger": "^0.7.15",
+    "moment": "^2.23.0",
+    "node-google-calendar": "^1.1.1",
     "nodemon": "^1.18.6",
     "promisepipe": "^3.0.0",
     "query-string": "^5.1.0",
@@ -27,8 +31,9 @@
     "util.promisify": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.8.0",
+    "eslint": "^5.10.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "jest": "^23.6.0"
   }
 }
