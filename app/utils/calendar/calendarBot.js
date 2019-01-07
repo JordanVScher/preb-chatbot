@@ -73,12 +73,27 @@ async function getFreeTime() {
 	const timeMax = new Date(Date.now() + 12096e5); // two weeks from now
 
 	const slicedRange = await calendar.divideTimeRange(timeMin, timeMax);
-	console.log(slicedRange);
+	// console.log(slicedRange);
 
 
 	const busyTimes = await calendar.checkFreeBusy(timeMin, timeMax);
 	console.log('List of busy timings with events within defined time range: ');
-	console.log(busyTimes);
+	// console.log(busyTimes);
+
+	const freeTimeSlots = {};
+	let count = 0;
+	console.log(Object.keys(slicedRange).length);
+
+	Object.values(slicedRange).forEach(async (timeSlot) => {
+		busyTimes.forEach(async (busyRange) => {
+			if ((timeSlot >= busyRange.start && timeSlot <= busyRange.end) === false) { // check if timeSlot is not in a 'busy' timerange
+				count += 1;
+				freeTimeSlots[count] = new Date(timeSlot * 1000);
+			}
+		});
+	});
+
+	console.log(freeTimeSlots);
 }
 
 
@@ -86,3 +101,5 @@ module.exports.createEvent = createEvent;
 module.exports.listAllEvents = listAllEvents;
 module.exports.listUserEvents = listUserEvents;
 module.exports.getFreeTime = getFreeTime;
+
+// getFreeTime();

@@ -107,17 +107,30 @@ function setEvent(usedID) {
 }
 module.exports.setEvent = setEvent;
 
+const help = require('../helper');
+
 
 async function checkFreeBusy(timeMin, timeMax) {
 	const params = { timeMin, timeMax, items: [{ id: calendarId }] };
 
-	const result = await calendar.FreeBusy.query(calendarId, params)
+	const dateStringRsult = await calendar.FreeBusy.query(calendarId, params)
 		.then(resp => resp)
 		.catch((err) => {
 			console.log(`Error: checkBusy -${err.message}`);
 		});
 
-	return result;
+	// converting the result dates to timestamps
+	const timestampResult = [];
+	dateStringRsult.forEach(async (element) => {
+		timestampResult.push({
+			start: help.moment(element.start).unix(),
+			end: help.moment(element.end).unix(),
+		});
+	});
+
+	console.log(timestampResult);
+
+	return timestampResult;
 }
 
 module.exports.checkFreeBusy = checkFreeBusy;
@@ -138,7 +151,7 @@ async function divideTimeRange(timeMin, finalData) {
 		} else if ((currentDate.getHours() >= 0 && currentDate.getHours() < 6)) { // || currentDate.getHours() === 22 || currentDate.getHours() === '23'
 			currentDate.setHours(7);
 		}
-		slices[count] = `${currentDate}`;
+		slices[count] = help.moment(currentDate).unix();
 		count += 1;
 	}
 	return slices;
