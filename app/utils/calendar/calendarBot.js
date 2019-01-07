@@ -102,4 +102,4 @@ module.exports.listAllEvents = listAllEvents;
 module.exports.listUserEvents = listUserEvents;
 module.exports.getFreeTime = getFreeTime;
 
-getFreeTime();
+// getFreeTime();
