@@ -1,7 +1,7 @@
 FROM node:10.4.1
 ENV NPM_CONFIG_LOGLEVEL warn
 
-EXPOSE 8080
+EXPOSE 2700
 
 USER root
 RUN mkdir src
