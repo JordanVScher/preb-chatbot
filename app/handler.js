@@ -15,7 +15,7 @@ module.exports = async (context) => {
 			await context.resetState();	await context.setState({ dialog: 'greetings' });
 		}
 		timer.createFollowUpTimer(context.session.user.id, context);
-		// let user = await getUser(context)
+
 		// we reload politicianData on every useful event
 		// we update context data at every interaction that's not a comment or a post
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) });
@@ -24,8 +24,9 @@ module.exports = async (context) => {
 			name: `${context.session.user.first_name} ${context.session.user.last_name}`,
 			origin_dialog: 'greetings',
 			picture: context.session.user.profile_pic,
-			// session: JSON.stringify(context.state),
+			session: JSON.stringify(context.state),
 		});
+
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			await context.setState({ dialog: context.state.lastPBpayload });
@@ -56,7 +57,9 @@ module.exports = async (context) => {
 		}
 		switch (context.state.dialog) {
 		case 'greetings':
-			await context.sendText(flow.greetings.text1, opt.mainMenu);
+			await context.sendText(flow.greetings.text1);
+			await context.sendText(flow.greetings.text2);
+			await context.sendText(flow.greetings.text3, opt.mainMenu);
 			break;
 		case 'mainMenu':
 			await context.sendText(flow.mainMenu.text1, opt.mainMenu);

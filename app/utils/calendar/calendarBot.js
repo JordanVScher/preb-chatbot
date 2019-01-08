@@ -100,7 +100,7 @@ async function getFreeTime() {
 
 	// console.log(Object.keys(slicedRange).length);
 	// console.log(Object.keys(freeTimeSlots).length);
-	console.log(freeTimeSlots);
+	// console.log(freeTimeSlots);
 
 	return freeTimeSlots;
 }
@@ -109,5 +109,3 @@ module.exports.createEvent = createEvent;
 module.exports.listAllEvents = listAllEvents;
 module.exports.listUserEvents = listUserEvents;
 module.exports.getFreeTime = getFreeTime;
-
-getFreeTime();
