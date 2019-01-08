@@ -72,7 +72,7 @@ function setUserSearchParam(userID) {
 module.exports.setUserSearchParam = setUserSearchParam;
 
 // creates a new event
-// Obs: your app needs write permission to do that, maybe your g-suite domain won't let you. Talk to your g-suite admin or use a new e-mail.
+// Obs: your app needs write permission to do that, maybe your g-suite domain won't let you. Talk to your g-suite admin or use a different e-mail.
 async function createEvent(event) {
 	const result = await calendar.Events.insert(calendarId, event)
 		.then((resp) => {
@@ -116,7 +116,7 @@ async function checkFreeBusy(timeMin, timeMax) {
 	const dateStringRsult = await calendar.FreeBusy.query(calendarId, params)
 		.then(resp => resp)
 		.catch((err) => {
-			console.log(`Error: checkBusy -${err.message}`);
+			console.log(`Error: checkBusy - ${err.message}`);
 		});
 
 	// converting the result dates to timestamps
@@ -127,8 +127,6 @@ async function checkFreeBusy(timeMin, timeMax) {
 			end: help.moment(element.end).unix(),
 		});
 	});
-
-	console.log(timestampResult);
 
 	return timestampResult;
 }
@@ -141,19 +139,24 @@ async function divideTimeRange(timeMin, finalData) {
 	const slices = {};
 	let count = 0;
 
-	while (finalData >= currentDate) { // while currentDate is not out of the bound
+	while (finalData >= currentDate) { // while currentDate is not out of bounds
 		currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60)); // jump to the next hour
 
 		if (currentDate.getDay() === 0) { // check if day is Sunday
 			currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24)); // skip one day to get to Monday
 		} else if (currentDate.getDay() === 6) { // check if day is Saturday
 			currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24 * 2)); // skip two days to get to Monday
-		} else if ((currentDate.getHours() >= 0 && currentDate.getHours() < 6)) { // || currentDate.getHours() === 22 || currentDate.getHours() === '23'
+		} else if ((currentDate.getHours() >= 0 && currentDate.getHours() < 6)) { // skip "closed" hours 0-6 and go to "open" hour 7
 			currentDate.setHours(7);
 		}
-		slices[count] = help.moment(currentDate).unix();
-		count += 1;
+
+		if (currentDate.getHours() < 22) { // simply ignore "closed hours" in the night (22, 23)
+			slices[count] = help.moment(currentDate).unix();
+			// slices[count] = `${currentDate}`;
+			count += 1;
+		}
 	}
+
 	return slices;
 }
 
