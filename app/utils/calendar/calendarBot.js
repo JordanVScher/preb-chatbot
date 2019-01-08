@@ -67,7 +67,7 @@ async function createEvent(context) {
 
 // Compares every hour that may be free with known busy time ranges from the api. Returns a list with free times, divided by hour.
 async function getFreeTime() {
-	const timeMin = new Date();
+	const timeMin = help.formatInitialDate(new Date());
 	const timeMax = new Date(Date.now() + 12096e5); // two weeks from now
 
 	const slicedRange = await calendar.divideTimeRange(timeMin, timeMax); // List of every hour that may be free in the range
@@ -80,13 +80,16 @@ async function getFreeTime() {
 		let countInside = 0;
 		let addToResult = true;
 
+		// obs: timeSlot === busyTimes[countInside].end doesn't mean busy (altoughtimeSlot === busyTimes[countInside].start means it's busy time)
 		while (countInside < busyTimes.length && addToResult === true) {
-			if (timeSlot >= busyTimes[countInside].start && timeSlot <= busyTimes[countInside].end) { // check if timeSlot is in a 'busy' timerange
+			if (timeSlot >= busyTimes[countInside].start && timeSlot < busyTimes[countInside].end) { // check if timeSlot is in a 'busy' timerange
 				addToResult = false; // if it is a busy timeslot, we don't add it to the results array (we can also stop looping because we know the time is busy already)
 			}
 
 			// if the current range end has happened before the current timeSlot the next ranges aren't going to include timeSlot so we can stop the loop
 			if (busyTimes[countInside].end > timeSlot) { countInside = busyTimes.length; }
+
+			countInside += 1; // next step for countInside
 		} // --while end
 
 		if (addToResult === true) { // add free timeSlot to end result (as date instead of timestamp)
@@ -97,7 +100,7 @@ async function getFreeTime() {
 
 	// console.log(Object.keys(slicedRange).length);
 	// console.log(Object.keys(freeTimeSlots).length);
-	// console.log(freeTimeSlots);
+	console.log(freeTimeSlots);
 
 	return freeTimeSlots;
 }
@@ -106,3 +109,5 @@ module.exports.createEvent = createEvent;
 module.exports.listAllEvents = listAllEvents;
 module.exports.listUserEvents = listUserEvents;
 module.exports.getFreeTime = getFreeTime;
+
+getFreeTime();

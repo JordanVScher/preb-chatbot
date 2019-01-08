@@ -72,7 +72,7 @@ function setUserSearchParam(userID) {
 module.exports.setUserSearchParam = setUserSearchParam;
 
 // creates a new event
-// Obs: your app needs write permission to do that, maybe your g-suite domain won't let you. Talk to your g-suite admin or use a new e-mail.
+// Obs: your app needs write permission to do that, maybe your g-suite domain won't let you. Talk to your g-suite admin or use a different e-mail.
 async function createEvent(event) {
 	const result = await calendar.Events.insert(calendarId, event)
 		.then((resp) => {
@@ -146,7 +146,7 @@ async function divideTimeRange(timeMin, finalData) {
 			currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24)); // skip one day to get to Monday
 		} else if (currentDate.getDay() === 6) { // check if day is Saturday
 			currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24 * 2)); // skip two days to get to Monday
-		} else if ((currentDate.getHours() >= 0 && currentDate.getHours() < 6)) { // || currentDate.getHours() === 22 || currentDate.getHours() === '23'
+		} else if ((currentDate.getHours() >= 0 && currentDate.getHours() < 6)) { // skip "closed" hours 0-6 and go to "open" hour 7
 			currentDate.setHours(7);
 		}
 
