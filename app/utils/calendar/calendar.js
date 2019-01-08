@@ -116,7 +116,7 @@ async function checkFreeBusy(timeMin, timeMax) {
 	const dateStringRsult = await calendar.FreeBusy.query(calendarId, params)
 		.then(resp => resp)
 		.catch((err) => {
-			console.log(`Error: checkBusy -${err.message}`);
+			console.log(`Error: checkBusy - ${err.message}`);
 		});
 
 	// converting the result dates to timestamps
@@ -127,8 +127,6 @@ async function checkFreeBusy(timeMin, timeMax) {
 			end: help.moment(element.end).unix(),
 		});
 	});
-
-	console.log(timestampResult);
 
 	return timestampResult;
 }
@@ -141,7 +139,7 @@ async function divideTimeRange(timeMin, finalData) {
 	const slices = {};
 	let count = 0;
 
-	while (finalData >= currentDate) { // while currentDate is not out of the bound
+	while (finalData >= currentDate) { // while currentDate is not out of bounds
 		currentDate = new Date(currentDate.getTime() + (1000 * 60 * 60)); // jump to the next hour
 
 		if (currentDate.getDay() === 0) { // check if day is Sunday
@@ -151,9 +149,14 @@ async function divideTimeRange(timeMin, finalData) {
 		} else if ((currentDate.getHours() >= 0 && currentDate.getHours() < 6)) { // || currentDate.getHours() === 22 || currentDate.getHours() === '23'
 			currentDate.setHours(7);
 		}
-		slices[count] = help.moment(currentDate).unix();
-		count += 1;
+
+		if (currentDate.getHours() < 22) { // simply ignore "closed hours" in the night (22, 23)
+			slices[count] = help.moment(currentDate).unix();
+			// slices[count] = `${currentDate}`;
+			count += 1;
+		}
 	}
+
 	return slices;
 }
 

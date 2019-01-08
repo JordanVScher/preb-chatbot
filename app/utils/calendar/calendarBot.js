@@ -56,10 +56,7 @@ async function listAllEvents(context) {
 
 async function createEvent(context) {
 	await context.setState({ eventParams: await calendar.setEvent(context.session.user.id, context.session.user._updatedAt) });
-	console.log(context.state.eventParams);
-
 	await context.setState({ createdEvent: await calendar.createEvent(context.state.eventParams) });
-	console.log(context.state.createdEvent);
 
 	if (context.state.createdEvent && context.state.createdEvent.start && context.state.createdEvent.start.dateTime) {
 		await context.sendText(`Criamos o evento para dia ${help.formatDate(context.state.createdEvent.start.dateTime)}`);
@@ -68,38 +65,44 @@ async function createEvent(context) {
 	}
 }
 
+// Compares every hour that may be free with known busy time ranges from the api. Returns a list with free times, divided by hour.
 async function getFreeTime() {
 	const timeMin = new Date();
 	const timeMax = new Date(Date.now() + 12096e5); // two weeks from now
 
-	const slicedRange = await calendar.divideTimeRange(timeMin, timeMax);
-	// console.log(slicedRange);
-
-
-	const busyTimes = await calendar.checkFreeBusy(timeMin, timeMax);
-	console.log('List of busy timings with events within defined time range: ');
-	// console.log(busyTimes);
+	const slicedRange = await calendar.divideTimeRange(timeMin, timeMax); // List of every hour that may be free in the range
+	const busyTimes = await calendar.checkFreeBusy(timeMin, timeMax); // List of busy timings with events within defined time range
 
 	const freeTimeSlots = {};
-	let count = 0;
-	console.log(Object.keys(slicedRange).length);
+	let count = 0; // freeTimeSlots keys counter
 
-	Object.values(slicedRange).forEach(async (timeSlot) => {
-		busyTimes.forEach(async (busyRange) => {
-			if ((timeSlot >= busyRange.start && timeSlot <= busyRange.end) === false) { // check if timeSlot is not in a 'busy' timerange
-				count += 1;
-				freeTimeSlots[count] = new Date(timeSlot * 1000);
+	Object.values(slicedRange).forEach(async (timeSlot) => { // check if each of the timeSlots are free or busy
+		let countInside = 0;
+		let addToResult = true;
+
+		while (countInside < busyTimes.length && addToResult === true) {
+			if (timeSlot >= busyTimes[countInside].start && timeSlot <= busyTimes[countInside].end) { // check if timeSlot is in a 'busy' timerange
+				addToResult = false; // if it is a busy timeslot, we don't add it to the results array (we can also stop looping because we know the time is busy already)
 			}
-		});
+
+			// if the current range end has happened before the current timeSlot the next ranges aren't going to include timeSlot so we can stop the loop
+			if (busyTimes[countInside].end > timeSlot) { countInside = busyTimes.length; }
+		} // --while end
+
+		if (addToResult === true) { // add free timeSlot to end result (as date instead of timestamp)
+			freeTimeSlots[count] = new Date(timeSlot * 1000);
+			count += 1; // next step for slicedRange
+		}
 	});
 
-	console.log(freeTimeSlots);
-}
+	// console.log(Object.keys(slicedRange).length);
+	// console.log(Object.keys(freeTimeSlots).length);
+	// console.log(freeTimeSlots);
 
+	return freeTimeSlots;
+}
 
 module.exports.createEvent = createEvent;
 module.exports.listAllEvents = listAllEvents;
 module.exports.listUserEvents = listUserEvents;
 module.exports.getFreeTime = getFreeTime;
-
-// getFreeTime();
