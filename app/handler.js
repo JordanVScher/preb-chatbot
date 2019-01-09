@@ -34,9 +34,13 @@ module.exports = async (context) => {
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
 			await context.setState({ lastQRpayload: context.event.quickReply.payload });
-			await context.setState({ dialog: context.state.lastQRpayload });
-			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
-				context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
+			if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
+				console.log('AAAAAAAAAAAAAAAAAAAAAA');
+			} else { // regular quick_replies
+				await context.setState({ dialog: context.state.lastQRpayload });
+				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
+					context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
+			}
 		} else if (context.event.isText) {
 			await context.setState({ whatWasTyped: context.event.message.text });
 			if (context.state.politicianData.use_dialogflow === 1) { // check if politician is using dialogFlow

@@ -67,7 +67,8 @@ async function createEvent(context) {
 
 // builds quick_replies options for the free days we have available
 async function sendAvailableDays(context) {
-	const freeDays = await calendar.listFreeDays(await calendar.getFreeTime());
+	await context.setState({ freeTime: await calendar.getFreeTime() }); // storing the freeTime for later
+	const freeDays = await calendar.listFreeDays(context.state.freeTime);
 	const quickReplyButtons = [];
 
 	Object.values(freeDays).forEach(async (element) => { // building the quick_replies array
@@ -77,6 +78,7 @@ async function sendAvailableDays(context) {
 
 	await context.sendText('Legal, escolha o dia que você quer marcar:', { quick_replies: quickReplyButtons });
 }
+
 
 module.exports.createEvent = createEvent;
 module.exports.listAllEvents = listAllEvents;
