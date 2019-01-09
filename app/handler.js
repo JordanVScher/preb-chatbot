@@ -37,6 +37,9 @@ module.exports = async (context) => {
 			if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
 				await context.setState({ selectedDate: context.state.lastQRpayload.slice(9, -1) });
 				await context.setState({ dialog: 'setEventHour' });
+			} else if (context.state.lastQRpayload.slice(0, 9) === 'eventHour') {
+				await context.setState({ selectedHour: context.state.lastQRpayload.slice(9, -1) });
+				await context.setState({ dialog: 'setEvent' });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -67,10 +70,12 @@ module.exports = async (context) => {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
-			await context.sendText(flow.greetings.text3, opt.mainMenu);
+			// await context.sendText(flow.greetings.text3, opt.mainMenu);
+			await context.sendText(flow.greetings.text3);
 			break;
 		case 'mainMenu':
-			await context.sendText(flow.mainMenu.text1, opt.mainMenu);
+			await context.sendText(flow.mainMenu.text1);
+			// await context.sendText(flow.mainMenu.text1, opt.mainMenu);
 			break;
 		case 'seeEvent':
 			await calendarBot.listAllEvents(context);
@@ -78,11 +83,14 @@ module.exports = async (context) => {
 		case 'myEvent':
 			await calendarBot.listUserEvents(context);
 			break;
-		case 'setEvent':
+		case 'setEventDate':
 			await calendarBot.sendAvailableDays(context);
 			break;
 		case 'setEventHour':
-			await calendarBot.sendAvailableHours(context.state.selectedDate, context);
+			await calendarBot.sendAvailableHours(context);
+			break;
+		case 'setEvent':
+			await calendarBot.setEvent(context);
 			break;
 		} // end switch case
 	} catch (error) {

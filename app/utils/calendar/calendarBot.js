@@ -80,18 +80,21 @@ async function sendAvailableDays(context) {
 }
 
 // builds quick_replies options for the free hours we have available
-async function sendAvailableHours(date, context) {
-	await context.setState({ freeHours: await calendar.getFreeHours(date, await calendar.getFreeTime()) }); // full date (with timezone fix)
+async function sendAvailableHours(context) {
+	await context.setState({ freeHours: await calendar.getFreeHours(context.state.selectedDate, await calendar.getFreeTime()) }); // full date
 	const quickReplyButtons = [];
 
-	Object.values(context.state.freeHours).forEach(async (element) => { // building the quick_replies array
-		quickReplyButtons.push({ content_type: 'text', title: `Às ${element.getHours()}:00h`, payload: `eventHour${element.date}` });
+	Object.values(context.state.freeHours).forEach(async (element, index) => { // building the quick_replies array
+		quickReplyButtons.push({ content_type: 'text', title: `Às ${element.getHours()}:00h`, payload: `eventHour${index}` });
 	});
 	// quickReplyButtons.push({ content_type: 'text', title: 'Voltar', payload: 'mainMenu' }); // Voltar button
 
-	console.log(quickReplyButtons.length);
 	await context.sendText('ok, escolha o horário para o dia que você quer marcar: (das 8h as 21h)', { quick_replies: quickReplyButtons });
 }
+
+// async function setEvent(context) {
+
+// }
 
 module.exports.createEvent = createEvent;
 module.exports.listAllEvents = listAllEvents;

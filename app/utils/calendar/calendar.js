@@ -157,7 +157,7 @@ async function getFreeTime() {
 	timeMax.setDate(timeMax.getDate() - 1); // we remove one day to make room for the "voltar button"
 
 	const slicedRange = await divideTimeRange(timeMin, timeMax); // List of every hour that may be free in the range
-	const busyTimes = await checkFreeBusy(timeMin, timeMax); // List of busy timings with events within defined time range
+	const busyTimes = await checkFreeBusy(timeMin, timeMax); // List of busy times with events within defined time range
 
 	const freeTimeSlots = {};
 	let count = 0; // freeTimeSlots keys counter
