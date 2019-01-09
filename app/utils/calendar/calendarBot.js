@@ -65,47 +65,39 @@ async function createEvent(context) {
 	}
 }
 
-// Compares every hour that may be free with known busy time ranges from the api. Returns a list with free times, divided by hour.
-async function getFreeTime() {
-	const timeMin = help.formatInitialDate(new Date());
-	const timeMax = new Date(Date.now() + 12096e5); // two weeks from now
+// builds quick_replies options for the free days we have available
+async function sendAvailableDays(context) {
+	await context.setState({ freeTime: await calendar.getFreeTime() }); // storing the freeTime for later
+	const freeDays = await calendar.getFreeDays(context.state.freeTime); // freeDays just stores day and date
+	const quickReplyButtons = [];
 
-	const slicedRange = await calendar.divideTimeRange(timeMin, timeMax); // List of every hour that may be free in the range
-	const busyTimes = await calendar.checkFreeBusy(timeMin, timeMax); // List of busy timings with events within defined time range
-
-	const freeTimeSlots = {};
-	let count = 0; // freeTimeSlots keys counter
-
-	Object.values(slicedRange).forEach(async (timeSlot) => { // check if each of the timeSlots are free or busy
-		let countInside = 0;
-		let addToResult = true;
-
-		// obs: timeSlot === busyTimes[countInside].end doesn't mean busy (altoughtimeSlot === busyTimes[countInside].start means it's busy time)
-		while (countInside < busyTimes.length && addToResult === true) {
-			if (timeSlot >= busyTimes[countInside].start && timeSlot < busyTimes[countInside].end) { // check if timeSlot is in a 'busy' timerange
-				addToResult = false; // if it is a busy timeslot, we don't add it to the results array (we can also stop looping because we know the time is busy already)
-			}
-
-			// if the current range end has happened before the current timeSlot the next ranges aren't going to include timeSlot so we can stop the loop
-			if (busyTimes[countInside].end > timeSlot) { countInside = busyTimes.length; }
-
-			countInside += 1; // next step for countInside
-		} // --while end
-
-		if (addToResult === true) { // add free timeSlot to end result (as date instead of timestamp)
-			freeTimeSlots[count] = new Date(timeSlot * 1000);
-			count += 1; // next step for slicedRange
-		}
+	Object.values(freeDays).forEach(async (element) => { // building the quick_replies array
+		quickReplyButtons.push({ content_type: 'text', title: `Dia ${element.date} - ${help.weekDayName[element.day]}`, payload: `eventDate${element.date}` });
 	});
+	// quickReplyButtons.push({ content_type: 'text', title: 'Voltar', payload: 'mainMenu' }); // Voltar button
 
-	// console.log(Object.keys(slicedRange).length);
-	// console.log(Object.keys(freeTimeSlots).length);
-	// console.log(freeTimeSlots);
-
-	return freeTimeSlots;
+	await context.sendText('Legal, escolha o dia que você quer marcar:', { quick_replies: quickReplyButtons });
 }
+
+// builds quick_replies options for the free hours we have available
+async function sendAvailableHours(context) {
+	await context.setState({ freeHours: await calendar.getFreeHours(context.state.selectedDate, await calendar.getFreeTime()) }); // full date
+	const quickReplyButtons = [];
+
+	Object.values(context.state.freeHours).forEach(async (element, index) => { // building the quick_replies array
+		quickReplyButtons.push({ content_type: 'text', title: `Às ${element.getHours()}:00h`, payload: `eventHour${index}` });
+	});
+	// quickReplyButtons.push({ content_type: 'text', title: 'Voltar', payload: 'mainMenu' }); // Voltar button
+
+	await context.sendText('ok, escolha o horário para o dia que você quer marcar: (das 8h as 21h)', { quick_replies: quickReplyButtons });
+}
+
+// async function setEvent(context) {
+
+// }
 
 module.exports.createEvent = createEvent;
 module.exports.listAllEvents = listAllEvents;
 module.exports.listUserEvents = listUserEvents;
-module.exports.getFreeTime = getFreeTime;
+module.exports.sendAvailableDays = sendAvailableDays;
+module.exports.sendAvailableHours = sendAvailableHours;
