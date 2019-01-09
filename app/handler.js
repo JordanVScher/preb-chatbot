@@ -70,6 +70,9 @@ module.exports = async (context) => {
 		case 'myEvent':
 			await calendarBot.listUserEvents(context);
 			break;
+		case 'setEvent':
+			await calendarBot.sendAvailableDays(context);
+			break;
 		} // end switch case
 	} catch (error) {
 		const date = new Date();

@@ -25,6 +25,9 @@ function formatInitialDate(date) {
 	return date;
 }
 
+const weekDayName = { // simple week day dictionary
+	0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado',
+};
 
 module.exports.Sentry = Sentry;
 module.exports.apiai = dialogFlow(process.env.DIALOGFLOW_TOKEN);
@@ -32,3 +35,4 @@ module.exports.moment = moment;
 module.exports.waitTypingEffect = waitTypingEffect;
 module.exports.formatDate = formatDate;
 module.exports.formatInitialDate = formatInitialDate;
+module.exports.weekDayName = weekDayName;
