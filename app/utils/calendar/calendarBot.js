@@ -68,19 +68,33 @@ async function createEvent(context) {
 // builds quick_replies options for the free days we have available
 async function sendAvailableDays(context) {
 	await context.setState({ freeTime: await calendar.getFreeTime() }); // storing the freeTime for later
-	const freeDays = await calendar.listFreeDays(context.state.freeTime);
+	const freeDays = await calendar.getFreeDays(context.state.freeTime); // freeDays just stores day and date
 	const quickReplyButtons = [];
 
 	Object.values(freeDays).forEach(async (element) => { // building the quick_replies array
 		quickReplyButtons.push({ content_type: 'text', title: `Dia ${element.date} - ${help.weekDayName[element.day]}`, payload: `eventDate${element.date}` });
 	});
-	quickReplyButtons.push({ content_type: 'text', title: 'Voltar', payload: 'mainMenu' }); // Voltar button
+	// quickReplyButtons.push({ content_type: 'text', title: 'Voltar', payload: 'mainMenu' }); // Voltar button
 
 	await context.sendText('Legal, escolha o dia que você quer marcar:', { quick_replies: quickReplyButtons });
 }
 
+// builds quick_replies options for the free hours we have available
+async function sendAvailableHours(date, context) {
+	await context.setState({ freeHours: await calendar.getFreeHours(date, await calendar.getFreeTime()) }); // full date (with timezone fix)
+	const quickReplyButtons = [];
+
+	Object.values(context.state.freeHours).forEach(async (element) => { // building the quick_replies array
+		quickReplyButtons.push({ content_type: 'text', title: `Às ${element.getHours()}:00h`, payload: `eventHour${element.date}` });
+	});
+	// quickReplyButtons.push({ content_type: 'text', title: 'Voltar', payload: 'mainMenu' }); // Voltar button
+
+	console.log(quickReplyButtons.length);
+	await context.sendText('ok, escolha o horário para o dia que você quer marcar: (das 8h as 21h)', { quick_replies: quickReplyButtons });
+}
 
 module.exports.createEvent = createEvent;
 module.exports.listAllEvents = listAllEvents;
 module.exports.listUserEvents = listUserEvents;
 module.exports.sendAvailableDays = sendAvailableDays;
+module.exports.sendAvailableHours = sendAvailableHours;

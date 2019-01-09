@@ -192,7 +192,7 @@ async function getFreeTime() {
 }
 
 // get every day available from the "free" time slots
-async function listFreeDays(timeSlots) {
+async function getFreeDays(timeSlots) {
 	const freeDays = []; // array of free days (month day and week day)
 	freeDays.push({ date: timeSlots[0].getDate(), day: timeSlots[0].getDay() }); // starting the list with the first element
 
@@ -213,9 +213,7 @@ async function getFreeHours(date, freeTime) {
 
 	while (notYet === true) {
 		if (freeTime[count].getDate() === date) { // check if the date is the same to get the free hours
-			const aux = freeTime[count];
-			aux.setHours(aux.getHours() - 2); // fixing wrong timezone issue
-			freeHours.push(aux);
+			freeHours.push(freeTime[count]);
 		} else if (freeTime[count].getDate() > date || !freeTime[count]) { // if the current date happens after the desired date or if it doesn't exist we can stop searching
 			notYet = false;
 		}
@@ -234,5 +232,5 @@ module.exports.checkFreeBusy = checkFreeBusy;
 
 module.exports.divideTimeRange = divideTimeRange;
 module.exports.getFreeTime = getFreeTime;
-module.exports.listFreeDays = listFreeDays;
+module.exports.getFreeDays = getFreeDays;
 module.exports.getFreeHours = getFreeHours;
