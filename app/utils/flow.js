@@ -13,7 +13,7 @@ module.exports = {
 		failure: 'Não entendi sua mensagem. Escreva novamente',
 	},
 	followUp: {
-		title: 'Chatbot Amanda',
+		title: 'Chatbot Mandy Selfie',
 		subtitle: 'Me compartilhe o mundo!',
 		preText: 'Oii, você tem alguma amiga ou amigo que gostariam de ouvir meus conselhos? Se sim, me compartilhe ;)',
 	},
