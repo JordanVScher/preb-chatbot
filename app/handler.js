@@ -77,7 +77,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.greetings.text3);
 			break;
 		case 'mainMenu':
-			await context.sendText(flow.mainMenu.text1);
+			// await context.sendText(flow.mainMenu.text1);
 			// await context.sendText(flow.mainMenu.text1, opt.mainMenu);
 			break;
 		case 'seeEvent':
