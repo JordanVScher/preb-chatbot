@@ -1,5 +1,5 @@
 module.exports = {
-	avatarImage: 'https://www.telegraph.co.uk/content/dam/news/2016/09/08/107667228_beech-tree-NEWS_trans_NvBQzQNjv4BqplGOf-dgG3z4gg9owgQTXEmhb5tXCQRHAvHRWfzHzHk.jpg?imwidth=450',
+	avatarImage: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/c38095b8-6b51-46f9-a8a9-b61ac9ac9385.png',
 	greetings: {
 		text1: 'E ai, tudo bem?',
 		text2: 'Sou a Mandy Selfie, a primeira assistente digital trans do Brasil. Estou aqui para falar dos bafos sobre sexo 😉',
@@ -14,6 +14,7 @@ module.exports = {
 	},
 	followUp: {
 		title: 'Chatbot Amanda',
-		subtitle: 'O texto que temos que ver',
+		subtitle: 'Me compartilhe o mundo!',
+		preText: 'Oii, você tem alguma amiga ou amigo que gostariam de ouvir meus conselhos? Se sim, me compartilhe ;)',
 	},
 };
