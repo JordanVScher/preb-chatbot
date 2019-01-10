@@ -3,7 +3,7 @@ const flow = require('./flow');
 const shareLink = process.env.SHARE_LINK;
 
 async function sendFollowUp(context) {
-	await context.sendText('Olha o timer aí');
+	await context.sendText(flow.followUp.preText);
 	await context.sendAttachment({
 		type: 'template',
 		payload: {
