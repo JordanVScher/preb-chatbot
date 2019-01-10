@@ -47,7 +47,10 @@ module.exports = async (context) => {
 			}
 		} else if (context.event.isText) {
 			await context.setState({ whatWasTyped: context.event.message.text });
-			if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
+			if (context.state.whatWasTyped === process.env.GET_PERFILDATA) {
+				await context.sendText(`Imprimindo os dados do peril: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
+				console.log(`Imprimindo os dados do peril: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
+			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
 			} else if (context.state.politicianData.use_dialogflow === 1) { // check if politician is using dialogFlow
