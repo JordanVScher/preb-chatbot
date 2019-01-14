@@ -92,16 +92,18 @@ module.exports = {
 		return privateReply;
 	},
 
-	async updateBlacklist(fb_id, active) {
+	async updateBlacklist(fb_id, active) { // 0 -> turn off notification && 1 -> turn on notification
 		const res = await request.post(`${apiUri}/api/chatbot/blacklist?fb_id=${fb_id}&active=${active}&security_token=${security_token}`);
 		const Blacklist = await res.json();
 		return Blacklist;
 	},
+
 	async getAvailableIntents(pageId, page) { // has pagination
 		const res = await request(`${apiUri}/api/chatbot/intents/available?fb_page_id=${pageId}&page=${page}&security_token=${security_token}`);
 		const intents = await res.json();
 		return intents;
 	},
+
 	async getAllAvailableIntents(pageId) {
 		const res = await request(`${apiUri}/api/chatbot/intents/available?fb_page_id=${pageId}&security_token=${security_token}`);
 		const intents = await res.json();
