@@ -3,18 +3,26 @@ const { createIssue } = require('./send_issue');
 const { checkPosition } = require('./dialogFlow');
 const { apiai } = require('./utils/helper');
 const flow = require('./utils/flow');
-const opt = require('./utils/options');
+const opt = require('./utils/options'); // eslint-disable-line
 const help = require('./utils/helper');
 const timer = require('./utils/timer');
 const calendarBot = require('./utils/calendar/calendarBot');
 
 module.exports = async (context) => {
 	try {
-		// console.log(await MaAPI.getLogAction()); // print possible log actions
 		if (!context.state.dialog || context.state.dialog === '' || (context.event.postback && context.event.postback.payload === 'greetings')) { // because of the message that comes from the comment private-reply
-			await context.resetState();	await context.setState({ dialog: 'greetings' });
+			await context.setState({ dialog: 'greetings' });
 		}
-		timer.createFollowUpTimer(context.session.user.id, context);
+
+		if (!context.state.timerOneSent || context.state.timerOneSent === false) { // checks if we haven't sent the followup Timer already
+		// checks if last activity has happened after the "timer" time period
+			if ((context.event.rawEvent.timestamp - context.session.lastActivity) >= (timer.followUpTimer + 1000)) {
+				// if it has, that means and the user interacted with the chatbot after we sent the timer (so, there's no need to send the timer again)
+				await context.setState({ timerOneSent: true });
+			} else { // creates the timer
+				timer.createFollowUpTimer(context.session.user.id, context);
+			}
+		}
 
 		// we reload politicianData on every useful event
 		// we update context data at every interaction that's not a comment or a post
@@ -48,8 +56,9 @@ module.exports = async (context) => {
 		} else if (context.event.isText) {
 			await context.setState({ whatWasTyped: context.event.message.text });
 			if (context.state.whatWasTyped === process.env.GET_PERFILDATA) {
-				await context.sendText(`Imprimindo os dados do peril: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
-				console.log(`Imprimindo os dados do peril: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
+				await context.setState({ timerOneSent: false }); // for testing timer
+				await context.sendText(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
+				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
@@ -77,7 +86,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.greetings.text3);
 			break;
 		case 'mainMenu':
-			await context.sendText(flow.mainMenu.text1);
+			// await context.sendText(flow.mainMenu.text1);
 			// await context.sendText(flow.mainMenu.text1, opt.mainMenu);
 			break;
 		case 'seeEvent':
@@ -94,6 +103,16 @@ module.exports = async (context) => {
 			break;
 		case 'setEvent':
 			await calendarBot.setEvent(context);
+			break;
+		case 'notificationOn':
+			await MaAPI.updateBlacklist(context.session.user.id, 1);
+			await MaAPI.logNotification(context.session.user.id, context.state.politicianData.user_id, 3);
+			await context.sendText('Legal. Estaremos te avisando das novidades.');
+			break;
+		case 'notificationOff':
+			await MaAPI.updateBlacklist(context.session.user.id, 0);
+			await MaAPI.logNotification(context.session.user.id, context.state.politicianData.user_id, 4);
+			await context.sendText('Tudo bem. Não te enviaremos mais nenhuma notificação.');
 			break;
 		} // end switch case
 	} catch (error) {
