@@ -38,3 +38,5 @@ module.exports.createFollowUpTimer = async (userID, context) => {
 		delete FollowUps[userID]; // deleting this timer from timers object
 	}, followUpTimer);
 };
+
+module.exports.followUpTimer = followUpTimer;

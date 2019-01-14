@@ -173,6 +173,7 @@ module.exports = {
 		return log;
 	},
 
+	// console.log(await MaAPI.getLogAction()); // print possible log actions
 	async getLogAction() {
 		const res = await request(`${apiUri}/api/chatbot/log/actions?security_token=${security_token}`);
 		const log = await res.json();
