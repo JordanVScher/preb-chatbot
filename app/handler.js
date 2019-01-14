@@ -104,6 +104,16 @@ module.exports = async (context) => {
 		case 'setEvent':
 			await calendarBot.setEvent(context);
 			break;
+		case 'notificationOn':
+			await MaAPI.updateBlacklist(context.session.user.id, 1);
+			await MaAPI.logNotification(context.session.user.id, context.state.politicianData.user_id, 3);
+			await context.sendText('Legal. Estaremos te avisando das novidades.');
+			break;
+		case 'notificationOff':
+			await MaAPI.updateBlacklist(context.session.user.id, 0);
+			await MaAPI.logNotification(context.session.user.id, context.state.politicianData.user_id, 4);
+			await context.sendText('Tudo bem. Não te enviaremos mais nenhuma notificação.');
+			break;
 		} // end switch case
 	} catch (error) {
 		const date = new Date();

@@ -2,8 +2,8 @@ require('dotenv').config();
 
 const { MessengerClient } = require('messaging-api-messenger');
 const config = require('../bottender.config').messenger;
+const flow = require('./flow');
 
-console.log(config);
 
 const client = MessengerClient.connect({
 	accessToken: config.accessToken,
@@ -14,7 +14,7 @@ async function createGetStarted() { // eslint-disable-line no-unused-vars
 	console.log(await client.setGetStarted('greetings'));
 	console.log(await client.setGreeting([{
 		locale: 'default',
-		text: 'Oi, clique em começar',
+		text: flow.getStarted,
 	}]));
 }
 
@@ -28,27 +28,27 @@ async function createPersistentMenu() { // eslint-disable-line no-unused-vars
 					title: 'Ir para o início',
 					payload: 'greetings',
 				},
-				{
-					type: 'web_url',
-					title: 'Example site',
-					url: 'http://www.google.com/',
-				},
 				// {
-				// 	type: 'nested',
-				// 	title: 'Menus',
-				// 	call_to_actions: [
-				// 		{
-				// 			type: 'postback',
-				// 			title: 'opt1',
-				// 			payload: 'opt1',
-				// 		},
-				// 		{
-				// 			type: 'postback',
-				// 			title: 'opt2',
-				// 			payload: 'opt2',
-				// 		},
-				// 	],
+				// 	type: 'web_url',
+				// 	title: 'Example site',
+				// 	url: 'http://www.google.com/',
 				// },
+				{
+					type: 'nested',
+					title: 'Notificações 🔔',
+					call_to_actions: [
+						{
+							type: 'postback',
+							title: 'Ligar Notificações 👌',
+							payload: 'notificationOn',
+						},
+						{
+							type: 'postback',
+							title: 'Para Notificações 🛑',
+							payload: 'notificationOff',
+						},
+					],
+				},
 			],
 		},
 	]));
