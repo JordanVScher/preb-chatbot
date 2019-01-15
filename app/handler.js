@@ -63,12 +63,7 @@ module.exports = async (context) => {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
 			} else if (context.state.politicianData.use_dialogflow === 1) { // check if politician is using dialogFlow
-				if (context.state.whatWasTyped.length <= 255) { // check if message is short enough for apiai
-					await context.setState({ toSend: context.state.whatWasTyped });
-				} else {
-					await context.setState({ toSend: context.state.whatWasTyped.slice(0, 255) });
-				}
-				await context.setState({ apiaiResp: await apiai.textRequest(context.state.toSend, { sessionId: context.session.user.id }) });
+				await context.setState({ apiaiResp: await apiai.textRequest(await help.formatDialogFlow(context.state.whatWasTyped), { sessionId: context.session.user.id }) });
 				// await context.setState({ resultParameters: context.state.apiaiResp.result.parameters }); // getting the entities
 				await context.setState({ intentName: context.state.apiaiResp.result.metadata.intentName }); // getting the intent
 				await checkPosition(context);
