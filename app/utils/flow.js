@@ -18,4 +18,8 @@ module.exports = {
 		subtitle: 'Me compartilhe no mundo!',
 		preText: 'Oii, você tem alguma amiga ou amigo que gostariam de ouvir meus conselhos? Se sim, me compartilhe ;)',
 	},
+	notifications: {
+		on: 'Legal. Estaremos te avisando das novidades.',
+		off: 'Tudo bem. Não te enviaremos mais nenhuma notificação.',
+	},
 };

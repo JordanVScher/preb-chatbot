@@ -10,9 +10,8 @@ const calendarBot = require('./utils/calendar/calendarBot');
 
 module.exports = async (context) => {
 	try {
-		if (!context.state.dialog || context.state.dialog === '' || (context.event.postback && context.event.postback.payload === 'greetings')) { // because of the message that comes from the comment private-reply
-			await context.setState({ dialog: 'greetings' });
-		}
+		console.log(context.event.postback);
+
 
 		if (!context.state.timerOneSent || context.state.timerOneSent === false) { // checks if we haven't sent the followup Timer already
 		// checks if last activity has happened after the "timer" time period
@@ -25,19 +24,23 @@ module.exports = async (context) => {
 		}
 
 		// we reload politicianData on every useful event
-		// we update context data at every interaction that's not a comment or a post
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) });
-		await MaAPI.postRecipient(context.state.politicianData.user_id, {
-			fb_id: context.session.user.id,
-			name: `${context.session.user.first_name} ${context.session.user.last_name}`,
-			origin_dialog: 'greetings',
-			picture: context.session.user.profile_pic,
-			session: JSON.stringify(context.state),
-		});
+		// we update context data at every interaction (post ony on the first time)
+		await MaAPI.postRecipientMA(`${context.session.user.first_name} ${context.session.user.last_name}`, context.session.user.id, context.state.politicianData.user_id);
+
+		if (!context.state.sentPrepPost || context.state.sentPrepPost === false) {
+			await MaAPI.postRecipientPrep(`${context.session.user.first_name} ${context.session.user.last_name}`, context.session.user.id, context.state.politicianData.user_id);
+			await context.setState({ sentPrepPost: true });
+		}
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
-			await context.setState({ dialog: context.state.lastPBpayload });
+			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
+				await context.setState({ dialog: 'greetings' });
+				await context.setState({ sentPrepPost: false });
+			} else {
+				await context.setState({ dialog: context.state.lastPBpayload });
+			}
 			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
@@ -63,12 +66,7 @@ module.exports = async (context) => {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
 			} else if (context.state.politicianData.use_dialogflow === 1) { // check if politician is using dialogFlow
-				if (context.state.whatWasTyped.length <= 255) { // check if message is short enough for apiai
-					await context.setState({ toSend: context.state.whatWasTyped });
-				} else {
-					await context.setState({ toSend: context.state.whatWasTyped.slice(0, 255) });
-				}
-				await context.setState({ apiaiResp: await apiai.textRequest(context.state.toSend, { sessionId: context.session.user.id }) });
+				await context.setState({ apiaiResp: await apiai.textRequest(await help.formatDialogFlow(context.state.whatWasTyped), { sessionId: context.session.user.id }) });
 				// await context.setState({ resultParameters: context.state.apiaiResp.result.parameters }); // getting the entities
 				await context.setState({ intentName: context.state.apiaiResp.result.metadata.intentName }); // getting the intent
 				await checkPosition(context);
@@ -105,14 +103,14 @@ module.exports = async (context) => {
 			await calendarBot.setEvent(context);
 			break;
 		case 'notificationOn':
-			await MaAPI.updateBlacklist(context.session.user.id, 1);
+			await MaAPI.updateBlacklistMA(context.session.user.id, 1);
 			await MaAPI.logNotification(context.session.user.id, context.state.politicianData.user_id, 3);
-			await context.sendText('Legal. Estaremos te avisando das novidades.');
+			await context.sendText(flow.notifications.on);
 			break;
 		case 'notificationOff':
-			await MaAPI.updateBlacklist(context.session.user.id, 0);
+			await MaAPI.updateBlacklistMA(context.session.user.id, 0);
 			await MaAPI.logNotification(context.session.user.id, context.state.politicianData.user_id, 4);
-			await context.sendText('Tudo bem. Não te enviaremos mais nenhuma notificação.');
+			await context.sendText(flow.notifications.off);
 			break;
 		} // end switch case
 	} catch (error) {
