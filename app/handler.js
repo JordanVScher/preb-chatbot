@@ -1,4 +1,5 @@
 const MaAPI = require('./chatbot_api.js');
+const prepAPI = require('./prep_api.js');
 const { createIssue } = require('./send_issue');
 const { checkPosition } = require('./dialogFlow');
 const { apiai } = require('./utils/helper');
@@ -10,9 +11,6 @@ const calendarBot = require('./utils/calendar/calendarBot');
 
 module.exports = async (context) => {
 	try {
-		console.log(context.event.postback);
-
-
 		if (!context.state.timerOneSent || context.state.timerOneSent === false) { // checks if we haven't sent the followup Timer already
 		// checks if last activity has happened after the "timer" time period
 			if ((context.event.rawEvent.timestamp - context.session.lastActivity) >= (timer.followUpTimer + 1000)) {
@@ -26,18 +24,26 @@ module.exports = async (context) => {
 		// we reload politicianData on every useful event
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) });
 		// we update context data at every interaction (post ony on the first time)
-		await MaAPI.postRecipientMA(`${context.session.user.first_name} ${context.session.user.last_name}`, context.session.user.id, context.state.politicianData.user_id);
+		await MaAPI.postRecipientMA(context.state.politicianData.user_id, {
+			fb_id: context.session.user.id,
+			name: `${context.session.user.first_name} ${context.session.user.last_name}`,
+			gender: context.session.user.gender === 'male' ? 'M' : 'F',
+			origin_dialog: 'greetings',
+			picture: context.session.user.profile_pic,
+			// session: JSON.stringify(context.state),
+		});
 
-		if (!context.state.sentPrepPost || context.state.sentPrepPost === false) {
-			await MaAPI.postRecipientPrep(`${context.session.user.first_name} ${context.session.user.last_name}`, context.session.user.id, context.state.politicianData.user_id);
+		if (!context.state.sentPrepPost || context.state.sentPrepPost === false) { // adding user to the prep base, happens only once
+			await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, `${context.session.user.first_name} ${context.session.user.last_name}`);
 			await context.setState({ sentPrepPost: true });
+		} else { // updating user already on prep base
+			await prepAPI.putRecipientPrep(context.session.user.id, `${context.session.user.first_name} ${context.session.user.last_name}`);
 		}
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				await context.setState({ sentPrepPost: false });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -104,11 +110,13 @@ module.exports = async (context) => {
 			break;
 		case 'notificationOn':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 1);
+			await prepAPI.putRecipientNotification(context.session.user.id, 1);
 			await MaAPI.logNotification(context.session.user.id, context.state.politicianData.user_id, 3);
 			await context.sendText(flow.notifications.on);
 			break;
 		case 'notificationOff':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 0);
+			await prepAPI.putRecipientNotification(context.session.user.id, 0);
 			await MaAPI.logNotification(context.session.user.id, context.state.politicianData.user_id, 4);
 			await context.sendText(flow.notifications.off);
 			break;
