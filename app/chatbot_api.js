@@ -3,8 +3,8 @@
 const request = require('requisition');
 const queryString = require('query-string');
 
-const security_token = process.env.SECURITY_TOKEN;
 const apiUri = process.env.MANDATOABERTO_API_URL;
+const security_token = process.env.SECURITY_TOKEN_MA;
 
 module.exports = {
 	async getPoliticianData(pageId) {
@@ -19,7 +19,7 @@ module.exports = {
 		return pollData;
 	},
 
-	async postRecipient(user_id, recipient) {
+	async postRecipientMA(user_id, recipient) {
 		const recipientData_qs = queryString.stringify(recipient);
 		const res = await request.post(`${apiUri}/api/chatbot/recipient?${recipientData_qs}&security_token=${security_token}&`).query({ politician_id: user_id });
 		const recipientData = await res.json();
@@ -92,7 +92,7 @@ module.exports = {
 		return privateReply;
 	},
 
-	async updateBlacklist(fb_id, active) { // 0 -> turn off notification && 1 -> turn on notification
+	async updateBlacklistMA(fb_id, active) { // 0 -> turn off notification && 1 -> turn on notification
 		const res = await request.post(`${apiUri}/api/chatbot/blacklist?fb_id=${fb_id}&active=${active}&security_token=${security_token}`);
 		const Blacklist = await res.json();
 		return Blacklist;

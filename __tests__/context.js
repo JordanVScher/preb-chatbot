@@ -2,12 +2,17 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 	return {
 		state: {
 			dialog,
+			politicianData: {
+				user_id: 2000,
+				use_dialogflow: 1,
+			},
 		},
 		session: {
 			lastActivity,
 			user: {
 				first_name: 'Userton',
 				last_name: 'McTest',
+				id: 1000,
 			},
 		},
 		event: {
@@ -17,7 +22,7 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 				quickReply: { payload },
 				text: 'This qr was clicked',
 			},
-			rawEvent: { timestamp: new Date() },
+			rawEvent: { timestamp: new Date(), recipient: { id: 1000 } },
 		},
 		sendText: jest.fn(),
 		setState: jest.fn(),
@@ -30,7 +35,44 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 	};
 }
 
-module.exports.quickReplyContext = quickReplyContext;
+function postbackContext(payload, title, dialog = 'prompt', lastActivity = new Date()) {
+	return {
+		state: {
+			dialog,
+			lastPBpayload: payload,
+			politicianData: {
+				user_id: 2000,
+				use_dialogflow: 1,
+			},
+		},
+		session: {
+			lastActivity,
+			user: {
+				first_name: 'Userton',
+				last_name: 'McTest',
+				id: 1000,
+			},
+		},
+		event: {
+			isPostback: true,
+			postback: { payload, title },
+			message: {
+				quickReply: { payload },
+				text: 'This qr was clicked',
+			},
+			rawEvent: { timestamp: new Date(), recipient: { id: 1000 } },
+		},
+		sendText: jest.fn(),
+		setState: jest.fn(),
+		resetState: jest.fn(),
+		sendImage: jest.fn(),
+		sendVideo: jest.fn(),
+		sendAudio: jest.fn(),
+		typingOn: jest.fn(),
+		typingOff: jest.fn(),
+	};
+}
+
 
 function textContext(text, dialog, lastActivity = new Date()) {
 	return {
@@ -73,8 +115,6 @@ function textContext(text, dialog, lastActivity = new Date()) {
 	};
 }
 
-module.exports.textContext = textContext;
-
 module.exports.knowledgeBase = {
 	knowledge_base:
 		[{
@@ -86,3 +126,7 @@ module.exports.knowledgeBase = {
 			saved_attachment_type: 'image',
 		}],
 };
+
+module.exports.textContext = textContext;
+module.exports.quickReplyContext = quickReplyContext;
+module.exports.postbackContext = postbackContext;
