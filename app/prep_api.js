@@ -33,6 +33,8 @@ module.exports = {
 	},
 
 	async getPendinQuestion(fb_id) {
+		console.log(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}&fb_id=${fb_id}`);
+
 		const res = await request.get(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}&`).query({ fb_id });
 		const quizData = await res.json();
 		return quizData;

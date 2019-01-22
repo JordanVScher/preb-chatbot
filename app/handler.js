@@ -59,8 +59,9 @@ module.exports = async (context) => {
 				await context.setState({ selectedHour: context.state.lastQRpayload.slice(9, -1) });
 				await context.setState({ dialog: 'setEvent' });
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
-				// await context.setState({ dialog: 'answerQuizA' });
-				await quiz.handleAnswerA(context);
+				await quiz.handleAnswerA(context, context.state.lastQRpayload.replace('quiz', ''));
+			} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
+				await quiz.AnswerExtraQuestion(context);
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -68,7 +69,10 @@ module.exports = async (context) => {
 			}
 		} else if (context.event.isText) {
 			await context.setState({ whatWasTyped: context.event.message.text });
-			if (context.state.whatWasTyped === process.env.GET_PERFILDATA) {
+			if (context.state.onTextQuiz === true) {
+				await context.setState({ onTextQuiz: false });
+				await quiz.handleAnswerA(context, context.state.whatWasTyped);
+			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA) {
 				await context.setState({ timerOneSent: false }); // for testing timer
 				await context.sendText(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
@@ -97,12 +101,7 @@ module.exports = async (context) => {
 			// await context.sendText(flow.mainMenu.text1, opt.mainMenu);
 			break;
 		case 'startQuizA':
-			console.log('reached');
-
 			await quiz.answerQuizA(context);
-			break;
-		case 'answerQuizA':
-			await quiz.handleAnswerA(context);
 			break;
 		case 'endQuizA':
 			await context.sendText('Você acabou o quiz!');
