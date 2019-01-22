@@ -6,6 +6,7 @@ const { apiai } = require('./utils/helper');
 const flow = require('./utils/flow');
 const opt = require('./utils/options'); // eslint-disable-line
 const help = require('./utils/helper');
+const quiz = require('./utils/quiz');
 const timer = require('./utils/timer');
 const calendarBot = require('./utils/calendar/calendarBot');
 
@@ -57,6 +58,8 @@ module.exports = async (context) => {
 			} else if (context.state.lastQRpayload.slice(0, 9) === 'eventHour') {
 				await context.setState({ selectedHour: context.state.lastQRpayload.slice(9, -1) });
 				await context.setState({ dialog: 'setEvent' });
+			} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
+				await context.setState({ dialog: 'answerQuizA' });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -85,12 +88,20 @@ module.exports = async (context) => {
 		switch (context.state.dialog) {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
-			await context.sendText(flow.greetings.text2);
+			await context.sendText(flow.greetings.text2, opt.greetings);
 			// await context.sendText(flow.greetings.text3);
 			break;
 		case 'mainMenu':
 			// await context.sendText(flow.mainMenu.text1);
 			// await context.sendText(flow.mainMenu.text1, opt.mainMenu);
+			break;
+		case 'startQuizA':
+			console.log('reached');
+
+			await quiz.answerQuizA(context);
+			break;
+		case 'answerQuizA':
+			await quiz.handleAnswerA(context);
 			break;
 		case 'aboutAmandaA':
 			await context.sendImage(flow.aboutAmanda.gif);

@@ -1,8 +1,11 @@
 module.exports = {
 	greetings: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmandaA' },
-			{ content_type: 'text', title: 'Continuar', payload: 'desafio' }],
+			{ content_type: 'text', title: 'Quiz', payload: 'startQuizA' },
+		// { content_type: 'text', title: 'Continuar', payload: 'desafio' }],
+		// { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmandaA' },
+		// { content_type: 'text', title: 'Continuar', payload: 'desafio' }
+		],
 	},
 	aboutAmandaA: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'desafio' }] },
 	aboutAmandaB: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' }] },
