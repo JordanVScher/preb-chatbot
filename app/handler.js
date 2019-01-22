@@ -59,7 +59,8 @@ module.exports = async (context) => {
 				await context.setState({ selectedHour: context.state.lastQRpayload.slice(9, -1) });
 				await context.setState({ dialog: 'setEvent' });
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
-				await context.setState({ dialog: 'answerQuizA' });
+				// await context.setState({ dialog: 'answerQuizA' });
+				await quiz.handleAnswerA(context);
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -102,6 +103,9 @@ module.exports = async (context) => {
 			break;
 		case 'answerQuizA':
 			await quiz.handleAnswerA(context);
+			break;
+		case 'endQuizA':
+			await context.sendText('Você acabou o quiz!');
 			break;
 		case 'aboutAmandaA':
 			await context.sendImage(flow.aboutAmanda.gif);

@@ -11,7 +11,12 @@ async function buildMultipleChoice(question) {
 
 async function answerQuizA(context) {
 	await context.setState({ currentQuestion: await prepAPI.getPendinQuestion(context.session.user.id) });
-	if (context.state.currentQuestion.type === 'multiple_choice') {
+
+	console.log('nova pergunta', context.state.currentQuestion);
+
+	if (context.state.currentQuestion && context.state.currentQuestion.error) {
+		await context.sendText('Você já respondeu esse quiz!');
+	} else if (context.state.currentQuestion.type === 'multiple_choice') {
 		await context.sendText(context.state.currentQuestion.text, await buildMultipleChoice(context.state.currentQuestion));
 	}
 }
@@ -19,6 +24,13 @@ async function answerQuizA(context) {
 async function handleAnswerA(context) {
 	// context.state.currentQuestion.code -> the code for the current question
 	const quizOpt = context.state.lastQRpayload.replace('quiz', ''); // the quiz option the user clicked
+	const sentAnswer = await prepAPI.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt);
+	console.log('resultado', sentAnswer);
+	if (sentAnswer.finished_quiz === 0) {
+		await context.setState({ dialog: 'startQuizA' });
+	} else {
+		await context.setState({ dialog: 'endQuizA' });
+	}
 }
 
 
