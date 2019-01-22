@@ -86,12 +86,24 @@ module.exports = async (context) => {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
-			// await context.sendText(flow.greetings.text3, opt.mainMenu);
-			await context.sendText(flow.greetings.text3);
+			// await context.sendText(flow.greetings.text3);
 			break;
 		case 'mainMenu':
 			// await context.sendText(flow.mainMenu.text1);
 			// await context.sendText(flow.mainMenu.text1, opt.mainMenu);
+			break;
+		case 'aboutAmandaA':
+			await context.sendImage(flow.aboutAmanda.gif);
+			await context.sendText(flow.aboutAmanda.msgOne);
+			await context.sendText(flow.aboutAmanda.msgTwo, opt.aboutAmandaA);
+			break;
+		case 'aboutAmandB':
+			await context.sendImage(flow.aboutAmanda.gif);
+			await context.sendText(flow.aboutAmanda.msgOne);
+			await context.sendText(flow.aboutAmanda.msgTwo, opt.aboutAmandaB);
+			break;
+		case 'desafio':
+			await context.sendText(flow.desafio.text1, opt.desafio);
 			break;
 		case 'seeEvent':
 			await calendarBot.listAllEvents(context);

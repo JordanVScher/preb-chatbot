@@ -6,8 +6,17 @@ module.exports = {
 		text2: 'Sou a Mandy Selfie, a primeira assistente digital trans do Brasil. Estou aqui para falar dos bafos sobre sexo 😉',
 		text3: 'Você pode me mandar uma mensagem a qualquer momento que irei te responder ou se não souber encaminho para minha equipe e logo lhe responderemos ',
 	},
+	aboutAmanda: {
+		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
+		msgOne: 'Cola na grade que vou te contar tudo!',
+		msgTwo: 'História começou assim... [texto sobre a Amanda]',
+	},
+	desafio: {
+		text1: 'Agora, te lanço um desafio! Você sabe quem é você no sexo?',
+	},
 	mainMenu: {
-		text1: 'Estamos no menu principal',
+		text1: '😉',
+		text2: 'Meus códigos são lindos e cheios de glitters e glamour 💁😂\nEntão, olha só o que você pode fazer por aqui:',
 	},
 	issueText: {
 		success: 'Desculpe, não entendi sua mensagem. Mas não se preocupe, enviei para minha equipe e logo vamos te responder ;)',
