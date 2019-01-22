@@ -6,12 +6,16 @@ const { createServer } = require('bottender/restify');
 const config = require('./bottender.config.js').messenger;
 const { getPoliticianData } = require('./chatbot_api');
 
+console.log(config);
+
+
 const mapPageToAccessToken = async (pageId) => {
 	const perfilData = await getPoliticianData(pageId);
-	return perfilData.fb_access_token;
+	return perfilData.fb_access_token ? perfilData.fb_access_token : config.accessToken;
 };
 
 const bot = new MessengerBot({
+	// accessToken: config.accessToken,
 	mapPageToAccessToken,
 	appSecret: config.appSecret,
 	verifyToken: config.verifyToken,
