@@ -54,8 +54,6 @@ module.exports = async (context) => {
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
 			await context.setState({ lastQRpayload: context.event.quickReply.payload });
-			console.log('payload', context.state.lastQRpayload);
-
 			if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
 				await context.setState({ selectedDate: context.state.lastQRpayload.slice(9, -1) });
 				await context.setState({ dialog: 'setEventHour' });
@@ -66,6 +64,10 @@ module.exports = async (context) => {
 				await quiz.handleAnswerA(context, context.state.lastQRpayload.replace('quiz', ''));
 			} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
 				await quiz.AnswerExtraQuestion(context);
+			} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
+				await context.setState({ dialog: 'showHours' });
+			} else if (context.state.lastQRpayload.slice(0, 4) === 'hora') {
+				await context.setState({ dialog: 'finalDate' });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -130,6 +132,12 @@ module.exports = async (context) => {
 			break;
 		case 'consulta':
 			await context.sendText('Escolha uma opção!', opt.consulta);
+			break;
+		case 'showHours':
+			await consulta.showHours(context, context.state.lastQRpayload.replace('dia', ''));
+			break;
+		case 'finalDate':
+			await consulta.finalDate(context, context.state.lastQRpayload.replace('hora', '').replace(':', '-'));
 			break;
 		case 'marcarConsulta':
 			await consulta.marcarConsulta(context);
