@@ -2,10 +2,6 @@ const prepAPI = require('../prep_api.js');
 const research = require('./research');
 
 async function endQuizA(context) {
-	await context.setState({ isPrep: true });
-	console.log('entrei', context.state.isPrep);
-
-	// await context.setState({ dialog: 'endQuizA' }); // quiz is over
 	if (context.state.isPrep === true) {
 		await research.onTheResearch(context);
 	} else if (context.state.isPrep === false) {
