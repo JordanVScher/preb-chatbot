@@ -33,8 +33,6 @@ module.exports = {
 	},
 
 	async getPendinQuestion(fb_id) {
-		console.log(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}&fb_id=${fb_id}`);
-
 		const res = await request.get(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}&`).query({ fb_id });
 		const quizData = await res.json();
 		return quizData;
@@ -42,6 +40,12 @@ module.exports = {
 
 	async postQuizAnswer(fb_id, code, answer_value) {
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}&`).query({ fb_id, code, answer_value });
+		const quizData = await res.json();
+		return quizData;
+	},
+
+	async deleteQuizAnswer(fb_id) {
+		const res = await request.post(`${apiUri}/api/internal/delete-answers?`).query({ security_token, fb_id });
 		const quizData = await res.json();
 		return quizData;
 	},

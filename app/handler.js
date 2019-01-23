@@ -72,9 +72,10 @@ module.exports = async (context) => {
 			if (context.state.onTextQuiz === true) {
 				await context.setState({ onTextQuiz: false });
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
-			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA) {
+			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod') {
+				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
+				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ timerOneSent: false }); // for testing timer
-				await context.sendText(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
@@ -93,7 +94,7 @@ module.exports = async (context) => {
 		switch (context.state.dialog) {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
-			await context.sendText(flow.greetings.text2, opt.greetings);
+			await context.sendText(flow.greetings.text2, await quiz.checkAnsweredQuiz(context, opt.greetings));
 			// await context.sendText(flow.greetings.text3);
 			break;
 		case 'mainMenu':
@@ -104,7 +105,7 @@ module.exports = async (context) => {
 			await quiz.answerQuizA(context);
 			break;
 		case 'endQuizA':
-			await context.sendText('Você acabou o quiz!');
+			await quiz.endQuizA(context);
 			break;
 		case 'aboutAmandaA':
 			await context.sendImage(flow.aboutAmanda.gif);

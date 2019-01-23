@@ -1,5 +1,28 @@
 const prepAPI = require('../prep_api.js');
 
+async function endQuizA(context) {
+	await context.setState({ dialog: 'endQuizA' }); // quiz is over
+	await context.sendText('Você acabou o quiz! Bom trabalho! 👏👏👏');
+	if (context.state.isPrep === true) {
+		await context.sendText('Você é parte da nossa pesquisa!');
+	} else {
+		await context.sendText('Você não é parte da nossa pesquisa!');
+	}
+}
+
+// check if user has already answered the quiz to remove the quick_reply option from the menu
+async function checkAnsweredQuiz(context, options) {
+	let newOptions = options.quick_replies; // getting array out of the QR object
+	console.log('antes', newOptions);
+	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // no more questions to answer
+		console.log('entrei');
+		newOptions = await newOptions.filter(obj => obj.payload !== 'startQuizA'); // remove quiz option
+	}
+	console.log('depois', newOptions);
+	return { quick_replies: newOptions }; // putting the filtered array on a QR object
+}
+
+// builds quick_repliy menu from the question answer options
 async function buildMultipleChoice(question) {
 	const qrButtons = [];
 	Object.keys(question.multiple_choices).forEach(async (element) => {
@@ -15,23 +38,39 @@ async function buildMultipleChoice(question) {
 	return { quick_replies: qrButtons };
 }
 
+// loads next question and shows it to the user
 async function answerQuizA(context) {
 	await context.setState({ currentQuestion: await prepAPI.getPendinQuestion(context.session.user.id) });
-	// console.log('nova pergunta', context.state.currentQuestion);
-	if (context.state.currentQuestion && context.state.currentQuestion.error) {
-		await context.sendText('Você já respondeu esse quiz!');
-	} else if (context.state.currentQuestion.type === 'multiple_choice') {
-		await context.sendText(context.state.currentQuestion.text, await buildMultipleChoice(context.state.currentQuestion));
-	} else if (context.state.currentQuestion.type === 'open_text') {
-		await context.sendText(context.state.currentQuestion.text);
-		await context.setState({ onTextQuiz: true });
-	}
+	console.log('\nnova pergunta', context.state.currentQuestion, '\n');
+
+	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
+		endQuizA(context); // quiz is over
+		// await context.sendText('Você já respondeu esse quiz!');
+	} else { /* eslint-disable no-lonely-if */ // user is still answering the quiz
+		if (context.state.currentQuestion.count_more === 10) { // encouragement message
+			await context.sendText('Só faltam 10 perguntinhas, força! 💪💪');
+		} else if (context.state.currentQuestion.count_more === 5) {
+			await context.sendText('Calma, só mais 5 perguntas e a gente acaba 🌟🌟');
+		} else if (context.state.currentQuestion.count_more === 2) {
+			await context.sendText('Boa, só faltam duas perguntinhas ✨✨');
+		}
+		// showing question and answer options
+
+		if (context.state.currentQuestion.type === 'multiple_choice') {
+			await context.sendText(context.state.currentQuestion.text, await buildMultipleChoice(context.state.currentQuestion));
+		} else if (context.state.currentQuestion.type === 'open_text') {
+			await context.sendText(context.state.currentQuestion.text);
+			await context.setState({ onTextQuiz: true });
+		}
+		/* eslint-enable no-lonely-if */
+	} // -- answering quiz else
 }
 
+// extra questions -> explanation of obscure terms
+// sends the answer to the question and sends user back to the question
 async function AnswerExtraQuestion(context) {
 	const index = context.state.lastQRpayload.replace('extraQuestion', '');
 	const answer = context.state.currentQuestion.extra_quick_replies[index].text;
-
 	await context.sendText(answer);
 }
 
@@ -39,14 +78,33 @@ async function handleAnswerA(context, quizOpt) {
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
 	const sentAnswer = await prepAPI.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt);
-	// console.log('resultado', sentAnswer);
-	if (sentAnswer.finished_quiz === 0) {
+	console.log('resultado', sentAnswer);
+
+	if (sentAnswer.error === 'Internal server error') { // error
+		await context.sendText('Ops, tive um erro interno');
+	} else if (sentAnswer.form_error && sentAnswer.form_error.answer_value && sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
+		await context.sendText('Formato inválido! Digite novamente!');
+		// Date is: YYYY-MM-DD
 		await context.setState({ dialog: 'startQuizA' });
-	} else {
-		await context.setState({ dialog: 'endQuizA' });
+	} else { /* eslint-disable no-lonely-if */ // no error
+		// checks if user is a part of this research
+		if (sentAnswer.is_prep && sentAnswer.is_prep === 1) {
+			await context.setState({ isPrep: true });
+		} else if (sentAnswer.is_prep && sentAnswer.is_prep === 0) {
+			await context.setState({ isPrep: false });
+		}
+
+		if (sentAnswer.finished_quiz === 0) { // check if the quiz is over
+			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
+		} else {
+			await context.setState({ dialog: 'endQuizA' }); // quiz is over
+		}
+		/* eslint-enable no-lonely-if */
 	}
 }
 
 module.exports.answerQuizA = answerQuizA;
 module.exports.handleAnswerA = handleAnswerA;
 module.exports.AnswerExtraQuestion = AnswerExtraQuestion;
+module.exports.endQuizA = endQuizA;
+module.exports.checkAnsweredQuiz = checkAnsweredQuiz;
