@@ -4,11 +4,13 @@ const { createIssue } = require('./send_issue');
 const { checkPosition } = require('./dialogFlow');
 const { apiai } = require('./utils/helper');
 const flow = require('./utils/flow');
-const opt = require('./utils/options'); // eslint-disable-line
+const opt = require('./utils/options');
 const help = require('./utils/helper');
 const quiz = require('./utils/quiz');
 const timer = require('./utils/timer');
 const calendarBot = require('./utils/calendar/calendarBot');
+const desafio = require('./utils/desafio');
+const consulta = require('./utils/consulta');
 
 module.exports = async (context) => {
 	try {
@@ -52,6 +54,8 @@ module.exports = async (context) => {
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
 			await context.setState({ lastQRpayload: context.event.quickReply.payload });
+			console.log('payload', context.state.lastQRpayload);
+
 			if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
 				await context.setState({ selectedDate: context.state.lastQRpayload.slice(9, -1) });
 				await context.setState({ dialog: 'setEventHour' });
@@ -94,18 +98,25 @@ module.exports = async (context) => {
 		switch (context.state.dialog) {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
-			await context.sendText(flow.greetings.text2, await quiz.checkAnsweredQuiz(context, opt.greetings));
+			await context.sendText(flow.greetings.text2);
+			await desafio.asksDesafio(context);
 			// await context.sendText(flow.greetings.text3);
+			break;
+		case 'desafioRecusado':
+			await desafio.desafioRecusado(context);
+			break;
+		case 'desafioAceito':
+			await desafio.desafioAceito(context);
 			break;
 		case 'mainMenu':
 			// await context.sendText(flow.mainMenu.text1);
 			// await context.sendText(flow.mainMenu.text1, opt.mainMenu);
 			break;
+		case 'beginQuiz':
+			await context.sendText('Preparar, apontar... fogo!');
+			// falls throught
 		case 'startQuizA':
 			await quiz.answerQuizA(context);
-			break;
-		case 'endQuizA':
-			await quiz.endQuizA(context);
 			break;
 		case 'aboutAmandaA':
 			await context.sendImage(flow.aboutAmanda.gif);
@@ -116,6 +127,12 @@ module.exports = async (context) => {
 			await context.sendImage(flow.aboutAmanda.gif);
 			await context.sendText(flow.aboutAmanda.msgOne);
 			await context.sendText(flow.aboutAmanda.msgTwo, opt.aboutAmandaB);
+			break;
+		case 'consulta':
+			await context.sendText('Escolha uma opção!', opt.consulta);
+			break;
+		case 'marcarConsulta':
+			await consulta.marcarConsulta(context);
 			break;
 		case 'desafio':
 			await context.sendText(flow.desafio.text1, opt.desafio);

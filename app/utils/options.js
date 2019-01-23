@@ -1,10 +1,28 @@
 module.exports = {
 	greetings: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Quiz', payload: 'startQuizA' },
+			{ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' },
+			{ content_type: 'text', title: 'Consulta', payload: 'consulta' },
 		// { content_type: 'text', title: 'Continuar', payload: 'desafio' }],
 		// { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmandaA' },
 		// { content_type: 'text', title: 'Continuar', payload: 'desafio' }
+		],
+	},
+	asksDesafio: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Desafio Aceito!', payload: 'desafioAceito' },
+			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
+		],
+	},
+	desafioAceito: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Começar!', payload: 'beginQuiz' },
+			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
+		],
+	},
+	consulta: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' },
 		],
 	},
 	aboutAmandaA: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'desafio' }] },

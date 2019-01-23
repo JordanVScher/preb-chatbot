@@ -50,4 +50,10 @@ module.exports = {
 		return quizData;
 	},
 
+	async getAvailableDates() {
+		const res = await request.get(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}&`).query({ });
+		const dates = await res.json();
+		return dates;
+	},
+
 };

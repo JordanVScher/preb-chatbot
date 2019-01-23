@@ -11,8 +11,12 @@ module.exports = {
 		msgOne: 'Cola na grade que vou te contar tudo!',
 		msgTwo: 'História começou assim... [texto sobre a Amanda]',
 	},
-	desafio: {
+	asksDesafio: {
 		text1: 'Agora, te lanço um desafio! Você sabe quem é você no sexo?',
+	},
+	desafioAceito: {
+		text1: 'É o seguinte, são algumas perguntinhas e para responder, basta clicar no botão. Caso você clique em "Não sei o que é" em alguma delas, eu explicarei e você poderá responder novamente. No final, seu resultado 😉',
+		text2: 'Sinceridade, hein! Não estou aqui para te julgar, então se joga!',
 	},
 	mainMenu: {
 		text1: '😉',
@@ -30,5 +34,13 @@ module.exports = {
 	notifications: {
 		on: 'Legal. Estaremos te avisando das novidades.',
 		off: 'Tudo bem. Não te enviaremos mais nenhuma notificação.',
+	},
+	onTheResearch: {
+		text1: 'Resultado:\nVocê é lacração! Solta a franga e não quer nem saber!',
+		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
+		text2: 'Eu tenho dicas ótimas para você!',
+	},
+	NotOnResearch: {
+		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
 	},
 };

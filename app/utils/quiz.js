@@ -1,14 +1,18 @@
 const prepAPI = require('../prep_api.js');
+const research = require('./research');
 
 async function endQuizA(context) {
-	await context.setState({ dialog: 'endQuizA' }); // quiz is over
-	await context.sendText('Você acabou o quiz! Bom trabalho! 👏👏👏');
+	await context.setState({ isPrep: true });
+	console.log('entrei', context.state.isPrep);
+
+	// await context.setState({ dialog: 'endQuizA' }); // quiz is over
 	if (context.state.isPrep === true) {
-		await context.sendText('Você é parte da nossa pesquisa!');
-	} else {
-		await context.sendText('Você não é parte da nossa pesquisa!');
+		await research.onTheResearch(context);
+	} else if (context.state.isPrep === false) {
+		await research.NotOnResearch(context);
 	}
 }
+
 
 // check if user has already answered the quiz to remove the quick_reply option from the menu
 async function checkAnsweredQuiz(context, options) {
@@ -44,7 +48,7 @@ async function answerQuizA(context) {
 	console.log('\nnova pergunta', context.state.currentQuestion, '\n');
 
 	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
-		endQuizA(context); // quiz is over
+		await endQuizA(context); // quiz is over
 		// await context.sendText('Você já respondeu esse quiz!');
 	} else { /* eslint-disable no-lonely-if */ // user is still answering the quiz
 		if (context.state.currentQuestion.count_more === 10) { // encouragement message
@@ -97,7 +101,8 @@ async function handleAnswerA(context, quizOpt) {
 		if (sentAnswer.finished_quiz === 0) { // check if the quiz is over
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 		} else {
-			await context.setState({ dialog: 'endQuizA' }); // quiz is over
+			await context.sendText('Você acabou o quiz! Bom trabalho! 👏👏👏');
+			await endQuizA(context); // quiz is over
 		}
 		/* eslint-enable no-lonely-if */
 	}
