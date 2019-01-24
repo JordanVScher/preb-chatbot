@@ -103,11 +103,10 @@ module.exports = async (context) => {
 		} // -- end text
 		switch (context.state.dialog) {
 		case 'greetings':
-			await consulta.marcarConsulta(context);
-			// await context.sendText(flow.greetings.text1);
-			// await context.sendText(flow.greetings.text2);
-			// await desafio.asksDesafio(context);
-			// await context.sendText(flow.greetings.text3);
+			await context.sendText(flow.greetings.text1);
+			await context.sendText(flow.greetings.text2);
+			await desafio.asksDesafio(context);
+			await context.sendText(flow.greetings.text3);
 			break;
 		case 'desafioRecusado':
 			await desafio.desafioRecusado(context);

@@ -50,10 +50,19 @@ module.exports = {
 		return quizData;
 	},
 
-	async getAvailableDates() {
-		const res = await request.get(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}&`).query({ });
+	async getAvailableDates(fb_id) {
+		const res = await request.get(`${apiUri}/api/chatbot/appointment/available-dates?security_token=${security_token}&`).query({ fb_id });
 		const dates = await res.json();
 		return dates;
 	},
+
+	async postAppointment(fb_id, calendar_id, appointment_window_id, quota_number) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}&`).query({
+			fb_id, calendar_id, appointment_window_id, quota_number,
+		});
+		const dates = await res.json();
+		return dates;
+	},
+
 
 };
