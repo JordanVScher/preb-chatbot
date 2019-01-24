@@ -110,7 +110,7 @@ async function handleAnswerA(context, quizOpt) {
 			await context.setState({ is_part_of_research: true });
 		}
 
-		if (sentAnswer.finished_quiz === 0) { // check if the quiz is over
+		if (sentAnswer.finished_quiz && sentAnswer.finished_quiz === 0) { // check if the quiz is over
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 		} else {
 			await context.sendText('Você acabou o quiz! Bom trabalho! 👏👏👏');
