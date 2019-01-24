@@ -2,11 +2,21 @@ const prepAPI = require('../prep_api.js');
 const research = require('./research');
 
 async function endQuizA(context) {
-	if (context.state.isPrep === true) {
-		await research.onTheResearch(context);
-	} else if (context.state.isPrep === false) {
-		await research.NotOnResearch(context);
+	if (context.state.is_eligible_for_research === true) {
+		if (context.state.is_part_of_research === true) {
+			await research.onTheResearch(context);
+		} else {
+			await research.NotOnResearch(context);
+		}
+	} else {
+		await context.sendText('Você acabou o quiz. Você não faz parte da pesquisa. Desculpe.');
 	}
+
+	// if (context.state.isPrep === true) {
+	// 	await research.onTheResearch(context);
+	// } else if (context.state.isPrep === false) {
+	// 	await research.NotOnResearch(context);
+	// }
 }
 
 
@@ -92,6 +102,13 @@ async function handleAnswerA(context, quizOpt) {
 			await context.setState({ isPrep: true });
 		} else if (sentAnswer.is_prep && sentAnswer.is_prep === 0) {
 			await context.setState({ isPrep: false });
+		}
+
+		if (sentAnswer.is_eligible_for_research && sentAnswer.is_eligible_for_research === 1) {
+			await context.setState({ is_eligible_for_research: true });
+		}
+		if (sentAnswer.is_part_of_research && sentAnswer.is_part_of_research === 1) {
+			await context.setState({ is_part_of_research: true });
 		}
 
 		if (sentAnswer.finished_quiz === 0) { // check if the quiz is over
