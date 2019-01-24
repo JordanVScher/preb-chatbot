@@ -6,10 +6,10 @@ async function endQuizA(context) {
 		if (context.state.is_part_of_research === true) {
 			await research.onTheResearch(context);
 		} else {
-			await research.NotOnResearch(context);
+			await research.notOnResearch(context);
 		}
 	} else {
-		await context.sendText('Você acabou o quiz. Você não faz parte da pesquisa. Desculpe.');
+		await research.notOnResearch(context);
 	}
 
 	// if (context.state.isPrep === true) {
@@ -19,8 +19,7 @@ async function endQuizA(context) {
 	// }
 }
 
-
-// check if user has already answered the quiz to remove the quick_reply option from the menu
+// check if user has already answered the quiz to remove the quick_reply option from the menu UNUSED
 async function checkAnsweredQuiz(context, options) {
 	let newOptions = options.quick_replies; // getting array out of the QR object
 	console.log('antes', newOptions);
@@ -55,7 +54,6 @@ async function answerQuizA(context) {
 
 	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
 		await endQuizA(context); // quiz is over
-		// await context.sendText('Você já respondeu esse quiz!');
 	} else { /* eslint-disable no-lonely-if */ // user is still answering the quiz
 		if (context.state.currentQuestion.count_more === 10) { // encouragement message
 			await context.sendText('Só faltam 10 perguntinhas, força! 💪💪');
@@ -64,8 +62,8 @@ async function answerQuizA(context) {
 		} else if (context.state.currentQuestion.count_more === 2) {
 			await context.sendText('Boa, só faltam duas perguntinhas ✨✨');
 		}
-		// showing question and answer options
 
+		// showing question and answer options
 		if (context.state.currentQuestion.type === 'multiple_choice') {
 			await context.sendText(context.state.currentQuestion.text, await buildMultipleChoice(context.state.currentQuestion));
 		} else if (context.state.currentQuestion.type === 'open_text') {
@@ -82,6 +80,7 @@ async function AnswerExtraQuestion(context) {
 	const index = context.state.lastQRpayload.replace('extraQuestion', '');
 	const answer = context.state.currentQuestion.extra_quick_replies[index].text;
 	await context.sendText(answer);
+	await context.setState({ dialog: 'startQuizA' }); // re-asks same question
 }
 
 async function handleAnswerA(context, quizOpt) {
@@ -95,19 +94,19 @@ async function handleAnswerA(context, quizOpt) {
 	} else if (sentAnswer.form_error && sentAnswer.form_error.answer_value && sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
 		await context.sendText('Formato inválido! Digite novamente!');
 		// Date is: YYYY-MM-DD
-		await context.setState({ dialog: 'startQuizA' });
-	} else { /* eslint-disable no-lonely-if */ // no error
+		await context.setState({ dialog: 'startQuizA' }); // re-asks same question
+	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
 		// checks if user is a part of this research
-		if (sentAnswer.is_prep && sentAnswer.is_prep === 1) {
-			await context.setState({ isPrep: true });
-		} else if (sentAnswer.is_prep && sentAnswer.is_prep === 0) {
-			await context.setState({ isPrep: false });
-		}
+		// if (sentAnswer.is_prep && sentAnswer.is_prep === 1) {
+		// 	await context.setState({ isPrep: true });
+		// } else if (sentAnswer.is_prep && sentAnswer.is_prep === 0) {
+		// 	await context.setState({ isPrep: false });
+		// }
 
-		if (sentAnswer.is_eligible_for_research && sentAnswer.is_eligible_for_research === 1) {
+		if (sentAnswer.is_eligible_for_research && sentAnswer.is_eligible_for_research === 1) { // user is eligible for research -> sees "do you want to participate" question
 			await context.setState({ is_eligible_for_research: true });
 		}
-		if (sentAnswer.is_part_of_research && sentAnswer.is_part_of_research === 1) {
+		if (sentAnswer.is_part_of_research && sentAnswer.is_part_of_research === 1) { // chooses to participate in the research
 			await context.setState({ is_part_of_research: true });
 		}
 

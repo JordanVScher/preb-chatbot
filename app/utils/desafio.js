@@ -3,7 +3,7 @@ const opt = require('./options');
 const quiz = require('./quiz');
 
 async function asksDesafio(context) {
-	if (!context.state.isPrep2) {
+	if (!context.state.context.state.is_part_of_research) {
 		await context.sendText(flow.asksDesafio.text1, opt.asksDesafio);
 	} else {
 		await context.sendText('Veja o que você pode fazer por aqui', await quiz.checkAnsweredQuiz(context, opt.greetings));
