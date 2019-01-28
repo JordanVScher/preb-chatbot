@@ -111,7 +111,8 @@ async function marcarConsulta(context) {
 
 	await context.setState({ freeDays: await separateDaysQR(context.state.freeTime) });
 	if (context.state.freeDays && context.state.freeDays['0'] && context.state.freeDays['0'] && context.state.freeDays['0'].length > 0) {
-		await context.sendText('Escolha uma data', { quick_replies: context.state.freeDays['0'] });
+		await context.sendText('Agora vamos agendar sua consulta no CTA XYZ.', { quick_replies: context.state.freeDays['0'] });
+		await context.sendText('Escolha uma data:', { quick_replies: context.state.freeDays['0'] });
 	} else {
 		await context.sendText('Não temos nenhuma data disponível em um futuro próximo');
 	}
@@ -123,7 +124,7 @@ async function showHours(context, windowId) {
 	await context.setState({ chosenDay: context.state.freeTime.find(date => date.appointment_window_id === parseInt(windowId, 10)) });
 	await context.setState({ freeHours: await separateHoursQR(context.state.chosenDay.hours) });
 	if (context.state.freeHours && context.state.freeHours['0'] && context.state.freeHours['0'] && context.state.freeHours['0'].length > 0) {
-		await context.sendText('Escolha um horário', { quick_replies: context.state.freeHours['0'] });
+		await context.sendText('Agora, escolha um horário;', { quick_replies: context.state.freeHours['0'] });
 	} else {
 		await context.sendText('Não temos nenhum horario disponível nesse dia');
 	}
@@ -131,12 +132,16 @@ async function showHours(context, windowId) {
 
 async function finalDate(context, quota) {
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
+
 	const response = await prepApi.postAppointment(
-		context.session.user.id, context.state.calendar.google_id, context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota,
+		context.session.user.id, context.state.calendar.google_id, context.state.chosenDay.appointment_window_id,
+		context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
 	);
 
 	if (response.id) {
-		await context.sendText('Marcamos a consulta com sucesso');
+		await context.sendText('Arrasou! Sua consulta está marcada:'
+			+ '\n🏠: Rua do Teste, 00, Bairro, cep.'
+			+ `\n⏰: ${help.formatDate(context.state.chosenHour.datetime_start)}`);
 	} else {
 		await context.sendText('Ocorreu um erro');
 	}

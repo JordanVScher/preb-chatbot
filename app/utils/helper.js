@@ -17,7 +17,6 @@ async function formatDialogFlow(text) {
 	return result.trim();
 }
 
-
 async function waitTypingEffect(context, waitTime = 2500) {
 	await context.typingOn();
 	setTimeout(async () => {
