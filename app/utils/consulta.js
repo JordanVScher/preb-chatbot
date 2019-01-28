@@ -5,6 +5,22 @@ require('dotenv').config();
 const help = require('./helper');
 const prepApi = require('../prep_api');
 
+async function verConsulta(context) {
+	const consultas = await prepApi.getAppointment(context.session.user.id);
+
+	if (consultas.appointments && consultas.appointments.length === 0) {
+		await context.sendText('Você não tem nenhuma consulta marcada...');
+	} else {
+		for (const iterator of consultas.appointments) { // eslint-disable-line
+			await context.sendText('Arrasou! Você tem uma consulta:'
+				+ '\n🏠: Rua do Teste, 00, Bairro, cep.'
+				+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`);
+		}
+
+		await context.sendText('Não falte!');
+	}
+}
+
 async function separateDaysQR(dates) {
 	if (dates.length <= 10) { // less han 10 options, no need for pagination
 		const result = [];
@@ -25,7 +41,7 @@ async function separateDaysQR(dates) {
 			set.push({ content_type: 'text', title: 'Anterior', payload: `nextDay${page - 1}` }); // adding previous button to set
 		}
 
-		const date = new Date(`${element.ymd}T00:00:00`);
+		const date = new Date(`${element.ymd}`);
 		set.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.appointment_window_id}` });
 
 
@@ -108,6 +124,8 @@ async function marcarConsulta(context) {
 	// await context.setState({ freeTime: example }); // all the free time slots we have
 	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id) });
 	await context.setState({ freeTime: context.state.calendar.dates }); // all the free time slots we have
+	console.log(context.state.freeTime);
+
 
 	await context.setState({ freeDays: await separateDaysQR(context.state.freeTime) });
 	if (context.state.freeDays && context.state.freeDays['0'] && context.state.freeDays['0'] && context.state.freeDays['0'].length > 0) {
@@ -124,7 +142,7 @@ async function showHours(context, windowId) {
 	await context.setState({ chosenDay: context.state.freeTime.find(date => date.appointment_window_id === parseInt(windowId, 10)) });
 	await context.setState({ freeHours: await separateHoursQR(context.state.chosenDay.hours) });
 	if (context.state.freeHours && context.state.freeHours['0'] && context.state.freeHours['0'] && context.state.freeHours['0'].length > 0) {
-		await context.sendText('Agora, escolha um horário;', { quick_replies: context.state.freeHours['0'] });
+		await context.sendText('Agora, escolha um horário:', { quick_replies: context.state.freeHours['0'] });
 	} else {
 		await context.sendText('Não temos nenhum horario disponível nesse dia');
 	}
@@ -147,6 +165,7 @@ async function finalDate(context, quota) {
 	}
 }
 
+module.exports.verConsulta = verConsulta;
 module.exports.marcarConsulta = marcarConsulta;
 module.exports.nextDay = nextDay;
 module.exports.nextHour = nextHour;

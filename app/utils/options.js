@@ -3,6 +3,7 @@ module.exports = {
 		quick_replies: [
 			{ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' },
+			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		// { content_type: 'text', title: 'Continuar', payload: 'desafio' }],
 		// { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmandaA' },
 		// { content_type: 'text', title: 'Continuar', payload: 'desafio' }

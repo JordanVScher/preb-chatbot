@@ -87,6 +87,7 @@ module.exports = async (context) => {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ timerOneSent: false }); // for testing timer
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
+				await context.setState({ dialog: 'greetings' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
@@ -103,11 +104,11 @@ module.exports = async (context) => {
 		} // -- end text
 		switch (context.state.dialog) {
 		case 'greetings':
-			// await consulta.marcarConsulta(context);
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
 			await desafio.asksDesafio(context);
-			// await context.sendText(flow.greetings.text3);
+			// await consulta.marcarConsulta(context);
+			// await quiz.answerQuizA(context);
 			break;
 		case 'desafioRecusado':
 			await desafio.desafioRecusado(context);
@@ -140,6 +141,9 @@ module.exports = async (context) => {
 			break;
 		case 'marcarConsulta':
 			await consulta.marcarConsulta(context);
+			break;
+		case 'verConsulta':
+			await consulta.verConsulta(context);
 			break;
 		case 'showHours':
 			await consulta.showHours(context, context.state.lastQRpayload.replace('dia', ''));
