@@ -44,4 +44,29 @@ module.exports = {
 		return quizData;
 	},
 
+	async deleteQuizAnswer(fb_id) {
+		const res = await request.post(`${apiUri}/api/internal/delete-answers?`).query({ security_token, fb_id });
+		const quizData = await res.json();
+		return quizData;
+	},
+
+	async getAvailableDates(fb_id) {
+		const res = await request.get(`${apiUri}/api/chatbot/appointment/available-dates?security_token=${security_token}&`).query({ fb_id });
+		const dates = await res.json();
+		return dates;
+	},
+
+	async postAppointment(fb_id, calendar_id, appointment_window_id, quota_number, datetime_start, datetime_end) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}&`).query({
+			fb_id, calendar_id, appointment_window_id, quota_number, datetime_start, datetime_end,
+		});
+		const dates = await res.json();
+		return dates;
+	},
+
+	async getAppointment(fb_id) {
+		const res = await request.get(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}&`).query({ fb_id });
+		const dates = await res.json();
+		return dates;
+	},
 };
