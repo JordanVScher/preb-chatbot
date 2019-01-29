@@ -25,7 +25,7 @@ async function waitTypingEffect(context, waitTime = 2500) {
 }
 
 function formatDate(date) {
-	return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).format('hh:mm')}`;
+	return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).utcOffset('+0000').format('hh:mm')}`;
 }
 
 function formatInitialDate(date) {

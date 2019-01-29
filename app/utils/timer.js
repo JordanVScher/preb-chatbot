@@ -40,3 +40,15 @@ module.exports.createFollowUpTimer = async (userID, context) => {
 };
 
 module.exports.followUpTimer = followUpTimer;
+
+
+// what we had for timer on handler.js
+// if (!context.state.timerOneSent || context.state.timerOneSent === false) { // checks if we haven't sent the followup Timer already
+// 	// checks if last activity has happened after the "timer" time period
+// 	if ((context.event.rawEvent.timestamp - context.session.lastActivity) >= (timer.followUpTimer + 1000)) {
+// 		// if it has, that means and the user interacted with the chatbot after we sent the timer (so, there's no need to send the timer again)
+// 		await context.setState({ timerOneSent: true });
+// 	} else { // creates the timer
+// 		timer.createFollowUpTimer(context.session.user.id, context);
+// 	}
+// }

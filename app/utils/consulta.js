@@ -41,7 +41,7 @@ async function separateDaysQR(dates) {
 			set.push({ content_type: 'text', title: 'Anterior', payload: `nextDay${page - 1}` }); // adding previous button to set
 		}
 
-		const date = new Date(`${element.ymd}`);
+		const date = new Date(`${element.hours[0].datetime_start}`);
 		set.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.appointment_window_id}` });
 
 
@@ -120,16 +120,27 @@ async function separateHoursQR(dates) {
 	return result;
 }
 
-async function marcarConsulta(context) {
-	// await context.setState({ freeTime: example }); // all the free time slots we have
-	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id) });
-	console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
 
-	await context.setState({ freeTime: context.state.calendar.dates }); // all the free time slots we have
+// removes dates that don't have any available hours
+async function cleanDates(dates) {
+	const result = [];
+	dates.forEach(async (element) => {
+		if (element.hours.length !== 0) { result.push(element); }
+	});
+
+	return result;
+}
+
+async function marcarConsulta(context) { // shows available days
+	// await context.setState({ freeTime: example }); // all the free time slots we have
+	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id) }); // getting whole calendar
+	// console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
+
+	await context.setState({ freeTime: await cleanDates(context.state.calendar.dates) }); // all the free time slots we have
 
 	await context.setState({ freeDays: await separateDaysQR(context.state.freeTime) });
 	if (context.state.freeDays && context.state.freeDays['0'] && context.state.freeDays['0'] && context.state.freeDays['0'].length > 0) {
-		await context.sendText('Agora vamos agendar sua consulta no CTA XYZ.', { quick_replies: context.state.freeDays['0'] });
+		await context.sendText('Agora vamos agendar sua consulta no CTA.', { quick_replies: context.state.freeDays['0'] });
 		await context.sendText('Escolha uma data:', { quick_replies: context.state.freeDays['0'] });
 	} else {
 		await context.sendText('Não temos nenhuma data disponível em um futuro próximo');
@@ -150,6 +161,7 @@ async function showHours(context, windowId) {
 
 async function finalDate(context, quota) {
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
+	// console.log('chosenHour', context.state.chosenHour);
 
 	const response = await prepApi.postAppointment(
 		context.session.user.id, context.state.calendar.google_id, context.state.chosenDay.appointment_window_id,
