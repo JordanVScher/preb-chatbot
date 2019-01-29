@@ -87,6 +87,8 @@ module.exports = async (context) => {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ timerOneSent: false }); // for testing timer
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
+				await context.setState({ is_eligible_for_research: null });
+				await context.setState({ is_part_of_research: null });
 				await context.setState({ dialog: 'greetings' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });

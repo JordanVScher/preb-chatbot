@@ -4,17 +4,15 @@ const research = require('./research');
 async function handleFlags(context, response) {
 	if (response.is_eligible_for_research && response.is_eligible_for_research === 1) { // user is eligible for research -> sees "do you want to participate" question
 		await context.setState({ is_eligible_for_research: true });
-	} else if (response.is_eligible_for_research && response.is_eligible_for_research === 0) {
+	} else if (response.is_eligible_for_research === 0) {
 		await context.setState({ is_eligible_for_research: false });
 	}
+
 	if (response.is_part_of_research && response.is_part_of_research === 1) { // chooses to participate in the research
 		await context.setState({ is_part_of_research: true });
-	} else if (response.is_part_of_research && response.is_part_of_research === 0) {
+	} else if (response.is_part_of_research === 0) {
 		await context.setState({ is_part_of_research: false });
 	}
-
-	console.log(context.state.is_eligible_for_research);
-	console.log(context.state.is_part_of_research);
 }
 
 async function endQuizA(context) {
@@ -32,12 +30,11 @@ async function endQuizA(context) {
 // check if user has already answered the quiz to remove the quick_reply option from the menu UNUSED
 async function checkAnsweredQuiz(context, options) {
 	let newOptions = options.quick_replies; // getting array out of the QR object
-	console.log('antes', newOptions);
-	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // no more questions to answer
-		console.log('entrei');
-		newOptions = await newOptions.filter(obj => obj.payload !== 'startQuizA'); // remove quiz option
+	// console.log('antes', newOptions);
+	if (context.state.currentQuestion) { // no more questions to answer
+		newOptions = await newOptions.filter(obj => obj.payload !== 'beginQuiz'); // remove quiz option
 	}
-	console.log('depois', newOptions);
+	// console.log('depois', newOptions);
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
@@ -60,7 +57,7 @@ async function buildMultipleChoice(question) {
 // loads next question and shows it to the user
 async function answerQuizA(context) {
 	await context.setState({ currentQuestion: await prepAPI.getPendinQuestion(context.session.user.id) });
-	console.log('\nnova pergunta', context.state.currentQuestion, '\n');
+	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 	await handleFlags(context, context.state.currentQuestion);
 
 	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
@@ -98,7 +95,7 @@ async function handleAnswerA(context, quizOpt) {
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
 	const sentAnswer = await prepAPI.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt);
-	// console.log('resultado', sentAnswer);
+	console.log('\nResultado do post da pergunta', sentAnswer, '\n');
 
 	if (sentAnswer.error === 'Internal server error') { // error
 		await context.sendText('Ops, tive um erro interno');
@@ -107,7 +104,7 @@ async function handleAnswerA(context, quizOpt) {
 		// Date is: YYYY-MM-DD
 		await context.setState({ dialog: 'startQuizA' }); // re-asks same question
 	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
-		// await handleFlags(context, sentAnswer);
+		await handleFlags(context, sentAnswer);
 
 		if (sentAnswer && sentAnswer.finished_quiz === 0) { // check if the quiz is over
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question

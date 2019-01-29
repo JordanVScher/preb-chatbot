@@ -25,7 +25,7 @@ async function separateDaysQR(dates) {
 	if (dates.length <= 10) { // less han 10 options, no need for pagination
 		const result = [];
 		dates.forEach(async (element) => {
-			const date = new Date(`${element.ymd}`); // new date from ymd
+			const date = new Date(`${element.ymd}T00:00:00`); // new date from ymd
 			result.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.appointment_window_id}` });
 		});
 		return { 0: result }; // return object with the result array
@@ -124,8 +124,6 @@ async function marcarConsulta(context) {
 	// await context.setState({ freeTime: example }); // all the free time slots we have
 	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id) });
 	await context.setState({ freeTime: context.state.calendar.dates }); // all the free time slots we have
-	console.log(context.state.freeTime);
-
 
 	await context.setState({ freeDays: await separateDaysQR(context.state.freeTime) });
 	if (context.state.freeDays && context.state.freeDays['0'] && context.state.freeDays['0'] && context.state.freeDays['0'].length > 0) {

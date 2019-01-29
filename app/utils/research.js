@@ -14,7 +14,7 @@ async function notOnResearch(context) {
 
 async function notEligible(context) {
 	await context.setState({ dialog: 'NotEligible' });
-	await context.sendText('Você acabou o quiz. Você não faz parte da pesquisa. Desculpe.');
+	await context.sendText(flow.notEligible.text1);
 }
 
 module.exports.onTheResearch = onTheResearch;

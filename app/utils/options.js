@@ -30,10 +30,6 @@ module.exports = {
 	aboutAmandaB: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' }] },
 	mainMenu: {
 		quick_replies: [
-		// { content_type: 'url', title: 'Sim, conta mais!', payload: 'Alimentação - Conta mais' },
-			// { content_type: 'text', title: 'Ver eventos', payload: 'seeEvent' },
-			// { content_type: 'text', title: 'Meus eventos', payload: 'myEvent' },
-			// { content_type: 'text', title: 'Marcar Evento', payload: 'setEventDate' },
 			{ content_type: 'text', title: 'Prevenções', payload: 'prevencao' },
 			{ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' },
 			{ content_type: 'text', title: 'CTA', payload: 'cta' },

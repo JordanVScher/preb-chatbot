@@ -43,4 +43,7 @@ module.exports = {
 	NotOnResearch: {
 		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
 	},
+	notEligible: {
+		text1: 'Você acabou o quiz. Você não faz parte da pesquisa. Desculpe.',
+	},
 };
