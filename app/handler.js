@@ -7,24 +7,12 @@ const flow = require('./utils/flow');
 const opt = require('./utils/options');
 const help = require('./utils/helper');
 const quiz = require('./utils/quiz');
-const timer = require('./utils/timer');
 const calendarBot = require('./utils/calendar/calendarBot');
 const desafio = require('./utils/desafio');
 const consulta = require('./utils/consulta');
 
 module.exports = async (context) => {
 	try {
-		if (!context.state.timerOneSent || context.state.timerOneSent === false) { // checks if we haven't sent the followup Timer already
-		// checks if last activity has happened after the "timer" time period
-			if ((context.event.rawEvent.timestamp - context.session.lastActivity) >= (timer.followUpTimer + 1000)) {
-				// if it has, that means and the user interacted with the chatbot after we sent the timer (so, there's no need to send the timer again)
-				await context.setState({ timerOneSent: true });
-			} else { // creates the timer
-				timer.createFollowUpTimer(context.session.user.id, context);
-			}
-		}
-
-
 		// we reload politicianData on every useful event
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) });
 		// we update context data at every interaction (post ony on the first time)
