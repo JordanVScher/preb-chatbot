@@ -123,6 +123,8 @@ async function separateHoursQR(dates) {
 async function marcarConsulta(context) {
 	// await context.setState({ freeTime: example }); // all the free time slots we have
 	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id) });
+	console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
+
 	await context.setState({ freeTime: context.state.calendar.dates }); // all the free time slots we have
 
 	await context.setState({ freeDays: await separateDaysQR(context.state.freeTime) });
