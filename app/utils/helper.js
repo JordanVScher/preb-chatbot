@@ -36,6 +36,14 @@ function formatInitialDate(date) {
 	return date;
 }
 
+function capQR(text) {
+	let result = text;
+	if (result.length > 20) {
+		result = `${result.slice(0, 17)}...`;
+	}
+	return result;
+}
+
 const weekDayName = { // simple week day dictionary
 	0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado', 7: 'Domingo',
 };
@@ -43,6 +51,7 @@ const weekDayName = { // simple week day dictionary
 module.exports.Sentry = Sentry;
 module.exports.apiai = dialogFlow(process.env.DIALOGFLOW_TOKEN);
 module.exports.moment = moment;
+module.exports.capQR = capQR;
 module.exports.formatDialogFlow = formatDialogFlow;
 module.exports.waitTypingEffect = waitTypingEffect;
 module.exports.formatDate = formatDate;

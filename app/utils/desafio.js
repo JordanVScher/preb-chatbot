@@ -1,9 +1,11 @@
 const flow = require('./flow');
 const opt = require('./options');
 const quiz = require('./quiz');
+const prepApi = require('../prep_api');
 
 async function asksDesafio(context) {
-	if (context.state.finished_quiz === true) {
+	const user = await prepApi.getRecipientPrep(context.session.user.id);
+	if (user.finished_quiz === 1) {
 		await context.sendText('Veja o que você pode fazer por aqui', await quiz.checkAnsweredQuiz(context, opt.greetings)); // has answered the quiz already
 	} else {
 		await context.sendText(flow.asksDesafio.text1, opt.asksDesafio); // has yet to awnser the quiz
