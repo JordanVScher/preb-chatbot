@@ -29,7 +29,6 @@ async function endQuizA(context) {
 			// await research.notOnResearch(context); // elegível e respondeu Não
 		}
 	} else {
-		await research.notOnResearch(context); // elegível e respondeu Não
 		await research.notEligible(context); // não elegível pra pesquisa
 	}
 }
@@ -90,8 +89,8 @@ async function answerQuizA(context) {
 		if (context.state.currentQuestion.code === 'AC5') {
 			if (context.state.currentQuestion.is_eligible_for_research === 1) {
 				await research.onTheResearch(context); // elegível e respondeu Sim
-			// } else if (context.state.currentQuestion.is_eligible_for_research === 0) {
-			// 	await research.notOnResearch(context); // elegível e respondeu Não
+			} else if (context.state.currentQuestion.is_eligible_for_research === 0) {
+				await research.notOnResearch(context); // elegível e respondeu Não
 			}
 		}
 
