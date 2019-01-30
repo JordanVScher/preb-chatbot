@@ -1,5 +1,6 @@
 const prepApi = require('../prep_api.js');
 const research = require('./research');
+const opt = require('./options');
 const { capQR } = require('./helper');
 
 async function handleFlags(context, response) {
@@ -21,11 +22,14 @@ async function endQuizA(context) {
 
 	if (context.state.is_eligible_for_research === true) { // elegível pra pesquisa
 		if (context.state.is_part_of_research === true) { // o que o usuário respondeu
-			await research.onTheResearch(context); // elegível e respondeu Sim
+			await context.sendText('Que bom que você quer participar da nossa pesquisa. Marque uma consulta conosco para poder dar continuidade.', opt.saidYes);
+			// await research.onTheResearch(context); // elegível e respondeu Sim
 		} else {
-			await research.notOnResearch(context); // elegível e respondeu Não
+			await context.sendText('Que pena você não quer participar da nossa pesquisa. Veja métodos de prevenção:', opt.saidNo);
+			// await research.notOnResearch(context); // elegível e respondeu Não
 		}
 	} else {
+		await research.notOnResearch(context); // elegível e respondeu Não
 		await research.notEligible(context); // não elegível pra pesquisa
 	}
 }
@@ -38,9 +42,14 @@ async function checkAnsweredQuiz(context, options) {
 
 	const user = await prepApi.getRecipientPrep(context.session.user.id);
 	if (user.finished_quiz === 1) { // no more questions to answer
-		// console.log('entrei');
 		newOptions = await newOptions.filter(obj => obj.payload !== 'beginQuiz'); // remove quiz option
 	}
+
+	if (context.state.is_eligible_for_research === true) {
+		newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' });
+		newOptions.push({ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' });
+	}
+
 	// console.log('depois', newOptions);
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
@@ -71,11 +80,19 @@ async function answerQuizA(context) {
 		await endQuizA(context); // quiz is over
 	} else { /* eslint-disable no-lonely-if */ // user is still answering the quiz
 		if (context.state.currentQuestion.count_more === 10) { // encouragement message
-			await context.sendText('Só faltam 10 perguntinhas, força! 💪💪');
+			await context.sendText('Estamos indo bem, força! 💪💪');
 		} else if (context.state.currentQuestion.count_more === 5) {
-			await context.sendText('Calma, só mais 5 perguntas e a gente acaba 🌟🌟');
+			await context.sendText('Calma, só mais algumas perguntinhas e a gente acaba 🌟🌟');
 		} else if (context.state.currentQuestion.count_more === 2) {
-			await context.sendText('Boa, só faltam duas perguntinhas ✨✨');
+			await context.sendText('Boa, estamos na reta final ✨✨');
+		}
+
+		if (context.state.currentQuestion.code === 'AC5') {
+			if (context.state.currentQuestion.is_eligible_for_research === 1) {
+				await research.onTheResearch(context); // elegível e respondeu Sim
+			// } else if (context.state.currentQuestion.is_eligible_for_research === 0) {
+			// 	await research.notOnResearch(context); // elegível e respondeu Não
+			}
 		}
 
 		// showing question and answer options

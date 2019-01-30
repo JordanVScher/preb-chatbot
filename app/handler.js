@@ -107,8 +107,7 @@ module.exports = async (context) => {
 			await desafio.desafioAceito(context);
 			break;
 		case 'mainMenu':
-			// await context.sendText(flow.mainMenu.text1);
-			// await context.sendText(flow.mainMenu.text1, opt.mainMenu);
+			await context.sendText('Fim do Fluxo');
 			break;
 		case 'beginQuiz':
 			await context.sendText('Preparar, apontar... fogo!');
@@ -164,6 +163,12 @@ module.exports = async (context) => {
 			break;
 		case 'setEvent':
 			await calendarBot.setEvent(context);
+			break;
+		case 'seePreventions':
+			await context.sendText(flow.prevention.text1);
+			await context.sendText(flow.prevention.text2);
+			await context.sendText(flow.prevention.text3);
+			await context.sendText(flow.prevention.text4, opt.prevention);
 			break;
 		case 'notificationOn':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 1);
