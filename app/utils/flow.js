@@ -46,4 +46,10 @@ module.exports = {
 	notEligible: {
 		text1: 'Você acabou o quiz. Você não faz parte da pesquisa. Desculpe.',
 	},
+	prevention: {
+		text1: 'Utilizar preservativo é sempre, sempre essencial! Mesmo porque ele previne não só HIV, né! Mas ele não é o único método.',
+		text2: 'Existe o PREP, que ajuda prevenir a infecção pelo HIV por meio da administração diária de uma pílula!',
+		text3: 'Indicado principalmente para trans, gays e outros homens que fazem sexo com homens, trabalhadores/as do sexo e casais sorodiferentes.',
+		text4: 'Já o PEP, conhecido como coquetel, é recomendado para pessoas que possam ter entrado em contato com o vírus recentemente.',
+	},
 };

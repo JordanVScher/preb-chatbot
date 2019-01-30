@@ -1,4 +1,5 @@
 const flow = require('./flow');
+const opt = require('./options');
 
 async function onTheResearch(context) {
 	await context.setState({ dialog: 'onTheResearch' });
@@ -14,7 +15,7 @@ async function notOnResearch(context) {
 
 async function notEligible(context) {
 	await context.setState({ dialog: 'NotEligible' });
-	await context.sendText(flow.notEligible.text1);
+	await context.sendText(`${flow.notEligible.text1}\nVeja métodos de prevenção`, opt.saidNo);
 }
 
 module.exports.onTheResearch = onTheResearch;
