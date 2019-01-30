@@ -1,4 +1,4 @@
-const prepAPI = require('../prep_api.js');
+const prepApi = require('../prep_api.js');
 const research = require('./research');
 const { capQR } = require('./helper');
 
@@ -34,9 +34,10 @@ async function endQuizA(context) {
 // check if user has already answered the quiz to remove the quick_reply option from the menu UNUSED
 async function checkAnsweredQuiz(context, options) {
 	let newOptions = options.quick_replies; // getting array out of the QR object
-
 	// console.log('antes', newOptions);
-	if (context.state.finished_quiz === true) { // no more questions to answer
+
+	const user = await prepApi.getRecipientPrep(context.session.user.id);
+	if (user.finished_quiz === 1) { // no more questions to answer
 		// console.log('entrei');
 		newOptions = await newOptions.filter(obj => obj.payload !== 'beginQuiz'); // remove quiz option
 	}
@@ -62,7 +63,7 @@ async function buildMultipleChoice(question) {
 
 // loads next question and shows it to the user
 async function answerQuizA(context) {
-	await context.setState({ currentQuestion: await prepAPI.getPendinQuestion(context.session.user.id) });
+	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 	await handleFlags(context, context.state.currentQuestion);
 
@@ -100,7 +101,7 @@ async function AnswerExtraQuestion(context) {
 async function handleAnswerA(context, quizOpt) {
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
-	const sentAnswer = await prepAPI.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt);
+	const sentAnswer = await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt);
 	console.log('\nResultado do post da pergunta', sentAnswer, '\n');
 
 	if (sentAnswer.error === 'Internal server error') { // error
