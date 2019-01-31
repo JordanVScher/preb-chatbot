@@ -1,6 +1,5 @@
 const prepApi = require('../prep_api.js');
 const research = require('./research');
-const opt = require('./options');
 const { capQR } = require('./helper');
 
 async function handleFlags(context, response) {
@@ -19,39 +18,17 @@ async function handleFlags(context, response) {
 
 async function endQuizA(context) {
 	await context.setState({ finished_quiz: true });
-
 	if (context.state.is_eligible_for_research === true) { // elegível pra pesquisa
 		if (context.state.is_part_of_research === true) { // o que o usuário respondeu
-			await context.sendText('Que bom que você quer participar da nossa pesquisa. Marque uma consulta conosco para poder dar continuidade.', opt.saidYes);
-			// await research.onTheResearch(context); // elegível e respondeu Sim
+			await research.researchSaidYes(context); // elegível, disse sim
 		} else {
-			await context.sendText('Que pena você não quer participar da nossa pesquisa. Veja métodos de prevenção:', opt.saidNo);
-			// await research.notOnResearch(context); // elegível e respondeu Não
+			await research.researchSaidNo(context); // elegível, disse não
 		}
 	} else {
 		await research.notEligible(context); // não elegível pra pesquisa
 	}
 }
 
-
-// check if user has already answered the quiz to remove the quick_reply option from the menu UNUSED
-async function checkAnsweredQuiz(context, options) {
-	let newOptions = options.quick_replies; // getting array out of the QR object
-	// console.log('antes', newOptions);
-
-	const user = await prepApi.getRecipientPrep(context.session.user.id);
-	if (user.finished_quiz === 1) { // no more questions to answer
-		newOptions = await newOptions.filter(obj => obj.payload !== 'beginQuiz'); // remove quiz option
-	}
-
-	if (context.state.is_eligible_for_research === true) {
-		newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' });
-		newOptions.push({ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' });
-	}
-
-	// console.log('depois', newOptions);
-	return { quick_replies: newOptions }; // putting the filtered array on a QR object
-}
 
 // builds quick_repliy menu from the question answer options
 async function buildMultipleChoice(question) {
@@ -145,4 +122,3 @@ module.exports.answerQuizA = answerQuizA;
 module.exports.handleAnswerA = handleAnswerA;
 module.exports.AnswerExtraQuestion = AnswerExtraQuestion;
 module.exports.endQuizA = endQuizA;
-module.exports.checkAnsweredQuiz = checkAnsweredQuiz;

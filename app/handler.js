@@ -36,6 +36,7 @@ module.exports = async (context) => {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				await context.setState({ onTextQuiz: false });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -96,7 +97,7 @@ module.exports = async (context) => {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
-			await desafio.asksDesafio(context);
+			await desafio.asksDesafio(context, opt.greetings);
 			// await consulta.marcarConsulta(context);
 			// await quiz.answerQuizA(context);
 			break;
@@ -107,7 +108,10 @@ module.exports = async (context) => {
 			await desafio.desafioAceito(context);
 			break;
 		case 'mainMenu':
-			await context.sendText('Fim do Fluxo');
+			await context.sendText(flow.mainMenu.text2);
+			break;
+		case 'endQuestion':
+			await context.sendText(flow.mainMenu.text3);
 			break;
 		case 'beginQuiz':
 			await context.sendText('Preparar, apontar... fogo!');
@@ -126,7 +130,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.aboutAmanda.msgTwo, opt.aboutAmandaB);
 			break;
 		case 'consulta':
-			await context.sendText('Escolha uma opção!', opt.consulta);
+			await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
 			break;
 		case 'marcarConsulta':
 			await consulta.marcarConsulta(context);
@@ -169,6 +173,9 @@ module.exports = async (context) => {
 			await context.sendText(flow.prevention.text2);
 			await context.sendText(flow.prevention.text3);
 			await context.sendText(flow.prevention.text4, opt.prevention);
+			break;
+		case 'preventionEnd':
+			await context.sendText(flow.prevention.end);
 			break;
 		case 'notificationOn':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 1);

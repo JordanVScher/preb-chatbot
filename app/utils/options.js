@@ -2,11 +2,13 @@ module.exports = {
 	greetings: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' },
-			// { content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' },
-			// { content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
-		// { content_type: 'text', title: 'Continuar', payload: 'desafio' }],
-		// { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmandaA' },
-		// { content_type: 'text', title: 'Continuar', payload: 'desafio' }
+			{ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' },
+			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
+		],
+	},
+	verConsulta: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
 	asksDesafio: {
@@ -24,6 +26,7 @@ module.exports = {
 	consulta: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' },
+			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
 	aboutAmandaA: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'desafio' }] },
@@ -50,12 +53,19 @@ module.exports = {
 	saidYes: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' },
-		],
+			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' }],
 	},
 	prevention: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' },
+			{ content_type: 'text', title: 'Entendi', payload: 'preventionEnd' },
 		],
+	},
+	consultaFail: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Tentar de Novo', payload: 'marcarConsulta' },
+			{ content_type: 'text', title: 'Cancelar', payload: 'mainMenu' },
+		],
+
 	},
 
 };
