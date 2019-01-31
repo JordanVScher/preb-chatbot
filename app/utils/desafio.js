@@ -42,7 +42,7 @@ async function asksDesafio(context, options) {
 
 async function desafioRecusado(context) {
 	await context.sendText('Ok');
-	await context.sendText('Veja o que você pode fazer por aqui', opt.greetings);
+	await context.sendText('Veja o que você pode fazer por aqui', await checkAnsweredQuiz(context, opt.greetings));
 }
 
 async function desafioAceito(context) {
