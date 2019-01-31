@@ -1,5 +1,6 @@
 const flow = require('./flow');
 const opt = require('./options');
+const desafio = require('./desafio');
 
 async function onTheResearch(context) {
 	await context.setState({ dialog: 'onTheResearch' });
@@ -15,9 +16,19 @@ async function notOnResearch(context) {
 
 async function notEligible(context) {
 	await context.setState({ dialog: 'NotEligible' });
-	await context.sendText(`${flow.notEligible.text1}\nVeja métodos de prevenção`, opt.saidNo);
+	await context.sendText(flow.notEligible.text1, opt.saidNo);
+}
+
+async function researchSaidNo(context) {
+	await context.sendText(flow.quizNo.text1, opt.saidNo);
+}
+
+async function researchSaidYes(context) {
+	await context.sendText(flow.quizYes.text1, await desafio.checkAnsweredQuiz(context, opt.saidYes));
 }
 
 module.exports.onTheResearch = onTheResearch;
 module.exports.notOnResearch = notOnResearch;
 module.exports.notEligible = notEligible;
+module.exports.researchSaidNo = researchSaidNo;
+module.exports.researchSaidYes = researchSaidYes;

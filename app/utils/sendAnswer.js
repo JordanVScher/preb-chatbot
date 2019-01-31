@@ -25,7 +25,7 @@ async function sendAnswer(context) { // send answer from posicionamento
 			await context.sendAudio({ attachment_id: context.state.currentTheme.saved_attachment_id });
 		}
 		await context.typingOff();
-		await context.setState({ dialog: 'mainMenu' });
+		await context.setState({ dialog: 'endQuestion' });
 	} else { // in case there's an error
 		await createIssue(context);
 	}

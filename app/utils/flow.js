@@ -21,6 +21,7 @@ module.exports = {
 	mainMenu: {
 		text1: '😉',
 		text2: 'Meus códigos são lindos e cheios de glitters e glamour 💁😂\nEntão, olha só o que você pode fazer por aqui:',
+		text3: 'Se tiver outras dúvidas é só me enviar uma mensagem',
 	},
 	issueText: {
 		success: 'Desculpe, não entendi sua mensagem. Mas não se preocupe, enviei para minha equipe e logo vamos te responder ;)',
@@ -44,12 +45,21 @@ module.exports = {
 		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
 	},
 	notEligible: {
-		text1: 'Você acabou o quiz. Você não faz parte da pesquisa. Desculpe.',
+		text1: 'Você acabou o QUIZ. Quer saber um pouco mais sobre saúde sexual e conhecer alguns métodos de prevenção ao HIV que talvez você ainda não conheça e são muito seguros?',
+	},
+	quizNo: {
+		text1: 'Que pena você não quer participar da nossa pesquisa. Quer saber um pouco mais sobre saúde sexual e conhecer alguns métodos de prevenção ao HIV que talvez você ainda não conheça',
+	},
+	quizYes: {
+		text1: 'Que bom que você quer participar da nossa pesquisa. Marque uma consulta conosco para poder dar continuidade.',
 	},
 	prevention: {
 		text1: 'Utilizar preservativo é sempre, sempre essencial! Mesmo porque ele previne não só HIV, né! Mas ele não é o único método.',
 		text2: 'Existe o PREP, que ajuda prevenir a infecção pelo HIV por meio da administração diária de uma pílula!',
 		text3: 'Indicado principalmente para trans, gays e outros homens que fazem sexo com homens, trabalhadores/as do sexo e casais sorodiferentes.',
 		text4: 'Já o PEP, conhecido como coquetel, é recomendado para pessoas que possam ter entrado em contato com o vírus recentemente.',
+		alternativeText: 'A PEP são comprimidos que evitam que a pessoa se infecte pelo HIV depois de uma relação sexual desprotegida. A pessoa precisar ir a um serviço de '
+		+ 'saúde até 72 horas depois da relação sexual e lá ela recebe os comprimidos para seres tomados durante 28 dias.',
+		end: 'Espero ter te ajudado a conhecer um pouco mais sobre saúde sexual. Mas caso tenha mais duvidas, pode me mandar uma mensagem que tento te responder ;)',
 	},
 };
