@@ -2,6 +2,7 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 	return {
 		state: {
 			dialog,
+			lastQRpayload: payload,
 			politicianData: {
 				user_id: 2000,
 				use_dialogflow: 1,

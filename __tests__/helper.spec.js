@@ -3,6 +3,7 @@ require('dotenv').config();
 const help = require('../app/utils/helper');
 
 jest.mock('../app/chatbot_api');
+// jest.mock('../app/utils/helper');
 
 it('formatDialogFlow - 250 chars or more, upperCase, remove-accents', async () => {
 	const largetext = 'Estou sentado num escritório, cercado de cabeças e corpos. Minha postura está conscientemente moldada ao formato da cadeira dura. '

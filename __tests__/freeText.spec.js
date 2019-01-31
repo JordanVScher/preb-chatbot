@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const handler = require('../app/handler');
-const MaAPI = require('../app/chatbot_api.js');
+const MaAPI = require('../app/chatbot_api');
 // const flow = require('../app/utils/flow');
 const cont = require('./context');
 // const timer = require('../app/utils/timer');
@@ -12,7 +12,7 @@ const { checkPosition } = require('../app/dialogFlow');
 
 jest.mock('../app/send_issue');
 jest.mock('../app/utils/helper');
-jest.mock('../app/chatbot_api.js');
+jest.mock('../app/chatbot_api');
 // jest.mock('../app/utils/timer');
 jest.mock('../app/dialogFlow');
 
@@ -33,6 +33,7 @@ it('Loading data and Free text - DF disabled', async () => {
 
 it('Free text - DF enabled', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.politicianData.use_dialogflow = 1; // default
 	await handler(context);
 	await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text });
 	await expect(context.state.whatWasTyped === process.env.GET_PERFILDATA).toBeFalsy();

@@ -3,15 +3,19 @@ require('dotenv').config();
 const cont = require('./context');
 const handler = require('../app/handler');
 const flow = require('../app/utils/flow');
+const opt = require('../app/utils/options');
 const MaAPI = require('../app/chatbot_api');
 const prepAPI = require('../app/prep_api');
+const desafio = require('../app/utils/desafio');
 
 jest.mock('../app/chatbot_api');
 jest.mock('../app/prep_api');
 jest.mock('../app/utils/flow');
+jest.mock('../app/utils/options');
+jest.mock('../app/utils/desafio');
 
 it('Voltar para o inicio - menu', async () => {
-	const context = cont.postbackContext('greetings', 'Voltar para o inicio');
+	const context = cont.postbackContext('greetings', 'Voltar para o inicio', 'greetings');
 	await handler(context);
 	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) });
 	await expect(MaAPI.postRecipientMA).toBeCalledWith(context.state.politicianData.user_id, {
@@ -27,6 +31,10 @@ it('Voltar para o inicio - menu', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'greetings' });
 	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id,
 		context.event.postback.payload, context.event.postback.title);
+
+	await expect(context.sendText).toBeCalledWith(flow.greetings.text1);
+	await expect(context.sendText).toBeCalledWith(flow.greetings.text2);
+	await expect(desafio.asksDesafio).toBeCalledWith(context, opt.greetings);
 });
 
 it('Notifications on - menu', async () => {
