@@ -1,6 +1,6 @@
 const flow = require('./flow');
 const opt = require('./options');
-const prepApi = require('../prep_api');
+const prepApi = require('./prep_api');
 
 // check if user has already answered the quiz to remove the quick_reply option from the menu UNUSED
 async function checkAnsweredQuiz(context, options) {

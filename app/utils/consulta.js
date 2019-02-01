@@ -3,7 +3,7 @@ require('dotenv').config();
 // const flow = require('./flow');
 const opt = require('./options');
 const help = require('./helper');
-const prepApi = require('../prep_api');
+const prepApi = require('./prep_api');
 
 async function verConsulta(context) {
 	const consultas = await prepApi.getAppointment(context.session.user.id);

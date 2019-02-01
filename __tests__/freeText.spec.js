@@ -15,7 +15,7 @@ jest.mock('../app/utils/helper');
 jest.mock('../app/chatbot_api');
 // jest.mock('../app/utils/timer');
 jest.mock('../app/dialogFlow');
-
+jest.mock('../app/utils/prep_api'); // mock prep_api tp avoid making the postRecipientPrep request
 
 it('Loading data and Free text - DF disabled', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');

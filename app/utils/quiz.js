@@ -1,4 +1,4 @@
-const prepApi = require('../prep_api.js');
+const prepApi = require('./prep_api.js');
 const research = require('./research');
 const { capQR } = require('./helper');
 
@@ -34,12 +34,12 @@ async function endQuizA(context) {
 async function buildMultipleChoice(question) {
 	const qrButtons = [];
 	Object.keys(question.multiple_choices).forEach(async (element) => {
-		qrButtons.push({ content_type: 'text', title: capQR(question.multiple_choices[element]), payload: `quiz${element}` });
+		qrButtons.push({ content_type: 'text', title: await capQR(question.multiple_choices[element]), payload: `quiz${element}` });
 	});
 
 	if (question.extra_quick_replies && question.extra_quick_replies.length > 0) {
-		question.extra_quick_replies.forEach((element, index) => {
-			qrButtons.push({ content_type: 'text', title: capQR(element.label), payload: `extraQuestion${index}` });
+		question.extra_quick_replies.forEach(async (element, index) => {
+			qrButtons.push({ content_type: 'text', title: await capQR(element.label), payload: `extraQuestion${index}` });
 		});
 	}
 

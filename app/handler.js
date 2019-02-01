@@ -1,5 +1,5 @@
 const MaAPI = require('./chatbot_api.js');
-const prepAPI = require('./prep_api.js');
+const prepAPI = require('./utils/prep_api.js');
 const { createIssue } = require('./send_issue');
 const { checkPosition } = require('./dialogFlow');
 const { apiai } = require('./utils/helper');

@@ -20,7 +20,7 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 			isQuickReply: true,
 			quickReply: { payload },
 			message: {
-				quickReply: { payload },
+				quick_reply: { payload },
 				text: 'This qr was clicked',
 			},
 			rawEvent: { timestamp: new Date(), recipient: { id: 1000 } },
