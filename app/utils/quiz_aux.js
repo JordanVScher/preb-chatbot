@@ -29,7 +29,6 @@ async function endQuizA(context) {
 	}
 }
 
-
 // builds quick_repliy menu from the question answer options
 async function buildMultipleChoice(question) {
 	const qrButtons = [];

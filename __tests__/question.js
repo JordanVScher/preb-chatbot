@@ -10,7 +10,7 @@ module.exports.regularMultipleChoice = {
 };
 
 module.exports.extraMultiple = {
-	code: 'A3',
+	code: 'AC5',
 	count_more: 14,
 	extra_quick_replies: [{ label: 'Não sei o que é', text: 'Tente descobrir' }],
 	has_more: 1,
@@ -46,3 +46,4 @@ module.exports.finished = {
 };
 module.exports.serverError = { error: 'Internal server error' };
 module.exports.invalidValue = { form_error: { answer_value: 'invalid' } };
+module.exports.handleAnswer = {	finished_quiz: 1, id: 76, is_eligible_for_research: 0 };
