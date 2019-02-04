@@ -44,19 +44,19 @@ async function AnswerExtraQuestion(context) {
 async function handleAnswerA(context, quizOpt) {
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
-	const sentAnswer = await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt);
-	console.log('\nResultado do post da pergunta', sentAnswer, '\n');
+	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
+	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
 
-	if (sentAnswer.error === 'Internal server error') { // error
+	if (context.state.sentAnswer.error === 'Internal server error') { // error
 		await context.sendText('Ops, tive um erro interno');
-	} else if (sentAnswer.form_error && sentAnswer.form_error.answer_value && sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
+	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
 		await context.sendText('Formato inválido! Digite novamente!');
 		// Date is: YYYY-MM-DD
 		await context.setState({ dialog: 'startQuizA' }); // re-asks same question
 	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
-		await aux.handleFlags(context, sentAnswer);
+		await aux.handleFlags(context, context.state.sentAnswer);
 
-		if (sentAnswer && sentAnswer.finished_quiz === 0) { // check if the quiz is over
+		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 			await context.setState({ finished_quiz: false });
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 		} else {
