@@ -1,6 +1,6 @@
 const flow = require('./flow');
 const opt = require('./options');
-const desafio = require('./desafio');
+const { checkAnsweredQuiz } = require('./checkQR');
 
 async function onTheResearch(context) {
 	await context.setState({ dialog: 'onTheResearch' });
@@ -24,7 +24,7 @@ async function researchSaidNo(context) {
 }
 
 async function researchSaidYes(context) {
-	await context.sendText(flow.quizYes.text1, await desafio.checkAnsweredQuiz(context, opt.saidYes));
+	await context.sendText(flow.quizYes.text1, await checkAnsweredQuiz(context, opt.saidYes));
 }
 
 module.exports.onTheResearch = onTheResearch;

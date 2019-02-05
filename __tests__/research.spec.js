@@ -2,11 +2,12 @@ const cont = require('./context');
 const research = require('../app/utils/research');
 const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
-const desafio = require('../app/utils/desafio');
+const { checkAnsweredQuiz } = require('../app/utils/checkQR');
 
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
 jest.mock('../app/utils/desafio');
+jest.mock('../app/utils/checkQR');
 
 it('onTheResearch', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
@@ -45,5 +46,5 @@ it('researchSaidYes', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.researchSaidYes(context);
 
-	await expect(context.sendText).toBeCalledWith(flow.quizYes.text1, await desafio.checkAnsweredQuiz(context, opt.saidYes));
+	await expect(context.sendText).toBeCalledWith(flow.quizYes.text1, await checkAnsweredQuiz(context, opt.saidYes));
 });

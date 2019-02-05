@@ -14,6 +14,10 @@ module.exports = {
 	asksDesafio: {
 		text1: 'Agora, te lanço um desafio! Você sabe quem é você no sexo?',
 	},
+	desafioRecusado: {
+		text1: 'Ok',
+		text2: 'Veja o que você pode fazer por aqui',
+	},
 	desafioAceito: {
 		text1: 'É o seguinte, são algumas perguntinhas e para responder, basta clicar no botão. Caso você clique em "Não sei o que é" em alguma delas, eu explicarei e você poderá responder novamente. No final, seu resultado 😉',
 		text2: 'Sinceridade, hein! Não estou aqui para te julgar, então se joga!',
