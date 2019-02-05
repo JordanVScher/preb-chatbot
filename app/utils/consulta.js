@@ -1,22 +1,21 @@
 require('dotenv').config();
 
-// const flow = require('./flow');
+const flow = require('./flow');
 const opt = require('./options');
 const help = require('./helper');
 const prepApi = require('./prep_api');
 
 async function verConsulta(context) {
-	const consultas = await prepApi.getAppointment(context.session.user.id);
-	if (consultas.appointments && consultas.appointments.length === 0) {
-		await context.sendText('Você não tem nenhuma consulta marcada. Você pode marcar uma nova consulta a qualquer momento', opt.saidYes);
-	} else {
-		for (const iterator of consultas.appointments) { // eslint-disable-line
+	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length === 1) {
+		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
 			await context.sendText('Arrasou! Você tem uma consulta:'
-				+ '\n🏠: Rua do Teste, 00, Bairro, cep.'
-				+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`);
+			+ '\n🏠: Rua do Teste, 00, Bairro, cep.'
+			+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`);
 		}
-
 		await context.sendText('Não falte!');
+	} else {
+		await context.sendText(flow.verConsulta.zero, opt.saidYes);
 	}
 }
 

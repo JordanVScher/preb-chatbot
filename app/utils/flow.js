@@ -45,6 +45,9 @@ module.exports = {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
 		text2: 'Eu tenho dicas ótimas para você!',
 	},
+	verConsulta: {
+		zero: 'Você não tem nenhuma consulta marcada. Você pode marcar uma nova consulta a qualquer momento',
+	},
 	NotOnResearch: {
 		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
 	},
