@@ -102,8 +102,6 @@ it('handleAnswerA - regular answer - finished', async () => {
 	await expect(aux.handleFlags).toBeCalledWith(context, context.state.sentAnswer);
 
 	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith('Você acabou o quiz! Bom trabalho! 👏👏👏');
-	await expect(context.setState).toBeCalledWith({ finished_quiz: true });
 	await expect(aux.endQuizA).toBeCalledWith(context);
 });
 
