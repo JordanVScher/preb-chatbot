@@ -62,6 +62,9 @@ module.exports = async (context) => {
 				await context.setState({ dialog: 'nextDay' });
 			} else if (context.state.lastQRpayload.slice(0, 8) === 'nextHour') {
 				await context.setState({ dialog: 'nextHour' });
+			} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
+				await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
+				await context.setState({ dialog: 'marcarConsulta' });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -98,7 +101,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
 			await desafio.asksDesafio(context, opt.greetings);
-			// await consulta.marcarConsulta(context);
+			// await consulta.getCity(context);
 			// await quiz.answerQuizA(context);
 			break;
 		case 'desafioRecusado':
@@ -131,6 +134,9 @@ module.exports = async (context) => {
 			break;
 		case 'consulta':
 			await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
+			break;
+		case 'getCity':
+			await consulta.showCities(context);
 			break;
 		case 'marcarConsulta':
 			await consulta.marcarConsulta(context);

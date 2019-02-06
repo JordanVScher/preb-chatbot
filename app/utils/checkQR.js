@@ -11,17 +11,17 @@ async function checkAnsweredQuiz(context, options) {
 	}
 
 	// if Options has the consulta options we have to check if the user is able to scheduled appointments
-	if (newOptions.find(x => x.payload === 'marcarConsulta') || newOptions.find(x => x.payload === 'verConsulta')) { // checks if we have the options
+	if (newOptions.find(x => x.payload === 'getCity') || newOptions.find(x => x.payload === 'verConsulta')) { // checks if we have the options
 		if (context.state.is_eligible_for_research === true) { // if user is eligible he can schedule appointments
 			await context.setState({ consultas: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
 			if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) { // user can only have one appointment
-				newOptions = await newOptions.filter(obj => obj.payload !== 'marcarConsulta'); // remove option to schedule appointment because he scheduled one already
+				newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option to schedule appointment because he scheduled one already
 			} else { // if he has one we can show it to him
 				newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option to see consulta for there isn't any consulta available
 			}
 		} else { // user shouldn't be able to see these options if he is not eligible
 			newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option
-			newOptions = await newOptions.filter(obj => obj.payload !== 'marcarConsulta'); // remove option
+			newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option
 		}
 	}
 

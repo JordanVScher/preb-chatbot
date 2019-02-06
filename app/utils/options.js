@@ -2,7 +2,7 @@ module.exports = {
 	greetings: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' },
-			{ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' },
+			{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
@@ -25,7 +25,7 @@ module.exports = {
 	},
 	consulta: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' },
+			{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
@@ -52,7 +52,7 @@ module.exports = {
 	},
 	saidYes: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Marcar Consulta', payload: 'marcarConsulta' },
+			{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' }],
 	},
 	prevention: {
@@ -62,7 +62,7 @@ module.exports = {
 	},
 	consultaFail: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Tentar de Novo', payload: 'marcarConsulta' },
+			{ content_type: 'text', title: 'Tentar de Novo', payload: 'getCity' },
 			{ content_type: 'text', title: 'Cancelar', payload: 'mainMenu' },
 		],
 

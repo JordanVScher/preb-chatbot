@@ -60,8 +60,6 @@ async function handleAnswerA(context, quizOpt) {
 			await context.setState({ finished_quiz: false });
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 		} else {
-			await context.sendText('Você acabou o quiz! Bom trabalho! 👏👏👏');
-			await context.setState({ finished_quiz: true });
 			await aux.endQuizA(context); // quiz is over
 		}
 		/* eslint-enable no-lonely-if */

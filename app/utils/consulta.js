@@ -7,7 +7,9 @@ const prepApi = require('./prep_api');
 
 async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length === 1) {
+	console.log(context.state.consulta);
+
+	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) {
 		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
 			await context.sendText('Arrasou! Você tem uma consulta:'
 			+ '\n🏠: Rua do Teste, 00, Bairro, cep.'
@@ -129,16 +131,27 @@ async function cleanDates(dates) {
 	return result;
 }
 
+async function showCities(context) {
+	await context.setState({ cities: await prepApi.getAvailableCities() });
+	const options = [];
+
+	context.state.cities.calendars.forEach(async (element) => {
+		options.push({ content_type: 'text', title: element.city, payload: `city${element.id}` });
+	});
+
+	await context.sendText('Agora vamos agendar sua consulta no CTA.');
+	await context.sendText('Escolha sua cidade:', { quick_replies: options });
+}
+
 async function marcarConsulta(context) { // shows available days
 	// await context.setState({ freeTime: example }); // all the free time slots we have
-	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id) }); // getting whole calendar
+	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId) }); // getting whole calendar
 	// console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
 
 	await context.setState({ freeTime: await cleanDates(context.state.calendar.dates) }); // all the free time slots we have
 
 	await context.setState({ freeDays: await separateDaysQR(context.state.freeTime) });
 	if (context.state.freeDays && context.state.freeDays['0'] && context.state.freeDays['0'] && context.state.freeDays['0'].length > 0) {
-		await context.sendText('Agora vamos agendar sua consulta no CTA.', { quick_replies: context.state.freeDays['0'] });
 		await context.sendText('Escolha uma data:', { quick_replies: context.state.freeDays['0'] });
 	} else {
 		await context.sendText('Não temos nenhuma data disponível em um futuro próximo');
@@ -177,6 +190,7 @@ async function finalDate(context, quota) {
 
 module.exports.verConsulta = verConsulta;
 module.exports.marcarConsulta = marcarConsulta;
+module.exports.showCities = showCities;
 module.exports.nextDay = nextDay;
 module.exports.nextHour = nextHour;
 module.exports.showHours = showHours;
