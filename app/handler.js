@@ -113,9 +113,6 @@ module.exports = async (context) => {
 		case 'mainMenu':
 			await context.sendText(flow.mainMenu.text2);
 			break;
-		case 'endQuestion':
-			await context.sendText(flow.mainMenu.text3);
-			break;
 		case 'beginQuiz':
 			await context.sendText('Preparar, apontar... fogo!');
 			// falls throught
@@ -173,6 +170,12 @@ module.exports = async (context) => {
 			break;
 		case 'setEvent':
 			await calendarBot.setEvent(context);
+			break;
+		case 'joinResearch':
+			await context.sendText('Legal, agora você é parte da pesquisa!');
+			// falls throught
+		case 'endFlow':
+			await context.sendText('Você pode me compartilhar se quiser');
 			break;
 		case 'seePreventions':
 			await context.sendText(flow.prevention.text1);
