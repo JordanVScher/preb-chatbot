@@ -32,7 +32,7 @@ it('verConsulta - one appointment', async () => {
 		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
         + `\n⏰: ${help.formatDate(iterator.datetime_start)}`);
 	}
-});
+});// טך
 
 it('nextDay', async () => {
 	const context = cont.quickReplyContext('verConsulta', 'greetings');

@@ -121,6 +121,7 @@ module.exports = async (context) => {
 			await context.sendText('Preparar, apontar... fogo!');
 			// falls throught
 		case 'startQuizA':
+			await context.setState({ categoryQuestion: 'quiz' });
 			await quiz.answerQuizA(context);
 			break;
 		case 'aboutAmanda':

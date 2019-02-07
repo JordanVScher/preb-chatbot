@@ -12,12 +12,15 @@ jest.mock('../app/utils/prep_api');
 it('AnswerExtraQuestion - multiple choice - 5 more', async () => {
 	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
 	context.state.currentQuestion = question.regularMultipleChoice;
+	context.state.categoryQuestion = 'quiz';
 	await quiz.answerQuizA(context);
 
-	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	await expect(aux.handleFlags).toBeCalledWith(context, context.state.currentQuestion);
 	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
 
+
+	await expect(context.state.categoryQuestion === 'quiz').toBeTruthy();
 	await expect(context.state.currentQuestion.count_more === 10).toBeFalsy();
 	await expect(context.state.currentQuestion.count_more === 5).toBeTruthy();
 	await expect(context.state.currentQuestion.count_more === 2).toBeFalsy();
@@ -31,12 +34,14 @@ it('AnswerExtraQuestion - multiple choice - 5 more', async () => {
 it('AnswerExtraQuestion - open text - 10 more', async () => {
 	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
 	context.state.currentQuestion = question.regularOpenText;
+	context.state.categoryQuestion = 'quiz';
 	await quiz.answerQuizA(context);
 
-	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	await expect(aux.handleFlags).toBeCalledWith(context, context.state.currentQuestion);
 	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
 
+	await expect(context.state.categoryQuestion === 'quiz').toBeTruthy();
 	await expect(context.state.currentQuestion.count_more === 10).toBeTruthy();
 	await expect(context.state.currentQuestion.count_more === 5).toBeFalsy();
 	await expect(context.state.currentQuestion.count_more === 2).toBeFalsy();
@@ -51,9 +56,10 @@ it('AnswerExtraQuestion - open text - 10 more', async () => {
 it('AnswerExtraQuestion - null question', async () => {
 	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
 	context.state.currentQuestion = question.nullQuestion;
+	context.state.categoryQuestion = 'quiz';
 	await quiz.answerQuizA(context);
 
-	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	await expect(aux.handleFlags).toBeCalledWith(context, context.state.currentQuestion);
 	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeTruthy();
 	await expect(aux.endQuizA).toBeCalledWith(context);
@@ -80,7 +86,11 @@ it('handleAnswerA - regular answer - not finished', async () => {
 	const quizOpt = 'a resposta';
 	await quiz.handleAnswerA(context);
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
+	await expect(context.setState).toBeCalledWith({
+		sentAnswer: await prepApi.postQuizAnswer(
+			context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt,
+		),
+	});
 	await expect(context.state.sentAnswer.error === 'Internal server error').toBeFalsy();
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
 	await expect(aux.handleFlags).toBeCalledWith(context, context.state.sentAnswer);
@@ -96,7 +106,11 @@ it('handleAnswerA - regular answer - finished', async () => {
 	const quizOpt = 'a resposta';
 	await quiz.handleAnswerA(context);
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
+	await expect(context.setState).toBeCalledWith({
+		sentAnswer: await prepApi.postQuizAnswer(
+			context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt,
+		),
+	});
 	await expect(context.state.sentAnswer.error === 'Internal server error').toBeFalsy();
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
 	await expect(aux.handleFlags).toBeCalledWith(context, context.state.sentAnswer);
@@ -112,7 +126,11 @@ it('handleAnswerA - internal error', async () => {
 	const quizOpt = 'a resposta';
 	await quiz.handleAnswerA(context);
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
+	await expect(context.setState).toBeCalledWith({
+		sentAnswer: await prepApi.postQuizAnswer(
+			context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt,
+		),
+	});
 	await expect(context.state.sentAnswer.error === 'Internal server error').toBeTruthy();
 	await expect(context.sendText).toBeCalledWith('Ops, tive um erro interno');
 });
@@ -124,7 +142,11 @@ it('handleAnswerA - invalid value', async () => {
 	const quizOpt = '19/19/19';
 	await quiz.handleAnswerA(context);
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
+	await expect(context.setState).toBeCalledWith({
+		sentAnswer: await prepApi.postQuizAnswer(
+			context.session.user.id, context.state.currentQuestion.code, quizOpt,
+		),
+	});
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeTruthy();
 	await expect(context.sendText).toBeCalledWith('Formato inválido! Digite novamente!');
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });

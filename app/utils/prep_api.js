@@ -32,14 +32,16 @@ module.exports = {
 		return recipientData;
 	},
 
-	async getPendinQuestion(fb_id) {
-		const res = await request.get(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}&`).query({ fb_id });
+	async getPendinQuestion(fb_id, category) {
+		const res = await request.get(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}&`).query({ fb_id, category });
 		const quizData = await res.json();
 		return quizData;
 	},
 
-	async postQuizAnswer(fb_id, code, answer_value) {
-		const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}&`).query({ fb_id, code, answer_value });
+	async postQuizAnswer(fb_id, category, code, answer_value) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}&`).query({
+			fb_id, category, code, answer_value,
+		});
 		const quizData = await res.json();
 		return quizData;
 	},

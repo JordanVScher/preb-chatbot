@@ -4,19 +4,22 @@ const aux = require('./quiz_aux');
 
 // loads next question and shows it to the user
 async function answerQuizA(context) {
-	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id) });
+	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 	await aux.handleFlags(context, context.state.currentQuestion);
+
 
 	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
 		await aux.endQuizA(context); // quiz is over
 	} else { /* eslint-disable no-lonely-if */ // user is still answering the quiz
-		if (context.state.currentQuestion.count_more === 10) { // encouragement message
-			await context.sendText('Estamos indo bem, força! 💪💪');
-		} else if (context.state.currentQuestion.count_more === 5) {
-			await context.sendText('Calma, só mais algumas perguntinhas e a gente acaba 🌟🌟');
-		} else if (context.state.currentQuestion.count_more === 2) {
-			await context.sendText('Boa, estamos na reta final ✨✨');
+		if (context.state.categoryQuestion === 'quiz') { // send encouragement only on the regular quiz
+			if (context.state.currentQuestion.count_more === 10) { // encouragement message
+				await context.sendText('Estamos indo bem, força! 💪💪');
+			} else if (context.state.currentQuestion.count_more === 5) {
+				await context.sendText('Calma, só mais algumas perguntinhas e a gente acaba 🌟🌟');
+			} else if (context.state.currentQuestion.count_more === 2) {
+				await context.sendText('Boa, estamos na reta final ✨✨');
+			}
 		}
 
 		await aux.handleAC5(context);
@@ -44,7 +47,7 @@ async function AnswerExtraQuestion(context) {
 async function handleAnswerA(context, quizOpt) {
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
-	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
+	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
 	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
 
 	if (context.state.sentAnswer.error === 'Internal server error') { // error
