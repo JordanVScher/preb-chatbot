@@ -47,3 +47,94 @@ it('asksDesafio - user finished quiz ', async () => {
 	await expect(context.state.user.finished_quiz === 1).toBeFalsy();
 	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text1, opt.asksDesafio);
 });
+
+it('followUp - counter equals 3', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.followUpCounter = 3;
+	await desafio.followUp(context);
+
+	await expect(context.state.followUpCounter >= 3).toBeTruthy();
+	await expect(sendMain).toBeCalledWith(context);
+});
+
+it('followUp - user already part on research', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 1 };
+	context.state.followUpCounter = 0;
+	await desafio.followUp(context);
+
+	await expect(context.state.followUpCounter >= 3).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ followUpCounter: context.state.followUpCounter >= 0 ? context.state.followUpCounter + 1 : 0 });
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
+
+	await expect(context.state.user.is_part_of_research === 1).toBeTruthy();
+	await expect(sendMain).toBeCalledWith(context);
+});
+
+it('followUp - dont know if user is_eligible_for_research', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 0 };
+	await desafio.followUp(context);
+
+	await expect(context.state.followUpCounter >= 3).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ followUpCounter: context.state.followUpCounter >= 0 ? context.state.followUpCounter + 1 : 0 });
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
+
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.desafio.text1, opt.answer.sendQuiz);
+});
+
+it('followUp - user didnt finish quiz', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 0, is_eligible_for_research: 0, finished_quiz: 0 };
+	await desafio.followUp(context);
+
+	await expect(context.state.followUpCounter >= 3).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ followUpCounter: context.state.followUpCounter >= 0 ? context.state.followUpCounter + 1 : 0 });
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
+
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.desafio.text1, opt.answer.sendQuiz);
+});
+
+it('followUp - user not eligible_for_research', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 0, is_eligible_for_research: 0, finished_quiz: 1 };
+	await desafio.followUp(context);
+
+	await expect(context.state.followUpCounter >= 3).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ followUpCounter: context.state.followUpCounter >= 0 ? context.state.followUpCounter + 1 : 0 });
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
+
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(context.state.user.is_eligible_for_research === null || context.state.user.finished_quiz === 0).toBeFalsy();
+	await expect(context.state.user.is_eligible_for_research === 0).toBeTruthy();
+	await expect(sendMain).toBeCalled();
+});
+
+it('followUp - user eligible_for_research', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 0, is_eligible_for_research: 1, finished_quiz: 1 };
+	await desafio.followUp(context);
+
+	await expect(context.state.followUpCounter >= 3).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ followUpCounter: context.state.followUpCounter >= 0 ? context.state.followUpCounter + 1 : 0 });
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
+
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(context.state.user.is_eligible_for_research === null || context.state.user.finished_quiz === 0).toBeFalsy();
+	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.desafio.text2);
+});

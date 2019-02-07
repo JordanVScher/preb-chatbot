@@ -17,11 +17,11 @@ async function followUp(context) {
 
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa
 			await sendMain(context);
-		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se acabou o quiz
-			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 1) { // eslint-disable-line no-lonely-if
-				await context.sendText('Ei, vc ainda não acabou o nosso quiz! Vamos terminar?', opt.answer.sendQuiz);
+		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
+			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
+				await context.sendText(flow.desafio.text1, opt.answer.sendQuiz);
 			} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não)
-				await context.sendText('Você não quer mesmo fazer parte da nossa pesquisa?');
+				await context.sendText(flow.desafio.text2);
 			} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível
 				await sendMain(context);
 			}
