@@ -1,13 +1,7 @@
 const flow = require('./flow');
 const opt = require('./options');
 const prepApi = require('./prep_api');
-// const { checkAnsweredQuiz } = require('./checkQR');
-const checkQR = require('./checkQR');
-
-async function sendMain(context) {
-	await context.setState({ dialog: 'mainMenu' });
-	await context.sendText(flow.mainMenu.text2, await checkQR.checkMainMenu(context, opt.mainMenu));
-}
+const { sendMain } = require('./mainMenu');
 
 async function followUp(context) {
 	if (context.state.followUpCounter >= 3) { // only offer the options on the first 3 times
@@ -58,5 +52,4 @@ async function desafioAceito(context) {
 module.exports.asksDesafio = asksDesafio;
 module.exports.desafioRecusado = desafioRecusado;
 module.exports.desafioAceito = desafioAceito;
-module.exports.sendMain = sendMain;
 module.exports.followUp = followUp;

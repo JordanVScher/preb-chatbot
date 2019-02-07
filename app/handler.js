@@ -10,6 +10,7 @@ const quiz = require('./utils/quiz');
 const desafio = require('./utils/desafio');
 const consulta = require('./utils/consulta');
 const { handleToken } = require('./utils/research');
+const { sendMain } = require('./utils/mainMenu');
 
 module.exports = async (context) => {
 	try {
@@ -114,7 +115,7 @@ module.exports = async (context) => {
 			await desafio.desafioAceito(context);
 			break;
 		case 'mainMenu':
-			await desafio.sendMain(context);
+			await sendMain(context);
 			break;
 		case 'beginQuiz':
 			await context.sendText('Preparar, apontar... fogo!');
