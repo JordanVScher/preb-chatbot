@@ -8,7 +8,6 @@ async function followUp(context) {
 		await sendMain(context);
 	} else {
 		await context.setState({ followUpCounter: context.state.followUpCounter >= 0 ? context.state.followUpCounter + 1 : 0 });
-		console.log('context.state.followUpCounter', context.state.followUpCounter);
 
 		await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
 		await context.setState({ dialog: 'mainMenu' });
@@ -21,7 +20,7 @@ async function followUp(context) {
 			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
 				await context.sendText(flow.desafio.text1, opt.answer.sendQuiz);
 			} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não)
-				await context.sendText(flow.desafio.text2);
+				await context.sendText(flow.desafio.text2, opt.answer.sendResearch);
 			} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível
 				await sendMain(context);
 			}

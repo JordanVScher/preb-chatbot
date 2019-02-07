@@ -81,7 +81,7 @@ module.exports = {
 		sendResearch: {
 			quick_replies: [
 				{ content_type: 'text', title: 'Tudo bem', payload: 'joinResearch' },
-				{ content_type: 'text', title: 'Não', payload: 'mainMenu' },
+				{ content_type: 'text', title: 'Não quero', payload: 'mainMenu' },
 			],
 		},
 		sendConsulta: {

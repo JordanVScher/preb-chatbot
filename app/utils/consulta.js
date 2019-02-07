@@ -143,7 +143,7 @@ async function showCities(context) {
 	await context.sendText('Escolha sua cidade:', { quick_replies: options });
 }
 
-async function marcarConsulta(context) { // shows available days
+async function showDays(context) { // shows available days
 	// await context.setState({ freeTime: example }); // all the free time slots we have
 	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId) }); // getting whole calendar
 	// console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
@@ -170,12 +170,12 @@ async function showHours(context, windowId) {
 	}
 }
 
-async function finalDate(context, quota) {
+async function finalDate(context, quota) { // where we actually schedule the consulta
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
 	// console.log('chosenHour', context.state.chosenHour);
 
 	const response = await prepApi.postAppointment(
-		context.session.user.id, context.state.calendar.google_id, context.state.chosenDay.appointment_window_id,
+		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta, context.state.chosenDay.appointment_window_id,
 		context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
 	);
 
@@ -189,7 +189,7 @@ async function finalDate(context, quota) {
 }
 
 module.exports.verConsulta = verConsulta;
-module.exports.marcarConsulta = marcarConsulta;
+module.exports.showDays = showDays;
 module.exports.showCities = showCities;
 module.exports.nextDay = nextDay;
 module.exports.nextHour = nextHour;

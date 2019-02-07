@@ -65,7 +65,7 @@ module.exports = async (context) => {
 				await context.setState({ dialog: 'nextHour' });
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
 				await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
-				await context.setState({ dialog: 'marcarConsulta' });
+				await context.setState({ dialog: 'showDays' });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -120,8 +120,12 @@ module.exports = async (context) => {
 		case 'beginQuiz':
 			await context.sendText('Preparar, apontar... fogo!');
 			// falls throught
-		case 'startQuizA':
+		case 'startQuizA': // this is the quiz-type of questionario
 			await context.setState({ categoryQuestion: 'quiz' });
+			await quiz.answerQuizA(context);
+			break;
+		case 'triagem': // this is the triagem-type of questionario
+			await context.setState({ categoryQuestion: 'triagem' });
 			await quiz.answerQuizA(context);
 			break;
 		case 'aboutAmanda':
@@ -141,11 +145,16 @@ module.exports = async (context) => {
 		case 'consulta':
 			await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
 			break;
-		case 'getCity':
+		case 'getCity': // this is the regular type of consulta
+			await context.setState({ categoryConsulta: 'recrutamento' });
 			await consulta.showCities(context);
 			break;
-		case 'marcarConsulta':
-			await consulta.marcarConsulta(context);
+		case 'getCity2': // this is the diferent type of consulta
+			await context.setState({ categoryConsulta: 'anotherType' });
+			await consulta.showCities(context);
+			break;
+		case 'showDays':
+			await consulta.showDays(context);
 			break;
 		case 'verConsulta':
 			await consulta.verConsulta(context);

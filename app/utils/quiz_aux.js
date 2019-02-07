@@ -18,6 +18,7 @@ async function handleFlags(context, response) {
 
 async function endQuizA(context) {
 	await context.setState({ finished_quiz: true });
+	await context.setState({ followUpCounter: 0 });
 	if (context.state.is_eligible_for_research === true) { // elegível pra pesquisa
 		if (context.state.is_part_of_research === true) { // o que o usuário respondeu
 			await research.researchSaidYes(context); // elegível, disse sim
