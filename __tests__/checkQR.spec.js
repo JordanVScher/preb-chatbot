@@ -77,3 +77,27 @@ it('checkAnsweredQuiz - verConsulta, quiz finished and eligible with consulta', 
 	newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option to schedule appointment because he scheduled one already
 	await expect(newOptions.length === length - 2).toBeTruthy();
 });
+
+
+it('checkMainMenu - no integration_token ', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = {};
+	await checkQR.checkAnsweredQuiz(context, opt.mainMenu);
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.state.user.integration_token).toBeFalsy();
+});
+
+it('checkMainMenu - with integration_token ', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { integration_token: '1' };
+	await checkQR.checkAnsweredQuiz(context, opt.mainMenu);
+	let newOptions = opt.mainMenu.quick_replies;
+	const { length } = newOptions;
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.state.user.integration_token).toBeTruthy();
+	newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken');
+
+	await expect(newOptions.length === length - 1).toBeTruthy();
+});
