@@ -51,7 +51,7 @@ const weekDayName = {
 };
 
 const cidadeDictionary = {
-	1: 'São Paulo - SP', 2: 'Salvador', 3: 'Outro',
+	1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA',
 };
 
 

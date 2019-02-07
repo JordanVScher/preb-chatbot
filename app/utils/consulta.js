@@ -4,6 +4,7 @@ const flow = require('./flow');
 const opt = require('./options');
 const help = require('./helper');
 const prepApi = require('./prep_api');
+const { sendMain } = require('./mainMenu');
 
 async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
@@ -179,12 +180,16 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
 	);
 
+	console.log('response', response);
+
+
 	if (response.id) {
 		await context.sendText('Arrasou! Sua consulta está marcada:'
-			+ '\n🏠: Rua do Teste, 00, Bairro, cep.'
+			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
 			+ `\n⏰: ${help.formatDate(context.state.chosenHour.datetime_start)}`);
+		await sendMain(context);
 	} else {
-		await context.sendText('Parece que acabaram de marcar uma consulta nesse mesmo horário! Mas tudo bem, escolha outro dia para sua consulta!');
+		await context.sendText('Parece que acabaram de marcar uma consulta nesse mesmo horário! Mas tudo bem, escolha outro dia para sua consulta!', opt.consultaFail);
 	}
 }
 
