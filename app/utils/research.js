@@ -2,6 +2,17 @@ const flow = require('./flow');
 const opt = require('./options');
 const { checkAnsweredQuiz } = require('./checkQR');
 
+async function handleToken(context) {
+	await context.setState({ awaitToken: false, dialog: 'handleToken' });
+	if (context.state.whatWasTyped.length === 6) {
+		await context.sendText('Legal, é válido!');
+		await context.setState({ dialog: 'mainMenu' });
+	} else {
+		await context.sendText('Inválido, tente novamente');
+		await context.setState({ dialog: 'joinToken' });
+	}
+}
+
 async function onTheResearch(context) {
 	await context.setState({ dialog: 'onTheResearch' });
 	await context.sendText(flow.onTheResearch.text1);
@@ -32,3 +43,4 @@ module.exports.notOnResearch = notOnResearch;
 module.exports.notEligible = notEligible;
 module.exports.researchSaidNo = researchSaidNo;
 module.exports.researchSaidYes = researchSaidYes;
+module.exports.handleToken = handleToken;

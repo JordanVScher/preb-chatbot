@@ -29,4 +29,18 @@ async function checkAnsweredQuiz(context, options) {
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
+async function checkMainMenu(context, options) {
+	let newOptions = options.quick_replies; // getting array out of the QR object
+	// console.log('antes', newOptions);
+
+	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	if (context.state.user.token) { // check if user has token
+		newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
+	}
+
+	// console.log('depois', newOptions);
+	return { quick_replies: newOptions }; // putting the filtered array on a QR object
+}
+
 module.exports.checkAnsweredQuiz = checkAnsweredQuiz;
+module.exports.checkMainMenu = checkMainMenu;

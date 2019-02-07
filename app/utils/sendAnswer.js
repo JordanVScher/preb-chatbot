@@ -1,33 +1,11 @@
 const MaAPI = require('../chatbot_api');
-const prepApi = require('./prep_api');
-const { checkAnsweredQuiz } = require('./checkQR');
-// const flow = require('./flow');
-const opt = require('./options');
 const { createIssue } = require('../send_issue');
+// const prepApi = require('./prep_api');
+// const { checkAnsweredQuiz } = require('./checkQR');
+// const flow = require('./flow');
+// const opt = require('./options');
 
 // const queixas = ['Camisinha Estourou', 'Tratamento IST', 'Indetectavel Transmite', 'Tenho Ferida', 'Apresenta Sintoma', 'Abuso', 'Tenho HIV'];
-
-async function answerFollowUp(context) {
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
-
-	console.log(context.state.user);
-
-	if (context.state.user.is_part_of_research2 === 1) { // parte da pesquisa
-		// if (queixas.includes(context.state.intentName)) {
-		// 	await context.sendText('Vamos te mandar pra triagem mas ela não está pronta ainda, marque uma consulta', await checkAnsweredQuiz(opt.answer.sendConsulta));
-		// } else {
-		// 	await context.setState({ dialog: 'endFlow' });
-		// }
-	} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se acabou o quiz
-		if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 1) { // eslint-disable-line no-lonely-if
-			await context.sendText('Ei, vc ainda não acabou o nosso quiz! Vamos terminar?', opt.answer.sendQuiz);
-		} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não)
-			await context.sendText('Você não quer mesmo fazer parte da nossa pesquisa?');
-		} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível
-			await context.setState({ dialog: 'endFlow' });
-		}
-	}
-}
 
 
 async function sendAnswer(context) { // send answer from posicionamento
@@ -60,4 +38,3 @@ async function sendAnswer(context) { // send answer from posicionamento
 	}
 }
 module.exports.sendAnswer = sendAnswer;
-module.exports.answerFollowUp = answerFollowUp;

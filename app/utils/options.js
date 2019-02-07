@@ -29,14 +29,19 @@ module.exports = {
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
-	aboutAmandaA: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'desafio' }] },
-	aboutAmandaB: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' }] },
+	// aboutAmandaA: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'desafio' }] },
+	// aboutAmandaB: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' }] },
 	mainMenu: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Prevenções', payload: 'prevencao' },
 			{ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' },
-			{ content_type: 'text', title: 'CTA', payload: 'cta' },
-			{ content_type: 'text', title: 'Sobre Amanda Selfie', payload: 'aboutAmandaB' },
+			{ content_type: 'text', title: 'Prevenções', payload: 'seePreventions' },
+			{ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
+			{ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' },
+		],
+	},
+	joinToken: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Não tenho token', payload: 'mainMenu' },
 		],
 	},
 	desafio: {
@@ -70,13 +75,13 @@ module.exports = {
 		sendQuiz: {
 			quick_replies: [
 				{ content_type: 'text', title: 'Vamos lá', payload: 'beginQuiz' },
-				{ content_type: 'text', title: 'Agora não', payload: 'endFlow' },
+				{ content_type: 'text', title: 'Agora não', payload: 'mainMenu' },
 			],
 		},
 		sendResearch: {
 			quick_replies: [
 				{ content_type: 'text', title: 'Tudo bem', payload: 'joinResearch' },
-				{ content_type: 'text', title: 'Não', payload: 'endFlow' },
+				{ content_type: 'text', title: 'Não', payload: 'mainMenu' },
 			],
 		},
 		sendConsulta: {

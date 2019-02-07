@@ -27,6 +27,12 @@ module.exports = {
 		text2: 'Meus códigos são lindos e cheios de glitters e glamour 💁😂\nEntão, olha só o que você pode fazer por aqui:',
 		text3: 'Se tiver outras dúvidas é só me enviar uma mensagem',
 	},
+	baterPapo: {
+		text1: 'Você pode me perguntar qualquer coisa',
+	},
+	joinToken: {
+		text1: 'Digite seu token aí',
+	},
 	issueText: {
 		success: 'Desculpe, não entendi sua mensagem. Mas não se preocupe, enviei para minha equipe e logo vamos te responder ;)',
 		failure: 'Não entendi sua mensagem. Escreva novamente',

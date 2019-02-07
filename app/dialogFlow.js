@@ -1,12 +1,14 @@
 const MaAPI = require('./chatbot_api.js');
 const { createIssue } = require('./send_issue');
 const { sendAnswer } = require('./utils/sendAnswer');
-const { answerFollowUp } = require('./utils/sendAnswer');
 
 async function checkPosition(context) {
 	await context.setState({ dialog: 'checkPositionFunc' });
 	switch (context.state.intentName) {
 	// case 'Greetings': // add specific intents here
+	// 	break;
+	// case 'Fazer Quiz': // didn't understand what was typed
+	// 	await createIssue(context);
 	// 	break;
 	case 'Fallback': // didn't understand what was typed
 		await createIssue(context);
@@ -23,8 +25,6 @@ async function checkPosition(context) {
 
 		break;
 	}
-
-	await answerFollowUp(context);
 }
 
 module.exports.checkPosition = checkPosition;

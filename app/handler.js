@@ -7,9 +7,9 @@ const flow = require('./utils/flow');
 const opt = require('./utils/options');
 const help = require('./utils/helper');
 const quiz = require('./utils/quiz');
-const calendarBot = require('./utils/calendar/calendarBot');
 const desafio = require('./utils/desafio');
 const consulta = require('./utils/consulta');
+const { handleToken } = require('./utils/research');
 
 module.exports = async (context) => {
 	try {
@@ -75,10 +75,13 @@ module.exports = async (context) => {
 			if (context.state.onTextQuiz === true) {
 				await context.setState({ onTextQuiz: false });
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
+			} else if (context.state.awaitToken === true) {
+				await handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod') {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
-				await context.setState({ timerOneSent: false }); // for testing timer
+				// await context.setState({ timerOneSent: false }); // for testing timer
+				await context.setState({ followUpCounter: 0 });
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
 				await context.setState({ dialog: 'greetings' });
@@ -111,7 +114,7 @@ module.exports = async (context) => {
 			await desafio.desafioAceito(context);
 			break;
 		case 'mainMenu':
-			await context.sendText(flow.mainMenu.text2);
+			await desafio.sendMain(context);
 			break;
 		case 'beginQuiz':
 			await context.sendText('Preparar, apontar... fogo!');
@@ -119,15 +122,19 @@ module.exports = async (context) => {
 		case 'startQuizA':
 			await quiz.answerQuizA(context);
 			break;
-		case 'aboutAmandaA':
+		case 'aboutAmanda':
 			await context.sendImage(flow.aboutAmanda.gif);
 			await context.sendText(flow.aboutAmanda.msgOne);
-			await context.sendText(flow.aboutAmanda.msgTwo, opt.aboutAmandaA);
+			await context.sendText(flow.aboutAmanda.msgTwo);
+			await desafio.followUp(context);
 			break;
-		case 'aboutAmandB':
-			await context.sendImage(flow.aboutAmanda.gif);
-			await context.sendText(flow.aboutAmanda.msgOne);
-			await context.sendText(flow.aboutAmanda.msgTwo, opt.aboutAmandaB);
+		case 'baterPapo':
+			await context.sendText(flow.baterPapo.text1);
+			await desafio.followUp(context);
+			break;
+		case 'joinToken':
+			await context.setState({ awaitToken: true });
+			await context.sendText(flow.joinToken.text1, opt.joinToken);
 			break;
 		case 'consulta':
 			await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
@@ -156,21 +163,6 @@ module.exports = async (context) => {
 		case 'desafio':
 			await context.sendText(flow.desafio.text1, opt.desafio);
 			break;
-		case 'seeEvent':
-			await calendarBot.listAllEvents(context);
-			break;
-		case 'myEvent':
-			await calendarBot.listUserEvents(context);
-			break;
-		case 'setEventDate':
-			await calendarBot.sendAvailableDays(context);
-			break;
-		case 'setEventHour':
-			await calendarBot.sendAvailableHours(context);
-			break;
-		case 'setEvent':
-			await calendarBot.setEvent(context);
-			break;
 		case 'joinResearch':
 			await context.sendText('Legal, agora você é parte da pesquisa!');
 			// falls throught
@@ -181,11 +173,12 @@ module.exports = async (context) => {
 			await context.sendText(flow.prevention.text1);
 			await context.sendText(flow.prevention.text2);
 			await context.sendText(flow.prevention.text3);
-			await context.sendText(flow.prevention.text4, opt.prevention);
+			await context.sendText(flow.prevention.text4);
+			await desafio.followUp(context);
 			break;
-		case 'preventionEnd':
-			await context.sendText(flow.prevention.end);
-			break;
+		// case 'preventionEnd':
+		// 	await context.sendText(flow.prevention.end);
+		// 	break;
 		case 'notificationOn':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 1);
 			await prepAPI.putRecipientNotification(context.session.user.id, 1);
