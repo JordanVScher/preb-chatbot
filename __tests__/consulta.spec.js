@@ -29,7 +29,7 @@ it('verConsulta - one appointment', async () => {
 	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeTruthy();
     for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
 		await expect(context.sendText).toBeCalledWith('Arrasou! Você tem uma consulta:'
-        + '\n🏠: Rua do Teste, 00, Bairro, cep.'
+		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
         + `\n⏰: ${help.formatDate(iterator.datetime_start)}`);
 	}
 });

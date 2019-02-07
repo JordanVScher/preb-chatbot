@@ -45,9 +45,15 @@ function capQR(text) {
 	return result;
 }
 
-const weekDayName = { // simple week day dictionary
+// week day dictionary
+const weekDayName = {
 	0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado', 7: 'Domingo',
 };
+
+const cidadeDictionary = {
+	1: 'São Paulo - SP', 2: 'Salvador', 3: 'Outro',
+};
+
 
 module.exports.Sentry = Sentry;
 module.exports.apiai = dialogFlow(process.env.DIALOGFLOW_TOKEN);
@@ -58,3 +64,4 @@ module.exports.waitTypingEffect = waitTypingEffect;
 module.exports.formatDate = formatDate;
 module.exports.formatInitialDate = formatInitialDate;
 module.exports.weekDayName = weekDayName;
+module.exports.cidadeDictionary = cidadeDictionary;
