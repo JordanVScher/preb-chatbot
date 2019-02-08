@@ -21,9 +21,7 @@ async function sendFollowUp(context) {
 	});
 }
 
-
 module.exports.sendFollowUp = sendFollowUp;
-
 
 // // timeOut timers
 // // 24 hours -> send follow-up -> 1000 * 60 * 60 * 24

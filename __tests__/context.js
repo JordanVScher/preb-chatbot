@@ -26,6 +26,7 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 			rawEvent: { timestamp: new Date(), recipient: { id: 1000 } },
 		},
 		sendText: jest.fn(),
+		sendButtonTemplate: jest.fn(),
 		setState: jest.fn(),
 		resetState: jest.fn(),
 		sendImage: jest.fn(),
@@ -64,6 +65,7 @@ function postbackContext(payload, title, dialog = 'prompt', lastActivity = new D
 			rawEvent: { timestamp: new Date(), recipient: { id: 1000 } },
 		},
 		sendText: jest.fn(),
+		sendButtonTemplate: jest.fn(),
 		setState: jest.fn(),
 		resetState: jest.fn(),
 		sendImage: jest.fn(),
@@ -105,6 +107,7 @@ function textContext(text, dialog, lastActivity = new Date()) {
 			rawEvent: { timestamp: new Date(), recipient: { id: 1000 } },
 		},
 		sendText: jest.fn(),
+		sendButtonTemplate: jest.fn(),
 		setState: jest.fn(),
 		resetState: jest.fn(),
 		sendImage: jest.fn(),
@@ -112,7 +115,6 @@ function textContext(text, dialog, lastActivity = new Date()) {
 		sendAudio: jest.fn(),
 		typingOn: jest.fn(),
 		typingOff: jest.fn(),
-		sendButtonTemplate: jest.fn(),
 	};
 }
 

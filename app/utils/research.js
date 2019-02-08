@@ -31,11 +31,11 @@ async function notEligible(context) {
 }
 
 async function researchSaidNo(context) {
-	await context.sendText(flow.quizNo.text1, opt.saidNo);
+	await context.sendButtonTemplate(flow.quizNo.text1, opt.artigoLink);
 }
 
 async function researchSaidYes(context) {
-	await context.sendText(flow.quizYes.text1);
+	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
 	await context.sendText(flow.quizYes.text2);
 	await context.sendText(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
 }

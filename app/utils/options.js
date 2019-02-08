@@ -56,6 +56,11 @@ module.exports = {
 			{ content_type: 'text', title: 'Não quero!', payload: 'noResearch' },
 		],
 	},
+	artigoLink: [{
+		type: 'web_url',
+		url: 'https://www.google.com',
+		title: 'Ler artigo',
+	}],
 	saidYes: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },

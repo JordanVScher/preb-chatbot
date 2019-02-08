@@ -39,14 +39,14 @@ it('researchSaidNo', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.researchSaidNo(context);
 
-	await expect(context.sendText).toBeCalledWith(flow.quizNo.text1, opt.saidNo);
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizNo.text1, opt.artigoLink);
 });
 
 it('researchSaidYes', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.researchSaidYes(context);
 
-	await expect(context.sendText).toBeCalledWith(flow.quizYes.text1);
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text1, opt.artigoLink);
 	await expect(context.sendText).toBeCalledWith(flow.quizYes.text2);
 	await expect(context.sendText).toBeCalledWith(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
 });
