@@ -80,7 +80,19 @@ module.exports = {
 
 	async postIntegrationToken(fb_id, integration_token) {
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/integration-token?security_token=${security_token}&`).query({ fb_id, integration_token });
-		const dates = await res.json();
-		return dates;
+		const result = await res.json();
+		return result;
+	},
+
+	async getCountQuiz(fb_id) {
+		const res = await request.get(`${apiUri}/api/chatbot/recipient/count-quiz?security_token=${security_token}&`).query({ fb_id });
+		const count = await res.json();
+		return count;
+	},
+
+	async postCountQuiz(fb_id) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient/count-quiz?security_token=${security_token}&`).query({ fb_id });
+		const count = await res.json();
+		return count;
 	},
 };

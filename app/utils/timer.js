@@ -1,27 +1,4 @@
-const flow = require('./flow');
-
-const shareLink = process.env.SHARE_LINK;
-
-async function sendFollowUp(context) {
-	await context.sendText(flow.followUp.preText);
-	await context.sendAttachment({
-		type: 'template',
-		payload: {
-			template_type: 'generic',
-			elements: [
-				{
-					title: flow.followUp.title,
-					subtitle: flow.followUp.subtitle,
-					image_url: flow.avatarImage,
-					item_url: shareLink,
-					buttons: [{ type: 'element_share' }],
-				},
-			],
-		},
-	});
-}
-
-module.exports.sendFollowUp = sendFollowUp;
+// const flow = require('./flow');
 
 // // timeOut timers
 // // 24 hours -> send follow-up -> 1000 * 60 * 60 * 24
