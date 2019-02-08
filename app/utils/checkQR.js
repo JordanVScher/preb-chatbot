@@ -34,7 +34,8 @@ async function checkMainMenu(context, options) {
 	// console.log('antes', newOptions);
 
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	if (context.state.user.integration_token) { // check if user has token
+
+	if (context.state.user.integration_token && context.state.user.integration_token.length > 0) { // check if user has token
 		newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
 	}
 

@@ -32,7 +32,9 @@ module.exports = {
 		text1: 'Você pode me perguntar qualquer coisa',
 	},
 	joinToken: {
-		text1: 'Digite seu token aí',
+		text1: 'Para você qeu adquiriu seu voucher no serviço. Digite abaixo:',
+		success: 'Te encontrei no sistema',
+		fail: 'Não te encontrei no sistema. Vamos tentar novamente? Digite como lhe foi fornecido. Deve parecer com algo assim: xxx-xxx',
 	},
 	issueText: {
 		success: 'Desculpe, não entendi sua mensagem. Mas não se preocupe, enviei para minha equipe e logo vamos te responder ;)',

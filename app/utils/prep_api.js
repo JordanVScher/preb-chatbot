@@ -77,4 +77,10 @@ module.exports = {
 		const dates = await res.json();
 		return dates;
 	},
+
+	async postIntegrationToken(fb_id, integration_token) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient/integration-token?security_token=${security_token}&`).query({ fb_id, integration_token });
+		const dates = await res.json();
+		return dates;
+	},
 };
