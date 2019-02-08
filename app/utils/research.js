@@ -4,7 +4,6 @@ const checkQR = require('./checkQR');
 const { postIntegrationToken } = require('./prep_api');
 
 async function handleToken(context) {
-	await context.setState({ awaitToken: false, dialog: 'handleToken' });
 	const answer = await postIntegrationToken(context.session.user.id, context.state.whatWasTyped);
 	if (answer.form_error) { // check if there was any errors
 		await context.sendText(flow.joinToken.fail);

@@ -77,7 +77,7 @@ module.exports = async (context) => {
 			if (context.state.onTextQuiz === true) {
 				await context.setState({ onTextQuiz: false });
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
-			} else if (context.state.awaitToken === true) {
+			} else if (context.state.dialog === 'joinToken') {
 				await handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod') {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
@@ -139,7 +139,6 @@ module.exports = async (context) => {
 			await desafio.followUp(context);
 			break;
 		case 'joinToken':
-			await context.setState({ awaitToken: true });
 			await context.sendText(flow.joinToken.text1, opt.joinToken);
 			break;
 		case 'consulta':
