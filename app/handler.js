@@ -108,6 +108,9 @@ module.exports = async (context) => {
 			// await consulta.getCity(context);
 			// await quiz.answerQuizA(context);
 			break;
+		case 'desafio':
+			await context.sendText(flow.desafio.text1, opt.desafio);
+			break;
 		case 'desafioRecusado':
 			await desafio.desafioRecusado(context);
 			break;
@@ -155,12 +158,6 @@ module.exports = async (context) => {
 		case 'showDays':
 			await consulta.showDays(context);
 			break;
-		case 'verConsulta':
-			await consulta.verConsulta(context);
-			break;
-		case 'noResearch':
-			await sendMain(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
-			break;
 		case 'showHours':
 			await consulta.showHours(context, context.state.lastQRpayload.replace('dia', ''));
 			break;
@@ -173,10 +170,14 @@ module.exports = async (context) => {
 		case 'nextHour':
 			await consulta.nextHour(context, context.state.lastQRpayload.replace('nextHour', ''));
 			break;
-		case 'desafio':
-			await context.sendText(flow.desafio.text1, opt.desafio);
+		case 'verConsulta':
+			await consulta.verConsulta(context);
+			break;
+		case 'noResearch':
+			await sendMain(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
 			break;
 		case 'joinResearch':
+			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);
 			await research.researchSaidYes(context);
 			break;
 		case 'endFlow':
