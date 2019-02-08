@@ -1,12 +1,5 @@
 const MaAPI = require('../chatbot_api');
 const { createIssue } = require('../send_issue');
-// const prepApi = require('./prep_api');
-// const { checkAnsweredQuiz } = require('./checkQR');
-// const flow = require('./flow');
-// const opt = require('./options');
-
-// const queixas = ['Camisinha Estourou', 'Tratamento IST', 'Indetectavel Transmite', 'Tenho Ferida', 'Apresenta Sintoma', 'Abuso', 'Tenho HIV'];
-
 
 async function sendAnswer(context) { // send answer from posicionamento
 	// await context.setState({ currentTheme: await context.state.knowledge.knowledge_base.find(x => x.type === 'posicionamento') });
@@ -32,7 +25,6 @@ async function sendAnswer(context) { // send answer from posicionamento
 			await context.sendAudio({ attachment_id: context.state.currentTheme.saved_attachment_id });
 		}
 		await context.typingOff();
-		// await context.sendText(flow.mainMenu.text3);
 	} else { // in case there's an error
 		await createIssue(context);
 	}

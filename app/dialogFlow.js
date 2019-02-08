@@ -1,6 +1,8 @@
 const MaAPI = require('./chatbot_api.js');
 const { createIssue } = require('./send_issue');
 const { sendAnswer } = require('./utils/sendAnswer');
+const mainMenu = require('./utils/mainMenu');
+
 
 async function checkPosition(context) {
 	await context.setState({ dialog: 'checkPositionFunc' });
@@ -25,6 +27,8 @@ async function checkPosition(context) {
 
 		break;
 	}
+
+	await mainMenu.sendShareAndMenu(context);
 }
 
 module.exports.checkPosition = checkPosition;
