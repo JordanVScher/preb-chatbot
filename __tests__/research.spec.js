@@ -2,7 +2,7 @@ const cont = require('./context');
 const research = require('../app/utils/research');
 const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
-const { checkAnsweredQuiz } = require('../app/utils/checkQR');
+const checkQR = require('../app/utils/checkQR');
 
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
@@ -32,7 +32,7 @@ it('notEligible', async () => {
 	await research.notEligible(context);
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'NotEligible' });
-	await expect(context.sendText).toBeCalledWith(flow.notEligible.text1, opt.saidNo);
+	await expect(context.sendText).toBeCalledWith(flow.notEligible.text1, await checkQR.checkMainMenu(context, opt.mainMenu));
 });
 
 it('researchSaidNo', async () => {
@@ -46,5 +46,5 @@ it('researchSaidYes', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.researchSaidYes(context);
 
-	await expect(context.sendText).toBeCalledWith(flow.quizYes.text1, await checkAnsweredQuiz(context, opt.saidYes));
+	await expect(context.sendText).toBeCalledWith(flow.quizYes.text1, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
 });

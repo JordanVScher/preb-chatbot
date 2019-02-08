@@ -1,6 +1,6 @@
 const flow = require('./flow');
 const opt = require('./options');
-const { checkAnsweredQuiz } = require('./checkQR');
+const checkQR = require('./checkQR');
 
 async function handleToken(context) {
 	await context.setState({ awaitToken: false, dialog: 'handleToken' });
@@ -27,7 +27,7 @@ async function notOnResearch(context) {
 
 async function notEligible(context) {
 	await context.setState({ dialog: 'NotEligible' });
-	await context.sendText(flow.notEligible.text1, opt.saidNo);
+	await context.sendText(flow.notEligible.text1, await checkQR.checkMainMenu(context, opt.mainMenu));
 }
 
 async function researchSaidNo(context) {
@@ -35,7 +35,7 @@ async function researchSaidNo(context) {
 }
 
 async function researchSaidYes(context) {
-	await context.sendText(flow.quizYes.text1, await checkAnsweredQuiz(context, opt.saidYes));
+	await context.sendText(flow.quizYes.text1, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
 }
 
 module.exports.onTheResearch = onTheResearch;

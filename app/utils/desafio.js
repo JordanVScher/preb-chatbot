@@ -33,7 +33,8 @@ async function asksDesafio(context) {
 	if (context.state.user.finished_quiz === 1) { // user has answered the quiz already, he goes to the mainMenu
 		await sendMain(context);
 	} else {
-		await context.sendText(flow.asksDesafio.text1, opt.asksDesafio); // has yet to awnser the quiz
+		await context.sendText(flow.asksDesafio.text1);
+		await context.sendText(flow.asksDesafio.text2, opt.asksDesafio); // has yet to awnser the quiz
 	}
 }
 
@@ -43,8 +44,7 @@ async function desafioRecusado(context) {
 }
 
 async function desafioAceito(context) {
-	await context.sendText(flow.desafioAceito.text1);
-	await context.sendText(flow.desafioAceito.text2, opt.desafioAceito);
+	await context.sendText(flow.desafioAceito.text1, opt.desafioAceito);
 }
 
 

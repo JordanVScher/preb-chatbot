@@ -12,24 +12,21 @@ module.exports = {
 		msgTwo: 'História começou assim... [texto sobre a Amanda]',
 	},
 	asksDesafio: {
-		text1: 'Agora, te lanço um desafio! Você sabe quem é você no sexo?',
+		text1: 'Agora, te lanço um desafio! Sabe aqueles caderninhos de enquete que rolavam nas escolas?\nAin, estou denuncionando a idade dos meus criadores.',
+		text2: 'Então, eu tenho dicas ótimas, mas antes eu brincar de enquete. Vamos?',
 	},
 	desafio: {
 		text1: 'Ei, vc ainda não acabou o nosso quiz! Vamos terminar?',
 		text2: 'Você não quer mesmo fazer parte da nossa pesquisa?',
 	},
 	desafioRecusado: {
-		text1: 'Ok',
-		text2: 'Veja o que você pode fazer por aqui',
+		text1: '😉',
 	},
 	desafioAceito: {
-		text1: 'É o seguinte, são algumas perguntinhas e para responder, basta clicar no botão. Caso você clique em "Não sei o que é" em alguma delas, eu explicarei e você poderá responder novamente. No final, seu resultado 😉',
-		text2: 'Sinceridade, hein! Não estou aqui para te julgar, então se joga!',
+		text1: 'Vou te fazer umas perguntinhas, jogo rápido. Se joga!',
 	},
 	mainMenu: {
-		text1: '😉',
-		text2: 'Meus códigos são lindos e cheios de glitters e glamour 💁😂\nEntão, olha só o que você pode fazer por aqui:',
-		text3: 'Se tiver outras dúvidas é só me enviar uma mensagem',
+		text1: 'Você pode me fazer uma pergunta ou escolher um dos botões abaixo:',
 	},
 	baterPapo: {
 		text1: 'Você pode me perguntar qualquer coisa',
@@ -53,7 +50,7 @@ module.exports = {
 	onTheResearch: {
 		text1: 'Resultado:\nVocê é lacração! Solta a franga e não quer nem saber!',
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
-		text2: 'Eu tenho dicas ótimas para você!',
+		text2: 'Você sabia que existem vários tipos de prevenções? Uma delas é a Prep, prevena a infecção pelo HIV por meio da administração diária de uma pílula! Bb, é gratuito pelo SUS!',
 	},
 	verConsulta: {
 		zero: 'Você não tem nenhuma consulta marcada. Você pode marcar uma nova consulta a qualquer momento',
@@ -62,7 +59,7 @@ module.exports = {
 		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
 	},
 	notEligible: {
-		text1: 'Você acabou o QUIZ. Quer saber um pouco mais sobre saúde sexual e conhecer alguns métodos de prevenção ao HIV que talvez você ainda não conheça e são muito seguros?',
+		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
 	},
 	quizNo: {
 		text1: 'Que pena você não quer participar da nossa pesquisa. Quer saber um pouco mais sobre saúde sexual e conhecer alguns métodos de prevenção ao HIV que talvez você ainda não conheça',
