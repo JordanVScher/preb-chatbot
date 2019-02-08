@@ -95,4 +95,16 @@ module.exports = {
 		const count = await res.json();
 		return count;
 	},
+
+	async getCountResearch(fb_id) {
+		const res = await request.get(`${apiUri}/api/chatbot/recipient/count-research-invite?security_token=${security_token}&`).query({ fb_id });
+		const count = await res.json();
+		return count;
+	},
+
+	async postCountResearch(fb_id) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient/count-research-invite?security_token=${security_token}&`).query({ fb_id });
+		const count = await res.json();
+		return count;
+	},
 };

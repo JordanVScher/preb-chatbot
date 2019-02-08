@@ -1,6 +1,7 @@
 const checkQR = require('./checkQR');
 const flow = require('./flow');
 const opt = require('./options');
+// const prepApi = require('./prep_api');
 
 const shareLink = process.env.SHARE_LINK;
 

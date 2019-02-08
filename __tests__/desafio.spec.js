@@ -132,5 +132,9 @@ it('followUp - user eligible_for_research', async () => {
 	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
 	await expect(context.state.user.is_eligible_for_research === null || context.state.user.finished_quiz === 0).toBeFalsy();
 	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ researchCounter: await prepApi.getCountResearch(context.session.user.id) });
+	await expect(context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3).toBeFalsy();
+	await expect(prepApi.postCountResearch).toBeCalledWith(context.session.user.id);
 	await expect(context.sendText).toBeCalledWith(flow.desafio.text2, opt.answer.sendResearch);
 });

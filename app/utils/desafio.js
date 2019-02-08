@@ -13,6 +13,7 @@ async function followUp(context) {
 		await mainMenu.sendShareAndMenu(context); // send regular menu
 	} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
 		if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
+		// -- send quiz
 			await context.setState({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // load quiz counter
 			if (context.state.quizCounter && context.state.quizCounter.count_quiz >= 3) { // check quiz counter
 				await mainMenu.sendShareAndMenu(context); // send regular menu
@@ -20,8 +21,17 @@ async function followUp(context) {
 				await prepApi.postCountQuiz(context.session.user.id); // update quiz counter
 				await context.sendText(flow.desafio.text1, opt.answer.sendQuiz); // send quiz
 			}
+		// -- send quiz
 		} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não)
-			await context.sendText(flow.desafio.text2, opt.answer.sendResearch);
+			// -- send research
+			await context.setState({ researchCounter: await prepApi.getCountResearch(context.session.user.id) }); // load quiz counter
+			if (context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3) { // check quiz counter
+				await mainMenu.sendShareAndMenu(context); // send regular menu
+			} else {
+				await prepApi.postCountResearch(context.session.user.id); // update quiz counter
+				await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
+			}
+			// -- send research
 		} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível
 			await mainMenu.sendShareAndMenu(context); // send regular menu
 		}
@@ -46,7 +56,6 @@ async function desafioRecusado(context) {
 async function desafioAceito(context) {
 	await context.sendText(flow.desafioAceito.text1, opt.desafioAceito);
 }
-
 
 module.exports.asksDesafio = asksDesafio;
 module.exports.desafioRecusado = desafioRecusado;
