@@ -12,6 +12,7 @@ const consulta = require('./utils/consulta');
 const { handleToken } = require('./utils/research');
 const { sendMain } = require('./utils/mainMenu');
 const research = require('./utils/research');
+const timer = require('./utils/timer');
 
 module.exports = async (context) => {
 	try {
@@ -133,7 +134,8 @@ module.exports = async (context) => {
 			await context.sendImage(flow.aboutAmanda.gif);
 			await context.sendText(flow.aboutAmanda.msgOne);
 			await context.sendText(flow.aboutAmanda.msgTwo);
-			await desafio.followUp(context);
+			await timer.sendFollowUp(context);
+			await sendMain(context);
 			break;
 		case 'baterPapo':
 			await context.sendText(flow.baterPapo.text1);

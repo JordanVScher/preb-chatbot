@@ -41,7 +41,7 @@ module.exports = {
 	followUp: {
 		title: 'Chatbot Amanda Selfie',
 		subtitle: 'Me compartilhe no mundo!',
-		preText: 'Oii, você tem alguma amiga ou amigo que gostariam de ouvir meus conselhos? Se sim, me compartilhe ;)',
+		preText: 'O que você acha de espalhar meu glitter por aí, e falar de mim para todos os seus amigoxs?',
 	},
 	notifications: {
 		on: 'Legal. Estaremos te avisando das novidades.',
