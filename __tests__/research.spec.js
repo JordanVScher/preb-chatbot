@@ -32,7 +32,8 @@ it('notEligible', async () => {
 	await research.notEligible(context);
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'NotEligible' });
-	await expect(context.sendText).toBeCalledWith(flow.notEligible.text1, await checkQR.checkMainMenu(context, opt.mainMenu));
+	await expect(context.sendText).toBeCalledWith(flow.notEligible.text1);
+	await expect(context.sendText).toBeCalledWith(flow.notEligible.text2, await checkQR.checkMainMenu(context, opt.mainMenu));
 });
 
 it('researchSaidNo', async () => {
@@ -40,6 +41,7 @@ it('researchSaidNo', async () => {
 	await research.researchSaidNo(context);
 
 	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizNo.text1, opt.artigoLink);
+	await expect(context.sendText).toBeCalledWith(flow.quizNo.text2, opt.saidNo);
 });
 
 it('researchSaidYes', async () => {

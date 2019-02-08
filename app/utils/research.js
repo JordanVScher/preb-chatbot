@@ -25,13 +25,15 @@ async function notOnResearch(context) {
 	await context.sendText(flow.NotOnResearch.text1);
 }
 
-async function notEligible(context) {
+async function notEligible(context) { // não passou nas 3 primeiras perguntas
 	await context.setState({ dialog: 'NotEligible' });
-	await context.sendText(flow.notEligible.text1, await checkQR.checkMainMenu(context, opt.mainMenu));
+	await context.sendText(flow.notEligible.text1);
+	await context.sendText(flow.notEligible.text2, await checkQR.checkMainMenu(context, opt.mainMenu));
 }
 
 async function researchSaidNo(context) {
 	await context.sendButtonTemplate(flow.quizNo.text1, opt.artigoLink);
+	await context.sendText(flow.quizNo.text2, opt.saidNo);
 }
 
 async function researchSaidYes(context) {

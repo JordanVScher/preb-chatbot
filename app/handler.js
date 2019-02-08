@@ -11,6 +11,7 @@ const desafio = require('./utils/desafio');
 const consulta = require('./utils/consulta');
 const { handleToken } = require('./utils/research');
 const { sendMain } = require('./utils/mainMenu');
+const research = require('./utils/research');
 
 module.exports = async (context) => {
 	try {
@@ -160,8 +161,7 @@ module.exports = async (context) => {
 			await consulta.verConsulta(context);
 			break;
 		case 'noResearch':
-			await context.sendText(flow.quizNo.text1);
-			await sendMain(context);
+			await sendMain(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
 			break;
 		case 'showHours':
 			await consulta.showHours(context, context.state.lastQRpayload.replace('dia', ''));
@@ -179,8 +179,8 @@ module.exports = async (context) => {
 			await context.sendText(flow.desafio.text1, opt.desafio);
 			break;
 		case 'joinResearch':
-			await context.sendText('Legal, agora você é parte da pesquisa!');
-			// falls throught
+			await research.researchSaidYes(context);
+			break;
 		case 'endFlow':
 			await context.sendText('Você pode me compartilhar se quiser');
 			break;

@@ -9,11 +9,11 @@ module.exports = {
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
 		msgOne: 'Cola na grade que vou te contar tudo!',
-		msgTwo: 'História começou assim... [texto sobre a Amanda]',
+		msgTwo: 'História começou assim... (texto sobre a Amanda)',
 	},
 	asksDesafio: {
 		text1: 'Agora, te lanço um desafio! Sabe aqueles caderninhos de enquete que rolavam nas escolas?\nAin, estou denuncionando a idade dos meus criadores.',
-		text2: 'Então, eu tenho dicas ótimas, mas antes eu brincar de enquete. Vamos?',
+		text2: 'Então, eu tenho dicas ótimas, mas antes eu quero brincar de enquete. Vamos?',
 	},
 	desafio: {
 		text1: 'Ei, vc ainda não acabou o nosso quiz! Vamos terminar?',
@@ -56,18 +56,20 @@ module.exports = {
 		zero: 'Você não tem nenhuma consulta marcada. Você pode marcar uma nova consulta a qualquer momento',
 	},
 	NotOnResearch: {
-		// text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
-		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
+		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
+		text2: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
 	},
 	notEligible: {
-		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
+		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
+		text2: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
 	},
 	quizNo: {
 		text1: 'Está na dúvida, bb? Aqui você pode ler um artigo completo do professor da USP explicando sobre a pesquisa.',
-		text2: 'Tudo bem.',
+		text2: 'E aí? Não quer mesmo participar?',
+		text3: 'Tudo bem.',
 	},
 	quizYes: {
-		text1: 'O professor Alexandre, da USP, pediu para te mandar esse aqui explicando tudim.',
+		text1: 'O professor Alexandre, da USP, pediu para te mandar esse link aqui explicando tudim.',
 		text2: 'BAFO! Então, para continuar, clica no link abaixo e responda o questionário, rapidinho!',
 		text3: 'Cola na grade e vamos agendar sua primeira consulta! Bem tranquilo, você vai falar com um profissional que irá te orientar sobre tudo!',
 	},
