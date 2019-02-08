@@ -159,6 +159,10 @@ module.exports = async (context) => {
 		case 'verConsulta':
 			await consulta.verConsulta(context);
 			break;
+		case 'noResearch':
+			await context.sendText(flow.quizNo.text1);
+			await sendMain(context);
+			break;
 		case 'showHours':
 			await consulta.showHours(context, context.state.lastQRpayload.replace('dia', ''));
 			break;

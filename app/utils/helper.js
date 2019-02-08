@@ -54,6 +54,10 @@ const cidadeDictionary = {
 	1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA',
 };
 
+const telefoneDictionary = {
+	1: '11111-1111', 2: '2222-2222', 3: '33333-3333',
+};
+
 
 module.exports.Sentry = Sentry;
 module.exports.apiai = dialogFlow(process.env.DIALOGFLOW_TOKEN);
@@ -65,3 +69,4 @@ module.exports.formatDate = formatDate;
 module.exports.formatInitialDate = formatInitialDate;
 module.exports.weekDayName = weekDayName;
 module.exports.cidadeDictionary = cidadeDictionary;
+module.exports.telefoneDictionary = telefoneDictionary;

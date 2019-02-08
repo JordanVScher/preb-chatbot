@@ -52,7 +52,8 @@ module.exports = {
 	},
 	saidNo: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Ver métodos', payload: 'seePreventions' },
+			{ content_type: 'text', title: 'Quero!', payload: 'joinResearch' },
+			{ content_type: 'text', title: 'Não quero!', payload: 'noResearch' },
 		],
 	},
 	saidYes: {

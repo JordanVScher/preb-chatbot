@@ -27,10 +27,11 @@ it('verConsulta - one appointment', async () => {
 
 	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeTruthy();
-    for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
-		await expect(context.sendText).toBeCalledWith('Arrasou! Você tem uma consulta:'
+	for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
+		await expect(context.sendText).toBeCalledWith(`${flow.consulta.success}`
 		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-        + `\n⏰: ${help.formatDate(iterator.datetime_start)}`);
+		+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`
+		+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 	}
 });// טך
 
@@ -40,7 +41,7 @@ it('nextDay', async () => {
 	context.state.freeDays = [];
 	await consulta.nextDay(context);
 
-	await expect(context.sendText).toBeCalledWith('Escolha uma data', { quick_replies: context.state.freeDays[page] });
+	await expect(context.sendText).toBeCalledWith(flow.consulta.date, { quick_replies: context.state.freeDays[page] });
 });
 
 it('nextHour', async () => {
@@ -49,5 +50,5 @@ it('nextHour', async () => {
 	context.state.freeHours = [];
 	await consulta.nextHour(context);
 
-	await expect(context.sendText).toBeCalledWith('Escolha um horário', { quick_replies: context.state.freeHours[page] });
+	await expect(context.sendText).toBeCalledWith(flow.consulta.hour, { quick_replies: context.state.freeHours[page] });
 });

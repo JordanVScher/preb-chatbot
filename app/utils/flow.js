@@ -56,16 +56,29 @@ module.exports = {
 		zero: 'Você não tem nenhuma consulta marcada. Você pode marcar uma nova consulta a qualquer momento',
 	},
 	NotOnResearch: {
-		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
+		// text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
+		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
 	},
 	notEligible: {
 		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
 	},
 	quizNo: {
-		text1: 'Que pena você não quer participar da nossa pesquisa. Quer saber um pouco mais sobre saúde sexual e conhecer alguns métodos de prevenção ao HIV que talvez você ainda não conheça',
+		text1: 'Está na dúvida, bb? Aqui você pode ler um artigo completo do professor da USP explicando sobre a pesquisa.',
+		text2: 'Tudo bem.',
 	},
 	quizYes: {
-		text1: 'Que bom que você quer participar da nossa pesquisa. Marque uma consulta conosco para poder dar continuidade.',
+		text1: 'O professor Alexandre, da USP, pediu para te mandar esse aqui explicando tudim.',
+		text2: 'BAFO! Então, para continuar, clica no link abaixo e responda o questionário, rapidinho!',
+		text3: 'Cola na grade e vamos agendar sua primeira consulta! Bem tranquilo, você vai falar com um profissional que irá te orientar sobre tudo!',
+	},
+	consulta: {
+		city: 'Em qual cidade você quer agendar?',
+		date: 'Qual data?',
+		hours: 'Legal! E qual horário?',
+		fail1: 'Que estranho! Parece que tive um erro. Por favor, tente novamente mais tarde.',
+		fail2: 'Acho que me confundi! Não temos nenhum horario disponível nesse dia. Tente novamente!',
+		fail3: 'Parece que acabaram de marcar uma consulta nesse mesmo horário! Mas tudo bem, escolha outro dia para sua consulta!',
+		success: 'Arraso! Agendado 📅. Olha só sua consulta:\n',
 	},
 	prevention: {
 		text1: 'Utilizar preservativo é sempre, sempre essencial! Mesmo porque ele previne não só HIV, né! Mas ele não é o único método.',

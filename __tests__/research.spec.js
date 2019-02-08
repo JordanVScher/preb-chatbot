@@ -46,5 +46,7 @@ it('researchSaidYes', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.researchSaidYes(context);
 
-	await expect(context.sendText).toBeCalledWith(flow.quizYes.text1, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
+	await expect(context.sendText).toBeCalledWith(flow.quizYes.text1);
+	await expect(context.sendText).toBeCalledWith(flow.quizYes.text2);
+	await expect(context.sendText).toBeCalledWith(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
 });

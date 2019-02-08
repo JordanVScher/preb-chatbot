@@ -35,7 +35,9 @@ async function researchSaidNo(context) {
 }
 
 async function researchSaidYes(context) {
-	await context.sendText(flow.quizYes.text1, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
+	await context.sendText(flow.quizYes.text1);
+	await context.sendText(flow.quizYes.text2);
+	await context.sendText(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
 }
 
 module.exports.onTheResearch = onTheResearch;
