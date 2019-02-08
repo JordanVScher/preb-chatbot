@@ -2,6 +2,7 @@ const flow = require('./flow');
 const opt = require('./options');
 const prepApi = require('./prep_api');
 const { sendMain } = require('./mainMenu');
+const timer = require('./timer');
 
 async function followUp(context) {
 	if (context.state.followUpCounter >= 3) { // only offer the options on the first 3 times
@@ -15,6 +16,7 @@ async function followUp(context) {
 		console.log(context.state.user);
 
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa
+			await timer.sendFollowUp(context);
 			await sendMain(context);
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
 			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
@@ -22,6 +24,7 @@ async function followUp(context) {
 			} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não)
 				await context.sendText(flow.desafio.text2, opt.answer.sendResearch);
 			} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível
+				await timer.sendFollowUp(context);
 				await sendMain(context);
 			}
 		}

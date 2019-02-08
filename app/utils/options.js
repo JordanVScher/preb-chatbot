@@ -29,8 +29,6 @@ module.exports = {
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
-	// aboutAmandaA: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'desafio' }] },
-	// aboutAmandaB: { quick_replies: [{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' }] },
 	mainMenu: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' },
@@ -87,7 +85,7 @@ module.exports = {
 		sendResearch: {
 			quick_replies: [
 				{ content_type: 'text', title: 'Tudo bem', payload: 'joinResearch' },
-				{ content_type: 'text', title: 'Não quero', payload: 'mainMenu' },
+				{ content_type: 'text', title: 'Não quero', payload: 'noResearch' },
 			],
 		},
 		sendConsulta: {

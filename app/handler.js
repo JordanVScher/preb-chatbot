@@ -12,7 +12,6 @@ const consulta = require('./utils/consulta');
 const { handleToken } = require('./utils/research');
 const { sendMain } = require('./utils/mainMenu');
 const research = require('./utils/research');
-const timer = require('./utils/timer');
 
 module.exports = async (context) => {
 	try {
@@ -134,8 +133,7 @@ module.exports = async (context) => {
 			await context.sendImage(flow.aboutAmanda.gif);
 			await context.sendText(flow.aboutAmanda.msgOne);
 			await context.sendText(flow.aboutAmanda.msgTwo);
-			await timer.sendFollowUp(context);
-			await sendMain(context);
+			await desafio.followUp(context);
 			break;
 		case 'baterPapo':
 			await context.sendText(flow.baterPapo.text1);
@@ -190,12 +188,8 @@ module.exports = async (context) => {
 			await context.sendText(flow.prevention.text1);
 			await context.sendText(flow.prevention.text2);
 			await context.sendText(flow.prevention.text3);
-			await context.sendText(flow.prevention.text4);
 			await desafio.followUp(context);
 			break;
-		// case 'preventionEnd':
-		// 	await context.sendText(flow.prevention.end);
-		// 	break;
 		case 'notificationOn':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 1);
 			await prepAPI.putRecipientNotification(context.session.user.id, 1);

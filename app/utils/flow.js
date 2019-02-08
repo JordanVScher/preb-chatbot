@@ -32,7 +32,7 @@ module.exports = {
 		text1: 'Você pode me perguntar qualquer coisa',
 	},
 	joinToken: {
-		text1: 'Para você qeu adquiriu seu voucher no serviço. Digite abaixo:',
+		text1: 'Para você que adquiriu seu voucher no serviço. Digite abaixo:',
 		success: 'Te encontrei no sistema',
 		fail: 'Não te encontrei no sistema. Vamos tentar novamente? Digite como lhe foi fornecido. Deve parecer com algo assim: xxx-xxx',
 	},
@@ -85,12 +85,8 @@ module.exports = {
 		success: 'Arraso! Agendado 📅. Olha só sua consulta:\n',
 	},
 	prevention: {
-		text1: 'Utilizar preservativo é sempre, sempre essencial! Mesmo porque ele previne não só HIV, né! Mas ele não é o único método.',
+		text1: 'Bb, utilizar preservativo é sempre, sempre essencial! Mesmo porque ele previne não só HIV, né! Mas ele não é o único método.',
 		text2: 'Existe o PREP, que ajuda prevenir a infecção pelo HIV por meio da administração diária de uma pílula!',
-		text3: 'Indicado principalmente para trans, gays e outros homens que fazem sexo com homens, trabalhadores/as do sexo e casais sorodiferentes.',
-		text4: 'Já o PEP, conhecido como coquetel, é recomendado para pessoas que possam ter entrado em contato com o vírus recentemente.',
-		alternativeText: 'A PEP são comprimidos que evitam que a pessoa se infecte pelo HIV depois de uma relação sexual desprotegida. A pessoa precisar ir a um serviço de '
-		+ 'saúde até 72 horas depois da relação sexual e lá ela recebe os comprimidos para seres tomados durante 28 dias.',
-		end: 'Espero ter te ajudado a conhecer um pouco mais sobre saúde sexual. Mas caso tenha mais duvidas, pode me mandar uma mensagem que tento te responder ;)',
+		text3: 'Já o PEP, conhecido como coquetel, é recomendado para pessoas que possam ter entrado em contato com o vírus recentemente.',
 	},
 };
