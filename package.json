@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon app/index.js",
     "start": "node app/index.js",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "dependencies": {
     "@sentry/node": "^4.2.3",

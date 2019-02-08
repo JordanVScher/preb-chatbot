@@ -1,5 +1,5 @@
 const MaAPI = require('./chatbot_api.js');
-const prepAPI = require('./prep_api.js');
+const prepAPI = require('./utils/prep_api.js');
 const { createIssue } = require('./send_issue');
 const { checkPosition } = require('./dialogFlow');
 const { apiai } = require('./utils/helper');
@@ -7,9 +7,11 @@ const flow = require('./utils/flow');
 const opt = require('./utils/options');
 const help = require('./utils/helper');
 const quiz = require('./utils/quiz');
-const calendarBot = require('./utils/calendar/calendarBot');
 const desafio = require('./utils/desafio');
 const consulta = require('./utils/consulta');
+const { handleToken } = require('./utils/research');
+const { sendMain } = require('./utils/mainMenu');
+const research = require('./utils/research');
 
 module.exports = async (context) => {
 	try {
@@ -62,6 +64,9 @@ module.exports = async (context) => {
 				await context.setState({ dialog: 'nextDay' });
 			} else if (context.state.lastQRpayload.slice(0, 8) === 'nextHour') {
 				await context.setState({ dialog: 'nextHour' });
+			} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
+				await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
+				await context.setState({ dialog: 'showDays' });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -72,10 +77,12 @@ module.exports = async (context) => {
 			if (context.state.onTextQuiz === true) {
 				await context.setState({ onTextQuiz: false });
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
+			} else if (context.state.dialog === 'joinToken') {
+				await handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod') {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
-				await context.setState({ timerOneSent: false }); // for testing timer
+				await context.setState({ followUpCounter: 0 });
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
 				await context.setState({ dialog: 'greetings' });
@@ -98,8 +105,11 @@ module.exports = async (context) => {
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
 			await desafio.asksDesafio(context, opt.greetings);
-			// await consulta.marcarConsulta(context);
+			// await consulta.getCity(context);
 			// await quiz.answerQuizA(context);
+			break;
+		case 'desafio':
+			await context.sendText(flow.desafio.text1, opt.desafio);
 			break;
 		case 'desafioRecusado':
 			await desafio.desafioRecusado(context);
@@ -108,35 +118,45 @@ module.exports = async (context) => {
 			await desafio.desafioAceito(context);
 			break;
 		case 'mainMenu':
-			await context.sendText(flow.mainMenu.text2);
-			break;
-		case 'endQuestion':
-			await context.sendText(flow.mainMenu.text3);
+			await sendMain(context);
 			break;
 		case 'beginQuiz':
 			await context.sendText('Preparar, apontar... fogo!');
 			// falls throught
-		case 'startQuizA':
+		case 'startQuizA': // this is the quiz-type of questionario
+			await context.setState({ categoryQuestion: 'quiz' });
 			await quiz.answerQuizA(context);
 			break;
-		case 'aboutAmandaA':
-			await context.sendImage(flow.aboutAmanda.gif);
-			await context.sendText(flow.aboutAmanda.msgOne);
-			await context.sendText(flow.aboutAmanda.msgTwo, opt.aboutAmandaA);
+		case 'triagem': // this is the triagem-type of questionario
+			await context.setState({ categoryQuestion: 'triagem' });
+			await quiz.answerQuizA(context);
 			break;
-		case 'aboutAmandB':
+		case 'aboutAmanda':
 			await context.sendImage(flow.aboutAmanda.gif);
 			await context.sendText(flow.aboutAmanda.msgOne);
-			await context.sendText(flow.aboutAmanda.msgTwo, opt.aboutAmandaB);
+			await context.sendText(flow.aboutAmanda.msgTwo);
+			await desafio.followUp(context);
+			break;
+		case 'baterPapo':
+			await context.sendText(flow.baterPapo.text1);
+			await desafio.followUp(context);
+			break;
+		case 'joinToken':
+			await context.sendText(flow.joinToken.text1, opt.joinToken);
 			break;
 		case 'consulta':
 			await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
 			break;
-		case 'marcarConsulta':
-			await consulta.marcarConsulta(context);
+		case 'getCity': // this is the regular type of consulta
+			await context.setState({ categoryConsulta: 'recrutamento' });
+			await consulta.showCities(context);
 			break;
-		case 'verConsulta':
-			await consulta.verConsulta(context);
+		case 'getCity2': // this is the diferent type of consulta
+			await context.setState({ categoryConsulta: 'anotherType' });
+			await consulta.showCities(context);
+			break;
+		case 'showDays':
+			await consulta.showDays(context);
 			break;
 		case 'showHours':
 			await consulta.showHours(context, context.state.lastQRpayload.replace('dia', ''));
@@ -150,32 +170,24 @@ module.exports = async (context) => {
 		case 'nextHour':
 			await consulta.nextHour(context, context.state.lastQRpayload.replace('nextHour', ''));
 			break;
-		case 'desafio':
-			await context.sendText(flow.desafio.text1, opt.desafio);
+		case 'verConsulta':
+			await consulta.verConsulta(context);
 			break;
-		case 'seeEvent':
-			await calendarBot.listAllEvents(context);
+		case 'noResearch':
+			await sendMain(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
 			break;
-		case 'myEvent':
-			await calendarBot.listUserEvents(context);
+		case 'joinResearch':
+			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);
+			await research.researchSaidYes(context);
 			break;
-		case 'setEventDate':
-			await calendarBot.sendAvailableDays(context);
-			break;
-		case 'setEventHour':
-			await calendarBot.sendAvailableHours(context);
-			break;
-		case 'setEvent':
-			await calendarBot.setEvent(context);
+		case 'endFlow':
+			await context.sendText('Você pode me compartilhar se quiser');
 			break;
 		case 'seePreventions':
 			await context.sendText(flow.prevention.text1);
 			await context.sendText(flow.prevention.text2);
 			await context.sendText(flow.prevention.text3);
-			await context.sendText(flow.prevention.text4, opt.prevention);
-			break;
-		case 'preventionEnd':
-			await context.sendText(flow.prevention.end);
+			await desafio.followUp(context);
 			break;
 		case 'notificationOn':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 1);

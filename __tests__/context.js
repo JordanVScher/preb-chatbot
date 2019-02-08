@@ -2,6 +2,7 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 	return {
 		state: {
 			dialog,
+			lastQRpayload: payload,
 			politicianData: {
 				user_id: 2000,
 				use_dialogflow: 1,
@@ -19,12 +20,13 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 			isQuickReply: true,
 			quickReply: { payload },
 			message: {
-				quickReply: { payload },
+				quick_reply: { payload },
 				text: 'This qr was clicked',
 			},
 			rawEvent: { timestamp: new Date(), recipient: { id: 1000 } },
 		},
 		sendText: jest.fn(),
+		sendButtonTemplate: jest.fn(),
 		setState: jest.fn(),
 		resetState: jest.fn(),
 		sendImage: jest.fn(),
@@ -63,6 +65,7 @@ function postbackContext(payload, title, dialog = 'prompt', lastActivity = new D
 			rawEvent: { timestamp: new Date(), recipient: { id: 1000 } },
 		},
 		sendText: jest.fn(),
+		sendButtonTemplate: jest.fn(),
 		setState: jest.fn(),
 		resetState: jest.fn(),
 		sendImage: jest.fn(),
@@ -104,6 +107,7 @@ function textContext(text, dialog, lastActivity = new Date()) {
 			rawEvent: { timestamp: new Date(), recipient: { id: 1000 } },
 		},
 		sendText: jest.fn(),
+		sendButtonTemplate: jest.fn(),
 		setState: jest.fn(),
 		resetState: jest.fn(),
 		sendImage: jest.fn(),
@@ -111,7 +115,6 @@ function textContext(text, dialog, lastActivity = new Date()) {
 		sendAudio: jest.fn(),
 		typingOn: jest.fn(),
 		typingOff: jest.fn(),
-		sendButtonTemplate: jest.fn(),
 	};
 }
 
