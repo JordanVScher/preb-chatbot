@@ -3,6 +3,7 @@ const opt = require('./options');
 const checkQR = require('./checkQR');
 const { postIntegrationToken } = require('./prep_api');
 
+
 async function handleToken(context) {
 	const answer = await postIntegrationToken(context.session.user.id, context.state.whatWasTyped);
 	if (answer.form_error) { // check if there was any errors

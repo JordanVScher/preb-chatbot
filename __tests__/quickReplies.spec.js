@@ -1,11 +1,14 @@
 require('dotenv').config();
 
 const cont = require('./context');
-// const flow = require('../app/utils/flow');
+const flow = require('../app/utils/flow');
 const handler = require('../app/handler');
 const MaAPI = require('../app/chatbot_api');
 const desafio = require('../app/utils/desafio');
 const quiz = require('../app/utils/quiz');
+const prepAPI = require('../app/utils/prep_api');
+const research = require('../app/utils/research');
+const { sendMain } = require('../app/utils/mainMenu');
 // const help = require('../app/utils/helper');
 
 jest.mock('../app/utils/helper');
@@ -13,6 +16,8 @@ jest.mock('../app/chatbot_api');
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/desafio');
 jest.mock('../app/utils/quiz');
+jest.mock('../app/utils/research');
+jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/prep_api'); // mock prep_api tp avoid making the postRecipientPrep request
 
 it('desafio - aceito', async () => {
@@ -57,8 +62,8 @@ it('quiz - begin', async () => {
 
 it('quiz - multiple choice answer', async () => { // user clicked on option 3
 	const context = cont.quickReplyContext('quiz3', 'beginQuizA');
-
 	await handler(context);
+
 	await expect(context.event.isQuickReply).toBeTruthy();	// usual quickReply checking
 	await expect(context.setState).toBeCalledWith({ lastQRpayload: context.event.quickReply.payload });
 	await expect(context.state.lastQRpayload.slice(0, 4) === 'quiz').toBeTruthy();
@@ -68,11 +73,26 @@ it('quiz - multiple choice answer', async () => { // user clicked on option 3
 
 it('quiz - multiple choice extra answer', async () => { // user clicked on extra option
 	const context = cont.quickReplyContext('extraQuestion3', 'beginQuizA');
-
 	await handler(context);
+
 	await expect(context.event.isQuickReply).toBeTruthy();	// usual quickReply checking
 	await expect(context.setState).toBeCalledWith({ lastQRpayload: context.event.quickReply.payload });
 	await expect(context.state.lastQRpayload.slice(0, 4) === 'quiz').toBeFalsy();
 	await expect(context.state.lastQRpayload.slice(0, 13) === 'extraQuestion').toBeTruthy();
 	await expect(quiz.AnswerExtraQuestion).toBeCalledWith(context);
+});
+
+it('user wants to join research', async () => { // user clicked on extra option
+	const context = cont.quickReplyContext('Quero!', 'joinResearch');
+	await handler(context);
+
+	await expect(prepAPI.putUpdatePartOfResearch).toBeCalledWith(context.session.user.id, 1);
+	await expect(research.researchSaidYes).toBeCalledWith(context);
+});
+
+it('user doesnt want to join research', async () => { // user clicked on extra option
+	const context = cont.quickReplyContext('Não quero!', 'noResearch');
+	await handler(context);
+
+	await expect(sendMain).toBeCalledWith(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
 });
