@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const cont = require('./context');
 const desafio = require('../app/utils/desafio');
 const flow = require('../app/utils/flow');
@@ -5,12 +7,14 @@ const opt = require('../app/utils/options');
 // const { checkAnsweredQuiz } = require('../app/utils/checkQR');
 const prepApi = require('../app/utils/prep_api');
 const mainMenu = require('../app/utils/mainMenu');
+// const help = require('../app/utils/helper');
 
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/mainMenu');
+// jest.mock('../app/utils/helper');
 
 it('desafioAceito', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
