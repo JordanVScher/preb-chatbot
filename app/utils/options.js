@@ -11,6 +11,12 @@ module.exports = {
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
+	desafio: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Desafio Aceito', payload: 'desafioAceito' },
+			{ content_type: 'text', title: 'Agora não', payload: 'mainMenu' },
+		],
+	},
 	asksDesafio: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Desafio Aceito!', payload: 'desafioAceito' },
@@ -40,12 +46,6 @@ module.exports = {
 	joinToken: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Não tenho token', payload: 'mainMenu' },
-		],
-	},
-	desafio: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Desafio Aceito', payload: 'desafioAceito' },
-			{ content_type: 'text', title: 'Agora não', payload: 'mainMenu' },
 		],
 	},
 	artigoLink: [{
@@ -91,7 +91,8 @@ module.exports = {
 		sendConsulta: {
 			quick_replies: [
 				{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
-				{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
+				// { content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
+				{ content_type: 'text', title: 'Voltar', payload: 'mainMenu' },
 			],
 		},
 	},

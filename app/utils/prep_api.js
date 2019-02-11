@@ -22,9 +22,6 @@ module.exports = {
 	async putUpdatePartOfResearch(fb_id, is_part_of_research) {
 		const res = await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, is_part_of_research });
 		const recipientData = await res.json();
-
-		console.log('recipientData', recipientData);
-
 		return recipientData;
 	},
 

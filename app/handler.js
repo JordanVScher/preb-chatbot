@@ -75,14 +75,13 @@ module.exports = async (context) => {
 		} else if (context.event.isText) {
 			await context.setState({ whatWasTyped: `${context.event.message.text}` });
 			if (context.state.onTextQuiz === true) {
-				await context.setState({ onTextQuiz: false });
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
 			} else if (context.state.dialog === 'joinToken') {
 				await handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod') {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
-				await context.setState({ followUpCounter: 0 });
+				await context.setState({ startedQuiz: false });
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
 				await context.setState({ dialog: 'greetings' });
@@ -121,6 +120,7 @@ module.exports = async (context) => {
 			await sendMain(context);
 			break;
 		case 'beginQuiz':
+			await context.setState({ startedQuiz: true });
 			await context.sendText('Preparar, apontar... fogo!');
 			// falls throught
 		case 'startQuizA': // this is the quiz-type of questionario

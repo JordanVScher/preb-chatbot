@@ -18,6 +18,7 @@ module.exports = {
 	desafio: {
 		text1: 'Ei, vc ainda não acabou o nosso quiz! Vamos terminar?',
 		text2: 'Você não quer mesmo fazer parte da nossa pesquisa?',
+		text3: 'Ei, vc ainda não começou a responder nosso quiz!',
 	},
 	desafioRecusado: {
 		text1: '😉',
@@ -52,7 +53,7 @@ module.exports = {
 	onTheResearch: {
 		text1: 'Resultado:\nVocê é lacração! Solta a franga e não quer nem saber!',
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
-		text2: 'Você sabia que existem vários tipos de prevenções? Uma delas é a Prep, prevena a infecção pelo HIV por meio da administração diária de uma pílula! Bb, é gratuito pelo SUS!',
+		text2: 'Você sabia que existem vários tipos de prevenções? Uma delas é a Prep, que previne a infecção pelo HIV por meio da administração diária de uma pílula! Bb, é gratuito pelo SUS!',
 	},
 	verConsulta: {
 		zero: 'Você não tem nenhuma consulta marcada. Você pode marcar uma nova consulta a qualquer momento',
