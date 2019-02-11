@@ -13,14 +13,16 @@ module.exports = {
 	},
 	desafio: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Desafio Aceito', payload: 'desafioAceito' },
-			{ content_type: 'text', title: 'Agora não', payload: 'mainMenu' },
+			{ content_type: 'text', title: 'Desafio Aceito', payload: 'beginQuiz' },
+			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
+			{ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
 		],
 	},
 	asksDesafio: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Desafio Aceito!', payload: 'desafioAceito' },
+			{ content_type: 'text', title: 'Desafio Aceito', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
+			{ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
 		],
 	},
 	desafioAceito: {

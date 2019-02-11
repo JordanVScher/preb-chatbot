@@ -44,9 +44,15 @@ async function researchSaidYes(context) {
 	await context.sendText(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
 }
 
+async function notPart(context) {
+	await context.sendText('Você não faz parte do nosso público alvo');
+	await context.setState({ dialog: 'mainMenu' });
+}
+
 module.exports.onTheResearch = onTheResearch;
 module.exports.notOnResearch = notOnResearch;
 module.exports.notEligible = notEligible;
 module.exports.researchSaidNo = researchSaidNo;
 module.exports.researchSaidYes = researchSaidYes;
 module.exports.handleToken = handleToken;
+module.exports.notPart = notPart;
