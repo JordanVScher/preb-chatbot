@@ -143,3 +143,95 @@ it('followUp - user eligible_for_research', async () => {
 	await expect(prepApi.postCountResearch).toBeCalledWith(context.session.user.id);
 	await expect(context.sendText).toBeCalledWith(flow.desafio.text2, opt.answer.sendResearch);
 });
+
+// most of followUpIntent should be the same as followUp (tested above), below we are testing only the differences
+it('followUpIntent - test serviço', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 0, is_eligible_for_research: 1, finished_quiz: 0 };
+	context.state.intentType = 'serviço';
+	await desafio.followUpIntent(context);
+
+	const separateIntent = jest.fn();
+	await expect(context.setState).toBeCalledWith({ intentType: await separateIntent(context.state.intentName) });
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ dialog: 'prompt' });
+
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(context.state.intentType === 'serviço').toBeTruthy();
+	await expect(context.sendText).toBeCalledWith('Melhor ir em um posto de saúde mais próximo de você');
+	await expect(!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // follows sendQuiz
+});
+
+it('followUpIntent - serviço and prep', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 1, is_prep: 1 };
+	context.state.intentType = 'serviço';
+	await desafio.followUpIntent(context);
+
+	await expect(context.state.user.is_part_of_research === 1).toBeTruthy(); // checkAconselhamento
+	await expect(context.state.intentType === 'duvida').toBeFalsy();
+	await expect(context.state.user.is_prep === 0).toBeFalsy();
+
+	await expect(context.sendText).toBeCalledWith('Bb, vou te fazer umas perguntinhas para te ajudar melhor.');
+	await expect(context.sendText).toBeCalledWith('<Fluxo triagem> a fazer');
+	await expect(context.setState).toBeCalledWith({ dialog: 'triagem' });
+});
+
+it('followUpIntent - serviço and NOT prep and NO consultas', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 1, is_prep: 0 };
+	context.state.intentType = 'serviço';
+	await desafio.followUpIntent(context);
+
+	await expect(context.state.user.is_part_of_research === 1).toBeTruthy(); // checkAconselhamento
+	await expect(context.state.intentType === 'duvida').toBeFalsy();
+	await expect(context.state.user.is_prep === 0).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) }); // sendConsulta
+	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeFalsy();
+	await expect(context.sendText).toBeCalledWith('Percebi que você não tem uma consulta.\nVamos marcar?', opt.answer.sendConsulta);
+});
+
+it('followUpIntent - serviço and NOT prep and one consulta', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 1, is_prep: 0 };
+	context.state.consultas = { appointments: [{ datetime_start: '' }] };
+	context.state.intentType = 'serviço';
+	await desafio.followUpIntent(context);
+
+	await expect(context.state.user.is_part_of_research === 1).toBeTruthy(); // checkAconselhamento
+	await expect(context.state.intentType === 'duvida').toBeFalsy();
+	await expect(context.state.user.is_prep === 0).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) }); // sendConsulta
+	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeTruthy();
+	await expect(context.sendText).toBeCalled();
+	await expect(context.sendText).toBeCalledWith('<informações dos CTAs>');
+	await expect(mainMenu.sendMain).toBeCalledWith(context);
+});
+
+it('followUpIntent - duvida and prep', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 1, is_prep: 1 };
+	context.state.intentType = 'duvida';
+	await desafio.followUpIntent(context);
+
+	await expect(context.state.user.is_part_of_research === 1).toBeTruthy(); // checkAconselhamento
+	await expect(context.state.intentType === 'duvida').toBeTruthy();
+	await expect(context.state.user.is_prep === 0).toBeFalsy();
+
+	await expect(mainMenu.sendShareAndMenu).toBeCalled();
+});
+it('followUpIntent - duvida and NOT prep', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 1, is_prep: 0 };
+	context.state.intentType = 'duvida';
+	await desafio.followUpIntent(context);
+
+	await expect(context.state.user.is_part_of_research === 1).toBeTruthy(); // checkAconselhamento
+	await expect(context.state.intentType === 'duvida').toBeTruthy();
+	await expect(context.state.user.is_prep === 0).toBeTruthy();
+
+	await expect(context.sendText).toBeCalledWith('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
+});

@@ -57,7 +57,7 @@ async function followUp(context) {
 
 async function sendConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 10) {
+	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) {
 		await context.sendText('Você tem uma consulta marcada, mas se precisar de ajuda vou mandar as informações dos CTAs:');
 		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
 			await context.sendText('Sua consulta:'
@@ -91,7 +91,6 @@ async function checkAconselhamento(context) {
 	}
 }
 
-
 async function followUpIntent(context) {
 	await context.setState({ intentType: await separateIntent(context.state.intentName) });
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
@@ -106,14 +105,14 @@ async function followUpIntent(context) {
 	} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
 		if (context.state.intentType === 'serviço') { await context.sendText('Melhor ir em um posto de saúde mais próximo de você'); }
 		if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
-			console.log('Entrei aqui 2');
 			await sendQuiz(context);
+			console.log('Entrei aqui 2');
 		} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não) === 1
-			console.log('Entrei aqui 3');
 			await sendResearch(context);
+			console.log('Entrei aqui 3');
 		} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível === 0
-			console.log('Entrei aqui 4');
 			await mainMenu.sendShareAndMenu(context); // send regular menu
+			console.log('Entrei aqui 4');
 		}
 	}
 }
