@@ -74,7 +74,6 @@ async function sendConsulta(context) {
 
 async function checkAconselhamento(context) {
 	// await context.setState({ user: { is_prep: 0 } }); // for testing
-
 	if (context.state.intentType === 'duvida') {
 		if (context.state.user.is_prep === 0) { // user isn't prep
 			await context.sendText('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);

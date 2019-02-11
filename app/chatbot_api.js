@@ -73,9 +73,9 @@ module.exports = {
 		return false;
 	},
 
-	async getknowledgeBase(politician_id, entities) {
+	async getknowledgeBase(politician_id, entities, fb_id) {
 		entities = JSON.stringify(entities);
-		const res = await request(`${apiUri}/api/chatbot/knowledge-base?politician_id=${politician_id}&entities=${entities}&security_token=${security_token}`);
+		const res = await request(`${apiUri}/api/chatbot/knowledge-base?politician_id=${politician_id}&entities=${entities}&fb_id=${fb_id}&security_token=${security_token}`);
 		const knowledgeBase = await res.json();
 		return knowledgeBase;
 	},
