@@ -72,18 +72,22 @@ async function sendConsulta(context) {
 	}
 }
 
-
 async function checkAconselhamento(context) {
-	await context.setState({ user: { is_prep: 0 } }); // for testing
+	// await context.setState({ user: { is_prep: 0 } }); // for testing
 
 	if (context.state.intentType === 'duvida') {
-		await mainMenu.sendShareAndMenu(context); // send regular menu
+		if (context.state.user.is_prep === 0) { // user isn't prep
+			await context.sendText('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
+		} else { // user is prep
+			await mainMenu.sendShareAndMenu(context); // send regular menu
+		}
 	} else { // problema e serviço
 		if (context.state.user.is_prep === 0) { // eslint-disable-line no-lonely-if
 			await sendConsulta(context); // is prep, === 1
 		} else { // user isn't prep, goes to triagem
 			await context.sendText('Bb, vou te fazer umas perguntinhas para te ajudar melhor.');
 			await context.sendText('<Fluxo triagem> a fazer');
+			await context.setState({ dialog: 'triagem' });
 		}
 	}
 }

@@ -10,7 +10,7 @@ const quiz = require('./utils/quiz');
 const desafio = require('./utils/desafio');
 const consulta = require('./utils/consulta');
 const { handleToken } = require('./utils/research');
-const { sendMain } = require('./utils/mainMenu');
+const mainMenu = require('./utils/mainMenu');
 const research = require('./utils/research');
 
 module.exports = async (context) => {
@@ -116,8 +116,11 @@ module.exports = async (context) => {
 		case 'desafioAceito':
 			await desafio.desafioAceito(context);
 			break;
+		case 'sendFollowUp':
+			await mainMenu.sendFollowUp(context);
+		// falls throught
 		case 'mainMenu':
-			await sendMain(context);
+			await mainMenu.sendMain(context);
 			break;
 		case 'beginQuiz':
 			await context.setState({ startedQuiz: true });
@@ -174,7 +177,7 @@ module.exports = async (context) => {
 			await consulta.verConsulta(context);
 			break;
 		case 'noResearch':
-			await sendMain(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
+			await mainMenu.sendMain(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
 			break;
 		case 'joinResearch':
 			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);

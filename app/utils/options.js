@@ -88,6 +88,12 @@ module.exports = {
 				{ content_type: 'text', title: 'Não quero', payload: 'noResearch' },
 			],
 		},
+		isPrep: {
+			quick_replies: [
+				{ content_type: 'text', title: 'Sim', payload: 'triagem' },
+				{ content_type: 'text', title: 'Não', payload: 'sendFollowUp' },
+			],
+		},
 		sendConsulta: {
 			quick_replies: [
 				{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
