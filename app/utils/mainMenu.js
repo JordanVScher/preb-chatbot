@@ -10,7 +10,6 @@ async function sendMain(context, text) {
 	if (!toSend || toSend.length === 0) {
 		toSend = flow.mainMenu.text1;
 	}
-	await context.setState({ dialog: 'mainMenu' });
 	await context.sendText(toSend, await checkQR.checkMainMenu(context, opt.mainMenu));
 }
 

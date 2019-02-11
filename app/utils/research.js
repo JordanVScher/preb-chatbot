@@ -40,7 +40,7 @@ async function researchSaidNo(context) {
 
 async function researchSaidYes(context) {
 	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
-	await context.sendText(flow.quizYes.text2);
+	await context.sendButtonTemplate(flow.quizYes.text2, opt.artigoLink);
 	await context.sendText(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
 }
 

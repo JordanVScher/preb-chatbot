@@ -73,7 +73,7 @@ module.exports = async (context) => {
 					context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 			}
 		} else if (context.event.isText) {
-			await context.setState({ whatWasTyped: context.event.message.text });
+			await context.setState({ whatWasTyped: `${context.event.message.text}` });
 			if (context.state.onTextQuiz === true) {
 				await context.setState({ onTextQuiz: false });
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);

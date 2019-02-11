@@ -4,6 +4,7 @@ const aux = require('./quiz_aux');
 
 // loads next question and shows it to the user
 async function answerQuizA(context) {
+	await context.typingOn();
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 	await aux.handleFlags(context, context.state.currentQuestion);
@@ -31,6 +32,7 @@ async function answerQuizA(context) {
 			await context.sendText(context.state.currentQuestion.text);
 			await context.setState({ onTextQuiz: true });
 		}
+		await context.typingOff();
 		/* eslint-enable no-lonely-if */
 	} // -- answering quiz else
 }
