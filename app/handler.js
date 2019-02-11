@@ -82,7 +82,7 @@ module.exports = async (context) => {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
-				await context.setState({ is_target_audience: false });
+				await context.setState({ is_target_audience: false, is_prep: false });
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
 				await context.setState({ dialog: 'greetings' });

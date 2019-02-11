@@ -45,8 +45,7 @@ async function researchSaidYes(context) {
 }
 
 async function notPart(context) {
-	await context.sendText('Você não faz parte do nosso público alvo');
-	await context.setState({ dialog: 'mainMenu' });
+	await context.setState({ dialog: 'noResearch' });
 }
 
 module.exports.onTheResearch = onTheResearch;
