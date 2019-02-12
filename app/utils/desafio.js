@@ -10,7 +10,7 @@ const servico = ['Marcar Consulta', 'Abuso'];
 
 async function separateIntent(intentName) {
 	if (servico.includes(intentName)) { return 'serviço'; }
-	if (problema.includes(intentName)) { return 'problema';	}
+	if (problema.includes(intentName)) { return 'problema'; }
 	return 'duvida';
 }
 
@@ -119,8 +119,7 @@ async function followUpIntent(context) {
 }
 
 async function asksDesafio(context) {
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	if (context.state.user.finished_quiz === 1) { // user has answered the quiz already, he goes to the mainMenu
+	if (context.state.startedQuiz === true) { // user has answered the quiz already, he goes to the mainMenu
 		await mainMenu.sendMain(context);
 	} else {
 		await context.sendText(flow.asksDesafio.text1);

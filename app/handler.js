@@ -107,7 +107,7 @@ module.exports = async (context) => {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
-			await desafio.asksDesafio(context, opt.greetings);
+			await desafio.asksDesafio(context);
 			// await consulta.getCity(context);
 			// await quiz.answerQuizA(context);
 			break;
