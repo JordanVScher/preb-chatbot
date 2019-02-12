@@ -28,13 +28,7 @@ module.exports = async (context) => {
 			// session: JSON.stringify(context.state),
 		});
 
-		if (!context.state.sentPrepPost || context.state.sentPrepPost === false) { // adding user to the prep base, happens only once
-			await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, `${context.session.user.first_name} ${context.session.user.last_name}`);
-			await context.setState({ sentPrepPost: true });
-		} else { // updating user already on prep base
-			await prepAPI.putRecipientPrep(context.session.user.id, `${context.session.user.first_name} ${context.session.user.last_name}`);
-		}
-
+		await help.addNewUser(context, prepAPI);
 		await timer.deleteTimers(context.session.user.id);
 
 		if (context.event.isPostback) {

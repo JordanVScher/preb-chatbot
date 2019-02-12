@@ -38,6 +38,13 @@ const telefoneDictionary = {
 };
 
 
+async function addNewUser(context, prepAPI) {
+	const answer = await prepAPI.getRecipientPrep(context.session.user.id);
+	if (answer.form_error) {
+		await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, `${context.session.user.first_name} ${context.session.user.last_name}`);
+	}
+}
+
 function formatHour(hour) {
 	if (hour.toString().length === 1) {
 		return `0${hour}`;
@@ -70,6 +77,7 @@ function capQR(text) {
 
 
 module.exports.Sentry = Sentry;
+module.exports.addNewUser = addNewUser;
 module.exports.apiai = dialogFlow(process.env.DIALOGFLOW_TOKEN);
 module.exports.moment = moment;
 module.exports.capQR = capQR;
