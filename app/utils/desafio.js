@@ -84,9 +84,10 @@ async function checkAconselhamento(context) {
 		if (context.state.user.is_prep === 0) { // eslint-disable-line no-lonely-if
 			await sendConsulta(context); // is prep, === 1
 		} else { // user isn't prep, goes to triagem
-			await context.sendText('Bb, vou te fazer umas perguntinhas para te ajudar melhor.');
-			await context.sendText('<Fluxo triagem> a fazer');
-			await context.setState({ dialog: 'triagem' });
+			await mainMenu.sendShareAndMenu(context); // send regular menu
+			// await context.sendText('Bb, vou te fazer umas perguntinhas para te ajudar melhor.');
+			// await context.sendText('<Fluxo triagem> a fazer');
+			// await context.setState({ dialog: 'triagem' });
 		}
 	}
 }
