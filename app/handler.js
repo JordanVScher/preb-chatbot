@@ -12,6 +12,7 @@ const consulta = require('./utils/consulta');
 const { handleToken } = require('./utils/research');
 const mainMenu = require('./utils/mainMenu');
 const research = require('./utils/research');
+const timer = require('./utils/timer');
 
 module.exports = async (context) => {
 	try {
@@ -33,6 +34,8 @@ module.exports = async (context) => {
 		} else { // updating user already on prep base
 			await prepAPI.putRecipientPrep(context.session.user.id, `${context.session.user.first_name} ${context.session.user.last_name}`);
 		}
+
+		await timer.deleteTimers(context.session.user.id);
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
@@ -143,7 +146,8 @@ module.exports = async (context) => {
 			break;
 		case 'baterPapo':
 			await context.sendText(flow.baterPapo.text1);
-			await desafio.followUp(context);
+			await timer.createBaterPapoTimer(context.session.user.id, context);
+			// await desafio.followUp(context);
 			break;
 		case 'joinToken':
 			await context.sendText(flow.joinToken.text1, opt.joinToken);

@@ -41,7 +41,7 @@ module.exports = {
 		quick_replies: [
 			{ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' },
 			{ content_type: 'text', title: 'Prevenções', payload: 'seePreventions' },
-			{ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
+			// { content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
 			{ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' },
 		],
 	},

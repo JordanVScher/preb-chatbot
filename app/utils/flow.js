@@ -18,7 +18,7 @@ module.exports = {
 	desafio: {
 		text1: 'Ei, vc ainda não acabou o nosso quiz! Vamos terminar?',
 		text2: 'Você não quer mesmo fazer parte da nossa pesquisa?',
-		text3: 'Ei, vc ainda não começou a responder nosso quiz!',
+		text3: 'Bb, aproveitando...posso te fazer umas perguntinhas? Quero te conhecer melhor! 💁‍♀',
 	},
 	desafioRecusado: {
 		text1: '😉',
@@ -30,7 +30,7 @@ module.exports = {
 		text1: 'Você pode me fazer uma pergunta ou escolher um dos botões abaixo:',
 	},
 	baterPapo: {
-		text1: 'Você pode me perguntar qualquer coisa',
+		text1: 'Escreve alguma coisa que eu vou tentar tirar as suas dúvidas',
 	},
 	joinToken: {
 		text1: 'Para você que adquiriu seu voucher no serviço. Digite abaixo:',
