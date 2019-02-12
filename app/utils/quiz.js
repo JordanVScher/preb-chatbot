@@ -7,8 +7,8 @@ async function answerQuizA(context) {
 	await context.typingOn();
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
-	await aux.handleFlags(context, context.state.currentQuestion);
 
+	await aux.handleFlags(context, context.state.currentQuestion);
 
 	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
 		await aux.endQuizA(context); // quiz is over

@@ -8,7 +8,7 @@ const { sendMain } = require('./mainMenu');
 
 async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	console.log(context.state.consulta);
+	console.log('consulta', context.state.consulta);
 
 	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) {
 		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
@@ -172,8 +172,13 @@ async function showHours(context, windowId) {
 }
 
 async function finalDate(context, quota) { // where we actually schedule the consulta
+	console.log('aaaaaaaaaaaaaa');
+	console.log(quota);
+	console.log(parseInt(quota, 10));
+
+
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
-	// console.log('chosenHour', context.state.chosenHour);
+	console.log('chosenHour', context.state.chosenHour);
 
 	const response = await prepApi.postAppointment(
 		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta, context.state.chosenDay.appointment_window_id,
@@ -186,7 +191,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	if (response.id) {
 		await context.sendText(`${flow.consulta.success}`
 			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-			+ `\n⏰:  ${help.formatDate(context.state.chosenHour.datetime_start)}`
+			+ `\n⏰: ${help.formatDate(context.state.chosenHour.datetime_start)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 		await sendMain(context);
 	} else {

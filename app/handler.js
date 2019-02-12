@@ -41,6 +41,7 @@ module.exports = async (context) => {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'getCity' });
 				await context.setState({ onTextQuiz: false });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
@@ -82,13 +83,14 @@ module.exports = async (context) => {
 			} else if (context.state.dialog === 'joinToken') {
 				await handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod') {
-				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
 				await context.setState({ is_target_audience: false, is_prep: false });
+				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
-				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'greetings' });
+				await context.setState({ dialog: 'verConsulta' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });

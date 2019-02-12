@@ -71,6 +71,14 @@ module.exports = {
 	},
 
 	async postAppointment(fb_id, calendar_id, type, appointment_window_id, quota_number, datetime_start, datetime_end) {
+		console.log('calendar_id', calendar_id);
+		console.log('type', type);
+		console.log('appointment_window_id', appointment_window_id);
+		console.log('quota_number', quota_number);
+		console.log('datetime_start', datetime_start);
+		console.log('datetime_end', datetime_end);
+
+
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}&`).query({
 			fb_id, calendar_id, type, appointment_window_id, quota_number, datetime_start, datetime_end,
 		});

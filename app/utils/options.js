@@ -55,6 +55,11 @@ module.exports = {
 		url: 'https://www.google.com',
 		title: 'Ler artigo',
 	}],
+	questionario: [{
+		type: 'web_url',
+		url: 'https://www.google.com',
+		title: 'Ir ao Questionário',
+	}],
 	saidNo: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Quero!', payload: 'joinResearch' },

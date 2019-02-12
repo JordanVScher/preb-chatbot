@@ -24,9 +24,32 @@ async function waitTypingEffect(context, waitTime = 2500) {
 	}, waitTime);
 }
 
+// week day dictionary
+const weekDayName = {
+	0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado', 7: 'Domingo',
+};
+
+const cidadeDictionary = {
+	1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA',
+};
+
+const telefoneDictionary = {
+	1: '11111-1111', 2: '2222-2222', 3: '33333-3333',
+};
+
+
+function formatHour(hour) {
+	if (hour.toString().length === 1) {
+		return `0${hour}`;
+	}
+	return hour;
+}
+
 function formatDate(date) {
-	return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).format('hh:mm')}`;
-	// 	return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).utcOffset('+0000').format('hh:mm')}`;
+	const data = new Date(date);
+	return `${weekDayName[data.getDay()]}, ${formatHour(data.getDate())} de ${moment(date).utcOffset('+0000').format('MMMM')} às ${formatHour(data.getHours())}:${formatHour(data.getMinutes())}`;
+	// return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).format('hh:mm')}`;
+	// return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).utcOffset('+0000').format('hh:mm')}`;
 }
 
 function formatInitialDate(date) {
@@ -44,19 +67,6 @@ function capQR(text) {
 	}
 	return result;
 }
-
-// week day dictionary
-const weekDayName = {
-	0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado', 7: 'Domingo',
-};
-
-const cidadeDictionary = {
-	1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA',
-};
-
-const telefoneDictionary = {
-	1: '11111-1111', 2: '2222-2222', 3: '33333-3333',
-};
 
 
 module.exports.Sentry = Sentry;
