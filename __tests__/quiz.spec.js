@@ -148,6 +148,6 @@ it('handleAnswerA - invalid value', async () => {
 		),
 	});
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeTruthy();
-	await expect(context.sendText).toBeCalledWith('Formato inválido! Digite novamente!');
+	await expect(context.sendText).toBeCalledWith('Formato inválido! Tente novamente!');
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
 });

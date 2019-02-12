@@ -4,6 +4,7 @@ const aux = require('./quiz_aux');
 
 // loads next question and shows it to the user
 async function answerQuizA(context) {
+	await context.typingOn();
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 	await aux.handleFlags(context, context.state.currentQuestion);
@@ -25,12 +26,13 @@ async function answerQuizA(context) {
 		await aux.handleAC5(context);
 
 		// showing question and answer options
+		await context.setState({ onTextQuiz: true });
 		if (context.state.currentQuestion.type === 'multiple_choice') {
 			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion));
 		} else if (context.state.currentQuestion.type === 'open_text') {
 			await context.sendText(context.state.currentQuestion.text);
-			await context.setState({ onTextQuiz: true });
 		}
+		await context.typingOff();
 		/* eslint-enable no-lonely-if */
 	} // -- answering quiz else
 }
@@ -45,6 +47,7 @@ async function AnswerExtraQuestion(context) {
 }
 
 async function handleAnswerA(context, quizOpt) {
+	await context.setState({ onTextQuiz: false });
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
@@ -53,7 +56,7 @@ async function handleAnswerA(context, quizOpt) {
 	if (context.state.sentAnswer.error === 'Internal server error') { // error
 		await context.sendText('Ops, tive um erro interno');
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
-		await context.sendText('Formato inválido! Digite novamente!');
+		await context.sendText('Formato inválido! Tente novamente!');
 		// Date is: YYYY-MM-DD
 		await context.setState({ dialog: 'startQuizA' }); // re-asks same question
 	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully

@@ -49,6 +49,6 @@ it('researchSaidYes', async () => {
 	await research.researchSaidYes(context);
 
 	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text1, opt.artigoLink);
-	await expect(context.sendText).toBeCalledWith(flow.quizYes.text2);
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text2, opt.artigoLink);
 	await expect(context.sendText).toBeCalledWith(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
 });

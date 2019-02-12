@@ -1,8 +1,7 @@
 const MaAPI = require('./chatbot_api.js');
 const { createIssue } = require('./send_issue');
 const { sendAnswer } = require('./utils/sendAnswer');
-const mainMenu = require('./utils/mainMenu');
-
+const desafio = require('./utils/desafio');
 
 async function checkPosition(context) {
 	await context.setState({ dialog: 'checkPositionFunc' });
@@ -16,7 +15,11 @@ async function checkPosition(context) {
 		await createIssue(context);
 		break;
 	default: // default acts for every intent - position on MA
-		await context.setState({ knowledge: await MaAPI.getknowledgeBase(context.state.politicianData.user_id, context.state.apiaiResp) }); // getting knowledge base.
+		await context.setState({
+			knowledge: await MaAPI.getknowledgeBase(
+				context.state.politicianData.user_id, context.state.apiaiResp, context.session.user.id,
+			),
+		}); // getting knowledge base.
 		// console.log('knowledge', context.state.knowledge);
 		// check if there's at least one answer in knowledge_base
 		if (context.state.knowledge && context.state.knowledge.knowledge_base && context.state.knowledge.knowledge_base.length >= 1) {
@@ -28,7 +31,7 @@ async function checkPosition(context) {
 		break;
 	}
 
-	await mainMenu.sendShareAndMenu(context);
+	await desafio.followUpIntent(context);
 }
 
 module.exports.checkPosition = checkPosition;

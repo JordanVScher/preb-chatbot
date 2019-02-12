@@ -10,8 +10,9 @@ const quiz = require('./utils/quiz');
 const desafio = require('./utils/desafio');
 const consulta = require('./utils/consulta');
 const { handleToken } = require('./utils/research');
-const { sendMain } = require('./utils/mainMenu');
+const mainMenu = require('./utils/mainMenu');
 const research = require('./utils/research');
+const timer = require('./utils/timer');
 
 module.exports = async (context) => {
 	try {
@@ -33,6 +34,8 @@ module.exports = async (context) => {
 		} else { // updating user already on prep base
 			await prepAPI.putRecipientPrep(context.session.user.id, `${context.session.user.first_name} ${context.session.user.last_name}`);
 		}
+
+		await timer.deleteTimers(context.session.user.id);
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
@@ -73,16 +76,16 @@ module.exports = async (context) => {
 					context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 			}
 		} else if (context.event.isText) {
-			await context.setState({ whatWasTyped: context.event.message.text });
+			await context.setState({ whatWasTyped: `${context.event.message.text}` });
 			if (context.state.onTextQuiz === true) {
-				await context.setState({ onTextQuiz: false });
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
 			} else if (context.state.dialog === 'joinToken') {
 				await handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod') {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
-				await context.setState({ followUpCounter: 0 });
+				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
+				await context.setState({ is_target_audience: false, is_prep: false });
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
 				await context.setState({ dialog: 'greetings' });
@@ -117,10 +120,14 @@ module.exports = async (context) => {
 		case 'desafioAceito':
 			await desafio.desafioAceito(context);
 			break;
+		case 'sendFollowUp':
+			await mainMenu.sendFollowUp(context);
+		// falls throught
 		case 'mainMenu':
-			await sendMain(context);
+			await mainMenu.sendMain(context);
 			break;
 		case 'beginQuiz':
+			await context.setState({ startedQuiz: true });
 			await context.sendText('Preparar, apontar... fogo!');
 			// falls throught
 		case 'startQuizA': // this is the quiz-type of questionario
@@ -139,7 +146,8 @@ module.exports = async (context) => {
 			break;
 		case 'baterPapo':
 			await context.sendText(flow.baterPapo.text1);
-			await desafio.followUp(context);
+			await timer.createBaterPapoTimer(context.session.user.id, context);
+			// await desafio.followUp(context);
 			break;
 		case 'joinToken':
 			await context.sendText(flow.joinToken.text1, opt.joinToken);
@@ -174,7 +182,7 @@ module.exports = async (context) => {
 			await consulta.verConsulta(context);
 			break;
 		case 'noResearch':
-			await sendMain(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
+			await mainMenu.sendMain(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
 			break;
 		case 'joinResearch':
 			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);

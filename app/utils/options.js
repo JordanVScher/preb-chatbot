@@ -11,10 +11,18 @@ module.exports = {
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
+	desafio: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Desafio Aceito', payload: 'beginQuiz' },
+			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
+			{ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
+		],
+	},
 	asksDesafio: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Desafio Aceito!', payload: 'desafioAceito' },
+			{ content_type: 'text', title: 'Desafio Aceito', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
+			{ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
 		],
 	},
 	desafioAceito: {
@@ -40,12 +48,6 @@ module.exports = {
 	joinToken: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Não tenho token', payload: 'mainMenu' },
-		],
-	},
-	desafio: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Desafio Aceito', payload: 'desafioAceito' },
-			{ content_type: 'text', title: 'Agora não', payload: 'mainMenu' },
 		],
 	},
 	artigoLink: [{
@@ -88,10 +90,17 @@ module.exports = {
 				{ content_type: 'text', title: 'Não quero', payload: 'noResearch' },
 			],
 		},
+		isPrep: {
+			quick_replies: [
+				{ content_type: 'text', title: 'Sim', payload: 'triagem' },
+				{ content_type: 'text', title: 'Não', payload: 'sendFollowUp' },
+			],
+		},
 		sendConsulta: {
 			quick_replies: [
 				{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
-				{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
+				// { content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
+				{ content_type: 'text', title: 'Voltar', payload: 'mainMenu' },
 			],
 		},
 	},
