@@ -37,12 +37,16 @@ async function checkConsulta(context, options) {
 	if (context.state.user.is_eligible_for_research === 1) {
 		await context.setState({ consultas: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
 		if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) { // user can only have one appointment
+			newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-getCity'); // remove option to schedule appointment because he scheduled one already
 			newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option to schedule appointment because he scheduled one already
 		} else { // if he has one we can show it to him
+			newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta'); // remove option to see consulta for there isn't any consulta available
 			newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option to see consulta for there isn't any consulta available
 		}
 	} else { // user shouldn't be able to see these options if he is not eligible
+		newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta'); // remove option
 		newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option
+		newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-getCity'); // remove option
 		newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option
 	}
 

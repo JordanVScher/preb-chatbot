@@ -121,4 +121,17 @@ module.exports = {
 		const count = await res.json();
 		return count;
 	},
+
+	// $t-> post_ok('/api/chatbot/recipient/term-signature', form => { security_token => $security_token, fb_id => '111111', url => 'https://www.google.com' })
+
+	async postSignature(fb_id, url) {
+		console.log(fb_id);
+		console.log(url);
+
+		const res = await request.post(`${apiUri}/api/chatbot/recipient/term-signature?security_token=${security_token}&`).query({ fb_id, url });
+		const sign = await res.json();
+		console.log(sign);
+
+		return sign;
+	},
 };

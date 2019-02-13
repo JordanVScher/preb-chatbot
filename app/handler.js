@@ -30,6 +30,8 @@ module.exports = async (context) => {
 
 		await help.addNewUser(context, prepAPI);
 		await timer.deleteTimers(context.session.user.id);
+		// await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
+		// console.log(context.state.user);
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
@@ -67,6 +69,9 @@ module.exports = async (context) => {
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
 				await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
 				await context.setState({ dialog: 'showDays' });
+			} else if (context.state.lastQRpayload.slice(0, 5) === 'Sign-') {
+				await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url);
+				await context.setState({ dialog: await context.state.lastQRpayload.replace('Sign-', '') });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -85,7 +90,7 @@ module.exports = async (context) => {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
-				await context.setState({ dialog: 'greetings', categoryConsulta: '' });
+				await context.setState({ dialog: 'greetings' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
@@ -105,6 +110,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
 			await desafio.asksDesafio(context);
+			// await research.researchSaidYes(context);
 			// await consulta.getCity(context);
 			// await quiz.answerQuizA(context);
 			break;
@@ -146,6 +152,10 @@ module.exports = async (context) => {
 			await timer.createBaterPapoTimer(context.session.user.id, context);
 			// await desafio.followUp(context);
 			break;
+		case 'naoAceito':
+			await context.sendText('Tudo bem. Você ainda poderá marcar uma consulta.');
+			await mainMenu.sendMain(context);
+			break;
 		case 'joinToken':
 			await context.sendText(flow.joinToken.text1, opt.joinToken);
 			break;
@@ -183,6 +193,7 @@ module.exports = async (context) => {
 			await mainMenu.sendMain(context);
 			break;
 		case 'joinResearch':
+			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);
 			await research.researchSaidYes(context);
 			break;

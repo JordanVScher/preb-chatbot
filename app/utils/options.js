@@ -66,6 +66,11 @@ module.exports = {
 		url: 'https://www.google.com',
 		title: 'Ir ao Questionário',
 	}],
+	TCLE: [{
+		type: 'web_url',
+		url: 'https://www.google.com',
+		title: 'Ler Termos',
+	}],
 	saidNo: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Quero!', payload: 'joinResearch' },
@@ -74,8 +79,9 @@ module.exports = {
 	},
 	saidYes: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Li e Aceito', payload: 'getCity' },
-			{ content_type: 'text', title: 'Li e Aceito', payload: 'verConsulta' }],
+			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-getCity' },
+			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-verConsulta' },
+			{ content_type: 'text', title: 'Não aceito', payload: 'naoAceito' }],
 	},
 	prevention: {
 		quick_replies: [

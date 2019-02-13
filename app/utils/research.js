@@ -24,13 +24,12 @@ async function onTheResearch(context) {
 
 async function notOnResearch(context) {
 	await context.setState({ dialog: 'NotOnResearch' });
-	await context.sendText(flow.NotOnResearch.text1);
+	await context.sendText(flow.notOnResearch.text1, await checkQR.checkMainMenu(context, opt.mainMenu));
 }
 
 async function notEligible(context) { // não passou nas 3 primeiras perguntas
 	await context.setState({ dialog: 'NotEligible' });
-	await context.sendText(flow.notEligible.text1);
-	await context.sendText(flow.notEligible.text2, await checkQR.checkMainMenu(context, opt.mainMenu));
+	await context.sendText(flow.notEligible.text1, await checkQR.checkMainMenu(context, opt.mainMenu));
 }
 
 async function researchSaidNo(context) {
@@ -39,8 +38,9 @@ async function researchSaidNo(context) {
 }
 
 async function researchSaidYes(context) {
-	await context.setState({ categoryConsulta2: 'recrutamento' }); // used only to show a few different messages on consulta
+	await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
 	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
+	await context.sendButtonTemplate(flow.quizYes.text15, opt.TCLE);
 	await context.sendText('Você aceita?', await checkQR.checkConsulta(context, opt.saidYes));
 }
 

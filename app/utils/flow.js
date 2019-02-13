@@ -59,12 +59,12 @@ module.exports = {
 		zero: 'Você não tem nenhuma consulta marcada.',
 	},
 	NotOnResearch: {
-		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
-		text2: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
+		// text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
+		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
 	},
 	notEligible: {
-		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
-		text2: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
+		// text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
+		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
 	},
 	quizNo: {
 		text1: 'Está na dúvida, bb? Aqui você pode ler um artigo completo do professor da USP explicando sobre a pesquisa.',
@@ -73,6 +73,7 @@ module.exports = {
 	},
 	quizYes: {
 		text1: 'O professor Alexandre, da USP, pediu para te mandar esse link aqui explicando tudim.',
+		text15: 'Para a gente continuar, preciso que você leia esse termo aqui.',
 		text2: 'BAFO! Se quiser adiantar, preencha esse formulário. Mas também pode preencher lá no dia, ok?',
 		text3: 'Cola na grade e vamos agendar sua primeira consulta! Bem tranquilo, você vai falar com um profissional que irá te orientar sobre tudo!',
 	},

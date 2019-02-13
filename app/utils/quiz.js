@@ -26,10 +26,10 @@ async function answerQuizA(context) {
 		await aux.handleAC5(context);
 
 		// showing question and answer options
-		await context.setState({ onTextQuiz: true });
 		if (context.state.currentQuestion.type === 'multiple_choice') {
 			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion));
 		} else if (context.state.currentQuestion.type === 'open_text') {
+			await context.setState({ onTextQuiz: true });
 			await context.sendText(context.state.currentQuestion.text);
 		}
 		await context.typingOff();
@@ -47,11 +47,11 @@ async function AnswerExtraQuestion(context) {
 }
 
 async function handleAnswerA(context, quizOpt) {
-	await context.setState({ onTextQuiz: false });
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
 	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
+	await context.setState({ onTextQuiz: false });
 
 	if (context.state.sentAnswer.error || context.state.sentAnswer.form_erro) { // error
 		await context.sendText('Ops, Parece que me perdi, Pode me responder de novo?');

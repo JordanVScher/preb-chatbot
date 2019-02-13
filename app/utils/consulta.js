@@ -134,7 +134,7 @@ async function cleanDates(dates) {
 }
 
 async function showCities(context) {
-	if (context.state.categoryConsulta2 === 'recrutamento') {
+	if (context.state.sendExtraMessages === true) {
 		await context.sendText(flow.quizYes.text3);
 	}
 
@@ -179,9 +179,12 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
 
 	const response = await prepApi.postAppointment(
-		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta, context.state.chosenDay.appointment_window_id,
+		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento', context.state.chosenDay.appointment_window_id,
 		context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
 	);
+
+	console.log(response);
+
 
 	if (response.id) {
 		await context.sendText(`${flow.consulta.success}`
@@ -189,10 +192,10 @@ async function finalDate(context, quota) { // where we actually schedule the con
 			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 
-		if (context.state.categoryConsulta2 === 'recrutamento') {
+		if (context.state.sendExtraMessages === true) {
 			await context.sendButtonTemplate(flow.quizYes.text2, opt.questionario);
 		}
-		await context.setState({ categoryConsulta2: '' });
+		await context.setState({ sendExtraMessages: false });
 		await sendMain(context);
 	} else {
 		await context.sendText(flow.consulta.fail3, opt.consultaFail);
