@@ -53,17 +53,35 @@ async function checkConsulta(context, options) {
 	return { quick_replies: newOptions };
 }
 
-async function checkMainMenu(context, options) {
-	let newOptions = options.quick_replies; // getting array out of the QR object
+async function checkMainMenu(context) {
+	const newOptions = [];
 	// console.log('antes', newOptions);
+	newOptions.push({ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' });
+	newOptions.push({ content_type: 'text', title: 'Prevenções', payload: 'seePreventions' });
 
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 
-	if (context.state.user.integration_token && context.state.user.integration_token.length > 0) { // check if user has token
-		newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
+	if (context.state.user.is_part_of_research === 1) {
+		await context.setState({ consultas: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
+		if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) { // user can only have one appointment
+			newOptions.push({ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' });
+		} else {
+			newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' });
+		}
+	} else if (context.state.user.is_eligible_for_research === 1) {
+		newOptions.push({ content_type: 'text', title: 'Pesquisa', payload: 'askResearch' });
+	} else if (context.state.user.is_eligible_for_research === 0) {
+		newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+	} else if (context.state.user.finished_quiz === 0) {
+		newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+		newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 	}
+	// if (context.state.user.integration_token && context.state.user.integration_token.length > 0) { // check if user has token
+	// 	newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
+	// }
 
 	// console.log('depois', newOptions);
+	newOptions.push({ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' });
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 

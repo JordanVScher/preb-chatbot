@@ -1,6 +1,6 @@
 const checkQR = require('./checkQR');
 const flow = require('./flow');
-const opt = require('./options');
+// const opt = require('./options');
 // const prepApi = require('./prep_api');
 
 async function sendMain(context, text) {
@@ -8,7 +8,7 @@ async function sendMain(context, text) {
 	if (!toSend || toSend.length === 0) {
 		toSend = flow.mainMenu.text1;
 	}
-	await context.sendText(toSend, await checkQR.checkMainMenu(context, opt.mainMenu));
+	await context.sendText(toSend, await checkQR.checkMainMenu(context));
 }
 
 const shareLink = process.env.SHARE_LINK; // eslint-disable-line

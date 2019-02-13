@@ -188,6 +188,9 @@ module.exports = async (context) => {
 		case 'verConsulta':
 			await consulta.verConsulta(context);
 			break;
+		case 'askResearch':
+			await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
+			break;
 		case 'noResearch':
 			await context.sendText('Você não é parte do nosso público alvo para a pesquisa mas ainda poderá me conversar comigo!');
 			await mainMenu.sendMain(context);

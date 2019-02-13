@@ -43,14 +43,6 @@ module.exports = {
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
-	mainMenu: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' },
-			{ content_type: 'text', title: 'Prevenções', payload: 'seePreventions' },
-			{ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
-			{ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' },
-		],
-	},
 	joinToken: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Não tenho token', payload: 'mainMenu' },
@@ -121,5 +113,6 @@ module.exports = {
 			],
 		},
 	},
+
 
 };
