@@ -91,4 +91,7 @@ module.exports = {
 		text2: 'Existe o PREP, que ajuda prevenir a infecção pelo HIV por meio da administração diária de uma pílula!',
 		text3: 'Já o PEP, conhecido como coquetel, é recomendado para pessoas que possam ter entrado em contato com o vírus recentemente.',
 	},
+	sus: {
+		text1: 'Você pode procurar por um atendimento especializado no SUS. Vou te mandar as informações:',
+	},
 };

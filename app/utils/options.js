@@ -63,6 +63,11 @@ module.exports = {
 		url: 'https://www.google.com',
 		title: 'Ler Termos',
 	}],
+	sus: [
+		{ title: 'sp', subtitle: '11' },
+		{ title: 'belo', subtitle: '22' },
+		{ title: 'salva', subtitle: '33' },
+	],
 	saidNo: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Quero!', payload: 'joinResearch' },

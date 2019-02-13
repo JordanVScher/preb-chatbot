@@ -1,4 +1,4 @@
-// const flow = require('./flow');
+const flow = require('./flow');
 const { sendMain } = require('./mainMenu');
 
 // timeOut timers
@@ -23,6 +23,25 @@ module.exports.deleteTimers = async (userID) => {
 
 // module.exports.followUpTimer = followUpTimer;
 
+module.exports.sendCarouselSus = async (context, items) => {
+	const elements = [];
+
+	items.forEach(async (element) => {
+		elements.push({
+			title: element.title,
+			subtitle: element.subtitle,
+		});
+	});
+	await context.sendText(flow.sus.text1);
+	await context.sendAttachment({
+		type: 'template',
+		payload: {
+			template_type: 'generic',
+			elements,
+		},
+	});
+	await sendMain(context);
+};
 
 // what we had for timer on handler.js
 // if (!context.state.timerOneSent || context.state.timerOneSent === false) { // checks if we haven't sent the followup Timer already
