@@ -56,7 +56,7 @@ module.exports = {
 		text2: 'Você sabia que existem vários tipos de prevenções? Uma delas é a Prep, que previne a infecção pelo HIV por meio da administração diária de uma pílula! Bb, é gratuito pelo SUS!',
 	},
 	verConsulta: {
-		zero: 'Você não tem nenhuma consulta marcada. Você pode marcar uma nova consulta a qualquer momento',
+		zero: 'Você não tem nenhuma consulta marcada.',
 	},
 	NotOnResearch: {
 		text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',

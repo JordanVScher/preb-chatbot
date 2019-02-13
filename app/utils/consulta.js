@@ -4,12 +4,11 @@ const flow = require('./flow');
 const opt = require('./options');
 const help = require('./helper');
 const prepApi = require('./prep_api');
+const { checkConsulta } = require('./checkQR');
 const { sendMain } = require('./mainMenu');
 
 async function verConsulta(context) {
-	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	console.log('consulta', context.state.consulta);
-
+	await context.setState({ consultas: await prepApi.getAppointment(context.session.user.id) });
 	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) {
 		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
 			await context.sendText(`${flow.consulta.success}`
@@ -18,8 +17,9 @@ async function verConsulta(context) {
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 		}
 		await context.sendText('Não falte!');
+		await sendMain(context);
 	} else {
-		await context.sendText(flow.verConsulta.zero, opt.saidYes);
+		await context.sendText(flow.verConsulta.zero, await checkConsulta(context, opt.marcarConsulta));
 	}
 }
 

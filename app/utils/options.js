@@ -11,6 +11,12 @@ module.exports = {
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
+	marcarConsulta: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
+			{ content_type: 'text', title: 'Voltar', payload: 'mainMenu' },
+		],
+	},
 	desafio: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Desafio Aceito', payload: 'beginQuiz' },

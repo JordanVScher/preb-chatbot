@@ -36,6 +36,7 @@ module.exports = async (context) => {
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
 				// await context.setState({ dialog: 'getCity' });
+				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
 				await context.setState({ onTextQuiz: false });
 			} else {
@@ -178,7 +179,8 @@ module.exports = async (context) => {
 			await consulta.verConsulta(context);
 			break;
 		case 'noResearch':
-			await mainMenu.sendMain(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
+			await context.sendText('Você não é parte do nosso público alvo para a pesquisa mas ainda poderá me conversar comigo!');
+			await mainMenu.sendMain(context);
 			break;
 		case 'joinResearch':
 			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);
