@@ -14,7 +14,7 @@ async function verConsulta(context) {
 		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
 			await context.sendText(`${flow.consulta.success}`
 			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-			+ `\n⏰: ${await help.formatDate(iterator.datetime_start)}`
+			+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 		}
 		await context.sendText('Não falte!');
@@ -28,7 +28,7 @@ async function separateDaysQR(dates) {
 		const result = [];
 		dates.forEach(async (element) => {
 			const date = new Date(`${element.ymd}T00:00:00`); // new date from ymd
-			result.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.appointment_window_id}` });
+			result.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.ymd}` });
 		});
 		return { 0: result }; // return object with the result array
 	} // else
@@ -44,7 +44,7 @@ async function separateDaysQR(dates) {
 		}
 
 		const date = new Date(`${element.hours[0].datetime_start}`);
-		set.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.appointment_window_id}` });
+		set.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.ymd}` });
 
 
 		if (set.length % 9 === 0) { // time to add 'next' button at the 10th position
@@ -134,6 +134,10 @@ async function cleanDates(dates) {
 }
 
 async function showCities(context) {
+	if (context.state.categoryConsulta2 === 'recrutamento') {
+		await context.sendText(flow.quizYes.text3);
+	}
+
 	await context.setState({ cities: await prepApi.getAvailableCities() });
 	const options = [];
 
@@ -160,10 +164,9 @@ async function showDays(context) { // shows available days
 	}
 }
 
-async function showHours(context, windowId) {
+async function showHours(context, ymd) {
 	// context.state.freeTime -> // all the free time slots we have
-
-	await context.setState({ chosenDay: context.state.freeTime.find(date => date.appointment_window_id === parseInt(windowId, 10)) });
+	await context.setState({ chosenDay: context.state.freeTime.find(date => date.ymd === ymd) });
 	await context.setState({ freeHours: await separateHoursQR(context.state.chosenDay.hours) });
 	if (context.state.freeHours && context.state.freeHours['0'] && context.state.freeHours['0'] && context.state.freeHours['0'].length > 0) {
 		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours['0'] });
@@ -183,8 +186,13 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	if (response.id) {
 		await context.sendText(`${flow.consulta.success}`
 			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start)}`
+			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+
+		if (context.state.categoryConsulta2 === 'recrutamento') {
+			await context.sendButtonTemplate(flow.quizYes.text2, opt.questionario);
+		}
+		await context.setState({ categoryConsulta2: '' });
 		await sendMain(context);
 	} else {
 		await context.sendText(flow.consulta.fail3, opt.consultaFail);

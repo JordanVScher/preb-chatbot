@@ -39,9 +39,9 @@ async function researchSaidNo(context) {
 }
 
 async function researchSaidYes(context) {
+	await context.setState({ categoryConsulta2: 'recrutamento' }); // used only to show a few different messages on consulta
 	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
-	await context.sendButtonTemplate(flow.quizYes.text2, opt.questionario);
-	await context.sendText(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
+	await context.sendText('Você aceita?', await checkQR.checkConsulta(context, opt.saidYes));
 }
 
 async function notPart(context) {

@@ -49,38 +49,15 @@ async function addNewUser(context, prepAPI) {
 	}
 }
 
-async function getDST(date) { // check if date is in DST
-	if (typeof date === 'undefined') { date = new Date(); } // eslint-disable-line no-param-reassign
-	if (!(date instanceof Date)) { throw new TypeError(`${typeof date} not supported. Expected Date or undefined.`); }
-
-	const january = new Date(date.getFullYear(), 0, 1);
-	const july = new Date(date.getFullYear(), 6, 1);
-
-	const januaryTimezoneOffset = january.getTimezoneOffset();
-	const julyTimezoneOffset = july.getTimezoneOffset();
-	const timezoneOffset = date.getTimezoneOffset();
-
-	if (timezoneOffset === januaryTimezoneOffset && timezoneOffset === julyTimezoneOffset) {
-		return false;
-	}
-
-	const standardTimezoneOffset = Math.max(januaryTimezoneOffset, julyTimezoneOffset);
-	return timezoneOffset < standardTimezoneOffset;
-}
 
 async function formatHour(hour) {
 	if (hour.toString().length === 1) { return `0${hour}`;	}
 	return hour;
 }
 
-async function formatDate(date) {
+async function formatDate(date, hour) {
 	const data = new Date(date);
-	let change = 0;
-	if (await getDST(data) === false) { change = 1; } // if it's not on DST add one hour difference
-	return `${weekDayNameLong[data.getDay()]}, ${await formatHour(data.getDate())} de ${moment(date).utcOffset('+0000').format('MMMM')} às ${await formatHour(data.getHours() + change)}:${await formatHour(data.getMinutes())}`;
-
-	// return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).format('hh:mm')}`;
-	// return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).utcOffset('+0000').format('hh:mm')}`;
+	return `${weekDayNameLong[data.getDay()]}, ${await formatHour(data.getDate())} de ${moment(date).utcOffset('+0000').format('MMMM')} das ${hour.replace('-', 'as').replace(':00 ', ' ')}`;
 }
 
 // function formatInitialDate(date) {

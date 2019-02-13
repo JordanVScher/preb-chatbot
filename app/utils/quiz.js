@@ -10,8 +10,8 @@ async function answerQuizA(context) {
 
 	await aux.handleFlags(context, context.state.currentQuestion);
 
-	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
-		await aux.endQuizA(context); // quiz is over
+	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
+		await aux.endQuizA(context, prepApi); // quiz is over
 	} else { /* eslint-disable no-lonely-if */ // user is still answering the quiz
 		if (context.state.categoryQuestion === 'quiz') { // send encouragement only on the regular quiz
 			if (context.state.currentQuestion.count_more === 10) { // encouragement message
@@ -53,8 +53,9 @@ async function handleAnswerA(context, quizOpt) {
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
 	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
 
-	if (context.state.sentAnswer.error === 'Internal server error') { // error
-		await context.sendText('Ops, tive um erro interno');
+	if (context.state.sentAnswer.error || context.state.sentAnswer.form_erro) { // error
+		await context.sendText('Ops, Parece que me perdi, Pode me responder de novo?');
+		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
 		await context.sendText('Formato inválido! Tente novamente!');
 		// Date is: YYYY-MM-DD
@@ -63,10 +64,9 @@ async function handleAnswerA(context, quizOpt) {
 		await aux.handleFlags(context, context.state.sentAnswer);
 
 		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
-			await context.setState({ finished_quiz: false });
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 		} else {
-			await aux.endQuizA(context); // quiz is over
+			await aux.endQuizA(context, prepApi); // quiz is over
 		}
 		/* eslint-enable no-lonely-if */
 	}

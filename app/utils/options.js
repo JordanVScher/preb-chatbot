@@ -68,8 +68,8 @@ module.exports = {
 	},
 	saidYes: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
-			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' }],
+			{ content_type: 'text', title: 'Li e Aceito', payload: 'getCity' },
+			{ content_type: 'text', title: 'Li e Aceito', payload: 'verConsulta' }],
 	},
 	prevention: {
 		quick_replies: [
@@ -91,7 +91,7 @@ module.exports = {
 		},
 		sendResearch: {
 			quick_replies: [
-				{ content_type: 'text', title: 'Tudo bem', payload: 'joinResearch' },
+				{ content_type: 'text', title: 'Quero participar', payload: 'joinResearch' },
 				{ content_type: 'text', title: 'Não quero', payload: 'noResearch' },
 			],
 		},

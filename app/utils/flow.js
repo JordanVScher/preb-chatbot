@@ -73,7 +73,7 @@ module.exports = {
 	},
 	quizYes: {
 		text1: 'O professor Alexandre, da USP, pediu para te mandar esse link aqui explicando tudim.',
-		text2: 'BAFO! Então, para continuar, clica no link abaixo e responda o questionário, rapidinho!',
+		text2: 'BAFO! Se quiser adiantar, preencha esse formulário. Mas também pode preencher lá no dia, ok?',
 		text3: 'Cola na grade e vamos agendar sua primeira consulta! Bem tranquilo, você vai falar com um profissional que irá te orientar sobre tudo!',
 	},
 	consulta: {

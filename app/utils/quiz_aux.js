@@ -21,21 +21,19 @@ async function handleFlags(context, response) {
 	}
 }
 
-async function endQuizA(context) {
-	await context.setState({ finished_quiz: true });
-	await context.setState({ followUpCounter: 0 });
-	if (context.state.is_target_audience === true) { // parte do publico alvo
-		if (context.state.is_eligible_for_research === true) { // elegível pra pesquisa
-			if (context.state.is_part_of_research === true) { // o que o usuário respondeu
-				await research.researchSaidYes(context); // elegível, disse sim
-			} else {
-				await research.researchSaidNo(context); // elegível, disse não
-			}
+async function endQuizA(context, prepApi) {
+	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
+		await research.notPart(context); // não é parte do público alvo
+	} else
+	if (context.state.user.is_eligible_for_research === 1) { // elegível pra pesquisa
+		if (context.state.user.is_part_of_research === 1) { // o que o usuário respondeu
+			await research.researchSaidYes(context); // elegível, disse sim
 		} else {
-			await research.notEligible(context); // não elegível pra pesquisa
+			await research.researchSaidNo(context); // elegível, disse não
 		}
 	} else {
-		await research.notPart(context); // não é parte do público alvo
+		await research.notEligible(context); // não elegível pra pesquisa
 	}
 }
 

@@ -36,6 +36,7 @@ module.exports = async (context) => {
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
 				// await context.setState({ dialog: 'getCity' });
+				// await context.setState({ dialog: 'beginQuiz' });
 				await context.setState({ onTextQuiz: false });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
@@ -83,7 +84,7 @@ module.exports = async (context) => {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
-				await context.setState({ dialog: 'greetings' });
+				await context.setState({ dialog: 'greetings', categoryConsulta: '' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
@@ -151,11 +152,11 @@ module.exports = async (context) => {
 			await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
 			break;
 		case 'getCity': // this is the regular type of consulta
-			await context.setState({ categoryConsulta: 'recrutamento' });
+			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await consulta.showCities(context);
 			break;
 		case 'getCity2': // this is the diferent type of consulta
-			await context.setState({ categoryConsulta: 'anotherType' });
+			await context.setState({ categoryConsulta: 'emergencial' });
 			await consulta.showCities(context);
 			break;
 		case 'showDays':
