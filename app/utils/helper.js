@@ -28,15 +28,19 @@ async function waitTypingEffect(context, waitTime = 2500) {
 const weekDayName = {
 	0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado', 7: 'Domingo',
 };
+const weekDayNameLong = {
+	0: 'Domingo', 1: 'Segunda-Feira', 2: 'Terça-Feira', 3: 'Quarta-Feira', 4: 'Quinta-Feira', 5: 'Sexta-Feira', 6: 'Sábado', 7: 'Domingo',
+};
 
 const cidadeDictionary = {
-	1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA',
+	1: 'Centro de Testagem e Aconselhamento Henfil\nRua Libero Badaró, 144, Anhangabaú. São Paulo - SP - CEP: 01008001',
+	2: 'Centro de Referência da Juventude – CRJ\nRua Guaicurus, 50, Centro (Praça da Estação, Belo Horizonte - MG)',
+	3: 'Salvador - BA',
 };
 
 const telefoneDictionary = {
 	1: '11111-1111', 2: '2222-2222', 3: '33333-3333',
 };
-
 
 async function addNewUser(context, prepAPI) {
 	const answer = await prepAPI.getRecipientPrep(context.session.user.id);
@@ -45,27 +49,47 @@ async function addNewUser(context, prepAPI) {
 	}
 }
 
-function formatHour(hour) {
-	if (hour.toString().length === 1) {
-		return `0${hour}`;
+async function getDST(date) { // check if date is in DST
+	if (typeof date === 'undefined') { date = new Date(); } // eslint-disable-line no-param-reassign
+	if (!(date instanceof Date)) { throw new TypeError(`${typeof date} not supported. Expected Date or undefined.`); }
+
+	const january = new Date(date.getFullYear(), 0, 1);
+	const july = new Date(date.getFullYear(), 6, 1);
+
+	const januaryTimezoneOffset = january.getTimezoneOffset();
+	const julyTimezoneOffset = july.getTimezoneOffset();
+	const timezoneOffset = date.getTimezoneOffset();
+
+	if (timezoneOffset === januaryTimezoneOffset && timezoneOffset === julyTimezoneOffset) {
+		return false;
 	}
+
+	const standardTimezoneOffset = Math.max(januaryTimezoneOffset, julyTimezoneOffset);
+	return timezoneOffset < standardTimezoneOffset;
+}
+
+async function formatHour(hour) {
+	if (hour.toString().length === 1) { return `0${hour}`;	}
 	return hour;
 }
 
-function formatDate(date) {
+async function formatDate(date) {
 	const data = new Date(date);
-	return `${weekDayName[data.getDay()]}, ${formatHour(data.getDate())} de ${moment(date).utcOffset('+0000').format('MMMM')} às ${formatHour(data.getHours())}:${formatHour(data.getMinutes())}`;
+	let change = 0;
+	if (await getDST(data) === false) { change = 1; } // if it's not on DST add one hour difference
+	return `${weekDayNameLong[data.getDay()]}, ${await formatHour(data.getDate())} de ${moment(date).utcOffset('+0000').format('MMMM')} às ${await formatHour(data.getHours() + change)}:${await formatHour(data.getMinutes())}`;
+
 	// return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).format('hh:mm')}`;
 	// return `${moment(date).format('dddd')}, ${moment(date).format('D')} de ${moment(date).format('MMMM')} às ${moment(date).utcOffset('+0000').format('hh:mm')}`;
 }
 
-function formatInitialDate(date) {
-	date.setMinutes(0);
-	date.setSeconds(0);
-	// date.setMilliseconds(0); // already ignored because of moment.js' date to timestamp conversion
-	date.setHours(date.getHours() + 1);
-	return date;
-}
+// function formatInitialDate(date) {
+// 	date.setMinutes(0);
+// 	date.setSeconds(0);
+// 	// date.setMilliseconds(0); // already ignored because of moment.js' date to timestamp conversion
+// 	date.setHours(date.getHours() + 1);
+// 	return date;
+// }
 
 function capQR(text) {
 	let result = text;
@@ -84,7 +108,6 @@ module.exports.capQR = capQR;
 module.exports.formatDialogFlow = formatDialogFlow;
 module.exports.waitTypingEffect = waitTypingEffect;
 module.exports.formatDate = formatDate;
-module.exports.formatInitialDate = formatInitialDate;
 module.exports.weekDayName = weekDayName;
 module.exports.cidadeDictionary = cidadeDictionary;
 module.exports.telefoneDictionary = telefoneDictionary;

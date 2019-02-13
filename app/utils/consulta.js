@@ -14,7 +14,7 @@ async function verConsulta(context) {
 		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
 			await context.sendText(`${flow.consulta.success}`
 			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-			+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`
+			+ `\n⏰: ${await help.formatDate(iterator.datetime_start)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 		}
 		await context.sendText('Não falte!');
@@ -148,6 +148,7 @@ async function showDays(context) { // shows available days
 	// await context.setState({ freeTime: example }); // all the free time slots we have
 	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId) }); // getting whole calendar
 	// console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
+	// await context.setState({ timezone: context.state.calendar.time_zone });
 
 	await context.setState({ freeTime: await cleanDates(context.state.calendar.dates) }); // all the free time slots we have
 
@@ -191,7 +192,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	if (response.id) {
 		await context.sendText(`${flow.consulta.success}`
 			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-			+ `\n⏰: ${help.formatDate(context.state.chosenHour.datetime_start)}`
+			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_star)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 		await sendMain(context);
 	} else {
