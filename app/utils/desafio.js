@@ -4,9 +4,9 @@ const prepApi = require('./prep_api');
 const mainMenu = require('./mainMenu');
 const help = require('./helper');
 
-const duvida = ['Como Pega Chato', 'Como Pega Clamidia', 'Como Pega Gonorreia', 'Como Pega Hepatite A', 'Como Pega Hepatite B', 'Como Pega HIV', 'Como Pega IST', 'Como Pega Sifilis', 'Sexo oral', 'Passivo ITS', 'Beijo IST', 'Engolir Semen', 'Sobre PREP', 'Sobre Chuca', 'Sobre Gouinage', 'Sobre Orientacao Sexual', 'Tenho HIV Contar Parceiro', 'Sentido Da Vida', 'Me chupa', 'Manda Nudes', 'Hipotenusa', 'Eu te amo']; // eslint-disable-line no-unused-vars
-const problema = ['Tratamento IST', 'Indetectavel Transmite', 'Apresenta Sintoma', 'Tenho Ferida', 'Sera HIV', 'Camisinha Estourou', 'Sem Camisinha', 'Virgem Como Faco', 'Nunca Fiz Anal', 'Tenho HIV', 'Tenho HIV Contar Parceiro'];
-const servico = ['Marcar Consulta', 'Abuso'];
+const duvida = ['Como Pega Chato', 'Como Pega Clamidia', 'Como Pega Gonorreia', 'Como Pega Hepatite A', 'Como Pega Hepatite B', 'Como Pega HIV', 'Como Pega IST', 'Como Pega Sifilis', 'Sexo oral', 'Passivo ITS', 'Beijo IST', 'Engolir Semen', 'Sobre PREP', 'Sobre Chuca', 'Sobre Gouinage', 'Sobre Orientação Sexual', 'Sobre Orientacao Sexual', 'Quais Novidades', 'Sentido Da Vida', 'Me chupa', 'Manda Nudes', 'Espaço LGBT', 'Hipotenusa', 'Eu te amo']; // eslint-disable-line no-unused-vars
+const problema = ['Tratamento IST', 'Tratamento HIV', 'Indetectavel Transmite', 'indetectável Transmite', 'Apresenta Sintoma', 'Tenho Ferida', 'Sera HIV', 'Alternativa camisinha', 'Camisinha Estourou', 'Sem Camisinha', 'Virgem Como Faco', 'Nunca Fiz Anal', 'Tenho HIV', 'Tenho HIV Contar Parceiro'];
+const servico = ['Marcar Consulta', 'Abuso', 'Teste']; // shouldn't Abuso be here?
 
 async function separateIntent(intentName) {
 	if (servico.includes(intentName)) { return 'serviço'; }
