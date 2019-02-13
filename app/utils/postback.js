@@ -28,11 +28,11 @@ async function createPersistentMenu() { // eslint-disable-line no-unused-vars
 					title: 'Ir para o início',
 					payload: 'greetings',
 				},
-				{
-					type: 'postback',
-					title: 'Menu',
-					payload: 'mainMenu',
-				},
+				// {
+				// 	type: 'postback',
+				// 	title: 'Menu',
+				// 	payload: 'mainMenu',
+				// },
 				// {
 				// 	type: 'web_url',
 				// 	title: 'Example site',
@@ -49,7 +49,7 @@ async function createPersistentMenu() { // eslint-disable-line no-unused-vars
 						},
 						{
 							type: 'postback',
-							title: 'Para Notificações 🛑',
+							title: 'Parar Notificações 🛑',
 							payload: 'notificationOff',
 						},
 					],

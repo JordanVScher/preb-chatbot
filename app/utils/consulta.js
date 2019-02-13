@@ -173,26 +173,17 @@ async function showHours(context, windowId) {
 }
 
 async function finalDate(context, quota) { // where we actually schedule the consulta
-	console.log('aaaaaaaaaaaaaa');
-	console.log(quota);
-	console.log(parseInt(quota, 10));
-
-
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
-	console.log('chosenHour', context.state.chosenHour);
 
 	const response = await prepApi.postAppointment(
 		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta, context.state.chosenDay.appointment_window_id,
 		context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
 	);
 
-	console.log('response', response);
-
-
 	if (response.id) {
 		await context.sendText(`${flow.consulta.success}`
 			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_star)}`
+			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 		await sendMain(context);
 	} else {
