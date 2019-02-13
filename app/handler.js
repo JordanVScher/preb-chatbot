@@ -159,6 +159,10 @@ module.exports = async (context) => {
 		case 'joinToken':
 			await context.sendText(flow.joinToken.text1, opt.joinToken);
 			break;
+		case 'seeToken':
+			await context.sendText(`Seu Token é: ${context.state.user.integration_token}`);
+			await mainMenu.sendMain(context);
+			break;
 		case 'consulta':
 			await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
 			break;
