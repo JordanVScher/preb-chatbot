@@ -19,7 +19,7 @@ async function answerQuizA(context) {
 			} else if (context.state.currentQuestion.count_more === 5) {
 				await context.sendText('Amando! Só mais algumas vai...');
 			} else if (context.state.currentQuestion.count_more === 2) {
-				await context.sendText('Boa, estamos na reta final ✨✨');
+				await context.sendText('Arrasando.. só mais 2 e juro que paro de ser curiosa 🤩');
 			}
 		}
 
