@@ -15,9 +15,9 @@ async function answerQuizA(context) {
 	} else { /* eslint-disable no-lonely-if */ // user is still answering the quiz
 		if (context.state.categoryQuestion === 'quiz') { // send encouragement only on the regular quiz
 			if (context.state.currentQuestion.count_more === 10) { // encouragement message
-				await context.sendText('Estamos indo bem, força! 💪💪');
+				await context.sendText('Bafo! Estou adorando te conhecer...');
 			} else if (context.state.currentQuestion.count_more === 5) {
-				await context.sendText('Calma, só mais algumas perguntinhas e a gente acaba 🌟🌟');
+				await context.sendText('Amando! Só mais algumas vai...');
 			} else if (context.state.currentQuestion.count_more === 2) {
 				await context.sendText('Boa, estamos na reta final ✨✨');
 			}

@@ -12,8 +12,8 @@ module.exports = {
 		msgTwo: 'História começou assim... (texto sobre a Amanda)',
 	},
 	asksDesafio: {
-		text1: 'Agora, te lanço um desafio! Sabe aqueles caderninhos de enquete que rolavam nas escolas?\nAin, estou denuncionando a idade dos meus criadores.',
-		text2: 'Então, eu tenho dicas ótimas, mas antes eu quero brincar de enquete. Vamos?',
+		text1: 'Eu tenho dicas ótimas, mas antes eu quero brincar.',
+		text2: 'Sabe aqueles caderninhos de enquete que rolavam nas escolas? Ain.. estou denunciando a idade dos meus criadores 🤭 😂\nVamos?',
 	},
 	desafio: {
 		text1: 'Ei, vc ainda não acabou o nosso quiz! Vamos terminar?',
@@ -51,7 +51,7 @@ module.exports = {
 		off: 'Tudo bem. Não te enviaremos mais nenhuma notificação.',
 	},
 	onTheResearch: {
-		text1: 'Resultado:\nVocê é lacração! Solta a franga e não quer nem saber!',
+		text1: 'AMEI! E você hein.. lacração, solta a franga e não quer nem saber! 😻',
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
 		text2: 'Você sabia que existem vários tipos de prevenções? Uma delas é a Prep, que previne a infecção pelo HIV por meio da administração diária de uma pílula! Bb, é gratuito pelo SUS!',
 	},
