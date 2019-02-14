@@ -71,14 +71,6 @@ module.exports = {
 	},
 
 	async postAppointment(fb_id, calendar_id, type, appointment_window_id, quota_number, datetime_start, datetime_end) {
-		console.log('calendar_id', calendar_id);
-		console.log('type', type);
-		console.log('appointment_window_id', appointment_window_id);
-		console.log('quota_number', quota_number);
-		console.log('datetime_start', datetime_start);
-		console.log('datetime_end', datetime_end);
-
-
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}&`).query({
 			fb_id, calendar_id, type, appointment_window_id, quota_number, datetime_start, datetime_end,
 		});
@@ -122,16 +114,9 @@ module.exports = {
 		return count;
 	},
 
-	// $t-> post_ok('/api/chatbot/recipient/term-signature', form => { security_token => $security_token, fb_id => '111111', url => 'https://www.google.com' })
-
 	async postSignature(fb_id, url) {
-		console.log(fb_id);
-		console.log(url);
-
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/term-signature?security_token=${security_token}&`).query({ fb_id, url });
 		const sign = await res.json();
-		console.log(sign);
-
 		return sign;
 	},
 };
