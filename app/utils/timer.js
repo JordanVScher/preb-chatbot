@@ -29,7 +29,8 @@ module.exports.sendCarouselSus = async (context, items) => {
 	items.forEach(async (element) => {
 		elements.push({
 			title: element.title,
-			subtitle: element.subtitle,
+			// subtitle: element.subtitle,
+			buttons: element.buttons,
 		});
 	});
 	await context.sendText(flow.sus.text1);

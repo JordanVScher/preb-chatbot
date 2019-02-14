@@ -111,6 +111,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.greetings.text2);
 			await desafio.asksDesafio(context);
 			// await research.researchSaidYes(context);
+			// await timer.sendCarouselSus(context, opt.sus);
 			// await consulta.getCity(context);
 			// await quiz.answerQuizA(context);
 			break;
@@ -196,7 +197,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
 			break;
 		case 'noResearch':
-			await context.sendText('Você não é parte do nosso público alvo para a pesquisa mas ainda poderá conversar comigo!');
+			await context.sendText('Gostei de te conhecer, olha só o que você pode fazer aqui:');
 			await mainMenu.sendMain(context);
 			break;
 		case 'joinResearch':

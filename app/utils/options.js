@@ -64,9 +64,58 @@ module.exports = {
 		title: 'Ler Termos',
 	}],
 	sus: [
-		{ title: 'sp', subtitle: '11' },
-		{ title: 'belo', subtitle: '22' },
-		{ title: 'salva', subtitle: '33' },
+		{
+			title: 'SUS em São Paulo',
+			// subtitle: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245171',
+			buttons: [
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245171',
+					title: 'Endereço de todas as unidades',
+				},
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245403',
+					title: 'Para retirar camisinha',
+				},
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245409',
+					title: 'Para testagem:',
+				},
+			],
+		},
+		{
+			title: 'SUS em São Paulo de novo',
+			buttons: [
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245399',
+					title: 'PEP',
+				},
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=248175',
+					title: 'PREP',
+				},
+			],
+		},
+		{
+			title: 'SUS na Bahia',
+			buttons: [
+				{
+					type: 'web_url',
+					url: 'http://www.aids.gov.br/pt-br/cedap-centro-estadual-especializado-em-diagnostico-assistencia-e-pesquisa',
+					title: 'PREP e outras prevenções',
+				},
+				{
+					type: 'web_url',
+					url: 'http://www.aids.gov.br/pep_onde/index.html.',
+					title: 'PEP',
+				},
+			],
+		},
+
 	],
 	saidNo: {
 		quick_replies: [
