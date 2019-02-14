@@ -43,17 +43,21 @@ async function followUp(context) {
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
 	await context.setState({ dialog: 'prompt' });
 
-	if (context.state.user.is_part_of_research === 1) { // parte da pesquisa
-		await mainMenu.sendShareAndMenu(context); // send regular menu, here we don't have to check if user is prep or not
-	} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
-		if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
-			await sendQuiz(context);
-		} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não)
-			await sendResearch(context);
-		} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível
-			await sendCarouselSus(context, opt.sus);
+	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
+		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa
+			await mainMenu.sendShareAndMenu(context); // send regular menu, here we don't have to check if user is prep or not
+		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
+			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
+				await sendQuiz(context);
+			} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não)
+				await sendResearch(context);
+			} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível
+				await sendCarouselSus(context, opt.sus);
 			// await mainMenu.sendShareAndMenu(context); // send regular menu
+			}
 		}
+	} else { // not part of target audience
+		await mainMenu.sendShareAndMenu(context); // send regular menu
 	}
 }
 
@@ -102,22 +106,26 @@ async function followUpIntent(context) {
 	console.log('intentType', context.state.intentType);
 	console.log(context.state.user);
 
-	if (context.state.user.is_part_of_research === 1) { // parte da pesquisa === 1
-		await checkAconselhamento(context);
-		console.log('Entrei aqui 1');
-	} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
-		if (context.state.intentType === 'serviço') { await context.sendText('Melhor ir em um posto de saúde mais próximo de você'); }
-		if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
-			await sendQuiz(context);
-			console.log('Entrei aqui 2');
-		} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não) === 1
-			await sendResearch(context);
-			console.log('Entrei aqui 3');
-		} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível === 0
-			console.log('Entrei aqui 4');
-			await sendCarouselSus(context, opt.sus);
-			// await mainMenu.sendShareAndMenu(context); // send regular menu
+	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
+		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa === 1
+			await checkAconselhamento(context);
+			console.log('Entrei aqui 1');
+		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
+			if (context.state.intentType === 'serviço') { await context.sendText('Melhor ir em um posto de saúde mais próximo de você'); }
+			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
+				await sendQuiz(context);
+				console.log('Entrei aqui 2');
+			} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não) === 1
+				await sendResearch(context);
+				console.log('Entrei aqui 3');
+			} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível === 0
+				console.log('Entrei aqui 4');
+				await sendCarouselSus(context, opt.sus);
+				// await mainMenu.sendShareAndMenu(context); // send regular menu
+			}
 		}
+	} else { // not part of target audience
+		await mainMenu.sendShareAndMenu(context); // send regular menu
 	}
 }
 

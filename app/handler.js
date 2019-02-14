@@ -196,16 +196,13 @@ module.exports = async (context) => {
 			await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
 			break;
 		case 'noResearch':
-			await context.sendText('Você não é parte do nosso público alvo para a pesquisa mas ainda poderá me conversar comigo!');
+			await context.sendText('Você não é parte do nosso público alvo para a pesquisa mas ainda poderá conversar comigo!');
 			await mainMenu.sendMain(context);
 			break;
 		case 'joinResearch':
 			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);
 			await research.researchSaidYes(context);
-			break;
-		case 'endFlow':
-			await context.sendText('Você pode me compartilhar se quiser');
 			break;
 		case 'seePreventions':
 			await context.sendText(flow.prevention.text1);
