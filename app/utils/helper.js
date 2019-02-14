@@ -57,7 +57,7 @@ async function formatHour(hour) {
 
 async function formatDate(date, hour) {
 	const data = new Date(date);
-	return `${weekDayNameLong[data.getDay()]}, ${await formatHour(data.getDate())} de ${moment(date).utcOffset('+0000').format('MMMM')} das ${hour.replace('-', 'as').replace(':00 ', ' ')}`;
+	return `${weekDayNameLong[data.getDay()]}, ${await formatHour(data.getDate())} de ${moment(date).utcOffset('+0000').format('MMMM')} das ${hour.replace('-', 'as').replace(':00 ', ' ').slice(0, -3)}`;
 }
 
 // function formatInitialDate(date) {
