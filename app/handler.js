@@ -197,8 +197,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
 			break;
 		case 'noResearch':
-			await context.sendText('Gostei de te conhecer, olha só o que você pode fazer aqui:');
-			await mainMenu.sendMain(context);
+			await mainMenu.sendMain(context, flow.notEligible.text1);
 			break;
 		case 'joinResearch':
 			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
