@@ -57,7 +57,13 @@ async function followUp(context) {
 			}
 		}
 	} else { // not part of target audience
-		await mainMenu.sendShareAndMenu(context); // send regular menu
+		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+
+		if (!context.state.currentQuestion || context.state.currentQuestion.code === null) {
+			await mainMenu.sendShareAndMenu(context); // send regular menu
+		} else {
+			await sendQuiz(context); // if user didn't finish quiz we can send it to them, even if they aren't on target_audience
+		}
 	}
 }
 
@@ -103,29 +109,34 @@ async function followUpIntent(context) {
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
 	await context.setState({ dialog: 'prompt' });
 
-	console.log('intentType', context.state.intentType);
-	console.log(context.state.user);
+	// console.log('intentType', context.state.intentType);
+	// console.log(context.state.user);
 
 	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa === 1
 			await checkAconselhamento(context);
-			console.log('Entrei aqui 1');
+			// console.log('Entrei aqui 1');
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
 			if (context.state.intentType === 'serviço') { await context.sendText('Melhor ir em um posto de saúde mais próximo de você'); }
 			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
 				await sendQuiz(context);
-				console.log('Entrei aqui 2');
+				// console.log('Entrei aqui 2');
 			} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não) === 1
 				await sendResearch(context);
-				console.log('Entrei aqui 3');
+				// console.log('Entrei aqui 3');
 			} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível === 0
-				console.log('Entrei aqui 4');
+				// console.log('Entrei aqui 4');
 				await sendCarouselSus(context, opt.sus);
 				// await mainMenu.sendShareAndMenu(context); // send regular menu
 			}
 		}
 	} else { // not part of target audience
-		await mainMenu.sendShareAndMenu(context); // send regular menu
+		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+		if (!context.state.currentQuestion || context.state.currentQuestion.code === null) {
+			await mainMenu.sendShareAndMenu(context); // send regular menu
+		} else {
+			await sendQuiz(context); // if user didn't finish quiz we can send it to them, even if they aren't on target_audience
+		}
 	}
 }
 

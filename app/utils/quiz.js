@@ -5,6 +5,18 @@ const aux = require('./quiz_aux');
 // loads next question and shows it to the user
 async function answerQuizA(context) {
 	await context.typingOn();
+	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	console.log(context.state.user);
+
+	if (context.state.user.is_target_audience === 0) {
+		await context.setState({ categoryQuestion: 'fun_questions' });
+	} else {
+		await context.setState({ categoryQuestion: 'quiz' });
+	}
+
+	console.log(context.state.categoryQuestion);
+
+
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 
@@ -53,8 +65,8 @@ async function handleAnswerA(context, quizOpt) {
 	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
 	await context.setState({ onTextQuiz: false });
 
-	if (context.state.sentAnswer.error || context.state.sentAnswer.form_erro) { // error
-		await context.sendText('Ops, Parece que me perdi, Pode me responder de novo?');
+	if (context.state.sentAnswer.error || context.state.sentAnswer.form_error) { // error
+		await context.sendText('Ops, parece que me perdi, Pode me responder de novo?');
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
 		await context.sendText('Formato inválido! Tente novamente!');
@@ -64,6 +76,9 @@ async function handleAnswerA(context, quizOpt) {
 		await aux.handleFlags(context, context.state.sentAnswer);
 
 		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
+			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
+		} else if ((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
+		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)) {
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 		} else {
 			await aux.endQuizA(context, prepApi); // quiz is over

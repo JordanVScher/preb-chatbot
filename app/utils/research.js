@@ -46,6 +46,7 @@ async function researchSaidYes(context) {
 
 async function notPart(context) {
 	await context.setState({ dialog: 'noResearch' });
+	await context.sendText(flow.notEligible.text1, await checkQR.checkMainMenu(context));
 }
 
 module.exports.onTheResearch = onTheResearch;

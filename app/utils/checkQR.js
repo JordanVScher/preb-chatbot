@@ -83,6 +83,11 @@ async function checkMainMenu(context) {
 			newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
 			newOptions.push({ content_type: 'text', title: 'Ver meu Token', payload: 'seeToken' });
 		}
+	} else { // not on target audience, may send quiz
+		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+		if (context.state.currentQuestion && context.state.currentQuestion.code !== null) {
+			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+		}
 	}
 
 	// console.log('depois', newOptions);

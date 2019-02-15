@@ -23,6 +23,7 @@ async function handleFlags(context, response) {
 
 async function endQuizA(context, prepApi) {
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+
 	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
 		await research.notPart(context); // não é parte do público alvo
 	} else
