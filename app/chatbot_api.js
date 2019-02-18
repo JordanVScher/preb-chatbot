@@ -10,12 +10,14 @@ module.exports = {
 	async getPoliticianData(pageId) {
 		const res = await request(`${apiUri}/api/chatbot/politician?fb_page_id=${pageId}&security_token=${security_token}`);
 		const politicianData = await res.json();
+		console.log('politicianData', politicianData);
 		return politicianData;
 	},
 
 	async getPollData(pageId) {
 		const res = await request(`${apiUri}/api/chatbot/poll?fb_page_id=${pageId}&security_token=${security_token}`);
 		const pollData = await res.json();
+		console.log('pollData', pollData);
 		return pollData;
 	},
 
@@ -23,6 +25,7 @@ module.exports = {
 		const recipientData_qs = queryString.stringify(recipient);
 		const res = await request.post(`${apiUri}/api/chatbot/recipient?${recipientData_qs}&security_token=${security_token}&`).query({ politician_id: user_id });
 		const recipientData = await res.json();
+		console.log('recipientData', recipientData);
 		return recipientData;
 	},
 
@@ -56,6 +59,8 @@ module.exports = {
 			entities = JSON.stringify(entities);
 			const res = await request.post(`${apiUri}/api/chatbot/issue?politician_id=${politician_id}&fb_id=${fb_id}&message=${message}&entities=${entities}&security_token=${security_token}`);
 			const issue = await res.json();
+			console.log('postIssue', issue);
+
 			return issue;
 		}
 
@@ -67,6 +72,8 @@ module.exports = {
 			message = encodeURI(message);
 			const res = await request.post(`${apiUri}/api/chatbot/issue?politician_id=${politician_id}&fb_id=${fb_id}&message=${message}&security_token=${security_token}`);
 			const issue = await res.json();
+			console.log('postIssueWithoutEntities', issue);
+
 			return issue;
 		}
 
@@ -77,18 +84,22 @@ module.exports = {
 		entities = JSON.stringify(entities);
 		const res = await request(`${apiUri}/api/chatbot/knowledge-base?politician_id=${politician_id}&entities=${entities}&fb_id=${fb_id}&security_token=${security_token}`);
 		const knowledgeBase = await res.json();
+		console.log('getknowledgeBase', knowledgeBase);
 		return knowledgeBase;
 	},
 
 	async getknowledgeBaseByName(politician_id, entities) {
 		const res = await request(`${apiUri}/api/chatbot/knowledge-base?politician_id=${politician_id}&entities=${entities}&security_token=${security_token}`);
 		const knowledgeBase = await res.json();
+		console.log('getknowledgeBaseByName', knowledgeBase);
+
 		return knowledgeBase;
 	},
 
 	async postPrivateReply(item, page_id, post_id, comment_id, permalink, user_id) {
 		const res = await request.post(`${apiUri}/api/chatbot/private-reply?page_id=${page_id}&item=${item}&post_id=${post_id}&comment_id=${comment_id}&permalink=${permalink}&user_id=${user_id}&security_token=${security_token}`);
 		const privateReply = await res.json();
+		console.log('postPrivateReply', privateReply);
 		return privateReply;
 	},
 
