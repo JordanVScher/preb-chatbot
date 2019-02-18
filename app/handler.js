@@ -37,8 +37,9 @@ module.exports = async (context) => {
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
-				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'triagem' });
+				// await context.setState({ dialog: 'greetings' });
+				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
+				await context.setState({ dialog: 'triagem' });
 				// await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
@@ -211,6 +212,28 @@ module.exports = async (context) => {
 			await context.sendText(flow.prevention.text2);
 			await context.sendText(flow.prevention.text3);
 			await desafio.followUp(context);
+			break;
+		case 'triagemRetry':
+			await context.sendText('texto informativo do perigo', opt.triagem2);
+			break;
+		case 'autoTeste':
+			await context.sendText(flow.autoTeste.start, opt.autoteste);
+			break;
+		case 'auto':
+			await context.sendText(flow.autoTeste.auto1);
+			await context.sendText(flow.autoTeste.auto2);
+			await context.sendText(flow.autoTeste.auto3, opt.autotesteEnd);
+			break;
+		case 'ong':
+			await context.sendText(flow.autoTeste.ong1);
+			await context.sendText(flow.autoTeste.ong2, opt.autotesteEnd);
+			break;
+		case 'rua':
+			await context.sendText(flow.autoTeste.rua1);
+			await context.sendText(flow.autoTeste.rua2, opt.autotesteEnd);
+			break;
+		case 'servico':
+			await context.sendText(flow.autoTeste.servico1, opt.autotesteEnd);
 			break;
 		case 'notificationOn':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 1);

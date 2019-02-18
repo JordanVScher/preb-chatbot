@@ -94,4 +94,16 @@ module.exports = {
 	sus: {
 		text1: 'Você pode procurar por um atendimento especializado no SUS. Vou te mandar as informações:',
 	},
+	autoTeste:
+	{
+		start: '[oferecer testagem]',
+		auto1: 'Teste realizado pelo próprio indivíduo, você mesmo pode realizar, mas só tem para HIV.O teste é feito por fluído oral e demora 20 minutos para ficar pronto.Você pode receber na sua casa ou retirar em um dos nossos endereços. Mas se você quer fazer outros exames ou está com dúvida sobre outras IST, talvez esta não seja a melhor opção.',
+		auto2: 'Você pode receber em casa através dos correios, retirar em serviço, retirar em ONG, retirar e fazer no serviço',
+		auto3: '[informações dos CTAs]',
+		ong1: 'Somente teste rápido de HIV, é feito por fluído oral (Não precisa de sangue!), em horários da tarde e noite.Ideal para quem não consegue ir nos serviços de saúde por causa do horário ou para quem não gosta de ir nos serviços e quer um espaço diferente, mas gostaria de ser atendido por um profissional presencialmente.',
+		ong2: '[links de ONGS]',
+		rua1: 'É realização de testagem na rua e em ambientes de sociabilidade, com agenda, locais e horários variáveis. Acesso mais fácil e horários alternativos, pode ter um bem pertinho de você',
+		rua2: '[links de agenda]',
+		servico1: 'Testes rápidos ou convencionais (aqueles que vão para o laboratório e o resultado sai em 1 semana), tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode orientar sobre dúvidas e aconselhamento em prevenção combinada. Os horários são de segunda a sexta, das 8:00 as 17:00.',
+	},
 };

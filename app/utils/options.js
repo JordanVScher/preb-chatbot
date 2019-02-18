@@ -63,60 +63,6 @@ module.exports = {
 		url: 'https://www.google.com',
 		title: 'Ler Termos',
 	}],
-	sus: [
-		{
-			title: 'SUS em São Paulo',
-			// subtitle: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245171',
-			buttons: [
-				{
-					type: 'web_url',
-					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245171',
-					title: 'Endereço de todas as unidades',
-				},
-				{
-					type: 'web_url',
-					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245403',
-					title: 'Para retirar camisinha',
-				},
-				{
-					type: 'web_url',
-					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245409',
-					title: 'Para testagem:',
-				},
-			],
-		},
-		{
-			title: 'SUS em São Paulo de novo',
-			buttons: [
-				{
-					type: 'web_url',
-					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245399',
-					title: 'PEP',
-				},
-				{
-					type: 'web_url',
-					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=248175',
-					title: 'PREP',
-				},
-			],
-		},
-		{
-			title: 'SUS na Bahia',
-			buttons: [
-				{
-					type: 'web_url',
-					url: 'http://www.aids.gov.br/pt-br/cedap-centro-estadual-especializado-em-diagnostico-assistencia-e-pesquisa',
-					title: 'PREP e outras prevenções',
-				},
-				{
-					type: 'web_url',
-					url: 'http://www.aids.gov.br/pep_onde/index.html.',
-					title: 'PEP',
-				},
-			],
-		},
-
-	],
 	saidNo: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Quero!', payload: 'joinResearch' },
@@ -140,6 +86,7 @@ module.exports = {
 			{ content_type: 'text', title: 'Cancelar', payload: 'mainMenu' },
 		],
 	},
+
 	answer: {
 		sendQuiz: {
 			quick_replies: [
@@ -167,6 +114,104 @@ module.exports = {
 			],
 		},
 	},
+	triagem1: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Agendar', payload: 'getCity' },
+			{ content_type: 'text', title: 'Agora não', payload: 'triagemRetry' },
+		],
+	},
+	triagem2: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Agendar', payload: 'getCity' },
+			{ content_type: 'text', title: 'Agora não', payload: 'mainMenu' },
+		],
+	},
+	autoteste: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Autoteste', payload: 'auto' },
+			{ content_type: 'text', title: 'ONG', payload: 'ong' },
+			{ content_type: 'text', title: 'Rua', payload: 'rua' },
+			{ content_type: 'text', title: 'Serviço', payload: 'servico' },
+		],
+	},
+	autotesteEnd: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' },
+			{ content_type: 'text', title: 'Voltar', payload: 'autoTeste' },
+		],
+	},
+	sus: [
+		{
+			title: 'SUS em São Paulo',
+			// subtitle: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245171',
+			buttons: [
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245171',
+					title: 'Endereço de todas as unidades',
+				},
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245403',
+					title: 'Para retirar camisinha',
+				},
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245409',
+					title: 'Para testagem:',
+				},
+			],
+		},
+		{
+			title: 'SUS em São Paulo de novo',
+			buttons: [
+				{
+					type: 'web_url',
+					url: 'http://www.aids.gov.br/pt-br/acesso_a_informacao/servicos-de-saude?field_end_servicos_disponiveis_tid=1013&field_endereco_tipo_tid=All&province=SP',
+					title: 'Serviços de Saúde',
+				},
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=245399',
+					title: 'PEP',
+				},
+				{
+					type: 'web_url',
+					url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=248175',
+					title: 'PREP',
+				},
+			],
+		},
+		{
+			title: 'SUS na Bahia',
+			buttons: [
+				{
+					type: 'web_url',
+					url: 'http://www.aids.gov.br/pt-br/acesso_a_informacao/servicos-de-saude?field_end_servicos_disponiveis_tid=All&field_endereco_tipo_tid=All&province=BA',
+					title: 'Serviços de Saúde',
+				},
+				{
+					type: 'web_url',
+					url: 'http://www.aids.gov.br/pt-br/cedap-centro-estadual-especializado-em-diagnostico-assistencia-e-pesquisa',
+					title: 'PREP e outras prevenções',
+				},
+				{
+					type: 'web_url',
+					url: 'http://www.aids.gov.br/pep_onde/index.html.',
+					title: 'PEP',
+				},
+			],
+		},
+		{
+			title: 'SUS em Minas',
+			buttons: [
+				{
+					type: 'web_url',
+					url: 'http://www.aids.gov.br/pt-br/acesso_a_informacao/servicos-de-saude?field_end_servicos_disponiveis_tid=1013&field_endereco_tipo_tid=All&province=MG',
+					title: 'Serviços de Saúde',
+				},
+			],
+		},
 
-
+	],
 };

@@ -16,7 +16,6 @@ async function answerQuizA(context) {
 
 	console.log(context.state.categoryQuestion);
 
-
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 

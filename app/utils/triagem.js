@@ -9,8 +9,7 @@ async function getTriagem(context) {
 	console.log('currentQuestion', context.state.currentQuestion);
 
 	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
-		await context.sendText('Acabou a triagem');
-		// await aux.endQuizA(context, prepApi); // quiz is over
+		await aux.endTriagem(context, context.state.sentAnswer);
 	} else { // user is still answering the quiz
 		if (context.state.currentQuestion.type === 'multiple_choice') { // showing question and answer options
 			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'tria'));
@@ -36,7 +35,7 @@ async function handleAnswer(context, quizOpt) {
 		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 			await context.setState({ dialog: 'triagem' }); // not over, sends user to next question
 		} else {
-			await context.sendText('Acabamos o quiz no post');
+			await aux.endTriagem(context, context.state.sentAnswer);
 		}
 	}
 }
