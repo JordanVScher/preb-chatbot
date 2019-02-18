@@ -24,7 +24,7 @@ async function answerQuizA(context) {
 
 	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
 		await aux.endQuizA(context, prepApi); // quiz is over
-	} else { /* eslint-disable no-lonely-if */ // user is still answering the quiz
+	} else { // user is still answering the quiz
 		if (context.state.categoryQuestion === 'quiz') { // send encouragement only on the regular quiz
 			if (context.state.currentQuestion.count_more === 10) { // encouragement message
 				await context.sendText('Bafo! Estou adorando te conhecer...');
@@ -39,13 +39,12 @@ async function answerQuizA(context) {
 
 		// showing question and answer options
 		if (context.state.currentQuestion.type === 'multiple_choice') {
-			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion));
+			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
 		} else if (context.state.currentQuestion.type === 'open_text') {
 			await context.setState({ onTextQuiz: true });
 			await context.sendText(context.state.currentQuestion.text);
 		}
 		await context.typingOff();
-		/* eslint-enable no-lonely-if */
 	} // -- answering quiz else
 }
 

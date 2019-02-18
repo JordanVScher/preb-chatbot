@@ -13,6 +13,7 @@ const { handleToken } = require('./utils/research');
 const mainMenu = require('./utils/mainMenu');
 const research = require('./utils/research');
 const timer = require('./utils/timer');
+const triagem = require('./utils/triagem');
 
 module.exports = async (context) => {
 	try {
@@ -37,6 +38,7 @@ module.exports = async (context) => {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'triagem' });
 				// await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
@@ -56,6 +58,8 @@ module.exports = async (context) => {
 				await context.setState({ dialog: 'setEvent' });
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
 				await quiz.handleAnswerA(context, context.state.lastQRpayload.replace('quiz', ''));
+			} else if (context.state.lastQRpayload.slice(0, 4) === 'tria') {
+				await triagem.handleAnswer(context, context.state.lastQRpayload.replace('tria', ''));
 			} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
 				await quiz.AnswerExtraQuestion(context);
 			} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
@@ -110,7 +114,6 @@ module.exports = async (context) => {
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
 			await desafio.asksDesafio(context);
-			// await research.researchSaidYes(context);
 			// await timer.sendCarouselSus(context, opt.sus);
 			// await consulta.getCity(context);
 			// await quiz.answerQuizA(context);
@@ -139,8 +142,7 @@ module.exports = async (context) => {
 			await quiz.answerQuizA(context);
 			break;
 		case 'triagem': // this is the triagem-type of questionario
-			await context.setState({ categoryQuestion: 'triagem' });
-			await quiz.answerQuizA(context);
+			await triagem.getTriagem(context);
 			break;
 		case 'aboutAmanda':
 			await context.sendImage(flow.aboutAmanda.gif);
@@ -197,7 +199,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
 			break;
 		case 'noResearch':
-			await mainMenu.sendMain(context, flow.notEligible.text1);
+			await mainMenu.sendMain(context, flow.foraPesquisa.text1);
 			break;
 		case 'joinResearch':
 			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz

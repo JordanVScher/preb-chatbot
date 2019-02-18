@@ -84,6 +84,10 @@ async function sendConsulta(context) {
 	}
 }
 
+async function inviteTriagem(context) {
+	await context.sendText('');
+}
+
 async function checkAconselhamento(context) {
 	// await context.setState({ user: { is_prep: 0 } }); // for testing
 	if (context.state.intentType === 'duvida') {
@@ -96,6 +100,7 @@ async function checkAconselhamento(context) {
 		if (context.state.user.is_prep === 0) { // eslint-disable-line no-lonely-if
 			await sendConsulta(context); // is prep, === 1
 		} else { // user isn't prep, goes to triagem
+			await inviteTriagem(context);
 			await mainMenu.sendShareAndMenu(context); // send regular menu
 			// await context.sendText('Bb, vou te fazer umas perguntinhas para te ajudar melhor.');
 			// await context.sendText('<Fluxo triagem> a fazer');

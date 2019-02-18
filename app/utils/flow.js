@@ -58,8 +58,8 @@ module.exports = {
 	verConsulta: {
 		zero: 'Você não tem nenhuma consulta marcada.',
 	},
-	NotOnResearch: {
-		// text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
+
+	foraPesquisa: {
 		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
 	},
 	notEligible: {
