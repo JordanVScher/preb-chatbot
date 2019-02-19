@@ -64,7 +64,7 @@ async function handleAnswerA(context, quizOpt) {
 	await context.setState({ onTextQuiz: false });
 
 	if (context.state.sentAnswer.error || context.state.sentAnswer.form_error) { // error
-		await context.sendText('Ops, parece que me perdi, Pode me responder de novo?');
+		await context.sendText('Ops, parece que me perdi. Pode me responder de novo?');
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
 		await context.sendText('Formato inválido! Tente novamente!');

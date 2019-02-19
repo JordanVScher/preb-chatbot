@@ -29,6 +29,7 @@ async function checkPosition(context) {
 		} else { // no answers in knowledge_base (We know the entity but admin doesn't have a position)
 			await createIssue(context);
 		}
+		console.log('Entrou aqui');
 
 		await desafio.followUpIntent(context);
 		break;

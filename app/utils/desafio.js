@@ -85,14 +85,16 @@ async function sendConsulta(context) {
 }
 
 async function inviteTriagem(context) {
-	await context.sendText('');
+	await context.sendText('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
 }
 
 async function checkAconselhamento(context) {
 	// await context.setState({ user: { is_prep: 0 } }); // for testing
+	console.log('Estou aquio');
+
 	if (context.state.intentType === 'duvida') {
-		if (context.state.user.is_prep === 0) { // user isn't prep
-			await context.sendText('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
+		if (context.state.user.is_prep === 0) { // user isn't prep, send to triagem
+			await inviteTriagem(context);
 		} else { // user is prep
 			await mainMenu.sendShareAndMenu(context); // send regular menu
 		}
@@ -100,11 +102,8 @@ async function checkAconselhamento(context) {
 		if (context.state.user.is_prep === 0) { // eslint-disable-line no-lonely-if
 			await sendConsulta(context); // is prep, === 1
 		} else { // user isn't prep, goes to triagem
-			await inviteTriagem(context);
-			await mainMenu.sendShareAndMenu(context); // send regular menu
-			// await context.sendText('Bb, vou te fazer umas perguntinhas para te ajudar melhor.');
-			// await context.sendText('<Fluxo triagem> a fazer');
-			// await context.setState({ dialog: 'triagem' });
+			await context.sendText('Bb, vou fazer umas perguntinhas para te ajudar melhor');
+			await context.setState({ dialog: 'triagem' });
 		}
 	}
 }
@@ -114,8 +113,8 @@ async function followUpIntent(context) {
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
 	await context.setState({ dialog: 'prompt' });
 
-	// console.log('intentType', context.state.intentType);
-	// console.log(context.state.user);
+	console.log('intentType', context.state.intentType);
+	console.log('user', context.state.user);
 
 	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa === 1
