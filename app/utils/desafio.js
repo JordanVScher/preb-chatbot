@@ -113,8 +113,8 @@ async function followUpIntent(context) {
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
 	await context.setState({ dialog: 'prompt' });
 
-	console.log('intentType', context.state.intentType);
-	console.log('user', context.state.user);
+	// console.log('intentType', context.state.intentType);
+	// console.log('user', context.state.user);
 
 	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa === 1
