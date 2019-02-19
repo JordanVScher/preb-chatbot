@@ -117,7 +117,7 @@ module.exports = {
 	triagem1: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Agendar', payload: 'getCity' },
-			{ content_type: 'text', title: 'Agora não', payload: 'triagemRetry' },
+			{ content_type: 'text', title: 'Agora não', payload: 'retryTriagem' },
 		],
 	},
 	triagem2: {

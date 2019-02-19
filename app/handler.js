@@ -37,9 +37,9 @@ module.exports = async (context) => {
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
-				await context.setState({ dialog: 'greetings' });
-				// console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
-				// await context.setState({ dialog: 'triagem' });
+				// await context.setState({ dialog: 'greetings' });
+				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
+				await context.setState({ dialog: 'triagem' });
 				// await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
@@ -213,8 +213,8 @@ module.exports = async (context) => {
 			await context.sendText(flow.prevention.text3);
 			await desafio.followUp(context);
 			break;
-		case 'triagemRetry':
-			await context.sendText('texto informativo do perigo', opt.triagem2);
+		case 'retryTriagem':
+			await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
 			break;
 		case 'autoTeste':
 			await context.sendText(flow.autoTeste.start, opt.autoteste);

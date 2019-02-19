@@ -2,6 +2,7 @@
 const research = require('./research');
 const { capQR } = require('./helper');
 const opt = require('./options');
+const flow = require('./flow');
 const { sendMain } = require('./mainMenu');
 
 async function handleFlags(context, response) {
@@ -41,19 +42,20 @@ async function endQuizA(context, prepApi) {
 }
 
 async function endTriagem(context) {
-	// SC6 -> talvez a prep seja uma boa pra vc. bora marcar?
 	await context.setState({ dialog: 'endTriagem' });
 	const result = context.state.sentAnswer;
-	if (result && result.emergency_rerouting === 1) { // vai te retornar quando a pessoa responder Há menos de 72H para a primeira pergunta da triagem
-		await context.sendText('Texto sobre prep e urgencia');
-		await context.sendText('contatos CTA');
+	if (result && result.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
+		await context.sendText(flow.triagem.emergency1);
+		await context.sendText(flow.triagem.emergency2);
 		await sendMain(context);
-	} else if (result && result.go_to_autotest === 1) { // te retorna quando o recipient responder não para a SC6
+	} else if (result && result.go_to_autotest === 1) { // "A mais de 6 meses" + todos não
 		await context.setState({ dialog: 'autoTeste' });
-	} else if (result && result.go_to_appointment === 1) { // retorna quando o recipient responder sim para a SC6
+	} else if (result && result.go_to_appointment === 1) { // quando responder sim para a SC6 -> talvez a prep seja uma boa pra vc. bora marcar?
 		await context.setState({ dialog: 'getCity2' });
-	} else if (result && result.suggest_appointment === 1) {
-		await context.sendText('Bb, acho que vc está com IST.\nVamos agendar consulta com médico e tratar?', opt.triagem1);
+	} else if (result && result.suggest_appointment === 1) { // qualquer sim
+		await context.sendText(flow.triagem.suggest, opt.triagem1);
+	} else { // quando responder não para a SC6
+		await sendMain(context);
 	}
 }
 

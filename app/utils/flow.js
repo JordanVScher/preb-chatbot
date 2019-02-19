@@ -106,4 +106,11 @@ module.exports = {
 		rua2: '[links de agenda]',
 		servico1: 'Testes rápidos ou convencionais (aqueles que vão para o laboratório e o resultado sai em 1 semana), tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode orientar sobre dúvidas e aconselhamento em prevenção combinada. Os horários são de segunda a sexta, das 8:00 as 17:00.',
 	},
+	triagem: {
+		retryTriagem: 'texto informativo do perigo',
+		emergency1: 'Texto sobre prep e urgencia',
+		emergency2: 'contatos CTA',
+		suggest: 'Bb, acho que vc está com IST.\nVamos agendar consulta com médico e tratar?',
+
+	},
 };
