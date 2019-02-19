@@ -149,4 +149,11 @@ module.exports = {
 		const sign = await res.json();
 		return sign;
 	},
+
+	async resetTriagem(fb_id) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient/reset-screening?security_token=${security_token}&`).query({ fb_id });
+		// console.log('postSignature', res);
+		const sign = await res.json();
+		return sign;
+	},
 };
