@@ -6,13 +6,15 @@ const desafio = require('./utils/desafio');
 async function checkPosition(context) {
 	await context.setState({ dialog: 'checkPositionFunc' });
 	switch (context.state.intentName) {
-	// case 'Greetings': // add specific intents here
-	// 	break;
-	// case 'Fazer Quiz': // didn't understand what was typed
-	// 	await createIssue(context);
-	// 	break;
+	case 'Greetings': // user said hi
+		await context.setState({ dialog: 'greetings' });
+		break;
+	case 'Quiz': // user wants to answer the quiz
+		await context.setState({ dialog: 'beginQuiz' });
+		break;
 	case 'Fallback': // didn't understand what was typed
 		await createIssue(context);
+		await desafio.followUpIntent(context);
 		break;
 	default: // default acts for every intent - position on MA
 		await context.setState({
@@ -28,10 +30,9 @@ async function checkPosition(context) {
 			await createIssue(context);
 		}
 
+		await desafio.followUpIntent(context);
 		break;
 	}
-
-	await desafio.followUpIntent(context);
 }
 
 module.exports.checkPosition = checkPosition;

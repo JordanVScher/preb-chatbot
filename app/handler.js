@@ -37,9 +37,7 @@ module.exports = async (context) => {
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
-				// await context.setState({ dialog: 'greetings' });
-				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
-				await context.setState({ dialog: 'triagem' });
+				await context.setState({ dialog: 'greetings' });
 				// await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
@@ -95,7 +93,7 @@ module.exports = async (context) => {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
-				await context.setState({ dialog: 'greetings' });
+				await context.setState({ dialog: 'triagem' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
@@ -137,7 +135,7 @@ module.exports = async (context) => {
 		case 'beginQuiz':
 			await context.setState({ startedQuiz: true });
 			await context.sendText('Preparar, apontar... fogo!');
-			// falls throught
+		// falls throught
 		case 'startQuizA': // this is the quiz-type of questionario
 			await context.setState({ categoryQuestion: 'quiz' });
 			await quiz.answerQuizA(context);
