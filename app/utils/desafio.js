@@ -90,16 +90,17 @@ async function inviteTriagem(context) {
 
 async function checkAconselhamento(context) {
 	// await context.setState({ user: { is_prep: 0 } }); // for testing
-	console.log('Estou aquio');
+	console.log('intentType', context.state.intentType);
 
 	if (context.state.intentType === 'duvida') {
-		if (context.state.user.is_prep === 0) { // user isn't prep, send to triagem
-			await inviteTriagem(context);
-		} else { // user is prep
+		console.log('Chegamos aqui');
+		if (context.state.user.is_prep === 1) { // user isn't prep, send to triagem
 			await mainMenu.sendShareAndMenu(context); // send regular menu
+		} else { // user is prep
+			await inviteTriagem(context);
 		}
 	} else { // problema e serviço
-		if (context.state.user.is_prep === 0) { // eslint-disable-line no-lonely-if
+		if (context.state.user.is_prep === 1) { // eslint-disable-line no-lonely-if
 			await sendConsulta(context); // is prep, === 1
 		} else { // user isn't prep, goes to triagem
 			await context.sendText('Bb, vou fazer umas perguntinhas para te ajudar melhor');
