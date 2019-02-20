@@ -95,6 +95,7 @@ module.exports = async (context) => {
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
 				await context.setState({ dialog: '' });
+				await prepAPI.resetTriagem(context.session.user.id); // clear old triagem
 				await context.sendText('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
