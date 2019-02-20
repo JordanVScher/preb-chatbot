@@ -2,6 +2,8 @@ const MaAPI = require('./chatbot_api.js');
 const { createIssue } = require('./send_issue');
 const { sendAnswer } = require('./utils/sendAnswer');
 const desafio = require('./utils/desafio');
+const { getRecipientPrep } = require('./utils/prep_api');
+
 
 async function checkPosition(context) {
 	await context.setState({ dialog: 'checkPositionFunc' });
@@ -11,6 +13,15 @@ async function checkPosition(context) {
 		break;
 	case 'Quiz': // user wants to answer the quiz
 		await context.setState({ dialog: 'beginQuiz' });
+		break;
+	case 'Marcar Consulta':
+		await context.setState({ user: await getRecipientPrep(context.session.user.id) });
+		if (context.state.user.is_part_of_research === 1) {
+			await context.setState({ dialog: 'checarConsulta' });
+		} else {
+			await context.sendText('Você não pode marcar consulta');
+			await desafio.followUpIntent(context);
+		}
 		break;
 	case 'Fallback': // didn't understand what was typed
 		await createIssue(context);
