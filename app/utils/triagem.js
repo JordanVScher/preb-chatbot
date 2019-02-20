@@ -4,7 +4,7 @@ const aux = require('./quiz_aux');
 
 async function getTriagem(context) {
 	await context.typingOn();
-
+	await prepApi.resetTriagem(context.session.user.id); // clear old triagem
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, 'screening') });
 	console.log('currentQuestion', context.state.currentQuestion);
 

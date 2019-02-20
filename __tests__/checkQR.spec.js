@@ -238,6 +238,7 @@ it('checkMainMenu - on audience, no research, not eligible and finished_quiz ', 
 
 	await expect(newOptions.length === 1).toBeTruthy();
 });
+
 it('checkMainMenu - on audience, no research, not eligible and not finished_quiz ', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
 	context.state.user = {

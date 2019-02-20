@@ -123,6 +123,7 @@ module.exports = {
 	triagem2: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Agendar', payload: 'getCity' },
+			{ content_type: 'text', title: 'Testagem', payload: 'autoTeste' },
 			{ content_type: 'text', title: 'Agora não', payload: 'mainMenu' },
 		],
 	},

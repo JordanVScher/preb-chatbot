@@ -33,11 +33,13 @@ async function notEligible(context) { // não passou nas 3 primeiras perguntas
 }
 
 async function researchSaidNo(context) {
+	await context.setState({ dialog: 'researchSaidNo' });
 	await context.sendButtonTemplate(flow.quizNo.text1, opt.artigoLink);
 	await context.sendText(flow.quizNo.text2, opt.saidNo);
 }
 
 async function researchSaidYes(context) {
+	await context.setState({ dialog: 'researchSaidYes' });
 	await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
 	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
 	await context.sendButtonTemplate(flow.quizYes.text15, opt.TCLE);

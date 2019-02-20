@@ -88,9 +88,9 @@ async function inviteTriagem(context) {
 	await context.sendText('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
 }
 
+
 async function checkAconselhamento(context) {
 	// await context.setState({ user: { is_prep: 0 } }); // for testing
-	await prepApi.resetTriagem(context.session.user.id); // clear old triagem
 	if (context.state.intentType === 'duvida') {
 		if (context.state.user.is_prep === 1) { // user isn't prep, send to triagem
 			await mainMenu.sendShareAndMenu(context); // send regular menu

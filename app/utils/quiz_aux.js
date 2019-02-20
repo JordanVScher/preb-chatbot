@@ -51,7 +51,7 @@ async function endTriagem(context) {
 	} else if (result && result.go_to_autotest === 1) { // "A mais de 6 meses" + todos não
 		await context.setState({ dialog: 'autoTeste' });
 	} else if (result && result.go_to_appointment === 1) { // quando responder sim para a SC6 -> talvez a prep seja uma boa pra vc. bora marcar?
-		await context.setState({ dialog: 'getCity2' });
+		await context.setState({ dialog: 'checarConsulta' });
 	} else if (result && result.suggest_appointment === 1) { // qualquer sim
 		await context.sendText(flow.triagem.suggest, opt.triagem1);
 	} else { // quando responder não para a SC6

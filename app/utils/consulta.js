@@ -8,10 +8,10 @@ const { checkConsulta } = require('./checkQR');
 const { sendMain } = require('./mainMenu');
 
 async function verConsulta(context) {
-	await context.setState({ consultas: await prepApi.getAppointment(context.session.user.id) });
-	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) {
-		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
-			await context.sendText(`${flow.consulta.success}`
+	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
+		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
+			await context.sendText(''
 			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
 			+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
@@ -183,8 +183,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
 	);
 
-	console.log(response);
-
+	console.log('postAppointment', response);
 
 	if (response.id) {
 		await context.sendText(`${flow.consulta.success}`
@@ -202,6 +201,26 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	}
 }
 
+async function checarConsulta(context) {
+	await context.setState({ sendExtraMessages: false });
+	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	console.log('CONSULTA', context.state.consulta);
+
+	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
+		await context.sendText('Você já tem consulta marcada:');
+		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
+			await context.sendText(''
+				+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
+				+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
+				+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+		}
+		await sendMain(context);
+	} else {
+		await context.sendText('Então, vamos marcar uma nova consulta:');
+		await showCities(context);
+	}
+}
+
 module.exports.verConsulta = verConsulta;
 module.exports.showDays = showDays;
 module.exports.showCities = showCities;
@@ -209,3 +228,4 @@ module.exports.nextDay = nextDay;
 module.exports.nextHour = nextHour;
 module.exports.showHours = showHours;
 module.exports.finalDate = finalDate;
+module.exports.checarConsulta = checarConsulta;
