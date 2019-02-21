@@ -22,10 +22,10 @@ async function onTheResearch(context) {
 	await context.sendText(flow.onTheResearch.text2);
 }
 
-async function notOnResearch(context) {
-	await context.setState({ dialog: 'NotOnResearch' });
-	await context.sendText(flow.foraPesquisa.text1, await checkQR.checkMainMenu(context));
-}
+// async function notOnResearch(context) {
+// 	await context.setState({ dialog: 'NotOnResearch' });
+// 	await context.sendText(flow.foraPesquisa.text1, await checkQR.checkMainMenu(context));
+// }
 
 async function notEligible(context) { // não passou nas 3 primeiras perguntas
 	await context.setState({ dialog: 'NotEligible' });
@@ -52,7 +52,7 @@ async function notPart(context) {
 }
 
 module.exports.onTheResearch = onTheResearch;
-module.exports.notOnResearch = notOnResearch;
+// module.exports.notOnResearch = notOnResearch;
 module.exports.notEligible = notEligible;
 module.exports.researchSaidNo = researchSaidNo;
 module.exports.researchSaidYes = researchSaidYes;

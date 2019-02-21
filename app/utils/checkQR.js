@@ -70,7 +70,7 @@ async function checkMainMenu(context) {
 			} else {
 				newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' });
 			}
-		} else if (context.state.user.is_eligible_for_research === 1) { // 1
+		} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // 1 1
 			newOptions.push({ content_type: 'text', title: 'Pesquisa', payload: 'askResearch' });
 		} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // 0 1
 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });

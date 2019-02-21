@@ -4,6 +4,8 @@ const { capQR } = require('./helper');
 const opt = require('./options');
 const flow = require('./flow');
 const { sendMain } = require('./mainMenu');
+const { resetTriagem } = require('./prep_api');
+
 
 async function handleFlags(context, response) {
 	if (response.is_eligible_for_research && response.is_eligible_for_research === 1) { // user is eligible for research -> sees "do you want to participate" question
@@ -25,6 +27,8 @@ async function handleFlags(context, response) {
 }
 
 async function endQuizA(context, prepApi) {
+	console.log('NO FIM');
+
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 
 	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
@@ -42,6 +46,7 @@ async function endQuizA(context, prepApi) {
 }
 
 async function endTriagem(context) {
+	await resetTriagem(context.session.user.id); // clear old triagem
 	await context.setState({ dialog: 'endTriagem' });
 	const result = context.state.sentAnswer;
 	if (result && result.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
@@ -78,11 +83,15 @@ async function buildMultipleChoice(question, complement) {
 
 async function handleAC5(context) {
 	if (context.state.currentQuestion.code === 'AC5') {
-		if (context.state.currentQuestion.is_eligible_for_research === 1) {
-			await research.onTheResearch(context); // elegível e respondeu Sim
-		} else if (context.state.currentQuestion.is_eligible_for_research === 0) {
-			await research.notOnResearch(context); // elegível e respondeu Não
-		}
+		await research.onTheResearch(context); // elegível e respondeu Sim
+		//
+		// if (context.state.currentQuestion.is_eligible_for_research === 1) {
+		// console.log('ENTREI 1');
+		// await research.onTheResearch(context); // elegível e respondeu Sim
+		// } else if (context.state.currentQuestion.is_eligible_for_research === 0) {
+		// console.log('ENTREI 2');
+		// await research.notOnResearch(context); // elegível e respondeu Não
+		// }
 	}
 }
 

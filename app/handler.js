@@ -75,6 +75,8 @@ module.exports = async (context) => {
 			} else if (context.state.lastQRpayload.slice(0, 5) === 'Sign-') {
 				await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url);
 				await context.setState({ dialog: await context.state.lastQRpayload.replace('Sign-', '') });
+			} if (context.state.lastQRpayload.slice(0, 7) === 'NoSign-') {
+				await context.setState({ dialog: await context.state.lastQRpayload.replace('NoSign-', '') });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,

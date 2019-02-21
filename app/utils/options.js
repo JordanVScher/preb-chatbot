@@ -73,7 +73,8 @@ module.exports = {
 		quick_replies: [
 			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-getCity' },
 			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-verConsulta' },
-			{ content_type: 'text', title: 'Não aceito', payload: 'naoAceito' }],
+			{ content_type: 'text', title: 'Não aceito', payload: 'getCity' },
+			{ content_type: 'text', title: 'Não aceito', payload: 'verConsulta' }],
 	},
 	prevention: {
 		quick_replies: [
@@ -116,13 +117,13 @@ module.exports = {
 	},
 	triagem1: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Agendar', payload: 'getCity' },
+			{ content_type: 'text', title: 'Agendar', payload: 'checarConsulta' },
 			{ content_type: 'text', title: 'Agora não', payload: 'retryTriagem' },
 		],
 	},
 	triagem2: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Agendar', payload: 'getCity' },
+			{ content_type: 'text', title: 'Agendar', payload: 'checarConsulta' },
 			{ content_type: 'text', title: 'Testagem', payload: 'autoTeste' },
 			{ content_type: 'text', title: 'Agora não', payload: 'mainMenu' },
 		],
