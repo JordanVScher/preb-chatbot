@@ -9,7 +9,6 @@ const help = require('./utils/helper');
 const quiz = require('./utils/quiz');
 const desafio = require('./utils/desafio');
 const consulta = require('./utils/consulta');
-const { handleToken } = require('./utils/research');
 const mainMenu = require('./utils/mainMenu');
 const research = require('./utils/research');
 const timer = require('./utils/timer');
@@ -86,7 +85,7 @@ module.exports = async (context) => {
 			if (context.state.onTextQuiz === true) {
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
 			} else if (context.state.dialog === 'joinToken') {
-				await handleToken(context);
+				await research.handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });

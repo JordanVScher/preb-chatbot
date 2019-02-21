@@ -4,7 +4,6 @@ const { sendAnswer } = require('./utils/sendAnswer');
 const desafio = require('./utils/desafio');
 const { getRecipientPrep } = require('./utils/prep_api');
 
-
 async function checkPosition(context) {
 	await context.setState({ dialog: 'checkPositionFunc' });
 	switch (context.state.intentName) {
@@ -13,6 +12,12 @@ async function checkPosition(context) {
 		break;
 	case 'Quiz': // user wants to answer the quiz
 		await context.setState({ dialog: 'beginQuiz' });
+		break;
+	case 'Sobre Amanda':
+		await context.setState({ dialog: 'aboutAmanda' });
+		break;
+	case 'Inserir Token':
+		await context.setState({ dialog: 'joinToken' });
 		break;
 	case 'Marcar Consulta':
 		await context.setState({ user: await getRecipientPrep(context.session.user.id) });
