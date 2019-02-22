@@ -93,6 +93,36 @@ async function checkMainMenu(context) {
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
+
 module.exports.checkAnsweredQuiz = checkAnsweredQuiz;
 module.exports.checkMainMenu = checkMainMenu;
 module.exports.checkConsulta = checkConsulta;
+
+module.exports.getErrorQR = async (lastPostback) => {
+	const elements = [];
+	// const firstArray = opt.menuOptions;
+
+	// firstArray.forEach((element, index) => {
+	// 	elements.push({
+	// 		content_type: 'text',
+	// 		title: element,
+	// 		payload: opt.menuPostback[index],
+	// 	});
+	// });
+
+	elements.push({
+		content_type: 'text',
+		title: 'Voltar para o Menu',
+		payload: 'mainMenu',
+	});
+
+	// if (lastPostback && lastPostback.length > 0) {
+	// 	elements.push({
+	// 		content_type: 'text',
+	// 		title: 'Tentar de novo',
+	// 		payload: lastPostback,
+	// 	});
+	// }
+
+	return { quick_replies: elements };
+};

@@ -13,6 +13,7 @@ const mainMenu = require('./utils/mainMenu');
 const research = require('./utils/research');
 const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
+const { getErrorQR } = require('./utils/checkQR');
 
 module.exports = async (context) => {
 	try {
@@ -258,7 +259,7 @@ module.exports = async (context) => {
 		const date = new Date();
 		console.log(`Parece que aconteceu um erro as ${date.toLocaleTimeString('pt-BR')} de ${date.getDate()}/${date.getMonth() + 1} =>`);
 		console.log(error);
-		await context.sendText('Ops. Tive um erro interno. Tente novamente.'); // warning user
+		await context.sendText('Ops. Tive um erro interno. Tente novamente.', await getErrorQR(context.state.lastQRpayload)); // warning user
 
 		await help.Sentry.configureScope(async (scope) => { // sending to sentry
 			scope.setUser({ username: context.session.user.first_name });
