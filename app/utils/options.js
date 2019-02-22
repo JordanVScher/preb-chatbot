@@ -45,7 +45,7 @@ module.exports = {
 	},
 	joinToken: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Não tenho token', payload: 'mainMenu' },
+			{ content_type: 'text', title: 'Não tenho Voucher', payload: 'mainMenu' },
 		],
 	},
 	artigoLink: [{
@@ -103,7 +103,7 @@ module.exports = {
 		},
 		isPrep: {
 			quick_replies: [
-				{ content_type: 'text', title: 'Sim', payload: 'triagem' },
+				{ content_type: 'text', title: 'Sim', payload: 'sendToTriagem' },
 				{ content_type: 'text', title: 'Não', payload: 'sendFollowUp' },
 			],
 		},
@@ -138,8 +138,34 @@ module.exports = {
 	},
 	autotesteEnd: {
 		quick_replies: [
+			{ content_type: 'text', title: 'ONG', payload: 'ong' },
+			{ content_type: 'text', title: 'Rua', payload: 'rua' },
+			{ content_type: 'text', title: 'Serviço', payload: 'servico' },
 			{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' },
-			{ content_type: 'text', title: 'Voltar', payload: 'autoTeste' },
+		],
+	},
+	ong: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Autoteste', payload: 'auto' },
+			{ content_type: 'text', title: 'Rua', payload: 'rua' },
+			{ content_type: 'text', title: 'Serviço', payload: 'servico' },
+			{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' },
+		],
+	},
+	rua: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Autoteste', payload: 'auto' },
+			{ content_type: 'text', title: 'ONG', payload: 'ong' },
+			{ content_type: 'text', title: 'Serviço', payload: 'servico' },
+			{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' },
+		],
+	},
+	servico: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Autoteste', payload: 'auto' },
+			{ content_type: 'text', title: 'ONG', payload: 'ong' },
+			{ content_type: 'text', title: 'Rua', payload: 'rua' },
+			{ content_type: 'text', title: 'Entendi', payload: 'mainMenu' },
 		],
 	},
 	sus: [

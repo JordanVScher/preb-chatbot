@@ -4,8 +4,7 @@ const { capQR } = require('./helper');
 const opt = require('./options');
 const flow = require('./flow');
 const { sendMain } = require('./mainMenu');
-const { resetTriagem } = require('./prep_api');
-
+const { checarConsulta } = require('./consulta');
 
 async function handleFlags(context, response) {
 	if (response.is_eligible_for_research && response.is_eligible_for_research === 1) { // user is eligible for research -> sees "do you want to participate" question
@@ -27,8 +26,6 @@ async function handleFlags(context, response) {
 }
 
 async function endQuizA(context, prepApi) {
-	console.log('NO FIM');
-
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 
 	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
@@ -46,7 +43,6 @@ async function endQuizA(context, prepApi) {
 }
 
 async function endTriagem(context) {
-	await resetTriagem(context.session.user.id); // clear old triagem
 	await context.setState({ dialog: 'endTriagem' });
 	const result = context.state.sentAnswer;
 	if (result && result.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
@@ -54,9 +50,12 @@ async function endTriagem(context) {
 		await context.sendText(flow.triagem.emergency2);
 		await sendMain(context);
 	} else if (result && result.go_to_autotest === 1) { // "A mais de 6 meses" + todos não
-		await context.setState({ dialog: 'autoTeste' });
+		// await context.setState({ dialog: 'autoTeste' });
+		await context.sendText(flow.autoTeste.start, opt.autoteste);
 	} else if (result && result.go_to_appointment === 1) { // quando responder sim para a SC6 -> talvez a prep seja uma boa pra vc. bora marcar?
-		await context.setState({ dialog: 'checarConsulta' });
+		await context.setState({ categoryConsulta: 'emergencial' });
+		await checarConsulta(context);
+		// await context.setState({ dialog: 'checarConsulta' });
 	} else if (result && result.suggest_appointment === 1) { // qualquer sim
 		await context.sendText(flow.triagem.suggest, opt.triagem1);
 	} else { // quando responder não para a SC6

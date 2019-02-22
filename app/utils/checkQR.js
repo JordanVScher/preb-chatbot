@@ -56,7 +56,6 @@ async function checkConsulta(context, options) {
 async function checkMainMenu(context) {
 	await context.setState({ sendExtraMessages: false });
 	let newOptions = [];
-	// console.log('antes', newOptions);
 	newOptions.push({ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' });
 	newOptions.push({ content_type: 'text', title: 'Prevenções', payload: 'seePreventions' });
 
@@ -79,18 +78,17 @@ async function checkMainMenu(context) {
 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 		}
 
-		if (await newOptions.find(obj => obj.payload === 'joinToken') === true && context.state.user.integration_token && context.state.user.integration_token.length > 0) { // check if user has token
+		if (context.state.user.integration_token) { // if user already has an integration token we remove the option to enter the token and show the option to see it
 			newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
-			newOptions.push({ content_type: 'text', title: 'Ver meu Token', payload: 'seeToken' });
+			newOptions.push({ content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' });
 		}
-	} else { // not on target audience, may send quiz
+	} else { // not on target audience, may send quiz if there's still any fun_question to be answered
 		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 		if (context.state.currentQuestion && context.state.currentQuestion.code !== null) {
 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 		}
 	}
 
-	// console.log('depois', newOptions);
 	newOptions.push({ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' });
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }

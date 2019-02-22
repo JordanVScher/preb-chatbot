@@ -95,9 +95,7 @@ module.exports = async (context) => {
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
-				await context.setState({ dialog: '' });
-				await prepAPI.resetTriagem(context.session.user.id); // clear old triagem
-				await context.sendText('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
+				await context.setState({ dialog: 'greetings' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
@@ -144,6 +142,7 @@ module.exports = async (context) => {
 			await context.setState({ categoryQuestion: 'quiz' });
 			await quiz.answerQuizA(context);
 			break;
+		case 'sendToTriagem':
 		case 'triagem': // this is the triagem-type of questionario
 			await triagem.getTriagem(context);
 			break;
@@ -166,7 +165,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.joinToken.text1, opt.joinToken);
 			break;
 		case 'seeToken':
-			await context.sendText(`Seu Token é: ${context.state.user.integration_token}`);
+			await context.sendText(`Seu Voucher é: ${context.state.user.integration_token}`);
 			await mainMenu.sendMain(context);
 			break;
 		case 'consulta':
@@ -232,14 +231,14 @@ module.exports = async (context) => {
 			break;
 		case 'ong':
 			await context.sendText(flow.autoTeste.ong1);
-			await context.sendText(flow.autoTeste.ong2, opt.autotesteEnd);
+			await context.sendText(flow.autoTeste.ong2, opt.ong);
 			break;
 		case 'rua':
 			await context.sendText(flow.autoTeste.rua1);
-			await context.sendText(flow.autoTeste.rua2, opt.autotesteEnd);
+			await context.sendText(flow.autoTeste.rua2, opt.rua);
 			break;
 		case 'servico':
-			await context.sendText(flow.autoTeste.servico1, opt.autotesteEnd);
+			await context.sendText(flow.autoTeste.servico1, opt.servico);
 			break;
 		case 'notificationOn':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 1);
