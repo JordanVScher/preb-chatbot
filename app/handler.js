@@ -75,7 +75,7 @@ module.exports = async (context) => {
 			} else if (context.state.lastQRpayload.slice(0, 5) === 'Sign-') {
 				await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url);
 				await context.setState({ dialog: await context.state.lastQRpayload.replace('Sign-', '') });
-			} if (context.state.lastQRpayload.slice(0, 7) === 'NoSign-') {
+			} else if (context.state.lastQRpayload.slice(0, 7) === 'NoSign-') {
 				await context.setState({ dialog: await context.state.lastQRpayload.replace('NoSign-', '') });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
@@ -110,6 +110,7 @@ module.exports = async (context) => {
 			}
 			// await createIssue(context, 'Não entendi sua mensagem pois ela é muito complexa. Você pode escrever novamente, de forma mais direta?');
 		} // -- end text
+
 		switch (context.state.dialog) {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);

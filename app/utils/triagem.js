@@ -26,14 +26,13 @@ async function handleAnswer(context, quizOpt) {
 
 	if (context.state.sentAnswer.error || context.state.sentAnswer.form_error) { // error
 		await context.sendText('Ops, parece que me perdi. Pode me responder de novo?');
-		getTriagem(context);
+		await context.setState({ dialog: 'triagem' });
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
 		await context.sendText('Formato inválido! Tente novamente!');
-		getTriagem(context);
+		await context.setState({ dialog: 'triagem' });
 	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
 		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
-			getTriagem(context);
-			// await context.setState({ dialog: 'triagem' }); // not over, sends user to next question
+			await context.setState({ dialog: 'triagem' }); // not over, sends user to next question
 		} else {
 			await aux.endTriagem(context, context.state.sentAnswer);
 		}
