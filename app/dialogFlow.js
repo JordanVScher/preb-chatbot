@@ -32,11 +32,11 @@ async function checkPosition(context) {
 			await context.setState({ dialog: 'joinToken' });
 		}
 		break;
-	case 'Marcar Consulta':
+	// case 'Marcar Consulta':
 	// case 'Abuso':
 	// case 'Teste':
-		await desafio.followUpIntent(context);
-		break;
+	// 	await desafio.followUpIntent(context);
+	// 	break;
 	case 'Fallback': // didn't understand what was typed
 		await createIssue(context);
 		await desafio.followUpIntent(context);
