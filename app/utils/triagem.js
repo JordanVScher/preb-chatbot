@@ -10,6 +10,10 @@ async function getTriagem(context) {
 	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
 		await aux.endTriagem(context, context.state.sentAnswer);
 	} else { // user is still answering the quiz
+		if (context.state.currentQuestion.code === 'SC2') {
+			await context.sendText('[Text explicativo]');
+		}
+
 		if (context.state.currentQuestion.type === 'multiple_choice') { // showing question and answer options
 			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'tria'));
 		} else if (context.state.currentQuestion.type === 'open_text') {

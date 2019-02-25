@@ -34,16 +34,18 @@ async function answerQuizA(context) {
 			}
 		}
 
-		await aux.handleAC5(context);
-
-		// showing question and answer options
-		if (context.state.currentQuestion.type === 'multiple_choice') {
-			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
-		} else if (context.state.currentQuestion.type === 'open_text') {
-			await context.setState({ onTextQuiz: true });
-			await context.sendText(context.state.currentQuestion.text);
-		}
-		await context.typingOff();
+		if (context.state.currentQuestion.code === 'AC5') {
+			await aux.handleAC5(context);
+		} else {
+			// showing question and answer options
+			if (context.state.currentQuestion.type === 'multiple_choice') {
+				await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
+			} else if (context.state.currentQuestion.type === 'open_text') {
+				await context.setState({ onTextQuiz: true });
+				await context.sendText(context.state.currentQuestion.text);
+			}
+			await context.typingOff();
+		} // -- not AC5
 	} // -- answering quiz else
 }
 

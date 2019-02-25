@@ -56,7 +56,7 @@ module.exports = {
 	questionario: [{
 		type: 'web_url',
 		url: 'https://www.google.com',
-		title: 'Ir ao Questionário',
+		title: 'Ir para Pré-Cadastro',
 	}],
 	TCLE: [{
 		type: 'web_url',

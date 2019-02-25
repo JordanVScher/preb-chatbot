@@ -81,17 +81,10 @@ async function buildMultipleChoice(question, complement) {
 }
 
 async function handleAC5(context) {
-	if (context.state.currentQuestion.code === 'AC5') {
-		await research.onTheResearch(context); // elegível e respondeu Sim
-		//
-		// if (context.state.currentQuestion.is_eligible_for_research === 1) {
-		// console.log('ENTREI 1');
-		// await research.onTheResearch(context); // elegível e respondeu Sim
-		// } else if (context.state.currentQuestion.is_eligible_for_research === 0) {
-		// console.log('ENTREI 2');
-		// await research.notOnResearch(context); // elegível e respondeu Não
-		// }
-	}
+	await research.onTheResearch(context); // elegível e respondeu Sim
+	await context.sendText(context.state.currentQuestion.text);
+	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
+	await context.sendText('E aí, quer participar?', await buildMultipleChoice(context.state.currentQuestion, 'quiz'));
 }
 
 
