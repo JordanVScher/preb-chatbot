@@ -37,7 +37,7 @@ module.exports = async (context) => {
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
-				await context.setState({ dialog: 'greetings' });
+				await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'checarConsulta' });
 				// await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'verConsulta' });

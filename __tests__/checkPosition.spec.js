@@ -29,13 +29,14 @@ it('checkPosition - question with answer', async () => {
 
 it('checkPosition - question with no answer', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.user = {};
 	await checkPosition(context);
 	await expect(context.setState).toBeCalledWith({ dialog: 'checkPositionFunc' });
 	await expect(context.state.intentName === 'Fallback').toBeFalsy();
 	await context.setState({ knowledge: await MaAPI.getknowledgeBase(context.state.politicianData.user_id, context.state.apiaiResp) });
 	await expect(context.state.knowledge && context.state.knowledge.knowledge_base && context.state.knowledge.knowledge_base.length >= 1).toBeFalsy();
 	await expect(createIssue).toBeCalledWith(context);
-	await expect(desafio.followUpIntent).toBeCalledWith(context);
+	await expect(desafio.followUpIntent).toBeCalled();
 });
 
 it('checkPosition - Fallback case', async () => {
