@@ -49,9 +49,9 @@ async function followUp(context) {
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
 			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
 				await sendQuiz(context);
-			} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não)
+			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não)
 				await sendResearch(context);
-			} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível
+			} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // não é elegível
 				await sendCarouselSus(context, opt.sus);
 			// await mainMenu.sendShareAndMenu(context); // send regular menu
 			}
@@ -125,10 +125,10 @@ async function followUpIntent(context) {
 			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
 				await sendQuiz(context);
 				// console.log('Entrei aqui 2');
-			} else if (context.state.user.is_eligible_for_research === 1) { // elegível mas não parte da pesquisa (disse não) === 1
+			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não) === 1
 				await sendResearch(context);
 				// console.log('Entrei aqui 3');
-			} else if (context.state.user.is_eligible_for_research === 0) { // não é elegível === 0
+			} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // não é elegível === 0
 				// console.log('Entrei aqui 4');
 				await sendCarouselSus(context, opt.sus);
 				// await mainMenu.sendShareAndMenu(context); // send regular menu
@@ -168,3 +168,5 @@ module.exports.desafioAceito = desafioAceito;
 module.exports.followUp = followUp;
 module.exports.separateIntent = separateIntent;
 module.exports.followUpIntent = followUpIntent;
+module.exports.sendQuiz = sendQuiz;
+module.exports.sendResearch = sendResearch;

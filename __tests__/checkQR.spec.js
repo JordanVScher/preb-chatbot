@@ -208,14 +208,16 @@ it('checkMainMenu - on audience and research, one consulta', async () => {
 
 it('checkMainMenu - on audience, no research, eligible', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1, is_part_of_research: 0, is_eligible_for_research: 1 };
+	context.state.user = {
+		is_target_audience: 1, is_part_of_research: 0, is_eligible_for_research: 1, finished_quiz: 1,
+	};
 	const newOptions = [];
 	await checkQR.checkMainMenu(context);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
 	await expect(context.state.user.is_part_of_research === 0).toBeTruthy();
-	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
+	await expect(context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1).toBeTruthy();
 	newOptions.push({ content_type: 'text', title: 'Pesquisa', payload: 'askResearch' });
 
 	await expect(newOptions.length === 1).toBeTruthy();
