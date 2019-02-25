@@ -309,5 +309,6 @@ it('followUp - user already part on research', async () => {
 // 	await expect(context.state.intentType === 'duvida').toBeTruthy();
 // 	await expect(context.state.user.is_prep === 0).toBeTruthy();
 
-// 	await expect(context.sendText).toBeCalledWith('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
+// 	await expect(context.sendText).toBeCalledWith('Agora que já respondi suas dúvidas,
+// topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
 // });

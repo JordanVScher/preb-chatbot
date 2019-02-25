@@ -7,27 +7,35 @@ const { sendMain } = require('./utils/mainMenu');
 
 async function checkPosition(context) {
 	await context.setState({ dialog: 'checkPositionFunc' });
+	await context.setState({ user: await getRecipientPrep(context.session.user.id) });
+
+
 	switch (context.state.intentName) {
 	case 'Greetings': // user said hi
 		await context.setState({ dialog: 'greetings' });
 		break;
 	case 'Quiz': // user wants to answer the quiz
-		await context.setState({ dialog: 'beginQuiz' });
+		if (context.state.user.finished_quiz === 1) {
+			await context.sendText('Você já terminou o quiz');
+			await context.setState({ dialog: 'mainMenu' });
+		} else {
+			await context.setState({ dialog: 'beginQuiz' });
+		}
 		break;
 	case 'Sobre Amanda':
 		await context.setState({ dialog: 'aboutAmanda' });
 		break;
 	case 'Inserir Token':
-		await context.setState({ dialog: 'joinToken' });
+		if (context.state.user.integration_token && context.state.user.is_part_of_research === 1) {
+			await context.setState({ dialog: 'seeToken' });
+		} else {
+			await context.setState({ dialog: 'joinToken' });
+		}
 		break;
 	case 'Marcar Consulta':
-		await context.setState({ user: await getRecipientPrep(context.session.user.id) });
-		if (context.state.user.is_part_of_research === 1) {
-			await context.setState({ dialog: 'checarConsulta' });
-		} else {
-			await context.sendText('Você não pode marcar consulta');
-			await desafio.followUpIntent(context);
-		}
+	case 'Abuso':
+	case 'Teste':
+		await desafio.followUpIntent(context);
 		break;
 	case 'Fallback': // didn't understand what was typed
 		await createIssue(context);
