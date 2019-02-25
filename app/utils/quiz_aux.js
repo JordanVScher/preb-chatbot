@@ -84,7 +84,7 @@ async function handleAC5(context) {
 	await research.onTheResearch(context); // elegível e respondeu Sim
 	await context.sendText(context.state.currentQuestion.text);
 	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
-	await context.sendText('E aí, quer participar?', await buildMultipleChoice(context.state.currentQuestion, 'quiz'));
+	await context.sendText(flow.onTheResearch.extra, await buildMultipleChoice(context.state.currentQuestion, 'quiz'));
 }
 
 

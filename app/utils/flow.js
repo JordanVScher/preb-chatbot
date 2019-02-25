@@ -2,9 +2,11 @@ module.exports = {
 	avatarImage: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/c38095b8-6b51-46f9-a8a9-b61ac9ac9385.png',
 	getStarted: 'Sou a Amanda Selfie, a primeira assistente digital trans do Brasil. Clique em começar para falar comigo.',
 	greetings: {
-		text1: 'E aí, tudo bem?',
-		text2: 'Sou a Amanda Selfie, a primeira assistente digital trans do Brasil. Estou aqui para falar dos bafos sobre sexo 😉',
-		text3: 'Você pode me mandar uma mensagem a qualquer momento que irei te responder ou se não souber encaminho para minha equipe e logo lhe responderemos ',
+		text1: 'Inhai more, ta bem? ',
+		text2: 'Eu sou a Amanda Selfie, a primeira travesti robôa do Brasil 👏👏. Essa plataforma é nossa! #lacray',
+		text3: 'Aqui a gnt pode falar sobre ISTs, HIV e como se prevenir da forma mais saudável e justa para o próprio corpo. '
+		+ 'Eu tô aqui animadíssima pq pra mim é mt importante q a gnt tenha consciência sexual pra fazer escolhas com mais autonomia. Q tudo né? ',
+		// text3: 'Você pode me mandar uma mensagem a qualquer momento que irei te responder ou se não souber encaminho para minha equipe e logo lhe responderemos ',
 	},
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
@@ -54,6 +56,7 @@ module.exports = {
 		text1: 'AMEI! E você hein.. lacração, solta a franga e não quer nem saber! 😻',
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
 		text2: 'Você sabia que existem vários tipos de prevenções? Uma delas é a Prep, que previne a infecção pelo HIV por meio da administração diária de uma pílula! Bb, é gratuito pelo SUS!',
+		extra: 'E aí, quer participar?',
 	},
 	verConsulta: {
 		zero: 'Você não tem nenhuma consulta marcada.',
@@ -111,6 +114,12 @@ module.exports = {
 		emergency1: 'Texto sobre prep e urgencia',
 		emergency2: 'contatos CTA',
 		suggest: 'Bb, acho que vc está com IST.\nVamos agendar consulta com médico e tratar?',
-
+		invite: 'Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?',
+		send: 'Bb, vou fazer umas perguntinhas para te ajudar melhor',
+		posto: 'Melhor ir em um posto de saúde mais próximo de você',
+		consulta1: 'Você tem uma consulta marcada, mas se precisar de ajuda vou mandar as informações dos CTAs:',
+		cta: '<informações dos CTAs>',
+		consulta2: 'Percebi que você não tem uma consulta.\nVamos marcar?',
 	},
+
 };

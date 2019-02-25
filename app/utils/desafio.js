@@ -70,22 +70,22 @@ async function followUp(context) {
 async function sendConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) {
-		await context.sendText('Você tem uma consulta marcada, mas se precisar de ajuda vou mandar as informações dos CTAs:');
+		await context.sendText(flow.triagem.consulta1);
 		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
-			await context.sendText('Sua consulta:'
+			await context.sendText(''
 				+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
 				+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`
 				+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 		}
-		await context.sendText('<informações dos CTAs>');
+		await context.sendText(flow.triagem.cta);
 		await mainMenu.sendMain(context); // send regular menu
 	} else {
-		await context.sendText('Percebi que você não tem uma consulta.\nVamos marcar?', opt.answer.sendConsulta);
+		await context.sendText(flow.triagem.consulta2, opt.answer.sendConsulta);
 	}
 }
 
 async function inviteTriagem(context) {
-	await context.sendText('Agora que já respondi suas dúvidas, topa responder algumas perguntinhas para ver se tem mais alguma coisa que eu possa te ajudar?', opt.answer.isPrep);
+	await context.sendText(flow.triagem.invite, opt.answer.isPrep);
 }
 
 
@@ -102,7 +102,7 @@ async function checkAconselhamento(context) {
 		if (context.state.user.is_prep === 1) { // eslint-disable-line no-lonely-if
 			await sendConsulta(context); // is prep, === 1
 		} else { // user isn't prep, goes to triagem
-			await context.sendText('Bb, vou fazer umas perguntinhas para te ajudar melhor');
+			await context.sendText(flow.triagem.send);
 			await context.setState({ dialog: 'triagem' });
 		}
 	}
@@ -121,7 +121,7 @@ async function followUpIntent(context) {
 			await checkAconselhamento(context);
 			// console.log('Entrei aqui 1');
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
-			if (context.state.intentType === 'serviço') { await context.sendText('Melhor ir em um posto de saúde mais próximo de você'); }
+			if (context.state.intentType === 'serviço') { await context.sendText(flow.triagem.posto); }
 			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
 				await sendQuiz(context);
 				// console.log('Entrei aqui 2');
