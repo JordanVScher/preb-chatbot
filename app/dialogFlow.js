@@ -33,8 +33,8 @@ async function checkPosition(context) {
 		}
 		break;
 	case 'Marcar Consulta':
-	case 'Abuso':
-	case 'Teste':
+	// case 'Abuso':
+	// case 'Teste':
 		await desafio.followUpIntent(context);
 		break;
 	case 'Fallback': // didn't understand what was typed
