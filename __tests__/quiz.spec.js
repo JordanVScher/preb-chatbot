@@ -57,8 +57,7 @@ it('AnswerExtraQuestion - open text - 10 more', async () => {
 	await expect(context.typingOff).toBeCalled();
 });
 
-
-it('AnswerExtraQuestion - null question', async () => {
+it('answerQuizA - null question', async () => {
 	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
 	context.state.currentQuestion = question.nullQuestion;	context.state.categoryQuestion = 'quiz';
 	context.state.user = { is_target_audience: 1 };
@@ -70,7 +69,20 @@ it('AnswerExtraQuestion - null question', async () => {
 	await expect(aux.endQuizA).toBeCalledWith(context, prepApi);
 });
 
-it('AnswerExtraQuestion - null question', async () => {
+it('answerQuizA - AC5 question', async () => {
+	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
+	context.state.currentQuestion = question.extraMultiple;	context.state.categoryQuestion = 'quiz';
+	context.state.user = { is_target_audience: 1 };
+
+	await quiz.answerQuizA(context);
+
+	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
+	await expect(context.state.currentQuestion.code === 'AC5').toBeTruthy();
+	await expect(aux.handleAC5).toBeCalledWith(context);
+});
+
+it('AnswerExtraQuestion', async () => {
 	const context = cont.quickReplyContext('extraQuestion0', 'beginQuiz');
 	context.state.currentQuestion = question.extraMultiple;
 	await quiz.AnswerExtraQuestion(context);
