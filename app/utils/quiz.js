@@ -7,7 +7,6 @@ const flow = require('./flow');
 async function answerQuizA(context) {
 	await context.typingOn();
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	console.log(context.state.user);
 
 	if (context.state.user.is_target_audience === 0) {
 		await context.setState({ categoryQuestion: 'fun_questions' });
@@ -15,12 +14,10 @@ async function answerQuizA(context) {
 		await context.setState({ categoryQuestion: 'quiz' });
 	}
 
-	console.log(context.state.categoryQuestion);
-
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 
-	await aux.handleFlags(context, context.state.currentQuestion);
+	// await aux.handleFlags(context, context.state.currentQuestion);
 
 	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
 		await aux.endQuizA(context, prepApi); // quiz is over
@@ -66,7 +63,7 @@ async function handleAnswerA(context, quizOpt) {
 	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
 	await context.setState({ onTextQuiz: false });
 
-	if (context.state.sentAnswer.error || context.state.sentAnswer.form_error) { // error
+	if (context.state.sentAnswer.error) { // error
 		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
@@ -74,7 +71,7 @@ async function handleAnswerA(context, quizOpt) {
 		// Date is: YYYY-MM-DD
 		await context.setState({ dialog: 'startQuizA' }); // re-asks same question
 	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
-		await aux.handleFlags(context, context.state.sentAnswer);
+		// await aux.handleFlags(context, context.state.sentAnswer);
 
 		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question

@@ -19,36 +19,37 @@ it('onTheResearch', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text2);
 });
 
-it('notOnResearch', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	await research.notOnResearch(context);
-
-	await expect(context.setState).toBeCalledWith({ dialog: 'NotOnResearch' });
-	await expect(context.sendText).toBeCalledWith(flow.NotOnResearch.text1);
-});
-
 it('notEligible', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.notEligible(context);
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'NotEligible' });
-	await expect(context.sendText).toBeCalledWith(flow.notEligible.text1);
-	await expect(context.sendText).toBeCalledWith(flow.notEligible.text2, await checkQR.checkMainMenu(context, opt.mainMenu));
+	await expect(context.sendText).toBeCalledWith(flow.notEligible.text1, await checkQR.checkMainMenu(context, opt.mainMenu));
 });
 
 it('researchSaidNo', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.researchSaidNo(context);
 
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizNo.text1, opt.artigoLink);
-	await expect(context.sendText).toBeCalledWith(flow.quizNo.text2, opt.saidNo);
+	await expect(context.sendText).toBeCalledWith(flow.notEligible.saidNo);
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
 });
 
 it('researchSaidYes', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.researchSaidYes(context);
 
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text1, opt.artigoLink);
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text2, opt.artigoLink);
-	await expect(context.sendText).toBeCalledWith(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
+	await expect(context.setState).toBeCalledWith({ dialog: 'researchSaidYes' });
+	await expect(context.setState).toBeCalledWith({ sendExtraMessages: true });
+
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text15, opt.TCLE);
+	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, await checkQR.checkConsulta(context, opt.saidYes));
+});
+
+it('notPart', async () => {
+	const context = cont.quickReplyContext('0', 'prompt');
+	await research.notPart(context);
+
+	await expect(context.setState).toBeCalledWith({ dialog: 'noResearch' });
+	await expect(context.sendText).toBeCalledWith(flow.foraPesquisa.text1, await checkQR.checkMainMenu(context, opt.mainMenu));
 });

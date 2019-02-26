@@ -3,12 +3,13 @@ require('dotenv').config();
 const cont = require('./context');
 const flow = require('../app/utils/flow');
 const handler = require('../app/handler');
-const MaAPI = require('../app/chatbot_api');
-const desafio = require('../app/utils/desafio');
+// const MaAPI = require('../app/chatbot_api');
+// const desafio = require('../app/utils/desafio');
 const quiz = require('../app/utils/quiz');
 const prepAPI = require('../app/utils/prep_api');
 const research = require('../app/utils/research');
-const { sendMain } = require('../app/utils/mainMenu');
+const mainMenu = require('../app/utils/mainMenu');
+// const { sendMain } = require('../app/utils/mainMenu');
 // const help = require('../app/utils/helper');
 
 jest.mock('../app/utils/helper');
@@ -20,35 +21,35 @@ jest.mock('../app/utils/research');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/prep_api'); // mock prep_api tp avoid making the postRecipientPrep request
 
-it('desafio - aceito', async () => {
-	const context = cont.quickReplyContext('desafioAceito', 'greetings');
-	await handler(context);
+// it('desafio - aceito', async () => {
+// 	const context = cont.quickReplyContext('desafioAceito', 'greetings');
+// 	await handler(context);
 
-	await expect(context.event.isQuickReply).toBeTruthy(); // usual quickReply checking
-	await expect(context.setState).toBeCalledWith({ lastQRpayload: context.event.quickReply.payload });
-	await expect(context.setState).toBeCalledWith({ dialog: context.state.lastQRpayload });
-	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id,
-		context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
+// 	await expect(context.event.isQuickReply).toBeTruthy(); // usual quickReply checking
+// 	await expect(context.setState).toBeCalledWith({ lastQRpayload: context.event.quickReply.payload });
+// 	await expect(context.setState).toBeCalledWith({ dialog: context.state.lastQRpayload });
+// 	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id,
+// 		context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 
-	context.state.dialog = context.state.lastQRpayload;
-	await handler(context);
-	await expect(desafio.desafioAceito).toBeCalledWith(context);
-});
+// 	context.state.dialog = context.state.lastQRpayload;
+// 	await handler(context);
+// 	await expect(desafio.desafioAceito).toBeCalledWith(context);
+// });
 
-it('desafio - negado', async () => {
-	const context = cont.quickReplyContext('desafioRecusado', 'greetings');
-	await handler(context);
+// it('desafio - negado', async () => {
+// 	const context = cont.quickReplyContext('desafioRecusado', 'greetings');
+// 	await handler(context);
 
-	await expect(context.event.isQuickReply).toBeTruthy();	// usual quickReply checking
-	await expect(context.setState).toBeCalledWith({ lastQRpayload: context.event.quickReply.payload });
-	await expect(context.setState).toBeCalledWith({ dialog: context.state.lastQRpayload });
-	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id,
-		context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
+// 	await expect(context.event.isQuickReply).toBeTruthy();	// usual quickReply checking
+// 	await expect(context.setState).toBeCalledWith({ lastQRpayload: context.event.quickReply.payload });
+// 	await expect(context.setState).toBeCalledWith({ dialog: context.state.lastQRpayload });
+// 	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id,
+// 		context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 
-	context.state.dialog = context.state.lastQRpayload;
-	await handler(context);
-	await expect(desafio.desafioRecusado).toBeCalledWith(context);
-});
+// 	context.state.dialog = context.state.lastQRpayload;
+// 	await handler(context);
+// 	await expect(desafio.desafioRecusado).toBeCalledWith(context);
+// });
 
 it('quiz - begin', async () => {
 	const context = cont.quickReplyContext('beginQuiz', 'greetings');
@@ -56,7 +57,7 @@ it('quiz - begin', async () => {
 	context.state.dialog = context.state.lastQRpayload;
 	await handler(context);
 
-	await expect(context.sendText).toBeCalledWith('Preparar, apontar... fogo!');
+	await expect(context.sendText).toBeCalledWith(flow.quiz.beginQuiz);
 	await expect(quiz.answerQuizA).toBeCalledWith(context);
 });
 
@@ -94,5 +95,5 @@ it('user doesnt want to join research', async () => { // user clicked on extra o
 	const context = cont.quickReplyContext('Não quero!', 'noResearch');
 	await handler(context);
 
-	await expect(sendMain).toBeCalledWith(context, `${flow.quizNo.text3} ${flow.mainMenu.text1}`);
+	await expect(mainMenu.sendMain).toBeCalledWith(context, flow.foraPesquisa.text1);
 });

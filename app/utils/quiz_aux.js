@@ -30,8 +30,7 @@ async function endQuizA(context, prepApi) {
 
 	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
 		await research.notPart(context); // não é parte do público alvo
-	} else
-	if (context.state.user.is_eligible_for_research === 1) { // elegível pra pesquisa
+	} else if (context.state.user.is_eligible_for_research === 1) { // elegível pra pesquisa
 		if (context.state.user.is_part_of_research === 1) { // o que o usuário respondeu
 			await research.researchSaidYes(context); // elegível, disse sim
 		} else {

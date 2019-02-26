@@ -124,12 +124,12 @@ module.exports = async (context) => {
 		case 'desafio':
 			await context.sendText(flow.desafio.text1, opt.desafio);
 			break;
-		case 'desafioRecusado':
-			await desafio.desafioRecusado(context);
-			break;
-		case 'desafioAceito':
-			await desafio.desafioAceito(context);
-			break;
+		// case 'desafioRecusado':
+		// 	await desafio.desafioRecusado(context);
+		// 	break;
+		// case 'desafioAceito':
+		// 	await desafio.desafioAceito(context);
+		// 	break;
 		case 'sendFollowUp':
 			await mainMenu.sendFollowUp(context);
 		// falls throught

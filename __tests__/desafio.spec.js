@@ -37,13 +37,13 @@ it('asksDesafio - user started quiz ', async () => {
 	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });
 
-it('asksDesafio - user dindt start quiz ', async () => {
+it('asksDesafio - user didnt start quiz ', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	context.state.startedQuiz = false;
 	await desafio.asksDesafio(context);
 	await expect(context.state.startedQuiz === true).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text1);
-	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text2, opt.asksDesafio);
+	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text1, opt.asksDesafio);
+	// await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text2, opt.asksDesafio);
 });
 
 it('sendQuiz - count less than 3 - started quiz ', async () => {

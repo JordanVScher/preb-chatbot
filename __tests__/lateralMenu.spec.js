@@ -3,16 +3,19 @@ require('dotenv').config();
 const cont = require('./context');
 const handler = require('../app/handler');
 const flow = require('../app/utils/flow');
-const opt = require('../app/utils/options');
 const MaAPI = require('../app/chatbot_api');
 const prepAPI = require('../app/utils/prep_api');
 const desafio = require('../app/utils/desafio');
+const help = require('../app/utils/helper');
+const timer = require('../app/utils/timer');
 
 jest.mock('../app/chatbot_api');
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
 jest.mock('../app/utils/desafio');
+jest.mock('../app/utils/helper');
+jest.mock('../app/utils/timer');
 
 it('Voltar para o inicio - menu', async () => {
 	const context = cont.postbackContext('greetings', 'Voltar para o inicio', 'greetings');
@@ -27,9 +30,8 @@ it('Voltar para o inicio - menu', async () => {
 		// session: JSON.stringify(context.state),
 	});
 
-	await expect(!context.state.sentPrepPost || context.state.sentPrepPost === false).toBeTruthy(); // testing the first time the user starts the bot
-	await expect(prepAPI.postRecipientPrep).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id, `${context.session.user.first_name} ${context.session.user.last_name}`);
-	await expect(context.setState).toBeCalledWith({ sentPrepPost: true });
+	await expect(help.addNewUser).toBeCalledWith(context, prepAPI);
+	await expect(timer.deleteTimers).toBeCalledWith(context.session.user.id);
 
 	await expect(context.event.isPostback).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ lastPBpayload: context.event.postback.payload });
@@ -40,16 +42,13 @@ it('Voltar para o inicio - menu', async () => {
 
 	await expect(context.sendText).toBeCalledWith(flow.greetings.text1);
 	await expect(context.sendText).toBeCalledWith(flow.greetings.text2);
-	await expect(desafio.asksDesafio).toBeCalledWith(context, opt.greetings);
+	await expect(desafio.asksDesafio).toBeCalledWith(context);
 });
 
 it('Notifications on - menu', async () => {
 	const context = cont.postbackContext('notificationOn', 'Ligar Notificacoes', 'notificationOn');
 	context.state.sentPrepPost = true;
 	await handler(context);
-
-	await expect(!context.state.sentPrepPost || context.state.sentPrepPost === false).toBeFalsy(); // testing NOT first time the user starts the bot
-	await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, `${context.session.user.first_name} ${context.session.user.last_name}`);
 
 	await expect(context.event.isPostback).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ lastPBpayload: context.event.postback.payload });
