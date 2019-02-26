@@ -17,7 +17,7 @@ async function verConsulta(context) {
 			+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 		}
-		await context.sendText('Não falte!');
+		await context.sendText(flow.consulta.view);
 		await sendMain(context);
 	} else {
 		await context.sendText(flow.verConsulta.zero, await checkConsulta(context, opt.marcarConsulta));
@@ -108,7 +108,7 @@ async function checarConsulta(context) {
 	console.log('CONSULTA', context.state.consulta);
 
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
-		await context.sendText('Você já tem consulta marcada:');
+		await context.sendText(flow.consulta.checar1);
 		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
 			await context.sendText(''
 				+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
@@ -117,7 +117,7 @@ async function checarConsulta(context) {
 		}
 		await sendMain(context);
 	} else {
-		await context.sendText('Então, vamos marcar uma nova consulta:');
+		await context.sendText(flow.consulta.checar2);
 		await showCities(context);
 	}
 }

@@ -138,7 +138,7 @@ module.exports = async (context) => {
 			break;
 		case 'beginQuiz':
 			await context.setState({ startedQuiz: true });
-			await context.sendText('Preparar, apontar... fogo!');
+			await context.sendText(flow.quiz.beginQuiz);
 		// falls throught
 		case 'startQuizA': // this is the quiz-type of questionario
 			await context.setState({ categoryQuestion: 'quiz' });
@@ -159,20 +159,20 @@ module.exports = async (context) => {
 			await timer.createBaterPapoTimer(context.session.user.id, context);
 			// await desafio.followUp(context);
 			break;
-		case 'naoAceito':
-			await context.sendText('Tudo bem. Você ainda poderá marcar uma consulta.');
-			await mainMenu.sendMain(context);
-			break;
+		// case 'naoAceito':
+		// 	await context.sendText('Tudo bem. Você ainda poderá marcar uma consulta.');
+		// 	await mainMenu.sendMain(context);
+		// 	break;
 		case 'joinToken':
 			await context.sendText(flow.joinToken.text1, opt.joinToken);
 			break;
 		case 'seeToken':
-			await context.sendText(`Seu Voucher é: ${context.state.user.integration_token}`);
+			await context.sendText(`${flow.joinToken.view} ${context.state.user.integration_token}`);
 			await mainMenu.sendMain(context);
 			break;
-		case 'consulta':
-			await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
-			break;
+		// case 'consulta':
+		// 	await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
+		// 	break;
 		case 'getCity': // this is the regular type of consulta
 			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await consulta.showCities(context);
@@ -259,7 +259,7 @@ module.exports = async (context) => {
 		const date = new Date();
 		console.log(`Parece que aconteceu um erro as ${date.toLocaleTimeString('pt-BR')} de ${date.getDate()}/${date.getMonth() + 1} =>`);
 		console.log(error);
-		await context.sendText('Ops. Tive um erro interno. Tente novamente.', await getErrorQR(context.state.lastQRpayload)); // warning user
+		await context.sendText(flow.error.text1, await getErrorQR(context.state.lastQRpayload)); // warning user
 
 		await help.Sentry.configureScope(async (scope) => { // sending to sentry
 			scope.setUser({ username: context.session.user.first_name });

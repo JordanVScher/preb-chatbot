@@ -1,6 +1,7 @@
 // handles screening/trigem type of quiz
 const prepApi = require('./prep_api.js');
 const aux = require('./quiz_aux');
+const flow = require('./flow');
 
 async function getTriagem(context) {
 	await context.typingOn();
@@ -11,7 +12,7 @@ async function getTriagem(context) {
 		await aux.endTriagem(context, context.state.sentAnswer);
 	} else { // user is still answering the quiz
 		if (context.state.currentQuestion.code === 'SC2') {
-			await context.sendText('[Text explicativo]');
+			await context.sendText(flow.quiz.sintoma);
 		}
 
 		if (context.state.currentQuestion.type === 'multiple_choice') { // showing question and answer options
@@ -29,10 +30,10 @@ async function handleAnswer(context, quizOpt) {
 	console.log('sentAnswer', context.state.sentAnswer);
 
 	if (context.state.sentAnswer.error || context.state.sentAnswer.form_error) { // error
-		await context.sendText('Ops, parece que me perdi. Pode me responder de novo?');
+		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'triagem' });
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
-		await context.sendText('Formato inválido! Tente novamente!');
+		await context.sendText(flow.quiz.invalid);
 		await context.setState({ dialog: 'triagem' });
 	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
 		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over

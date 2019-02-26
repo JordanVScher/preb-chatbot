@@ -1,5 +1,6 @@
 const prepApi = require('./prep_api.js');
 const aux = require('./quiz_aux');
+const flow = require('./flow');
 
 
 // loads next question and shows it to the user
@@ -26,11 +27,11 @@ async function answerQuizA(context) {
 	} else { // user is still answering the quiz
 		if (context.state.categoryQuestion === 'quiz') { // send encouragement only on the regular quiz
 			if (context.state.currentQuestion.count_more === 10) { // encouragement message
-				await context.sendText('Bafo! Estou adorando te conhecer...');
+				await context.sendText(flow.quiz.count1);
 			} else if (context.state.currentQuestion.count_more === 5) {
-				await context.sendText('Amando! Só mais algumas vai...');
+				await context.sendText(flow.quiz.count2);
 			} else if (context.state.currentQuestion.count_more === 2) {
-				await context.sendText('Arrasando.. só mais 2 e juro que paro de ser curiosa 🤩');
+				await context.sendText(flow.quiz.count3);
 			}
 		}
 
@@ -66,10 +67,10 @@ async function handleAnswerA(context, quizOpt) {
 	await context.setState({ onTextQuiz: false });
 
 	if (context.state.sentAnswer.error || context.state.sentAnswer.form_error) { // error
-		await context.sendText('Ops, parece que me perdi. Pode me responder de novo?');
+		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
-		await context.sendText('Formato inválido! Tente novamente!');
+		await context.sendText(flow.quiz.invalid);
 		// Date is: YYYY-MM-DD
 		await context.setState({ dialog: 'startQuizA' }); // re-asks same question
 	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully

@@ -38,6 +38,7 @@ module.exports = {
 		text1: 'Para você que adquiriu seu voucher no serviço. Digite abaixo:',
 		success: 'Te encontrei no sistema',
 		fail: 'Não te encontrei no sistema. Vamos tentar novamente? Digite como lhe foi fornecido. Deve parecer com algo assim: xxx-xxx',
+		view: 'Seu voucher é: ',
 	},
 	issueText: {
 		success: 'Desculpe, não entendi sua mensagem. Mas não se preocupe, enviei para minha equipe e logo vamos te responder ;)',
@@ -57,17 +58,27 @@ module.exports = {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
 		text2: 'Você sabia que existem vários tipos de prevenções? Uma delas é a Prep, que previne a infecção pelo HIV por meio da administração diária de uma pílula! Bb, é gratuito pelo SUS!',
 		extra: 'E aí, quer participar?',
+		saidYes: 'Você aceita?',
 	},
 	verConsulta: {
 		zero: 'Você não tem nenhuma consulta marcada.',
 	},
-
 	foraPesquisa: {
 		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
 	},
 	notEligible: {
 		// text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
 		text1: 'Gostei de te conhecer, olha só o que você pode fazer aqui:',
+		saidNo: '[texto não aceita participar]',
+	},
+	quiz: {
+		beginQuiz: 'Preparar, apontar... fogo!',
+		count1: 'Bafo! Estou adorando te conhecer...',
+		count2: 'Amando! Só mais algumas vai...',
+		count3: 'Arrasando.. só mais 2 e juro que paro de ser curiosa 🤩',
+		form_error: 'Ops, parece que me perdi. Pode me responder de novo?',
+		invalid: 'Formato inválido! Tente novamente!',
+		sintoma: '[Text explicativo]',
 	},
 	quizNo: {
 		text1: 'Está na dúvida, bb? Aqui você pode ler um artigo completo do professor da USP explicando sobre a pesquisa.',
@@ -88,6 +99,9 @@ module.exports = {
 		fail2: 'Acho que me confundi! Não temos nenhum horario disponível nesse dia. Tente novamente!',
 		fail3: 'Parece que acabaram de marcar uma consulta nesse mesmo horário! Mas tudo bem, escolha outro dia para sua consulta!',
 		success: 'Arraso! Agendado 📅. Olha só sua consulta:\n',
+		view: 'Não falte!',
+		checar1: 'Você já tem consulta marcada:',
+		checar2: 'Então, vamos marcar uma nova consulta:',
 	},
 	prevention: {
 		text1: 'Bb, utilizar preservativo é sempre, sempre essencial! Mesmo porque ele previne não só HIV, né! Mas ele não é o único método.',
@@ -120,6 +134,9 @@ module.exports = {
 		consulta1: 'Você tem uma consulta marcada, mas se precisar de ajuda vou mandar as informações dos CTAs:',
 		cta: '<informações dos CTAs>',
 		consulta2: 'Percebi que você não tem uma consulta.\nVamos marcar?',
+	},
+	error: {
+		text1: 'Ops. Tive um erro interno. Tente novamente.',
 	},
 
 };
