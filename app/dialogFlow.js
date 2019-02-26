@@ -4,6 +4,7 @@ const { sendAnswer } = require('./utils/sendAnswer');
 const desafio = require('./utils/desafio');
 const { getRecipientPrep } = require('./utils/prep_api');
 const { sendMain } = require('./utils/mainMenu');
+const flow = require('./utils/flow');
 
 async function checkPosition(context) {
 	await context.setState({ dialog: 'checkPositionFunc' });
@@ -16,7 +17,7 @@ async function checkPosition(context) {
 		break;
 	case 'Quiz': // user wants to answer the quiz
 		if (context.state.user.finished_quiz === 1) {
-			await context.sendText('Você já terminou o quiz');
+			await context.sendText(flow.quiz.done);
 			await context.setState({ dialog: 'mainMenu' });
 		} else {
 			await context.setState({ dialog: 'beginQuiz' });
