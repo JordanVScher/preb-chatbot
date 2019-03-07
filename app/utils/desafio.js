@@ -50,6 +50,7 @@ async function followUp(context) {
 			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
 				await sendQuiz(context);
 			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não)
+				if (context.state.intentType === 'problema') { await context.sendText(flow.triagem.whatsapp); }
 				await sendResearch(context);
 			} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // não é elegível
 				await sendCarouselSus(context, opt.sus);
@@ -119,17 +120,14 @@ async function followUpIntent(context) {
 	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa === 1
 			await checkAconselhamento(context);
-			// console.log('Entrei aqui 1');
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
 			if (context.state.intentType === 'serviço') { await context.sendText(flow.triagem.posto); }
 			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
 				await sendQuiz(context);
-				// console.log('Entrei aqui 2');
 			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não) === 1
+				if (context.state.intentType === 'problema') { await context.sendText(flow.triagem.whatsapp); }
 				await sendResearch(context);
-				// console.log('Entrei aqui 3');
 			} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // não é elegível === 0
-				// console.log('Entrei aqui 4');
 				await sendCarouselSus(context, opt.sus);
 				// await mainMenu.sendShareAndMenu(context); // send regular menu
 			}

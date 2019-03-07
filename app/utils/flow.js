@@ -135,6 +135,7 @@ module.exports = {
 		consulta1: 'Eiiiiii bonita! Vc tem uma consulta marcada, mas se quiser ajuda eu te mando mais informações combinady?',
 		cta: '[informações dos atendimentos]>',
 		consulta2: 'Acabei de catar q vc não tem consulta marcada.\nVc qr marcar?',
+		whatsapp: '[texto com os números do whatapp]',
 	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',
