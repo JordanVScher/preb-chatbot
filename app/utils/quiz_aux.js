@@ -25,22 +25,6 @@ async function handleFlags(context, response) {
 	}
 }
 
-async function endQuizA(context, prepApi) {
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-
-	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
-		await research.notPart(context); // não é parte do público alvo
-	} else if (context.state.user.is_eligible_for_research === 1) { // elegível pra pesquisa
-		if (context.state.user.is_part_of_research === 1) { // o que o usuário respondeu
-			await research.researchSaidYes(context); // elegível, disse sim
-		} else {
-			await research.researchSaidNo(context); // elegível, disse não
-		}
-	} else {
-		await research.notEligible(context); // não elegível pra pesquisa
-	}
-}
-
 async function endTriagem(context) {
 	await context.setState({ dialog: 'endTriagem' });
 	const result = context.state.sentAnswer;
@@ -79,16 +63,25 @@ async function buildMultipleChoice(question, complement) {
 	return { quick_replies: qrButtons };
 }
 
-async function handleAC5(context) {
-	await research.onTheResearch(context); // elegível e respondeu Sim
-	await context.sendText(context.state.currentQuestion.text);
-	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
-	await context.sendText(flow.onTheResearch.extra, await buildMultipleChoice(context.state.currentQuestion, 'quiz'));
+async function sendTermos(context) {
+	await context.sendButtonTemplate(flow.quizYes.text15, opt.TCLE);
+	await context.sendText(flow.onTheResearch.saidYes, context, opt.termos);
+	// await context.sendText(flow.onTheResearch.saidYes, await checkQR.checkConsulta(context, opt.saidYes));
 }
 
+async function endQuiz(context, prepApi) {
+	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
+		await research.notPart(context); // não é parte do público alvo
+	} else if (context.state.user.is_eligible_for_research === 1) { // elegível pra pesquisa
+		await research.onTheResearch(context); // send AC5
+	} else {
+		await research.notEligible(context); // não elegível pra pesquisa
+	}
+}
 
 module.exports.handleFlags = handleFlags;
-module.exports.endQuizA = endQuizA;
 module.exports.buildMultipleChoice = buildMultipleChoice;
-module.exports.handleAC5 = handleAC5;
 module.exports.endTriagem = endTriagem;
+module.exports.sendTermos = sendTermos;
+module.exports.endQuiz = endQuiz;

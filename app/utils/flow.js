@@ -58,6 +58,7 @@ module.exports = {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
 		text2: 'Amore, sabia q existem vários tipos de prevenções? Uma delas é o PreP, previne a infecção pelo HIV através de um remedinho, tipo pílula q vc toma todo dia e é gratuito pelo SUS, acredita?',
 		extra: 'E aí, quer participar?',
+		AC5: 'E olha que bafo. Está rolando uma pesquisa bafônica com o pessoal das universidades (USP, UFMG e UFBA) para te acompanhar nessa lacração que você vive. Bora?',
 		saidYes: 'Você aceita?',
 	},
 	verConsulta: {

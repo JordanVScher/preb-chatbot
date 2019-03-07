@@ -11,20 +11,20 @@ jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/research');
 jest.mock('../app/utils/helper');
 
-it('endQuizA - not target audience', async () => {
+it('endQuiz - not target audience', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	context.state.user = { is_target_audience: 0 };
-	await aux.endQuizA(context, prepApi);
+	await aux.endQuiz(context, prepApi);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.state.user.is_target_audience === 0).toBeTruthy();
 	await expect(research.notPart).toBeCalledWith(context);
 });
 
-it('endQuizA - is_eligible_for_research - said yes', async () => {
+it('endQuiz - is_eligible_for_research - said yes', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	context.state.user = { is_target_audience: 1, is_eligible_for_research: 1, is_part_of_research: 1 };
-	await aux.endQuizA(context, prepApi);
+	await aux.endQuiz(context, prepApi);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
@@ -33,10 +33,10 @@ it('endQuizA - is_eligible_for_research - said yes', async () => {
 	await expect(research.researchSaidYes).toBeCalledWith(context);
 });
 
-it('endQuizA - is_eligible_for_research - said no', async () => {
+it('endQuiz - is_eligible_for_research - said no', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	context.state.user = { is_target_audience: 1, is_eligible_for_research: 1, is_part_of_research: 0 };
-	await aux.endQuizA(context, prepApi);
+	await aux.endQuiz(context, prepApi);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
@@ -45,10 +45,10 @@ it('endQuizA - is_eligible_for_research - said no', async () => {
 	await expect(research.researchSaidNo).toBeCalledWith(context);
 });
 
-it('endQuizA - not eligible', async () => {
+it('endQuiz - not eligible', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	context.state.user = { is_target_audience: 1, is_eligible_for_research: 0 };
-	await aux.endQuizA(context, prepApi);
+	await aux.endQuiz(context, prepApi);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();

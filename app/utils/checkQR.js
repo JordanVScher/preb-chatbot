@@ -97,12 +97,12 @@ async function checkMainMenu(context) {
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
-async function checkMedication(context) {
+async function checkMedication(context) { // eslint-disable-line
 	const newOptions = [];
 
 	// await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 
-	newOptions.push({ content_type: 'text', title: 'Sintomas', payload: 'sintomas' });
+	newOptions.push({ content_type: 'text', title: 'Sintomas', payload: 'sintomas' }); // todo: falta verificar se o user está no primeiro trimestre pra mostrar essa opção
 	newOptions.push({ content_type: 'text', title: 'Acabou o Remédio', payload: 'acabouRemedio' });
 	newOptions.push({ content_type: 'text', title: 'Esqueci de tomar', payload: 'esqueciDeTomar' });
 	newOptions.push({ content_type: 'text', title: 'Dúvida com o Remédio', payload: 'duvidaComRemedio' });

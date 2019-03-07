@@ -25,10 +25,18 @@ module.exports = {
 
 	async putUpdatePartOfResearch(fb_id, is_part_of_research) {
 		const res = await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, is_part_of_research });
-		// console.log('putUpdatePartOfResearch', res);
 		const recipientData = await res.json();
-
+		// console.log('putUpdatePartOfResearch', recipientData);
 		return recipientData;
+	},
+
+	async postParticipar(fb_id, is_part_of_research) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient/research-participation?security_token=${security_token}&`).query({
+			fb_id, is_part_of_research,
+		});
+		const postParticipar = await res.json();
+		// console.log('postParticipar', postParticipar);
+		return postParticipar;
 	},
 
 	async getRecipientPrep(fb_id) {
@@ -145,7 +153,7 @@ module.exports = {
 
 	async postSignature(fb_id, url) {
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/term-signature?security_token=${security_token}&`).query({ fb_id, url });
-		// console.log('postSignature', res);
+		console.log('postSignature', res);
 		const sign = await res.json();
 		return sign;
 	},

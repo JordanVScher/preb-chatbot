@@ -19,8 +19,9 @@ async function answerQuizA(context) {
 
 	// await aux.handleFlags(context, context.state.currentQuestion);
 
-	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
-		await aux.endQuizA(context, prepApi); // quiz is over
+	if (context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
+		// await aux.endQuiz(context, prepApi); // quiz is over
+		await aux.sendTermos(context);
 	} else { // user is still answering the quiz
 		if (context.state.categoryQuestion === 'quiz') { // send encouragement only on the regular quiz
 			if (context.state.currentQuestion.count_more === 10) { // encouragement message
@@ -32,18 +33,15 @@ async function answerQuizA(context) {
 			}
 		}
 
-		if (context.state.currentQuestion.code === 'AC5') {
-			await aux.handleAC5(context);
-		} else {
-			// showing question and answer options
-			if (context.state.currentQuestion.type === 'multiple_choice') {
-				await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
-			} else if (context.state.currentQuestion.type === 'open_text') {
-				await context.setState({ onTextQuiz: true });
-				await context.sendText(context.state.currentQuestion.text);
-			}
-			await context.typingOff();
-		} // -- not AC5
+		// showing question and answer options
+			if (context.state.currentQuestion.type === 'multiple_choice') { // eslint-disable-line
+			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
+		} else if (context.state.currentQuestion.type === 'open_text') {
+			await context.setState({ onTextQuiz: true });
+			await context.sendText(context.state.currentQuestion.text);
+		}
+		// } // -- not AC5
+		await context.typingOff();
 	} // -- answering quiz else
 }
 
@@ -79,11 +77,13 @@ async function handleAnswerA(context, quizOpt) {
 		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)) {
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 		} else {
-			await aux.endQuizA(context, prepApi); // quiz is over
+			// await aux.endQuiz(context, prepApi); // quiz is over
+			await aux.sendTermos(context);
 		}
 		/* eslint-enable no-lonely-if */
 	}
 }
+
 
 module.exports.answerQuizA = answerQuizA;
 module.exports.handleAnswerA = handleAnswerA;

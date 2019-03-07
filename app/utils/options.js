@@ -68,10 +68,22 @@ module.exports = {
 		url: 'http://www.aids.gov.br/system/tdf/pub/2017/65141/folder_essencial_prep_08_2017.pdf?file=1&type=node&id=65141&force=1',
 		title: 'Baixar Panfleto',
 	}],
+	termos: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Li e aceito!', payload: 'aceitaTermos' },
+			{ content_type: 'text', title: 'Não aceito!', payload: 'naoAceitaTermos' },
+		],
+	},
+	onTheResearch: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Quero Participar', payload: 'firstJoinResearch' },
+			{ content_type: 'text', title: 'Não quero Participar', payload: 'firstNoResearch' },
+		],
+	},
 	saidNo: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Quero!', payload: 'joinResearch' },
-			{ content_type: 'text', title: 'Não quero!', payload: 'noResearch' },
+			{ content_type: 'text', title: 'Quero!', payload: 'joinResearchAfter' },
+			{ content_type: 'text', title: 'Não quero!', payload: 'noResearchAfter' },
 		],
 	},
 	saidYes: {
@@ -102,8 +114,8 @@ module.exports = {
 		},
 		sendResearch: {
 			quick_replies: [
-				{ content_type: 'text', title: 'Quero participar', payload: 'joinResearch' },
-				{ content_type: 'text', title: 'Não quero', payload: 'noResearch' },
+				{ content_type: 'text', title: 'Quero participar', payload: 'joinResearchAfter' },
+				{ content_type: 'text', title: 'Não quero', payload: 'noResearchAfter' },
 			],
 		},
 		isPrep: {

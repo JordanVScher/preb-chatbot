@@ -66,7 +66,7 @@ it('answerQuizA - null question', async () => {
 
 	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeTruthy();
-	await expect(aux.endQuizA).toBeCalledWith(context, prepApi);
+	await expect(aux.endQuiz).toBeCalledWith(context, prepApi);
 });
 
 it('answerQuizA - AC5 question', async () => {
@@ -134,7 +134,7 @@ it('handleAnswerA - regular answer - not finished', async () => {
 	await expect(context.state.sentAnswer.error).toBeFalsy();
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
 	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeFalsy();
-	await expect(aux.endQuizA).toBeCalledWith(context, prepApi);
+	await expect(aux.endQuiz).toBeCalledWith(context, prepApi);
 });
 
 it('handleAnswerA - internal error', async () => {

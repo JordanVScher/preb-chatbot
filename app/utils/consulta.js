@@ -82,8 +82,8 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
 
 	const response = await prepApi.postAppointment(
-		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento', context.state.chosenDay.appointment_window_id,
-		context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
+		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento',
+		context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
 	);
 
 	console.log('postAppointment', response);
@@ -105,7 +105,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 }
 
 async function checarConsulta(context) {
-	await context.setState({ sendExtraMessages: false });
+	// await context.setState({ sendExtraMessages: false });
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	console.log('CONSULTA', context.state.consulta);
 

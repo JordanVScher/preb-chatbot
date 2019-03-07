@@ -2,7 +2,7 @@ const flow = require('./flow');
 const opt = require('./options');
 const checkQR = require('./checkQR');
 const { postIntegrationToken } = require('./prep_api');
-
+const { checarConsulta } = require('./consulta');
 
 async function handleToken(context) {
 	const answer = await postIntegrationToken(context.session.user.id, context.state.whatWasTyped);
@@ -20,31 +20,21 @@ async function onTheResearch(context) {
 	await context.sendText(flow.onTheResearch.text1);
 	await context.sendImage(flow.onTheResearch.gif);
 	await context.sendText(flow.onTheResearch.text2);
-}
 
-// async function notOnResearch(context) {
-// 	await context.setState({ dialog: 'NotOnResearch' });
-// 	await context.sendText(flow.foraPesquisa.text1, await checkQR.checkMainMenu(context));
-// }
+	await context.sendText(flow.onTheResearch.AC5);
+	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
+	await context.sendText(flow.onTheResearch.extra, opt.onTheResearch);
+}
 
 async function notEligible(context) { // não passou nas 3 primeiras perguntas
 	await context.setState({ dialog: 'NotEligible' });
 	await context.sendText(flow.foraPesquisa.text1, await checkQR.checkMainMenu(context));
 }
 
-async function researchSaidNo(context) {
-	await context.sendText(flow.notEligible.saidNo);
-	await context.setState({ dialog: 'mainMenu' });
-	// await context.setState({ dialog: 'researchSaidNo' });
-	// await context.sendButtonTemplate(flow.quizNo.text1, opt.artigoLink);
-	// await context.sendText(flow.quizNo.text2, opt.saidNo);
-}
-
 async function researchSaidYes(context) {
-	await context.setState({ dialog: 'researchSaidYes' });
+	await context.setState({ categoryConsulta: 'recrutamento' });
 	await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
-	await context.sendButtonTemplate(flow.quizYes.text15, opt.TCLE);
-	await context.sendText(flow.onTheResearch.saidYes, await checkQR.checkConsulta(context, opt.saidYes));
+	await checarConsulta(context);
 }
 
 async function notPart(context) {
@@ -53,9 +43,8 @@ async function notPart(context) {
 }
 
 module.exports.onTheResearch = onTheResearch;
-// module.exports.notOnResearch = notOnResearch;
 module.exports.notEligible = notEligible;
-module.exports.researchSaidNo = researchSaidNo;
+// module.exports.researchSaidNo = researchSaidNo;
 module.exports.researchSaidYes = researchSaidYes;
 module.exports.handleToken = handleToken;
 module.exports.notPart = notPart;

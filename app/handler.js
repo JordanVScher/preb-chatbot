@@ -14,6 +14,7 @@ const research = require('./utils/research');
 const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
+const { endQuiz } = require('./utils/quiz_aux');
 
 module.exports = async (context) => {
 	try {
@@ -42,7 +43,7 @@ module.exports = async (context) => {
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
-				await context.setState({ onTextQuiz: false });
+				await context.setState({ onTextQuiz: false, sendExtraMessages: false });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -157,26 +158,19 @@ module.exports = async (context) => {
 		case 'startQuizA': // this is the quiz-type of questionario
 			await context.setState({ categoryQuestion: 'quiz' });
 			await quiz.answerQuizA(context);
-			break;
-		case 'sendToTriagem':
-		case 'triagem': // this is the triagem-type of questionario
-			await triagem.getTriagem(context);
-			break;
-		case 'aboutAmanda':
-			await context.sendImage(flow.aboutAmanda.gif);
-			await context.sendText(flow.aboutAmanda.msgOne);
-			await context.sendText(flow.aboutAmanda.msgTwo);
-			await desafio.followUp(context);
-			break;
-		case 'baterPapo':
-			await context.sendText(flow.baterPapo.text1);
-			await timer.createBaterPapoTimer(context.session.user.id, context);
-			// await desafio.followUp(context);
+			// await endQuiz(context, prepAPI);
 			break;
 		// case 'naoAceito':
 		// 	await context.sendText('Tudo bem. Você ainda poderá marcar uma consulta.');
 		// 	await mainMenu.sendMain(context);
 		// 	break;
+		case 'aceitaTermos':
+			// await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
+			// falls throught
+		case 'naoAceitaTermos': // regular flow
+			console.log('Cheguei aqui');
+			await endQuiz(context, prepAPI);
+			break;
 		case 'joinToken':
 			await context.sendText(flow.joinToken.text1, opt.joinToken);
 			break;
@@ -184,9 +178,6 @@ module.exports = async (context) => {
 			await context.sendText(`${flow.joinToken.view} ${context.state.user.integration_token}`);
 			await mainMenu.sendMain(context);
 			break;
-		// case 'consulta':
-		// 	await context.sendText('Escolha uma opção!', await desafio.checkAnsweredQuiz(context, opt.consulta));
-		// 	break;
 		case 'getCity': // this is the regular type of consulta
 			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await consulta.showCities(context);
@@ -222,11 +213,18 @@ module.exports = async (context) => {
 		case 'askResearch':
 			await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
 			break;
-		case 'noResearch':
+		case 'firstNoResearch':
+			await context.sendText(flow.notEligible.saidNo);
+			await mainMenu.sendMain(context);
+			break;
+		case 'firstJoinResearch':
+			await prepAPI.postParticipar(context.session.user.id, 1);
+			await research.researchSaidYes(context);
+			break;
+		case 'noResearchAfter':
 			await mainMenu.sendMain(context, flow.foraPesquisa.text1);
 			break;
-		case 'joinResearch':
-			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
+		case 'joinResearchAfter':
 			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);
 			await research.researchSaidYes(context);
 			break;
@@ -257,6 +255,21 @@ module.exports = async (context) => {
 			break;
 		case 'servico':
 			await context.sendText(flow.autoTeste.servico1, opt.servico);
+			break;
+		case 'sendToTriagem':
+		case 'triagem': // this is the triagem-type of questionario
+			await triagem.getTriagem(context);
+			break;
+		case 'aboutAmanda':
+			await context.sendImage(flow.aboutAmanda.gif);
+			await context.sendText(flow.aboutAmanda.msgOne);
+			await context.sendText(flow.aboutAmanda.msgTwo);
+			await desafio.followUp(context);
+			break;
+		case 'baterPapo':
+			await context.sendText(flow.baterPapo.text1);
+			await timer.createBaterPapoTimer(context.session.user.id, context);
+			// await desafio.followUp(context);
 			break;
 		case 'notificationOn':
 			await MaAPI.updateBlacklistMA(context.session.user.id, 1);
