@@ -13,7 +13,7 @@ const mainMenu = require('./utils/mainMenu');
 const research = require('./utils/research');
 const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
-const { getErrorQR } = require('./utils/checkQR');
+const checkQR = require('./utils/checkQR');
 
 module.exports = async (context) => {
 	try {
@@ -39,7 +39,7 @@ module.exports = async (context) => {
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
 				// await context.setState({ dialog: 'checarConsulta' });
-				// await context.setState({ dialog: 'getCity' });
+				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
 				await context.setState({ onTextQuiz: false });
@@ -121,15 +121,29 @@ module.exports = async (context) => {
 			// await consulta.getCity(context);
 			// await quiz.answerQuizA(context);
 			break;
+		case 'medicaçao':
+			await context.sendText(flow.medication.text1, await checkQR.checkMedication(context));
+			break;
+		case 'sintomas':
+			await context.sendText('<começa o quiz>');
+			break;
+		case 'acabouRemedio':
+			await context.sendText(flow.medication.acabouRemedio1);
+			await context.sendText(flow.medication.acabouRemedio2);
+			await mainMenu.sendMain(context);
+			break;
+		case 'esqueciDeTomar':
+			await context.sendText(flow.medication.esqueci1);
+			await context.sendText(flow.medication.esqueci2);
+			await context.sendText('<começa o quiz>');
+			break;
+		case 'duvidaComRemedio':
+			await context.sendButtonTemplate(flow.medication.duvidaRemedio, opt.duvidaRemedio);
+			await mainMenu.sendMain(context);
+			break;
 		case 'desafio':
 			await context.sendText(flow.desafio.text1, opt.desafio);
 			break;
-		// case 'desafioRecusado':
-		// 	await desafio.desafioRecusado(context);
-		// 	break;
-		// case 'desafioAceito':
-		// 	await desafio.desafioAceito(context);
-		// 	break;
 		case 'sendFollowUp':
 			await mainMenu.sendFollowUp(context);
 		// falls throught
@@ -195,7 +209,9 @@ module.exports = async (context) => {
 			await consulta.finalDate(context, context.state.lastQRpayload.replace('hora', '').replace(':', '-'));
 			break;
 		case 'nextDay':
-			await consulta.nextDay(context, context.state.lastQRpayload.replace('nextDay', ''));
+			await context.setState({ paginationDate: context.state.paginationDate + 1 });
+			await consulta.showDays(context);
+			// await consulta.nextDay(context, context.state.lastQRpayload.replace('nextDay', ''));
 			break;
 		case 'nextHour':
 			await consulta.nextHour(context, context.state.lastQRpayload.replace('nextHour', ''));
@@ -259,7 +275,7 @@ module.exports = async (context) => {
 		const date = new Date();
 		console.log(`Parece que aconteceu um erro as ${date.toLocaleTimeString('pt-BR')} de ${date.getDate()}/${date.getMonth() + 1} =>`);
 		console.log(error);
-		await context.sendText(flow.error.text1, await getErrorQR(context.state.lastQRpayload)); // warning user
+		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
 
 		await help.Sentry.configureScope(async (scope) => { // sending to sentry
 			scope.setUser({ username: context.session.user.first_name });

@@ -137,6 +137,17 @@ module.exports = {
 		consulta2: 'Acabei de catar q vc não tem consulta marcada.\nVc qr marcar?',
 		whatsapp: '[texto com os números do whatapp]',
 	},
+	medication: {
+		text1: 'Ok BB, me diga o que vc tá precisando:',
+		acabouRemedio1: 'Vou te passar o número do WhatsApp para você entrar em contato e conseguir passar com o médico rapidinho!',
+		acabouRemedio2: '[texto com os números do whatsapp]',
+		esqueci1: 'Às vezes acontece de esquecer ou pular alguma dose de medicamento.\nSe você esqueceu de tomar um comprimido, tome assim que lembrar. Por exemplo:',
+		esqueci2: '-Se geralmente você toma um comprimido de manhã, mas a noite se lembrou que não o tomou, não tem problema: tome apenas um comprimido no momento que você lembrar e continua a tomar normalmente no dia seguinte.'
+		+ '\n-Não tome mais de um comprimido no mesmo dia. ',
+		duvidaRemedio: 'Temos um panfleto pra tirar suas dúvidas',
+
+
+	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',
 	},

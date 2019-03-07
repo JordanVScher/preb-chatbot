@@ -43,11 +43,7 @@ async function checkPosition(context) {
 		await desafio.followUpIntent(context);
 		break;
 	default: // default acts for every intent - position on MA
-		await context.setState({
-			knowledge: await MaAPI.getknowledgeBase(
-				context.state.politicianData.user_id, context.state.apiaiResp, context.session.user.id,
-			),
-		}); // getting knowledge base.
+		await context.setState({ knowledge: await MaAPI.getknowledgeBase(context.state.politicianData.user_id, context.state.apiaiResp, context.session.user.id) });
 		// console.log('knowledge', context.state.knowledge);
 		// check if there's at least one answer in knowledge_base
 		if (context.state.knowledge && context.state.knowledge.knowledge_base && context.state.knowledge.knowledge_base.length >= 1) {

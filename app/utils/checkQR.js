@@ -89,16 +89,28 @@ async function checkMainMenu(context) {
 		}
 	}
 
+	if (context.state.user.is_prep === 1) {
+		newOptions.push({ content_type: 'text', title: 'Medicação', payload: 'medicaçao' });
+	}
+
 	newOptions.push({ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' });
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
+async function checkMedication(context) {
+	const newOptions = [];
 
-module.exports.checkAnsweredQuiz = checkAnsweredQuiz;
-module.exports.checkMainMenu = checkMainMenu;
-module.exports.checkConsulta = checkConsulta;
+	// await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 
-module.exports.getErrorQR = async (lastPostback) => {
+	newOptions.push({ content_type: 'text', title: 'Sintomas', payload: 'sintomas' });
+	newOptions.push({ content_type: 'text', title: 'Acabou o Remédio', payload: 'acabouRemedio' });
+	newOptions.push({ content_type: 'text', title: 'Esqueci de tomar', payload: 'esqueciDeTomar' });
+	newOptions.push({ content_type: 'text', title: 'Dúvida com o Remédio', payload: 'duvidaComRemedio' });
+
+	return { quick_replies: newOptions }; // putting the filtered array on a QR object
+}
+
+module.exports.getErrorQR = async (lastPostback) => { // eslint-disable-line
 	const elements = [];
 	// const firstArray = opt.menuOptions;
 
@@ -126,3 +138,8 @@ module.exports.getErrorQR = async (lastPostback) => {
 
 	return { quick_replies: elements };
 };
+
+module.exports.checkAnsweredQuiz = checkAnsweredQuiz;
+module.exports.checkMainMenu = checkMainMenu;
+module.exports.checkConsulta = checkConsulta;
+module.exports.checkMedication = checkMedication;

@@ -39,6 +39,8 @@ async function showCities(context) {
 		await context.sendText(flow.quizYes.text3);
 	}
 
+	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
+
 	await context.setState({ cities: await prepApi.getAvailableCities() });
 	const options = [];
 

@@ -63,6 +63,11 @@ module.exports = {
 		url: 'https://www.google.com',
 		title: 'Ler Termos',
 	}],
+	duvidaRemedio: [{
+		type: 'web_url',
+		url: 'http://www.aids.gov.br/system/tdf/pub/2017/65141/folder_essencial_prep_08_2017.pdf?file=1&type=node&id=65141&force=1',
+		title: 'Baixar Panfleto',
+	}],
 	saidNo: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Quero!', payload: 'joinResearch' },

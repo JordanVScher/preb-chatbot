@@ -81,8 +81,8 @@ module.exports = {
 		return cities;
 	},
 
-	async getAvailableDates(fb_id, calendar_id) {
-		const res = await request.get(`${apiUri}/api/chatbot/appointment/available-dates?security_token=${security_token}&`).query({ fb_id, calendar_id });
+	async getAvailableDates(fb_id, calendar_id, page) {
+		const res = await request.get(`${apiUri}/api/chatbot/appointment/available-dates?security_token=${security_token}&`).query({ fb_id, calendar_id, page });
 		// console.log('getAvailableDates', res);
 		const dates = await res.json();
 		return dates;
