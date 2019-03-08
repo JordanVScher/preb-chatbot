@@ -18,9 +18,8 @@ async function answerQuizA(context) {
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 
 	// await aux.handleFlags(context, context.state.currentQuestion);
-
-	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
-		// await aux.endQuiz(context, prepApi); // quiz is over
+	// user already answered the quiz (user shouldn't be here)
+	if ((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)) {
 		await aux.sendTermos(context);
 	} else { // user is still answering the quiz
 		if (context.state.categoryQuestion === 'quiz') { // send encouragement only on the regular quiz
@@ -57,7 +56,12 @@ async function AnswerExtraQuestion(context) {
 async function handleAnswerA(context, quizOpt) {
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
+	// try {
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
+	// } catch (err) {
+	// await context.sendText(flow.quiz.form_error);
+	// await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
+	// }
 	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
 	await context.setState({ onTextQuiz: false });
 
@@ -77,7 +81,6 @@ async function handleAnswerA(context, quizOpt) {
 		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)) {
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 		} else {
-			// await aux.endQuiz(context, prepApi); // quiz is over
 			await aux.sendTermos(context);
 		}
 		/* eslint-enable no-lonely-if */

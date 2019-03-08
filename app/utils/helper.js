@@ -44,11 +44,12 @@ const telefoneDictionary = {
 
 async function addNewUser(context, prepAPI) {
 	const answer = await prepAPI.getRecipientPrep(context.session.user.id);
-	if (answer.form_error) {
+	if (answer.form_error || answer.error) {
 		await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, `${context.session.user.first_name} ${context.session.user.last_name}`);
+	} else {
+		await context.setState({ user: answer });
 	}
 }
-
 
 async function formatHour(hour) {
 	if (hour.toString().length === 1) { return `0${hour}`;	}

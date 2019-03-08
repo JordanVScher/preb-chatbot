@@ -65,11 +65,16 @@ module.exports = {
 	},
 
 	async postQuizAnswer(fb_id, category, code, answer_value) {
-		const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}&`).query({
-			fb_id, category, code, answer_value,
-		});
-		// console.log('postQuizAnswer', res);
-		const quizData = await res.json();
+		let quizData;
+		try {
+			const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}&`).query({
+				fb_id, category, code, answer_value,
+			});
+			console.log('postQuizAnswer', res);
+			quizData = await res.json();
+		} catch (error) {
+			quizData = { error: `error: ${error}` };
+		}
 		return quizData;
 	},
 
