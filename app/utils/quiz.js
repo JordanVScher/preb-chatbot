@@ -19,7 +19,7 @@ async function answerQuizA(context) {
 
 	// await aux.handleFlags(context, context.state.currentQuestion);
 
-	if (context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
+	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
 		// await aux.endQuiz(context, prepApi); // quiz is over
 		await aux.sendTermos(context);
 	} else { // user is still answering the quiz
