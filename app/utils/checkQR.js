@@ -89,7 +89,7 @@ async function checkMainMenu(context) {
 		}
 	}
 
-	if (context.state.user.is_prep === 1) {
+	if (context.state.user.is_part_of_research === 1 && context.state.user.is_prep === 0) {
 		newOptions.push({ content_type: 'text', title: 'Medicação', payload: 'medicaçao' });
 	}
 
