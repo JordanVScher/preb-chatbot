@@ -43,6 +43,7 @@ module.exports = async (context) => {
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
+				// await context.setState({ dialog: 'triagem' });
 				await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1 }); // eslint-disable-line
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
@@ -256,6 +257,10 @@ module.exports = async (context) => {
 			break;
 		case 'autoTeste':
 			await context.sendText(flow.autoTeste.start, opt.autoteste);
+			if (context.state.suggestWaitForTest === true) { // todo isso tem que acontecer depois do user escolher um tipo de teste mas essa parte não tá mapeada ainda
+				await context.setState({ suggestWaitForTest: false });
+				await context.sendText(flow.triagem.suggestWaitAutoTest);
+			}
 			break;
 		case 'auto':
 			await context.sendText(flow.autoTeste.auto1);

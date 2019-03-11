@@ -8,6 +8,7 @@ async function getTriagem(context) {
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, 'screening') });
 	console.log('currentQuestion', context.state.currentQuestion);
 
+
 	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
 		await aux.endTriagem(context, context.state.sentAnswer);
 	} else { // user is still answering the quiz

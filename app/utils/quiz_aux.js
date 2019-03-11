@@ -4,6 +4,7 @@ const { capQR } = require('./helper');
 const opt = require('./options');
 const flow = require('./flow');
 const { sendMain } = require('./mainMenu');
+const help = require('./helper');
 // const { checarConsulta } = require('./consulta');
 
 async function handleFlags(context, response) {
@@ -28,11 +29,19 @@ async function handleFlags(context, response) {
 async function endTriagem(context) {
 	await context.setState({ dialog: 'endTriagem' });
 	const result = context.state.sentAnswer;
-	if (result && result.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
+	console.log('result', result);
+
+	if (result && result.suggest_wait_for_test === 1) {
+		await context.setState({ suggestWaitForTest: true });
+		await context.setState({ dialog: 'autoTeste' });
+	} else if (result && result.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
 		await context.sendText(flow.triagem.emergency1);
-		await context.sendText(flow.triagem.emergency2);
+		await context.sendText('Telefones pra contato:'
+			+ `\nSão Paulo - SP: ${help.telefoneDictionary[1]}`
+			+ `\nBelo Horizonte - MG: ${help.telefoneDictionary[2]}`
+			+ `\nSalvador - BA: ${help.telefoneDictionary[3]}`, opt.outrasDatas);
 		await sendMain(context);
-	} else if (result && result.go_to_autotest === 1) { // "A mais de 6 meses" + todos não
+	} else if (result && result.go_to_test === 1) { // "A mais de 6 meses" + todos não
 		await context.setState({ dialog: 'autoTeste' });
 		// await context.sendText(flow.autoTeste.start, opt.autoteste);
 	} else if (result && result.go_to_appointment === 1) { // quando responder sim para a SC6 -> talvez a prep seja uma boa pra vc. bora marcar?
