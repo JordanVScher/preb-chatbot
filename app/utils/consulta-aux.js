@@ -1,47 +1,27 @@
 const help = require('./helper');
 
-async function separateDaysQR(dates) {
-	if (dates.length <= 10) { // less han 10 options, no need for pagination
-		const result = [];
-		dates.forEach(async (element) => {
-			const date = new Date(`${element.ymd}T00:00:00`); // new date from ymd
-			result.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.ymd}` });
-		});
-		return { 0: result }; // return object with the result array
-	} // else
-
-	// more than 10 options, we need pagination
-	let page = 0; // the page number
-	let set = [];
-	const result = {};
-
-	dates.forEach(async (element, index) => {// eslint-disable-line
-		if (page > 0 && set.length === 0) {
-			set.push({ content_type: 'text', title: 'Anterior', payload: `nextDay${page - 1}` }); // adding previous button to set
-		}
-
-		const date = new Date(`${element.hours[0].datetime_start}`);
-		set.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.ymd}` });
+async function separateDaysQR(dates, next, pageNumber) {
+	const dateOptions = [];
+	console.log(dates);
+	console.log(next);
 
 
-		if (set.length % 9 === 0) { // time to add 'next' button at the 10th position
-		// % 9 -> next is the "tenth" position for the set OR what remains before completing 10 positions for the new set (e.g. ->  47 - 40 = 7)
-		// console.log('entrei aqui', index + 1);
-
-			set.push({ content_type: 'text', title: 'Próximo', payload: `nextDay${page + 1}` }); // adding next button to set
-			result[page] = set; // adding set/page to result
-			page += 1; // next page
-			set = []; // cleaning set
-		}
-	});
-
-	if (set.length > 0) { // check if there's any left over options that didn't make the cut
-		result[page] = set; // adding set/page to result
-		page += 1; // next page
-		set = []; // cleaning set
+	if (pageNumber > 1) { // if not on the first page, add a button to go back to previous options
+		dateOptions.push({ content_type: 'text', title: 'Anterior', payload: 'previousDay' });
 	}
 
-	return result;
+	dates.forEach(async (element) => { // add dates (maximum of 8)
+		const date = new Date(`${element.hours[0].datetime_start}`);
+		dateOptions.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.ymd}` });
+	});
+
+	if (next && next.dates && next.dates.length > 0) { // if there's still dates to send, add a button to load them
+		dateOptions.push({ content_type: 'text', title: 'Próximo', payload: 'nextDay' });
+	} else { // no more dates, show extra option
+		dateOptions.push({ content_type: 'text', title: 'Outras Datas', payload: 'outrasDatas' });
+	}
+
+	return dateOptions;
 }
 
 

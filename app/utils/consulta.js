@@ -8,6 +8,8 @@ const { checkConsulta } = require('./checkQR');
 const { sendMain } = require('./mainMenu');
 const aux = require('./consulta-aux');
 
+const { mockDates } = require('./mock-dates');
+
 async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
@@ -23,7 +25,6 @@ async function verConsulta(context) {
 		await context.sendText(flow.verConsulta.zero, await checkConsulta(context, opt.marcarConsulta));
 	}
 }
-
 
 async function nextDay(context, page) {
 	await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays[page] });
@@ -52,18 +53,19 @@ async function showCities(context) {
 }
 
 async function showDays(context) { // shows available days
-	// await context.setState({ freeTime: example }); // all the free time slots we have
-	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId) }); // getting whole calendar
+	// await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) }); // getting calendar
+	// await context.setState({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) }); // getting next page
 	// console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
-	// await context.setState({ timezone: context.state.calendar.time_zone });
+	await context.setState({ calendar: mockDates[context.state.paginationDate] });
+	await context.setState({ calendarNext: mockDates[context.state.paginationDate + 1] }); // getting next page
 
 	await context.setState({ freeTime: await aux.cleanDates(context.state.calendar.dates) }); // all the free time slots we have
 
-	await context.setState({ freeDays: await aux.separateDaysQR(context.state.freeTime) });
-	if (context.state.freeDays && context.state.freeDays['0'] && context.state.freeDays['0'].length > 0) {
-		await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays['0'] });
+	await context.setState({ freeDays: await aux.separateDaysQR(context.state.freeTime, context.state.calendarNext, context.state.paginationDate) }); // builds buttons options
+	if (context.state.freeDays && context.state.freeDays.length > 0) {
+		await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays });
 	} else {
-		await context.sendText(flow.consulta.fail1, opt.consultaFail);
+		await context.sendText(flow.consulta.fail1, opt.consultaFail); // Eita! Bb, parece que ocorreu um erro. Você pode tentar novamente mais tarde.
 	}
 }
 

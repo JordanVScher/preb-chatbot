@@ -104,6 +104,7 @@ module.exports = {
 		view: 'More, não falte, ta bem? Importante 😉',
 		checar1: 'Beee, bocê já tem consulta marcada:',
 		checar2: 'Bora! Vamos marcar uma nova consulta:',
+		outrasDatas: 'Estas datas não estão boas para você, entre em contato conosco pelo número WhatsApp:',
 	},
 	prevention: {
 		text1: 'Keride, colocar capinha é importante, até pq não previne só HIV nééé?? Mas não é o único método não!',

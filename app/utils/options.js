@@ -93,6 +93,12 @@ module.exports = {
 			{ content_type: 'text', title: 'Não aceito', payload: 'getCity' },
 			{ content_type: 'text', title: 'Não aceito', payload: 'verConsulta' }],
 	},
+	outrasDatas: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Lista de Datas', payload: 'listaDatas' },
+			{ content_type: 'text', title: 'Voltar pro Menu', payload: 'mainMenu' },
+		],
+	},
 	prevention: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Entendi', payload: 'preventionEnd' },
@@ -104,7 +110,6 @@ module.exports = {
 			{ content_type: 'text', title: 'Cancelar', payload: 'mainMenu' },
 		],
 	},
-
 	answer: {
 		sendQuiz: {
 			quick_replies: [

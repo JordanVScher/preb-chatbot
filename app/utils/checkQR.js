@@ -108,7 +108,7 @@ async function checkMedication(context) { // eslint-disable-line
 	const now = Date.now() / 1000 | 0; // eslint-disable-line
 	// if the difference between now and the user date is bigger than 4 months than he is not on the first stage anymore
 	if (now - userJoined <= fourMonths) {
-		newOptions.push({ content_type: 'text', title: 'Sintomas', payload: 'sintomas' }); // todo: falta verificar se o user está no primeiro trimestre pra mostrar essa opção
+		newOptions.push({ content_type: 'text', title: 'Sintomas', payload: 'sintomas' });
 	}
 	newOptions.push({ content_type: 'text', title: 'Acabou o Remédio', payload: 'acabouRemedio' });
 	newOptions.push({ content_type: 'text', title: 'Esqueci de tomar', payload: 'esqueciDeTomar' });

@@ -43,7 +43,7 @@ module.exports = async (context) => {
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
-				await context.setState({ onTextQuiz: false, sendExtraMessages: false });
+				await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1 }); // eslint-disable-line
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -67,8 +67,6 @@ module.exports = async (context) => {
 				await context.setState({ dialog: 'showHours' });
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'hora') {
 				await context.setState({ dialog: 'finalDate' });
-			} else if (context.state.lastQRpayload.slice(0, 7) === 'nextDay') {
-				await context.setState({ dialog: 'nextDay' });
 			} else if (context.state.lastQRpayload.slice(0, 8) === 'nextHour') {
 				await context.setState({ dialog: 'nextHour' });
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
@@ -165,10 +163,9 @@ module.exports = async (context) => {
 		// 	await mainMenu.sendMain(context);
 		// 	break;
 		case 'aceitaTermos':
-			// await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
+			await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
 			// falls throught
 		case 'naoAceitaTermos': // regular flow
-			console.log('Cheguei aqui');
 			await endQuiz(context, prepAPI);
 			break;
 		case 'joinToken':
@@ -202,13 +199,26 @@ module.exports = async (context) => {
 		case 'nextDay':
 			await context.setState({ paginationDate: context.state.paginationDate + 1 });
 			await consulta.showDays(context);
-			// await consulta.nextDay(context, context.state.lastQRpayload.replace('nextDay', ''));
+			break;
+		case 'previousDay':
+			await context.setState({ paginationDate: context.state.paginationDate - 1 });
+			await consulta.showDays(context);
 			break;
 		case 'nextHour':
 			await consulta.nextHour(context, context.state.lastQRpayload.replace('nextHour', ''));
 			break;
 		case 'verConsulta':
 			await consulta.verConsulta(context);
+			break;
+		case 'outrasDatas':
+			await context.sendText(`${flow.consulta.outrasDatas}
+			       \nSão Paulo - SP: ${help.telefoneDictionary[1]}`
+				+ `\nBelo Horizonte - MG: ${help.telefoneDictionary[2]}`
+				+ `\nSalvador - BA: ${help.telefoneDictionary[3]}`, opt.outrasDatas);
+			break;
+		case 'listaDatas':
+			await context.setState({ paginationDate: 1, paginationHour: 1 });
+			await consulta.showDays(context);
 			break;
 		case 'askResearch':
 			await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
