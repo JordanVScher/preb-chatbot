@@ -64,6 +64,7 @@ async function buildMultipleChoice(question, complement) {
 }
 
 async function sendTermos(context) {
+	await context.setState({ dialog: 'seeTermos' });
 	await context.sendButtonTemplate(flow.quizYes.text15, opt.TCLE);
 	await context.sendText(flow.onTheResearch.saidYes, context, opt.termos);
 	// await context.sendText(flow.onTheResearch.saidYes, await checkQR.checkConsulta(context, opt.saidYes));

@@ -70,7 +70,6 @@ module.exports = {
 			const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}&`).query({
 				fb_id, category, code, answer_value,
 			});
-			console.log('postQuizAnswer', res);
 			quizData = await res.json();
 		} catch (error) {
 			quizData = { error: `error: ${error}` };
