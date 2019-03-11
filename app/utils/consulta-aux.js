@@ -2,9 +2,6 @@ const help = require('./helper');
 
 async function separateDaysQR(dates, next, pageNumber) {
 	const dateOptions = [];
-	console.log(dates);
-	console.log(next);
-
 
 	if (pageNumber > 1) { // if not on the first page, add a button to go back to previous options
 		dateOptions.push({ content_type: 'text', title: 'Anterior', payload: 'previousDay' });
@@ -27,46 +24,46 @@ async function separateDaysQR(dates, next, pageNumber) {
 
 async function formatHour(hour) {
 	let result = hour;
-	result = result.slice(0, 5);
-	result = `${result}${hour.slice(8, 16)}`;
-
+	result = await result.slice(0, 5);
+	result = await `${result}${hour.slice(8, 16)}`;
 	return result;
 }
 
-async function separateHoursQR(dates) {
+async function separateHoursQR(dates, ymd, pageNumber) {
+	const result = [];
+
 	if (dates.length <= 10) { // less han 10 options, no need for pagination
-		const result = [];
-		dates.forEach(async (element) => {
-			result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
-		});
-		return { 0: result }; // return object with the result array
-	} // else
-
-	// more than 10 options, we need pagination
-	let page = 0; // the page number
-	let set = [];
-	const result = {};
-
-	dates.forEach(async (element, index) => {// eslint-disable-line
-		if (page > 0 && set.length === 0) {
-			set.push({ content_type: 'text', title: 'Anterior', payload: `nextHour${page - 1}` }); // adding previous button to set
+		for (const element of dates) { // eslint-disable-line
+			await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
 		}
-		set.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
+		return result; // return object with the result array
+	} // pagination
 
-		if (set.length % 9 === 0) { // time to add 'next' button at the 10th position
-			// % 9 -> next is the "tenth" position for the set OR what remains before completing 10 positions for the new set (e.g. ->  47 - 40 = 7)
-			// console.log('entrei aqui', index + 1);
-
-			set.push({ content_type: 'text', title: 'Próximo', payload: `nextHour${page + 1}` }); // adding next button to set
-			result[page] = set; // adding set/page to result
-			page += 1; // next page
-			set = []; // cleaning set
+	if (!pageNumber || pageNumber === 1) { // on the first page
+		for (const element of dates) { // eslint-disable-line
+			if (result.length <= 8) { // grab only the first 9 elements
+				await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
+			}
 		}
-	});
-	if (set.length > 0) { // check if there's any left over options that didn't make the cut
-		result[page] = set; // adding set/page to result
-		page += 1; // next page
-		set = []; // cleaning set
+
+		result.push({ content_type: 'text', title: 'Próximo', payload: `nextHour${ymd}` }); // add next button
+	} else { // if not on the first page, add a button to go back to previous options
+		result.push({ content_type: 'text', title: 'Anterior', payload: `previousHour${ymd}` }); // add Anterior button
+		let lastQuota;
+		let index = 0;
+		for (const element of dates) { // eslint-disable-line
+			// get the index of only the elements after the first 9 elements (multiplied by the page number) and limit the number of elements in the array
+			if (index >= 9 * (pageNumber - 1) && result.length <= 8) {
+				result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
+				lastQuota = element.quota; // update added last quota
+			}
+			index += 1;
+		}
+
+		// if the last quota added is not the same as the last quota present in the dates array there's still some options to add
+		if (dates[dates.length - 1].quota !== lastQuota) {
+			result.push({ content_type: 'text', title: 'Próximo', payload: `nextHour${ymd}` });
+		}
 	}
 
 	return result;

@@ -71,22 +71,30 @@ async function showDays(context) { // shows available days
 
 async function showHours(context, ymd) {
 	// context.state.freeTime -> // all the free time slots we have
+	// await context.setState({ calendar: mockDates[context.state.paginationDate] }); // for testing
+	// await context.setState({ freeTime: await aux.cleanDates(context.state.calendar.dates) }); // all the free time slots we have
+
 	await context.setState({ chosenDay: context.state.freeTime.find(date => date.ymd === ymd) });
-	await context.setState({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours) });
-	if (context.state.freeHours && context.state.freeHours['0'] && context.state.freeHours['0'].length > 0) {
-		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours['0'] });
+
+	await context.setState({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
+	console.log(context.state.freeHours);
+
+	if (context.state.freeHours && context.state.freeHours.length > 0) {
+		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours });
 	} else {
 		await context.sendText(flow.consulta.fail2, opt.consultaFail);
 	}
 }
 
 async function finalDate(context, quota) { // where we actually schedule the consulta
+	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
 
 	const response = await prepApi.postAppointment(
 		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento',
 		context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
 	);
+
 
 	console.log('postAppointment', response);
 

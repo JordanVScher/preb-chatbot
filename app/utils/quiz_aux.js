@@ -67,9 +67,6 @@ async function sendTermos(context) {
 	await context.setState({ dialog: 'seeTermos' });
 	await context.sendButtonTemplate(flow.quizYes.text15, opt.TCLE);
 	await context.sendText(flow.onTheResearch.saidYes, opt.termos);
-	console.log('Cheguei aqui');
-
-	// await context.sendText(flow.onTheResearch.saidYes, await checkQR.checkConsulta(context, opt.saidYes));
 }
 
 async function endQuiz(context, prepApi) {

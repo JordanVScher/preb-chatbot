@@ -69,6 +69,8 @@ module.exports = async (context) => {
 				await context.setState({ dialog: 'finalDate' });
 			} else if (context.state.lastQRpayload.slice(0, 8) === 'nextHour') {
 				await context.setState({ dialog: 'nextHour' });
+			} else if (context.state.lastQRpayload.slice(0, 12) === 'previousHour') {
+				await context.setState({ dialog: 'previousHour' });
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
 				await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
 				await context.setState({ dialog: 'showDays' });
@@ -205,7 +207,12 @@ module.exports = async (context) => {
 			await consulta.showDays(context);
 			break;
 		case 'nextHour':
-			await consulta.nextHour(context, context.state.lastQRpayload.replace('nextHour', ''));
+			await context.setState({ paginationHour: context.state.paginationHour + 1 });
+			await consulta.showHours(context, context.state.lastQRpayload.replace('nextHour', ''));
+			break;
+		case 'previousHour':
+			await context.setState({ paginationHour: context.state.paginationHour - 1 });
+			await consulta.showHours(context, context.state.lastQRpayload.replace('previousHour', ''));
 			break;
 		case 'verConsulta':
 			await consulta.verConsulta(context);
