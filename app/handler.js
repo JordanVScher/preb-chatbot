@@ -256,11 +256,11 @@ module.exports = async (context) => {
 			await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
 			break;
 		case 'autoTeste':
-			await context.sendText(flow.autoTeste.start, opt.autoteste);
 			if (context.state.suggestWaitForTest === true) { // todo isso tem que acontecer depois do user escolher um tipo de teste mas essa parte não tá mapeada ainda
 				await context.setState({ suggestWaitForTest: false });
 				await context.sendText(flow.triagem.suggestWaitAutoTest);
 			}
+			await context.sendText(flow.autoTeste.start, opt.autoteste);
 			break;
 		case 'auto':
 			await context.sendText(flow.autoTeste.auto1);
