@@ -43,8 +43,8 @@ const telefoneDictionary = {
 };
 
 async function addNewUser(context, prepAPI) {
-	const answer = await prepAPI.getRecipientPrep(context.session.user.id);
-	if (answer.form_error || answer.error) {
+	const answer = await prepAPI.getRecipientPrep(context.session.user.id - 1);
+	if (answer.form_error || answer.error || !answer || !answer.id) {
 		await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, `${context.session.user.first_name} ${context.session.user.last_name}`);
 	} else {
 		await context.setState({ user: answer });

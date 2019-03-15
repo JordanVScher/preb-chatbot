@@ -117,19 +117,27 @@ module.exports = {
 	autoTeste:
 	{
 		start: 'Temos algumas possibilidades para você realizar seus testes, vou te explicar um pouquinho sobre cada uma delas para você ver qual você prefere:',
-		// auto1old: 'É um teste q vc mesmo pode fazer, mas é específico para HIV. O testo é por fluído oral (saliva) e demora uns 20 minutinhos pra ficar pronto! E vc pode, tipo, receber na sua casa ou ir pegar em algum dos nossos endereços, sabe? Mas se oq vc quer é fazer exame ou tá com dúvida sobre outras IST, talvez essa opção não seja tão bapho pra ti.',
+		cidade: 'De qual cidade você quer saber?',
 		auto1: 'Você faz sozinho, mas só tem para HIV. O teste é feito por fluído oral e demora 20 minutinhos para ficar pronto. ',
-		// auto2old: 'Tu pode receber em casa pelos correios, fino né? Haha, mas se quiser tirar em algum serviço de saúde ou ONG e até fazer lá mesmo.',
 		auto2: 'Você pode receber na sua casa ou retirar em um dos nossos endereços. Mas se você quer fazer outros exames ou está com dúvida sobre outras IST, talvez esta não seja a melhor opção.',
-		auto3: '[informações dos CTAs]',
-		// ong1Old: 'Em ONG é teste rápido de HIV, feito por fluído oral (saliva), não usa nenhuma gotinha do seu sangue rs. Tem horário pra tarde e noite. Isso é fechação pra qm não consegue ir no serviço de saúde pq não tá podendo nos horários ou pra qm não gosta mesmo de ir lá.',
+		auto3: {
+			1: 'CTA de SP',
+			2: 'CTA de MG',
+			3: 'CTA de BA',
+		},
 		ong1: 'É bom para quem não consegue ir até os serviços de saúde por causa do horário ou para quem quer um espaço diferente, mas gostaria de ser atendido por um profissional. Se você quiser este tipo de teste, posso te enviar o link com os locais e horários.',
-		ong2: '[links de ONGS]',
-		// rua1Old: 'Na rua rola algumas realizações de testagem e tb em lugar de socializar, com agenda, locais e horários variados. Esse acesso pode ser mais close, pode até ter um pertinho da sua casa bee!',
+		ong2: {
+			1: 'ONG de SP',
+			2: 'ONG de MG',
+			3: 'ONG de BA',
+		},
 		rua1: 'É realização de testagem na rua e em ambientes de sociabilidade, com agenda, locais e horários variáveis. Acesso mais fácil e horários alternativos, pode ter um bem pertinho de você! Nossa agenda é variável, se quiser podemos te enviar o link para você ver se tem algo por perto.',
-		rua2: '[links de agenda]',
-		// servico1Old: 'Tem testes rápidos ou mais comum mesmo q costuma demorar 1 semana. Tem pra HIV, sífilis, Hepatites B e C e dps vc pode falar com um profissional de saúde q é humano de vdd e ele pode te dá super dicas, tirar todas as dúvidas e falar de prevenção combinada. Horários de seg a sexta das 8h até 17h.',
-		servico1: 'tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode tirar suas dúvidas e falar sobre prevenção combinada',
+		rua2: {
+			1: 'AGENDA de SP',
+			2: 'AGENDA de MG',
+			3: 'AGENDA de BA',
+		},
+		servico1: 'Tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode tirar suas dúvidas e falar sobre prevenção combinada.',
 	},
 	triagem: {
 		retryTriagem: '[texto informativo do perigo]',

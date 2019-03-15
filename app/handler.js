@@ -20,6 +20,7 @@ module.exports = async (context) => {
 	try {
 		// we reload politicianData on every useful event
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) });
+		// console.log(context.state.politicianData);
 		// we update context data at every interaction (post ony on the first time)
 		await MaAPI.postRecipientMA(context.state.politicianData.user_id, {
 			fb_id: context.session.user.id,
@@ -64,6 +65,9 @@ module.exports = async (context) => {
 				await triagem.handleAnswer(context, context.state.lastQRpayload.replace('tria', ''));
 			} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
 				await quiz.AnswerExtraQuestion(context);
+			} else if (context.state.lastQRpayload.slice(0, 12) === 'optAutoTeste') {
+				await context.setState({ cidade: await context.state.lastQRpayload.replace('optAutoTeste', '') });
+				await context.setState({ dialog: 'optAutoTeste' });
 			} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
 				await context.setState({ dialog: 'showHours' });
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'hora') {
@@ -260,20 +264,23 @@ module.exports = async (context) => {
 				await context.setState({ suggestWaitForTest: false });
 				await context.sendText(flow.triagem.suggestWaitAutoTest);
 			}
+			await context.sendText(flow.autoTeste.cidade, opt.autotesteCidades);
+			break;
+		case 'optAutoTeste':
 			await context.sendText(flow.autoTeste.start, opt.autoteste);
 			break;
 		case 'auto':
 			await context.sendText(flow.autoTeste.auto1);
 			await context.sendText(flow.autoTeste.auto2);
-			await context.sendText(flow.autoTeste.auto3, opt.autotesteEnd);
+			await context.sendText(flow.autoTeste.auto3[context.state.cidade], opt.autotesteEnd);
 			break;
 		case 'ong':
 			await context.sendText(flow.autoTeste.ong1);
-			await context.sendText(flow.autoTeste.ong2, opt.ong);
+			await context.sendText(flow.autoTeste.ong2[context.state.cidade], opt.ong);
 			break;
 		case 'rua':
 			await context.sendText(flow.autoTeste.rua1);
-			await context.sendText(flow.autoTeste.rua2, opt.rua);
+			await context.sendText(flow.autoTeste.rua2[context.state.cidade], opt.rua);
 			break;
 		case 'servico':
 			await context.sendText(flow.autoTeste.servico1, opt.servico);
