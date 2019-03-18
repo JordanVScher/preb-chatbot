@@ -50,7 +50,6 @@ async function followUp(context) {
 			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
 				await sendQuiz(context);
 			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não)
-				if (context.state.intentType === 'problema') { await context.sendText(flow.triagem.whatsapp); }
 				await sendResearch(context);
 			} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // não é elegível
 				await sendCarouselSus(context, opt.sus);
@@ -70,9 +69,9 @@ async function followUp(context) {
 
 async function sendConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) {
+	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 		await context.sendText(flow.triagem.consulta1);
-		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
+		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
 			await context.sendText(''
 				+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
 				+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`
@@ -85,11 +84,6 @@ async function sendConsulta(context) {
 	}
 }
 
-async function inviteTriagem(context) {
-	await context.sendText(flow.triagem.invite, opt.answer.isPrep);
-}
-
-
 async function checkAconselhamento(context) {
 	// await context.setState({ user: { is_prep: 0 } }); // for testing
 	await prepApi.resetTriagem(context.session.user.id); // clear old triagem
@@ -97,7 +91,7 @@ async function checkAconselhamento(context) {
 		if (context.state.user.is_prep === 1) { // user isn't prep, send to triagem
 			await mainMenu.sendShareAndMenu(context); // send regular menu
 		} else { // user is prep
-			await inviteTriagem(context);
+			await context.sendText(flow.triagem.invite, opt.answer.isPrep);
 		}
 	} else { // problema e serviço
 		if (context.state.user.is_prep === 1) { // eslint-disable-line no-lonely-if
@@ -168,3 +162,4 @@ module.exports.separateIntent = separateIntent;
 module.exports.followUpIntent = followUpIntent;
 module.exports.sendQuiz = sendQuiz;
 module.exports.sendResearch = sendResearch;
+module.exports.sendConsulta = sendConsulta;

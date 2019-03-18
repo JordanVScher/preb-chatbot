@@ -39,6 +39,7 @@ it('verConsulta - one appointment', async () => {
 				+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
 				+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 	}
+
 	await expect(context.sendText).toBeCalledWith(flow.consulta.view);
 	await expect(sendMain).toBeCalledWith(context);
 });
