@@ -50,13 +50,26 @@ it('endQuiz - target audience and eligible', async () => {
 	await expect(research.onTheResearch).toBeCalledWith(context);
 });
 
-it('sendTermos', async () => {
+it('sendTermos - is_eligible_for_research', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.user = { is_eligible_for_research: 1 };
 	await aux.sendTermos(context);
 
+	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text1);
 	await expect(context.sendImage).toBeCalledWith(flow.onTheResearch.gif);
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text2);
+
+	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos' });
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text15, opt.TCLE);
+	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, opt.termos);
+});
+
+it('sendTermos - not eligible_for_research', async () => {
+	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.user = { is_eligible_for_research: 0 };
+	await aux.sendTermos(context);
+
+	await expect(context.state.user.is_eligible_for_research === 1).toBeFalsy();
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos' });
 	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text15, opt.TCLE);

@@ -18,6 +18,7 @@ async function handleToken(context) {
 async function onTheResearch(context) {
 	await context.setState({ dialog: 'onTheResearch' });
 
+	await context.sendText(flow.onTheResearch.text2);
 	await context.sendText(flow.onTheResearch.AC5);
 	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
 	await context.sendText(flow.onTheResearch.extra, opt.onTheResearch);
