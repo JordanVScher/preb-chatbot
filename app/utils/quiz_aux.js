@@ -60,7 +60,8 @@ async function sendTermos(context) {
 	}
 
 	await context.setState({ dialog: 'seeTermos' });
-	await context.sendButtonTemplate(flow.quizYes.text15, opt.TCLE);
+	await context.sendText(flow.quizYes.text15);
+	await context.sendButtonTemplate(await help.buildTermosMessage(), opt.TCLE);
 	await context.sendText(flow.onTheResearch.saidYes, opt.termos);
 }
 

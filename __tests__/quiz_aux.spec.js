@@ -60,7 +60,8 @@ it('sendTermos - is_eligible_for_research', async () => {
 	await expect(context.sendImage).toBeCalledWith(flow.onTheResearch.gif);
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos' });
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text15, opt.TCLE);
+	await expect(context.sendText).toBeCalledWith(flow.quizYes.text15);
+	await expect(context.sendButtonTemplate).toBeCalledWith(await help.buildTermosMessage(), opt.TCLE);
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, opt.termos);
 });
 
@@ -72,7 +73,8 @@ it('sendTermos - not eligible_for_research', async () => {
 	await expect(context.state.user.is_eligible_for_research === 1).toBeFalsy();
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos' });
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text15, opt.TCLE);
+	await expect(context.sendText).toBeCalledWith(flow.quizYes.text15);
+	await expect(context.sendButtonTemplate).toBeCalledWith(await help.buildTermosMessage(), opt.TCLE);
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, opt.termos);
 });
 

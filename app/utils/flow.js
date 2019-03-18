@@ -89,7 +89,7 @@ module.exports = {
 	},
 	quizYes: {
 		text1: 'Tem um professor super fofo da USP q pediu pra eu te mandar um link, cata, aki explica tudinho:',
-		text15: 'Ufa, mas eu ainda qro q vc leia os termos aki:',
+		text15: 'Ufa! Te perguntei tudim... antes da gente bater mais papo tem um texto q vc precisa ler. Sabe como é né, humanos adoram uma burocracia 🤭',
 		text2: 'Cata outra dika, se tu kisé ser bem ligera pode preencher esse formulário antes mas pode fazer isso lá tb q é sucesso, táá? Vc decide! 😉',
 		text3: 'Cola na grade pra gente agendar sua primeira consulta, eu tenho uma agenda com horários e tudo, keride!! Bem de boa receber orientações baphos sobre tudoo!! 😉',
 	},
