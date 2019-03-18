@@ -16,9 +16,9 @@ it('onTheResearch', async () => {
 	await research.onTheResearch(context);
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'onTheResearch' });
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text1);
-	await expect(context.sendImage).toBeCalledWith(flow.onTheResearch.gif);
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text2);
+	// await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text1);
+	// await expect(context.sendImage).toBeCalledWith(flow.onTheResearch.gif);
+	// await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text2);
 
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.AC5);
 	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text1, opt.artigoLink);

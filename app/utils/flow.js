@@ -76,7 +76,7 @@ module.exports = {
 		beginQuiz: 'Vamo la bee!! lesgo!',
 		count1: 'Bafo! Estou adorando te conhecer...',
 		count2: 'Amando! Só mais algumas vai...',
-		count3: 'Arrasando.. só mais 2 e juro que paro de ser curiosa 🤩',
+		count3: 'Arrasando.. só mais 3 e juro que paro de ser curiosa 🤩',
 		form_error: 'Eita, acho que me perdi. Topa responder de novo?',
 		invalid: 'Bee, esse formato é inválido! Vamos tentar novamente, digita aí!',
 		sintoma: '[Text explicativo dos sintomas]',
