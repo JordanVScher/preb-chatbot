@@ -17,7 +17,6 @@ async function answerQuizA(context) {
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 
-	// await aux.handleFlags(context, context.state.currentQuestion);
 	// user already answered the quiz (user shouldn't be here)
 	if ((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)) {
 		await aux.sendTermos(context);
@@ -73,8 +72,6 @@ async function handleAnswerA(context, quizOpt) {
 		// Date is: YYYY-MM-DD
 		await context.setState({ dialog: 'startQuizA' }); // re-asks same question
 	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
-		// await aux.handleFlags(context, context.state.sentAnswer);
-
 		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 		} else if ((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)

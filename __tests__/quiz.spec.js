@@ -21,7 +21,6 @@ it('AnswerExtraQuestion - multiple choice - 5 more', async () => {
 	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
 
 	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	// await expect(aux.handleFlags).toBeCalledWith(context, context.state.currentQuestion);
 	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
 	await expect(context.state.categoryQuestion === 'quiz').toBeTruthy();
 	await expect(context.state.currentQuestion.count_more === 5).toBeTruthy();
@@ -44,7 +43,6 @@ it('AnswerExtraQuestion - open text - 10 more', async () => {
 	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
 
 	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	// await expect(aux.handleFlags).toBeCalledWith(context, context.state.currentQuestion);
 	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
 	await expect(context.state.categoryQuestion === 'quiz').toBeTruthy();
 	await expect(context.state.currentQuestion.count_more === 10).toBeTruthy();
