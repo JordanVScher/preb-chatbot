@@ -54,9 +54,11 @@ async function buildMultipleChoice(question, complement) {
 }
 
 async function sendTermos(context) {
-	await context.sendText(flow.onTheResearch.text1);
-	await context.sendImage(flow.onTheResearch.gif);
-	await context.sendText(flow.onTheResearch.text2);
+	if (context.state.user.is_eligible_for_research === 1) {
+		await context.sendText(flow.onTheResearch.text1);
+		await context.sendImage(flow.onTheResearch.gif);
+		await context.sendText(flow.onTheResearch.text2);
+	}
 
 	await context.setState({ dialog: 'seeTermos' });
 	await context.sendButtonTemplate(flow.quizYes.text15, opt.TCLE);
