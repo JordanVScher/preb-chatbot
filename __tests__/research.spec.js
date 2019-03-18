@@ -3,11 +3,13 @@ const research = require('../app/utils/research');
 const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
 const checkQR = require('../app/utils/checkQR');
+const { checarConsulta } = require('../app/utils/consulta');
 
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
 jest.mock('../app/utils/desafio');
 jest.mock('../app/utils/checkQR');
+jest.mock('../app/utils/consulta');
 
 it('onTheResearch', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
@@ -17,6 +19,10 @@ it('onTheResearch', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text1);
 	await expect(context.sendImage).toBeCalledWith(flow.onTheResearch.gif);
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text2);
+
+	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.AC5);
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text1, opt.artigoLink);
+	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.extra, opt.onTheResearch);
 });
 
 it('notEligible', async () => {
@@ -27,23 +33,14 @@ it('notEligible', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.notEligible.text1, await checkQR.checkMainMenu(context, opt.mainMenu));
 });
 
-it('researchSaidNo', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	await research.researchSaidNo(context);
-
-	await expect(context.sendText).toBeCalledWith(flow.notEligible.saidNo);
-	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
-});
-
 it('researchSaidYes', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.researchSaidYes(context);
 
-	await expect(context.setState).toBeCalledWith({ dialog: 'researchSaidYes' });
+	await context.setState({ categoryConsulta: 'recrutamento' });
 	await expect(context.setState).toBeCalledWith({ sendExtraMessages: true });
 
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text15, opt.TCLE);
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, await checkQR.checkConsulta(context, opt.saidYes));
+	await expect(checarConsulta).toBeCalledWith(context);
 });
 
 it('notPart', async () => {
