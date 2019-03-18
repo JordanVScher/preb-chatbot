@@ -171,8 +171,10 @@ module.exports = async (context) => {
 		// 	break;
 		case 'aceitaTermos':
 			await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
-			// falls throught
+			await endQuiz(context, prepAPI);
+			break;
 		case 'naoAceitaTermos': // regular flow
+			await context.sendText(flow.onTheResearch.naoAceitaTermos);
 			await endQuiz(context, prepAPI);
 			break;
 		case 'joinToken':
