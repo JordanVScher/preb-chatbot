@@ -8,7 +8,7 @@ const { checkConsulta } = require('./checkQR');
 const { sendMain } = require('./mainMenu');
 const aux = require('./consulta-aux');
 
-const { mockDates } = require('./mock-dates');
+// const { mockDates } = require('./mock-dates');
 
 async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
@@ -53,11 +53,11 @@ async function showCities(context) {
 }
 
 async function showDays(context) { // shows available days
-	// await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) }); // getting calendar
-	// await context.setState({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) }); // getting next page
+	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) }); // getting calendar
+	await context.setState({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) }); // getting next page
 	// console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
-	await context.setState({ calendar: mockDates[context.state.paginationDate] });
-	await context.setState({ calendarNext: mockDates[context.state.paginationDate + 1] }); // getting next page
+	// await context.setState({ calendar: mockDates[context.state.paginationDate] });
+	// await context.setState({ calendarNext: mockDates[context.state.paginationDate + 1] }); // getting next page
 
 	await context.setState({ freeTime: await aux.cleanDates(context.state.calendar.dates) }); // all the free time slots we have
 
