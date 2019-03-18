@@ -48,9 +48,8 @@ async function buildTermosMessage() {
 
 	text += `\nSão Paulo - SP: ${telefoneDictionary[1]}`;
 	text += `\nBelo Horizonte - MG: ${telefoneDictionary[2]}`;
-	text += `\nSalvador - BA: ${telefoneDictionary[3]}\n`;
+	text += `\nSalvador - BA: ${telefoneDictionary[3]}`;
 
-	text += '\nA qualquer momento você pode pedir para desistir de participar.Se você aceitar, clique em: Aceito';
 	return text;
 }
 

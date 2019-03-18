@@ -59,7 +59,7 @@ module.exports = {
 		text2: 'Amore, sabia q existem vários tipos de prevenções? Uma delas é o PreP, previne a infecção pelo HIV através de um remedinho, tipo pílula q vc toma todo dia e é gratuito pelo SUS, acredita?',
 		extra: 'E aí, quer participar?',
 		AC5: 'E olha que bafo. Está rolando uma pesquisa bafônica com o pessoal das universidades (USP, UFMG e UFBA) para te acompanhar nessa lacração que você vive. Bora?',
-		saidYes: 'Você aceita?',
+		saidYes: 'A qualquer momento você pode pedir para desistir de participar.Se você aceitar, clique em: Aceito',
 	},
 	verConsulta: {
 		zero: 'Amooooreeee, você não tem nenhuma consulta marcada!',
