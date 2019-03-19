@@ -44,25 +44,6 @@ it('verConsulta - one appointment', async () => {
 	await expect(sendMain).toBeCalledWith(context);
 });
 
-
-it('nextDay', async () => {
-	const context = cont.quickReplyContext('verConsulta', 'greetings');
-	const page = 0;
-	context.state.freeDays = [];
-	await consulta.nextDay(context);
-
-	await expect(context.sendText).toBeCalledWith(flow.consulta.date, { quick_replies: context.state.freeDays[page] });
-});
-
-it('nextHour', async () => {
-	const context = cont.quickReplyContext('marcarConsulta', 'greetings');
-	const page = 0;
-	context.state.freeHours = [];
-	await consulta.nextHour(context);
-
-	await expect(context.sendText).toBeCalledWith(flow.consulta.hour, { quick_replies: context.state.freeHours[page] });
-});
-
 it('showCities - no extraMessage', async () => {
 	const context = cont.quickReplyContext('getCity', 'greetings');
 	context.state.cities = { calendars: [{ city: 'a', id: '1' }] };
@@ -97,31 +78,108 @@ it('showCities - with extraMessage', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.consulta.city, { quick_replies: options });
 });
 
-it('showDays', async () => {
+it('showDays - success', async () => {
 	const context = cont.quickReplyContext('showDays', '');
-	context.state.calendar = { dates: { appointment_window_id: 1, hours: [Array], ymd: '2019-02-25' } };
-	context.state.time = context.state.calendar;
-	context.state.freeDays = { 0: [{ content_type: 'text', title: '25/02 - Segunda', payload: 'dia1' }] };
+	context.state.freeDays = [{ foo: 'bar' }];
+	context.state.calendar = {};
 	await consulta.showDays(context);
 
-	await expect(context.setState).toBeCalledWith({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId) });
-	await expect(context.setState).toBeCalledWith({ freeTime: await aux.cleanDates(context.state.calendar.dates) });
-	await expect(context.setState).toBeCalledWith({ freeDays: await aux.separateDaysQR(context.state.freeTime) });
+	await expect(context.setState).toBeCalledWith({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) });
+	await expect(context.setState).toBeCalledWith({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) });
 
-	await expect(context.state.freeDays && context.state.freeDays['0'] && context.state.freeDays['0'].length > 0).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.consulta.date, { quick_replies: context.state.freeDays['0'] });
+	await expect(context.setState).toBeCalledWith({ freeTime: await aux.cleanDates(context.state.calendar.dates) });
+	await expect(context.setState).toBeCalledWith({ freeDays: await aux.separateDaysQR(context.state.freeTime, context.state.calendarNext, context.state.paginationDate) });
+	await expect(context.state.freeDays && context.state.freeDays.length > 0).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.consulta.date, { quick_replies: context.state.freeDays });
 });
 
-it('showHours', async () => {
-	const context = cont.quickReplyContext('showHours', '');
-	context.state.freeTime = [{ appointment_window_id: 1, hours: [Array], ymd: '2019-02-25' }];
-	context.state.chosenDay = { hours: '' };
-	context.state.freeHours = { 0: [{ content_type: 'text', title: '08:00 - 08:30', payload: 'hora1' }] };
-	const ymd = '1';
+it('showDays - error', async () => {
+	const context = cont.quickReplyContext('showDays', '');
+	context.state.calendar = {};
+	await consulta.showDays(context);
+
+	await expect(context.setState).toBeCalledWith({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) });
+	await expect(context.setState).toBeCalledWith({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) });
+
+	await expect(context.setState).toBeCalledWith({ freeTime: await aux.cleanDates(context.state.calendar.dates) });
+	await expect(context.setState).toBeCalledWith({ freeDays: await aux.separateDaysQR(context.state.freeTime, context.state.calendarNext, context.state.paginationDate) });
+	await expect(context.state.freeDays && context.state.freeDays.length > 0).toBeFalsy();
+	await expect(context.sendText).toBeCalledWith(flow.consulta.fail1, opt.consultaFail);
+});
+
+it('showHours - success', async () => {
+	const context = cont.quickReplyContext('showDays', '');
+	context.state.freeHours = [{ foo: 'bar' }];
+	context.state.chosenDay = {};
+	context.state.freeTime = [];
+	const ymd = 'foobar';
 	await consulta.showHours(context, ymd);
 
 	await expect(context.setState).toBeCalledWith({ chosenDay: context.state.freeTime.find(date => date.ymd === ymd) });
-	await expect(context.setState).toBeCalledWith({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours) });
-	await expect(context.state.freeHours && context.state.freeHours['0'] && context.state.freeHours['0'].length > 0).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.consulta.hours, { quick_replies: context.state.freeHours['0'] });
+	await expect(context.setState).toBeCalledWith({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
+
+	await expect(context.state.freeHours && context.state.freeHours.length > 0).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.consulta.hours, { quick_replies: context.state.freeHours });
+});
+
+it('showHours - error', async () => {
+	const context = cont.quickReplyContext('showDays', '');
+	context.state.chosenDay = {};
+	context.state.freeTime = [];
+	const ymd = 'foobar';
+	await consulta.showHours(context, ymd);
+
+	await expect(context.setState).toBeCalledWith({ chosenDay: context.state.freeTime.find(date => date.ymd === ymd) });
+	await expect(context.setState).toBeCalledWith({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
+
+	await expect(context.state.freeHours && context.state.freeHours.length > 0).toBeFalsy();
+	await expect(context.sendText).toBeCalledWith(flow.consulta.fail2, opt.consultaFail);
+});
+
+it('finalDate - success', async () => {
+	const context = cont.quickReplyContext('showDays', '');
+	context.state.chosenDay = { hours: [] };
+	context.state.calendar = {}; context.state.chosenHour = {};	context.state.response = { id: '1' };
+	context.state.sendExtraMessages = true;
+	const quota = '0';
+	await consulta.finalDate(context, quota);
+
+	await expect(context.setState).toBeCalledWith({ paginationDate: 1, paginationHour: 1 });
+	await expect(context.setState).toBeCalledWith({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
+	await expect(context.setState).toBeCalledWith({
+		response: await prepApi.postAppointment(
+			context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento',
+			context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
+		),
+	});
+
+	await expect(context.state.response && context.state.response.id && context.state.response.id.length > 0).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(`${flow.consulta.success}`
+		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
+		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
+		+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+
+	await expect(context.setState).toBeCalledWith({ sendExtraMessages: false });
+	await expect(context.state.sendExtraMessages === true).toBeTruthy();
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text2, opt.questionario);
+});
+
+it('finalDate - error', async () => {
+	const context = cont.quickReplyContext('showDays', '');
+	context.state.chosenDay = { hours: [] };
+	context.state.calendar = {}; context.state.chosenHour = {};	context.state.response = {};
+	const quota = '0';
+	await consulta.finalDate(context, quota);
+
+	await expect(context.setState).toBeCalledWith({ paginationDate: 1, paginationHour: 1 });
+	await expect(context.setState).toBeCalledWith({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
+	await expect(context.setState).toBeCalledWith({
+		response: await prepApi.postAppointment(
+			context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento',
+			context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
+		),
+	});
+
+	await expect(context.state.response && context.state.response.id && context.state.response.id.length > 0).toBeFalsy();
+	await expect(context.sendText).toBeCalledWith(flow.consulta.fail3, opt.consultaFail);
 });

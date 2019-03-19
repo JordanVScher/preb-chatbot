@@ -26,15 +26,6 @@ async function verConsulta(context) {
 	}
 }
 
-async function nextDay(context, page) {
-	await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays[page] });
-}
-
-async function nextHour(context, page) {
-	await context.sendText(flow.consulta.hour, { quick_replies: context.state.freeHours[page] });
-}
-
-
 async function showCities(context) {
 	if (context.state.sendExtraMessages === true) {
 		await context.sendText(flow.quizYes.text3);
@@ -90,15 +81,14 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
 
-	const response = await prepApi.postAppointment(
-		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento',
-		context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
-	);
+	await context.setState({
+		response: await prepApi.postAppointment(
+			context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento',
+			context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
+		),
+	});
 
-
-	console.log('postAppointment', response);
-
-	if (response.id) {
+	if (context.state.response && context.state.response.id && context.state.response.id.length > 0) {
 		await context.sendText(`${flow.consulta.success}`
 			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
 			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
@@ -137,8 +127,6 @@ async function checarConsulta(context) {
 module.exports.verConsulta = verConsulta;
 module.exports.showDays = showDays;
 module.exports.showCities = showCities;
-module.exports.nextDay = nextDay;
-module.exports.nextHour = nextHour;
 module.exports.showHours = showHours;
 module.exports.finalDate = finalDate;
 module.exports.checarConsulta = checarConsulta;
