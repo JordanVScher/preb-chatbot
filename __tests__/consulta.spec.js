@@ -139,6 +139,33 @@ it('showHours - error', async () => {
 it('finalDate - success', async () => {
 	const context = cont.quickReplyContext('showDays', '');
 	context.state.chosenDay = { hours: [] };
+	context.state.calendar = {}; context.state.chosenHour = {}; context.state.response = { id: '1' };
+	const quota = '0';
+	await consulta.finalDate(context, quota);
+
+	await expect(context.setState).toBeCalledWith({ paginationDate: 1, paginationHour: 1 });
+	await expect(context.setState).toBeCalledWith({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
+	await expect(context.setState).toBeCalledWith({
+		response: await prepApi.postAppointment(
+			context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento',
+			context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
+		),
+	});
+
+	await expect(context.state.response && context.state.response.id && context.state.response.id.length > 0).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(`${flow.consulta.success}`
+		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
+		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
+		+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+
+	await expect(context.state.sendExtraMessages === true).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ sendExtraMessages: false });
+	await expect(sendMain).toBeCalledWith(context);
+});
+
+it('finalDate - success with extra message', async () => {
+	const context = cont.quickReplyContext('showDays', '');
+	context.state.chosenDay = { hours: [] };
 	context.state.calendar = {}; context.state.chosenHour = {};	context.state.response = { id: '1' };
 	context.state.sendExtraMessages = true;
 	const quota = '0';
@@ -159,8 +186,8 @@ it('finalDate - success', async () => {
 		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 		+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 
-	await expect(context.setState).toBeCalledWith({ sendExtraMessages: false });
 	await expect(context.state.sendExtraMessages === true).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ sendExtraMessages: false });
 	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text2, opt.questionario);
 });
 

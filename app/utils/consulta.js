@@ -95,10 +95,12 @@ async function finalDate(context, quota) { // where we actually schedule the con
 			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 
 		if (context.state.sendExtraMessages === true) {
+			await context.setState({ sendExtraMessages: false });
 			await context.sendButtonTemplate(flow.quizYes.text2, opt.questionario);
+		} else {
+			await context.setState({ sendExtraMessages: false });
+			await sendMain(context);
 		}
-		await context.setState({ sendExtraMessages: false });
-		await sendMain(context);
 	} else {
 		await context.sendText(flow.consulta.fail3, opt.consultaFail);
 	}
