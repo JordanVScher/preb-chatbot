@@ -5,16 +5,6 @@ const mainMenu = require('./mainMenu');
 const help = require('./helper');
 const { sendCarouselSus } = require('./timer');
 
-const duvida = ['Como Pega Chato', 'Como Pega Clamidia', 'Como Pega Gonorreia', 'Como Pega Hepatite A', 'Como Pega Hepatite B', 'Como Pega HIV', 'Como Pega IST', 'Como Pega Sifilis', 'Sexo oral', 'Passivo ITS', 'Beijo IST', 'Engolir Semen', 'Sobre PREP', 'Sobre Chuca', 'Sobre Gouinage', 'Sobre Orientação Sexual', 'Sobre Orientacao Sexual', 'Quais Novidades', 'Sentido Da Vida', 'Me chupa', 'Manda Nudes', 'Espaço LGBT', 'Hipotenusa', 'Eu te amo']; // eslint-disable-line no-unused-vars
-const problema = ['Tratamento IST', 'Tratamento HIV', 'Indetectavel Transmite', 'indetectável Transmite', 'Apresenta Sintoma', 'Tenho Ferida', 'Sera HIV', 'Alternativa camisinha', 'Camisinha Estourou', 'Sem Camisinha', 'Virgem Como Faco', 'Nunca Fiz Anal', 'Tenho HIV', 'Tenho HIV Contar Parceiro'];
-const servico = ['Marcar Consulta', 'Abuso', 'Teste']; // shouldn't Abuso be here?
-
-async function separateIntent(intentName) {
-	if (servico.includes(intentName)) { return 'serviço'; }
-	if (problema.includes(intentName)) { return 'problema'; }
-	return 'duvida';
-}
-
 async function sendQuiz(context) {
 	await context.setState({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // load quiz counter
 	if (context.state.quizCounter && context.state.quizCounter.count_quiz >= 3) { // check quiz counter
@@ -47,7 +37,7 @@ async function followUp(context) {
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa
 			await mainMenu.sendShareAndMenu(context); // send regular menu, here we don't have to check if user is prep or not
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
-			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
+			if (context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
 				await sendQuiz(context);
 			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não)
 				await sendResearch(context);
@@ -104,9 +94,8 @@ async function checkAconselhamento(context) {
 }
 
 async function followUpIntent(context) {
-	await context.setState({ intentType: await separateIntent(context.state.intentName) });
+	await context.setState({ intentType: await help.separateIntent(context.state.intentName), dialog: 'prompt' });
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
-	await context.setState({ dialog: 'prompt' });
 
 	// console.log('intentType', context.state.intentType);
 	// console.log('user', context.state.user);
@@ -116,7 +105,7 @@ async function followUpIntent(context) {
 			await checkAconselhamento(context);
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
 			if (context.state.intentType === 'serviço') { await context.sendText(flow.triagem.posto); }
-			if (!context.state.user.is_eligible_for_research || context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
+			if (context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
 				await sendQuiz(context);
 			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não) === 1
 				if (context.state.intentType === 'problema') { await context.sendText(flow.triagem.whatsapp); }
@@ -158,8 +147,8 @@ module.exports.asksDesafio = asksDesafio;
 module.exports.desafioRecusado = desafioRecusado;
 module.exports.desafioAceito = desafioAceito;
 module.exports.followUp = followUp;
-module.exports.separateIntent = separateIntent;
 module.exports.followUpIntent = followUpIntent;
 module.exports.sendQuiz = sendQuiz;
 module.exports.sendResearch = sendResearch;
 module.exports.sendConsulta = sendConsulta;
+module.exports.checkAconselhamento = checkAconselhamento;

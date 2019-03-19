@@ -8,6 +8,7 @@ const opt = require('../app/utils/options');
 const prepApi = require('../app/utils/prep_api');
 const mainMenu = require('../app/utils/mainMenu');
 const help = require('../app/utils/helper');
+const { sendCarouselSus } = require('../app/utils/timer');
 
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
@@ -15,6 +16,7 @@ jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/helper');
+jest.mock('../app/utils/timer');
 
 it('desafioAceito', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
@@ -148,14 +150,62 @@ it('asksDesafio - didnt startedQuiz', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text1, opt.asksDesafio);
 });
 
-it('followUp - not target audience, didnt finish quiz', async () => {
+it('checkAconselhamento - duvida and prep', async () => {
+	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.intentType = 'duvida';
+	context.state.user = { is_prep: 1 };
+	await desafio.checkAconselhamento(context);
+
+	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id);
+	await expect(context.state.intentType === 'duvida').toBeTruthy();
+	await expect(context.state.user.is_prep === 1).toBeTruthy();
+	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
+});
+
+it('checkAconselhamento - duvida and not prep', async () => {
+	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.intentType = 'duvida';
+	context.state.user = { is_prep: 0 };
+	await desafio.checkAconselhamento(context);
+
+	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id);
+	await expect(context.state.intentType === 'duvida').toBeTruthy();
+	await expect(context.state.user.is_prep === 1).toBeFalsy();
+	await expect(context.sendText).toBeCalledWith(flow.triagem.invite, opt.answer.isPrep);
+});
+
+it('checkAconselhamento - not duvida and prep', async () => {
+	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.user = { is_prep: 1 };
+	await desafio.checkAconselhamento(context);
+
+	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id);
+	await expect(context.state.intentType === 'duvida').toBeFalsy();
+	await expect(context.state.user.is_prep === 1).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) }); // sendConsulta
+});
+
+it('checkAconselhamento - not duvida and not prep', async () => {
+	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.user = { is_prep: 0 };
+	await desafio.checkAconselhamento(context);
+
+	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id);
+	await expect(context.state.intentType === 'duvida').toBeFalsy();
+	await expect(context.state.user.is_prep === 1).toBeFalsy();
+	await expect(context.sendText).toBeCalledWith(flow.triagem.send);
+	await expect(context.setState).toBeCalledWith({ dialog: 'triagem' });
+});
+
+it('followUpIntent - not target audience, didnt finish quiz', async () => {
 	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
 	context.state.user = { is_target_audience: 0 };
 	context.state.currentQuestion = { code: 'A5' };
-	await desafio.followUp(context);
+	context.state.intentName = 'teste';
+	await desafio.followUpIntent(context);
 
+	await expect(context.setState).toBeCalledWith({ intentType: await help.separateIntent(context.state.intentName), dialog: 'prompt' });
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	await expect(context.setState).toBeCalledWith({ dialog: 'prompt' });
 
 	await expect(context.state.user.is_target_audience === 1).toBeFalsy();
 	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
@@ -163,13 +213,13 @@ it('followUp - not target audience, didnt finish quiz', async () => {
 	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // sendQuiz
 });
 
-it('followUp - not target audience, finished quiz', async () => {
+it('followUpIntent - not target audience, didnt finish quiz', async () => {
 	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
 	context.state.user = { is_target_audience: 0 };
-	await desafio.followUp(context);
+	await desafio.followUpIntent(context);
 
+	await expect(context.setState).toBeCalledWith({ intentType: await help.separateIntent(context.state.intentName), dialog: 'prompt' });
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	await expect(context.setState).toBeCalledWith({ dialog: 'prompt' });
 
 	await expect(context.state.user.is_target_audience === 1).toBeFalsy();
 	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
@@ -177,12 +227,66 @@ it('followUp - not target audience, finished quiz', async () => {
 	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
 });
 
-it('followUp - user already part on research', async () => {
+it('followUpIntent - user already part on research', async () => {
 	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
 	context.state.user = { is_part_of_research: 1, is_target_audience: 1 };
-	await desafio.followUp(context);
+	await desafio.followUpIntent(context);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
 	await expect(context.state.user.is_part_of_research === 1).toBeTruthy();
-	await expect(mainMenu.sendShareAndMenu).toBeCalled();
+	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id); // checkAconselhamento
+});
+
+it('followUpIntent - not research, didnt finish quiz and servico', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 0, is_target_audience: 1, finished_quiz: 0 };
+	context.state.intentType = 'serviço';
+	await desafio.followUpIntent(context);
+
+	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(context.state.intentType === 'serviço').toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.triagem.posto);
+	await expect(context.state.user.finished_quiz === 0).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // sendQuiz
+});
+
+it('followUpIntent - not research, finished quiz and eligible ', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 0, is_target_audience: 1, is_eligible_for_research: 1, finished_quiz: 1	}; // eslint-disable-line
+	await desafio.followUpIntent(context);
+
+	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(context.state.intentType === 'serviço').toBeFalsy();
+	await expect(context.state.user.finished_quiz === 0).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ researchCounter: await prepApi.getCountResearch(context.session.user.id) }); // sendResearch
+});
+
+it('followUpIntent - not research, finished quiz, eligible and problema ', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 0, is_target_audience: 1, is_eligible_for_research: 1, finished_quiz: 1	}; // eslint-disable-line
+	context.state.intentType = 'problema';
+	await desafio.followUpIntent(context);
+
+	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(context.state.intentType === 'serviço').toBeFalsy();
+	await expect(context.state.user.finished_quiz === 0).toBeFalsy();
+	await expect(context.state.intentType === 'problema').toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.triagem.whatsapp);
+	await expect(context.setState).toBeCalledWith({ researchCounter: await prepApi.getCountResearch(context.session.user.id) }); // sendResearch
+});
+
+it('followUpIntent - not research, finished quiz and not eligible  ', async () => {
+	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
+	context.state.user = { is_part_of_research: 0, is_target_audience: 1, is_eligible_for_research: 0, finished_quiz: 1	}; // eslint-disable-line
+	await desafio.followUpIntent(context);
+
+	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(context.state.intentType === 'serviço').toBeFalsy();
+	await expect(context.state.user.finished_quiz === 0).toBeFalsy();
+	await expect(context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1).toBeTruthy();
+	await expect(sendCarouselSus).toBeCalledWith(context, opt.sus);
 });
