@@ -51,8 +51,8 @@ it('checkAnsweredQuiz - verConsulta, quiz finished and eligible but no consulta'
 
 	await expect(newOptions.find(x => x.payload === 'getCity') || newOptions.find(x => x.payload === 'verConsulta')).toBeTruthy();
 	await expect(context.state.is_eligible_for_research === true).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ consultas: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeFalsy();
 	newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option to see consulta for there isn't any consulta available
 	await expect(newOptions.length === length - 2).toBeTruthy();
 });
@@ -61,7 +61,7 @@ it('checkAnsweredQuiz - verConsulta, quiz finished and eligible with consulta', 
 	const context = cont.quickReplyContext('greetings', 'greetings');
 	context.state.user = { finished_quiz: 1 };
 	context.state.is_eligible_for_research = true;
-	context.state.consultas = { appointments: ['a'] };
+	context.state.consulta = { appointments: ['a'] };
 	await checkQR.checkAnsweredQuiz(context, opt.greetings);
 	let newOptions = opt.greetings.quick_replies;
 	const { length } = newOptions;
@@ -73,8 +73,8 @@ it('checkAnsweredQuiz - verConsulta, quiz finished and eligible with consulta', 
 
 	await expect(newOptions.find(x => x.payload === 'getCity') || newOptions.find(x => x.payload === 'verConsulta')).toBeTruthy();
 	await expect(context.state.is_eligible_for_research === true).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ consultas: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeTruthy();
 	newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option to schedule appointment because he scheduled one already
 	await expect(newOptions.length === length - 2).toBeTruthy();
 });
@@ -99,14 +99,14 @@ it('checkConsulta - not eligible_for_research ', async () => {
 it('checkConsulta - zero consulta', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
 	context.state.user = { is_eligible_for_research: 1 };
-	context.state.consultas = { appointments: [] };
+	context.state.consulta = { appointments: [] };
 	let newOptions = opt.consulta.quick_replies;
 	await checkQR.checkConsulta(context, opt.consulta);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ consultas: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeFalsy();
 	newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta');
 	newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta');
 
@@ -116,14 +116,14 @@ it('checkConsulta - zero consulta', async () => {
 it('checkConsulta - one consulta', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
 	context.state.user = { is_eligible_for_research: 1 };
-	context.state.consultas = { appointments: ['foo'] };
+	context.state.consulta = { appointments: ['foo'] };
 	let newOptions = opt.consulta.quick_replies;
 	await checkQR.checkConsulta(context, opt.consulta);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ consultas: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeTruthy();
 	newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-getCity');
 	newOptions = await newOptions.filter(obj => obj.payload !== 'getCity');
 
@@ -176,15 +176,15 @@ it('checkMainMenu - not on audience, finish quiz', async () => {
 it('checkMainMenu - on audience and research, no consulta', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
 	context.state.user = { is_target_audience: 1, is_part_of_research: 1 };
-	context.state.consultas = { appointments: [] };
+	context.state.consulta = { appointments: [] };
 	const newOptions = [];
 	await checkQR.checkMainMenu(context);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
 	await expect(context.state.user.is_part_of_research === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ consultas: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeFalsy();
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeFalsy();
 	newOptions.push({ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' });
 	await expect(newOptions.length === 1).toBeTruthy();
 });
@@ -192,15 +192,15 @@ it('checkMainMenu - on audience and research, no consulta', async () => {
 it('checkMainMenu - on audience and research, one consulta', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
 	context.state.user = { is_target_audience: 1, is_part_of_research: 1 };
-	context.state.consultas = { appointments: ['foo'] };
+	context.state.consulta = { appointments: ['foo'] };
 	const newOptions = [];
 	await checkQR.checkMainMenu(context);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
 	await expect(context.state.user.is_part_of_research === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ consultas: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeTruthy();
 	newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' });
 
 	await expect(newOptions.length === 1).toBeTruthy();
@@ -259,4 +259,85 @@ it('checkMainMenu - on audience, no research, not eligible and not finished_quiz
 	newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 
 	await expect(newOptions.length === 2).toBeTruthy();
+});
+
+it('checkMainMenu - is prep ', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = {
+		is_target_audience: 1, is_part_of_research: 0, is_eligible_for_research: 0, finished_quiz: 0,
+	};
+	const newOptions = [];
+	await checkQR.checkMainMenu(context);
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
+	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
+	await expect(context.state.user.is_eligible_for_research === 1).toBeFalsy();
+	await expect(context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1).toBeFalsy();
+	await expect(context.state.user.finished_quiz === 0).toBeTruthy();
+	newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+	newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+
+	await expect(newOptions.length === 2).toBeTruthy();
+});
+
+it('checkMainMenu - on audience and research, is_prep', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { is_target_audience: 1, is_part_of_research: 1, is_prep: 1 };
+	context.state.consulta = { appointments: [] };
+	const newOptions = [];
+	await checkQR.checkMainMenu(context);
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
+	await expect(context.state.user.is_part_of_research === 1).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeFalsy();
+	newOptions.push({ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' });
+	await expect(context.state.user.is_part_of_research === 1 && context.state.user.is_prep === 1).toBeTruthy();
+	newOptions.push({ content_type: 'text', title: 'Medicação', payload: 'medicaçao' });
+	newOptions.push({ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' });
+
+
+	await expect(newOptions.length === 3).toBeTruthy();
+});
+
+
+it('checkMedication - less than four months', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { prep_since: 155208009 }; // eslint-disable-line
+	const newOptions = [];
+	await checkQR.checkMedication(context);
+
+	const fourMonths = 7776000; // the time range for the user to be in the first stage of the treatment
+	const userJoined = context.state.user.prep_since / 1000 | 0; // eslint-disable-line
+	const now = Date.now() / 1000 | 0; // eslint-disable-line
+
+	await expect(now - userJoined <= fourMonths).toBeFalsy();
+
+	newOptions.push({ content_type: 'text', title: 'Acabou o Remédio', payload: 'acabouRemedio' });
+	newOptions.push({ content_type: 'text', title: 'Esqueci de tomar', payload: 'esqueciDeTomar' });
+	newOptions.push({ content_type: 'text', title: 'Dúvida com o Remédio', payload: 'duvidaComRemedio' });
+
+	await expect(newOptions.length === 3).toBeTruthy();
+});
+
+it('checkMedication - more than four months', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { prep_since: 1552080090000 }; // eslint-disable-line
+	const newOptions = [];
+	await checkQR.checkMedication(context);
+
+	const fourMonths = 7776000; // the time range for the user to be in the first stage of the treatment
+	const userJoined = context.state.user.prep_since / 1000 | 0; // eslint-disable-line
+	const now = Date.now() / 1000 | 0; // eslint-disable-line
+
+	await expect(now - userJoined <= fourMonths).toBeTruthy();
+
+	newOptions.push({ content_type: 'text', title: 'Sintomas', payload: 'sintomas' });
+	newOptions.push({ content_type: 'text', title: 'Acabou o Remédio', payload: 'acabouRemedio' });
+	newOptions.push({ content_type: 'text', title: 'Esqueci de tomar', payload: 'esqueciDeTomar' });
+	newOptions.push({ content_type: 'text', title: 'Dúvida com o Remédio', payload: 'duvidaComRemedio' });
+
+	await expect(newOptions.length === 4).toBeTruthy();
 });
