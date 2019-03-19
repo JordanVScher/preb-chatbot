@@ -21,7 +21,6 @@ async function separateDaysQR(dates, next, pageNumber) {
 	return dateOptions;
 }
 
-
 async function formatHour(hour) {
 	let result = hour;
 	result = await result.slice(0, 5);
@@ -45,7 +44,6 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 				await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
 			}
 		}
-
 		result.push({ content_type: 'text', title: 'Próximo', payload: `nextHour${ymd}` }); // add next button
 	} else { // if not on the first page, add a button to go back to previous options
 		result.push({ content_type: 'text', title: 'Anterior', payload: `previousHour${ymd}` }); // add Anterior button
