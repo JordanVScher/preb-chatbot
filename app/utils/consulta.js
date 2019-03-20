@@ -88,6 +88,9 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		),
 	});
 
+	console.log('RESPONSE', context.state.response);
+
+
 	if (context.state.response && context.state.response.id && context.state.response.id.length > 0) {
 		await context.sendText(`${flow.consulta.success}`
 			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
