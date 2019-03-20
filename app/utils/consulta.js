@@ -88,41 +88,23 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		),
 	});
 
-	console.log('RESPONSE', context.state.response);
+	console.log('postAppointment', context.state.response);
 
-	if (!context.state.response || !context.state.response.id || context.state.response.error || context.state.response.err || context.state.response.error_code) {
-		await context.sendText(flow.consulta.fail3, opt.consultaFail);
-	} else {
-		if (context.state.response && context.state.response.id && context.state.response.id.length > 0) { // eslint-disable-line
-			await context.sendText(`${flow.consulta.success}`
-				+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-				+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
-				+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
-
-			if (context.state.sendExtraMessages === true) {
-				await context.setState({ sendExtraMessages: false });
-				await context.sendButtonTemplate(flow.quizYes.text2, opt.questionario);
-			} else {
-				await context.setState({ sendExtraMessages: false });
-				await sendMain(context);
-			}
+	if (context.state.response && context.state.response.id && context.state.response.id.toString().length > 0) {
+		await context.sendText(`${flow.consulta.success}`
+			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
+			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
+			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+		if (context.state.sendExtraMessages === true) {
+			await context.setState({ sendExtraMessages: false });
+			await context.sendButtonTemplate(flow.quizYes.text2, opt.questionario);
+		} else {
+			await context.setState({ sendExtraMessages: false });
+			await sendMain(context);
 		}
+	} else {
+		await context.sendText(flow.consulta.fail3, opt.consultaFail);
 	}
-
-	// if (context.state.response && context.state.response.id && context.state.response.id.length > 0) {
-	// 	await context.sendText(`${flow.consulta.success}`
-	// 		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-	// 		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
-	// 		+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
-	// 	if (context.state.sendExtraMessages === true) {
-	// 		await context.setState({ sendExtraMessages: false });
-	// 		await context.sendButtonTemplate(flow.quizYes.text2, opt.questionario);
-	// 	} else {
-	// 		await context.setState({ sendExtraMessages: false });
-	// 		await sendMain(context);
-	// 	}
-	// } else {
-	// 	await context.sendText(flow.consulta.fail3, opt.consultaFail);
 }
 
 async function checarConsulta(context) {
