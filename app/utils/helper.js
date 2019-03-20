@@ -54,8 +54,8 @@ const telefoneDictionary = {
 };
 
 async function buildTermosMessage() {
-	let text = 'As informações que você digitar neste chatbot poderá ser usada para fins de pesquisa sobre percepções, conhecimento, aceitabilidade e intenção de usar a PrEP'
-	+ ' e o autoteste para HIV, entre adolescentes HSH e TrMT de 15 - 19 anos, em São Paulo, Salvador e Belo Horizonte.Você poderá obter mais informações nos seguintes telefones:\n';
+	let text = 'As informações que você digitar neste chatbot poderão ser usadas para fins de pesquisa sobre percepções, conhecimento, aceitabilidade e intenção de usar a PrEP'
+	+ ' e o autoteste para HIV, entre adolescentes HSH e TrMT de 15 - 19 anos, em São Paulo, Salvador e Belo Horizonte. Você poderá obter mais informações nos seguintes telefones:\n';
 
 	text += `\nSão Paulo - SP: ${telefoneDictionary[1]}`;
 	text += `\nBelo Horizonte - MG: ${telefoneDictionary[2]}`;
