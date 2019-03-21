@@ -29,6 +29,8 @@ async function verConsulta(context) {
 async function showCities(context) {
 	if (context.state.sendExtraMessages === true) {
 		await context.sendText(flow.quizYes.text3);
+	} else {
+		await context.sendText(flow.consulta.checar2);
 	}
 
 	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
@@ -122,7 +124,6 @@ async function checarConsulta(context) {
 		}
 		await sendMain(context);
 	} else {
-		await context.sendText(flow.consulta.checar2);
 		await showCities(context);
 	}
 }
