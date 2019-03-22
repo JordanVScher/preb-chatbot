@@ -83,13 +83,15 @@ async function formatDate(date, hour) {
 	return `${weekDayNameLong[data.getDay()]}, ${await formatHour(data.getDate())} de ${moment(date).utcOffset('+0000').format('MMMM')} das ${hour.replace('-', 'as').replace(':00 ', ' ').slice(0, -3)}`;
 }
 
-// function formatInitialDate(date) {
-// 	date.setMinutes(0);
-// 	date.setSeconds(0);
-// 	// date.setMilliseconds(0); // already ignored because of moment.js' date to timestamp conversion
-// 	date.setHours(date.getHours() + 1);
-// 	return date;
-// }
+async function checkSuggestWaitForTest(context, riscoText, autotesteText, autotesteOpt) {
+	if (context.state.suggestWaitForTest === true) {
+		await context.setState({ suggestWaitForTest: false });
+		await context.sendText(autotesteText);
+		await context.sendText(riscoText, autotesteOpt);
+	} else {
+		await context.sendText(autotesteText, autotesteOpt);
+	}
+}
 
 function capQR(text) {
 	let result = text;
@@ -113,3 +115,4 @@ module.exports.cidadeDictionary = cidadeDictionary;
 module.exports.telefoneDictionary = telefoneDictionary;
 module.exports.buildTermosMessage = buildTermosMessage;
 module.exports.separateIntent = separateIntent;
+module.exports.checkSuggestWaitForTest = checkSuggestWaitForTest;

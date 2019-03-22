@@ -13,9 +13,16 @@ async function endTriagem(context) {
 	console.log('result', context.state.sentAnswer);
 
 	if (context.state.sentAnswer && context.state.sentAnswer.suggest_wait_for_test === 1) {
+		console.log('entrei aqui');
+
 		await context.setState({ suggestWaitForTest: true });
-		await context.setState({ dialog: 'autoTeste' });
-	} else if (context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
+	} else {
+		console.log('passei nessa');
+
+		await context.setState({ suggestWaitForTest: false });
+	}
+
+	if (context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
 		await context.sendText(flow.triagem.emergency1);
 		await context.sendText('Telefones pra contato:'
 			+ `\nSão Paulo - SP: ${help.telefoneDictionary[1]}`
@@ -31,7 +38,10 @@ async function endTriagem(context) {
 		await context.setState({ dialog: 'checarConsulta' });
 	} else if (context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1) { // qualquer sim
 		await context.sendText(flow.triagem.suggest, opt.triagem1);
-	} else { // quando responder não para a SC6
+	} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_test === 0) { // quando responder não para a SC6
+		await context.sendText(flow.triagem.noTest);
+		await sendMain(context);
+	} else {
 		await sendMain(context);
 	}
 }
