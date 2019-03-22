@@ -95,7 +95,7 @@ module.exports = async (context) => {
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
 			} else if (context.state.dialog === 'joinToken') {
 				await research.handleToken(context);
-			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod') {
+			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
 				await context.setState({ is_target_audience: false, is_prep: false });
