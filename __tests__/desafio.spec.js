@@ -31,23 +31,6 @@ it('desafioRecusado', async () => {
 	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });
 
-it('asksDesafio - user started quiz ', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.startedQuiz = true;
-	await desafio.asksDesafio(context);
-	await expect(context.state.startedQuiz === true).toBeTruthy();
-	await expect(mainMenu.sendMain).toBeCalledWith(context);
-});
-
-it('asksDesafio - user didnt start quiz ', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.startedQuiz = false;
-	await desafio.asksDesafio(context);
-	await expect(context.state.startedQuiz === true).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text1, opt.asksDesafio);
-	// await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text2, opt.asksDesafio);
-});
-
 it('sendQuiz - count less than 3 - started quiz ', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	context.state.quizCounter = { count_quiz: 2 };
@@ -135,18 +118,30 @@ it('sendConsulta - no consulta', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.triagem.consulta2, opt.answer.sendConsulta);
 });
 
-it('asksDesafio - startedQuiz', async () => {
+it('asksDesafio - finishedQuiz', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.startedQuiz = true;
+	context.state.startedQuiz = true; context.state.user = { finished_quiz: 1 };
 	await desafio.asksDesafio(context);
 
+	await expect(context.state.startedQuiz === true || context.state.user.finished_quiz === 1).toBeTruthy();
+	await expect(mainMenu.sendMain).toBeCalledWith(context);
+});
+
+it('asksDesafio - startedQuiz', async () => {
+	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.startedQuiz = true; context.state.user = { finished_quiz: 0 };
+	await desafio.asksDesafio(context);
+
+	await expect(context.state.startedQuiz === true || context.state.user.finished_quiz === 1).toBeTruthy();
 	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });
 
 it('asksDesafio - didnt startedQuiz', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.startedQuiz = false; context.state.user = { finished_quiz: 0 };
 	await desafio.asksDesafio(context);
 
+	await expect(context.state.startedQuiz === true || context.state.user.finished_quiz === 1).toBeFalsy();
 	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text1, opt.asksDesafio);
 });
 

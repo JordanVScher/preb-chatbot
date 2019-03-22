@@ -152,6 +152,7 @@ module.exports = {
 		consulta2: 'Acabei de catar q vc não tem consulta marcada.\nVc qr marcar?',
 		whatsapp: '[texto com os números do whatapp]',
 		suggestWaitAutoTest: 'Se seu risco aconteceu há menos de 30 dias, você ainda está em janela imunológica, aquele período em que o teste ainda não tem sensibilidade para identificar um contato. É melhor esperar pelo menos 30 dias para se testar.',
+		noTest: 'ok',
 	},
 	medication: {
 		text1: 'Ok BB, me diga o que vc tá precisando:',
@@ -161,8 +162,6 @@ module.exports = {
 		esqueci2: '-Se geralmente você toma um comprimido de manhã, mas a noite se lembrou que não o tomou, não tem problema: tome apenas um comprimido no momento que você lembrar e continua a tomar normalmente no dia seguinte.'
 		+ '\n-Não tome mais de um comprimido no mesmo dia. ',
 		duvidaRemedio: 'Temos um panfleto pra tirar suas dúvidas',
-
-
 	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',

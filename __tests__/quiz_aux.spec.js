@@ -112,7 +112,7 @@ it('buildMultipleChoice - extra option', async () => {
 
 it('endTriagem - suggest_wait_for_test', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.sentAnswer = { suggest_wait_for_test: 1 };
+	context.state.sentAnswer = { suggest_wait_for_test: 1, go_to_test: 1 };
 	await aux.endTriagem(context);
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'endTriagem' });

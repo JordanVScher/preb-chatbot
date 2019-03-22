@@ -262,10 +262,6 @@ module.exports = async (context) => {
 			await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
 			break;
 		case 'autoTeste':
-			if (context.state.suggestWaitForTest === true) { // todo isso tem que acontecer depois do user escolher um tipo de teste mas essa parte não tá mapeada ainda
-				await context.setState({ suggestWaitForTest: false });
-				await context.sendText(flow.triagem.suggestWaitAutoTest);
-			}
 			await context.sendText(flow.autoTeste.cidade, opt.autotesteCidades);
 			break;
 		case 'optAutoTeste':
@@ -274,18 +270,18 @@ module.exports = async (context) => {
 		case 'auto':
 			await context.sendText(flow.autoTeste.auto1);
 			await context.sendText(flow.autoTeste.auto2);
-			await context.sendText(flow.autoTeste.auto3[context.state.cidade], opt.autotesteEnd);
+			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto3[context.state.cidade], opt.autotesteEnd);
 			break;
 		case 'ong':
 			await context.sendText(flow.autoTeste.ong1);
-			await context.sendText(flow.autoTeste.ong2[context.state.cidade], opt.ong);
+			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.ong2[context.state.cidade], opt.ong);
 			break;
 		case 'rua':
 			await context.sendText(flow.autoTeste.rua1);
-			await context.sendText(flow.autoTeste.rua2[context.state.cidade], opt.rua);
+			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.rua2[context.state.cidade], opt.rua);
 			break;
 		case 'servico':
-			await context.sendText(flow.autoTeste.servico1, opt.servico);
+			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.servico1, opt.servico);
 			break;
 		case 'sendToTriagem':
 		case 'triagem': // this is the triagem-type of questionario
