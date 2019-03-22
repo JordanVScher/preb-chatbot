@@ -5,6 +5,7 @@ const request = require('requisition');
 
 const apiUri = process.env.PREP_API_URL;
 const security_token = process.env.SECURITY_TOKEN_PREP;
+const security_token2 = process.env.SECURITY_TOKEN_PREP2;
 
 module.exports = {
 	async postRecipientPrep(fb_id, page_id, name) {
@@ -79,7 +80,7 @@ module.exports = {
 	},
 
 	async deleteQuizAnswer(fb_id) {
-		const res = await request.post(`${apiUri}/api/internal/delete-answers?`).query({ security_token, fb_id });
+		const res = await request.post(`${apiUri}/api/internal/delete-answers?`).query({ security_token: security_token2, fb_id });
 		// console.log('deleteQuizAnswer', res);
 		const quizData = await res.json();
 
