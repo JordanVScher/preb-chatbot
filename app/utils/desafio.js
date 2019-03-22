@@ -79,9 +79,9 @@ async function checkAconselhamento(context) {
 	// await context.setState({ user: { is_prep: 0 } }); // for testing
 	await prepApi.resetTriagem(context.session.user.id); // clear old triagem
 	if (context.state.intentType === 'duvida') {
-		if (context.state.user.is_prep === 1) { // user isn't prep, send to triagem
+		if (context.state.user.is_prep === 1) { // user is prep
 			await mainMenu.sendShareAndMenu(context); // send regular menu
-		} else { // user is prep
+		} else { // user isn't prep, send to triagem
 			await context.sendText(flow.triagem.invite, opt.answer.isPrep);
 		}
 	} else { // problema e serviço
