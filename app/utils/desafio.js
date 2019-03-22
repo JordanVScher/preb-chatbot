@@ -7,6 +7,7 @@ const { sendCarouselSus } = require('./timer');
 
 async function sendQuiz(context) {
 	await context.setState({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // load quiz counter
+	await context.setState({ categoryQuestion: 'quiz' });
 	if (context.state.quizCounter && context.state.quizCounter.count_quiz >= 3) { // check quiz counter
 		await mainMenu.sendShareAndMenu(context); // send regular menu
 	} else {
