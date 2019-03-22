@@ -30,7 +30,6 @@ it('send Answer - answer and image', async () => {
 	await expect(context.state.currentTheme.saved_attachment_type === 'audio').toBeFalsy();
 
 	await expect(context.typingOff);
-	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
 });
 
 it('send Answer - no answer text and video', async () => {
@@ -51,7 +50,6 @@ it('send Answer - no answer text and video', async () => {
 	await expect(context.state.currentTheme.saved_attachment_type === 'audio').toBeFalsy();
 
 	await expect(context.typingOff);
-	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
 });
 
 

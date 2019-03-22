@@ -1,4 +1,4 @@
-const MaAPI = require('../chatbot_api.js');
+const MaAPI = require('../chatbot_api');
 const { createIssue } = require('../send_issue');
 
 async function sendAnswer(context) { // send answer from posicionamento
@@ -25,7 +25,6 @@ async function sendAnswer(context) { // send answer from posicionamento
 			await context.sendAudio({ attachment_id: context.state.currentTheme.saved_attachment_id });
 		}
 		await context.typingOff();
-		await context.setState({ dialog: 'mainMenu' });
 	} else { // in case there's an error
 		await createIssue(context);
 	}
