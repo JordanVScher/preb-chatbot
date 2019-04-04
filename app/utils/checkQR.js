@@ -117,6 +117,20 @@ async function checkMedication(context) { // eslint-disable-line
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
+async function autoTesteOption(options, cityId) {
+	let newOptions = options.quick_replies;
+	// no need to filter out cityId = 1
+	if (cityId === 2) {
+		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
+		newOptions = await newOptions.filter(obj => obj.payload !== 'ong');
+	} else if (cityId === 3) {
+		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
+		newOptions = await newOptions.filter(obj => obj.payload !== 'auto');
+	}
+
+	return { quick_replies: newOptions };
+}
+
 module.exports.getErrorQR = async (lastPostback) => { // eslint-disable-line
 	const elements = [];
 	// const firstArray = opt.menuOptions;
@@ -150,3 +164,4 @@ module.exports.checkAnsweredQuiz = checkAnsweredQuiz;
 module.exports.checkMainMenu = checkMainMenu;
 module.exports.checkConsulta = checkConsulta;
 module.exports.checkMedication = checkMedication;
+module.exports.autoTesteOption = autoTesteOption;

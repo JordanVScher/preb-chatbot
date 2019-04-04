@@ -252,23 +252,28 @@ module.exports = async (context) => {
 			break;
 		case 'autoTeste':
 			await context.setState({ cidade: context.state.user.city }); // getting location id
-			await context.sendText(flow.autoTeste.start, opt.autoteste);
+			await context.setState({ cidade: 2 }); // getting location id
+			await context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.cidade));
 			break;
 		case 'auto':
 			await context.sendText(flow.autoTeste.auto1);
 			await context.sendText(flow.autoTeste.auto2);
-			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto3[context.state.cidade], opt.autotesteEnd);
+			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto3[context.state.cidade],
+				await checkQR.autoTesteOption(opt.autotesteEnd, context.state.cidade));
 			break;
 		case 'ong':
 			await context.sendText(flow.autoTeste.ong1);
-			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.ong2[context.state.cidade], opt.ong);
+			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.ong2[context.state.cidade],
+				await checkQR.autoTesteOption(opt.ong, context.state.cidade));
 			break;
 		case 'rua':
 			await context.sendText(flow.autoTeste.rua1);
-			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.rua2[context.state.cidade], opt.rua);
+			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.rua2[context.state.cidade],
+				await checkQR.autoTesteOption(opt.rua, context.state.cidade));
 			break;
 		case 'servico':
-			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.servico1, opt.servico);
+			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.servico1,
+				await checkQR.autoTesteOption(opt.servico, context.state.cidade));
 			break;
 		case 'sendToTriagem':
 		case 'triagem': // this is the triagem-type of questionario

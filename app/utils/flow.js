@@ -124,18 +124,18 @@ module.exports = {
 		auto3: {
 			1: 'CTA de SP',
 			2: 'CTA de MG',
-			3: 'CTA de BA',
+			3: 'O autoteste pode ser retirado na clínica:\nCasarão da Diversidade, Rua do Tijolo, 08 - Pelourinho - Antiga Sede do IPAC\nAtendimento de seg-sex, de 09:00-16:00.',
 		},
 		ong1: 'É bom para quem não consegue ir até os serviços de saúde por causa do horário ou para quem quer um espaço diferente, mas gostaria de ser atendido por um profissional. Se você quiser este tipo de teste, posso te enviar o link com os locais e horários.',
 		ong2: {
 			1: 'ONG de SP',
 			2: 'ONG de MG',
-			3: 'ONG de BA',
+			3: 'Gapa Salvador\nRua Comendador Gomes Costa, 39 - Barris, Salvador - BA\nTelefone: (71) 3017-9216\nhttps://www.facebook.com/gapabahia',
 		},
 		rua1: 'É realização de testagem na rua e em ambientes de sociabilidade, com agenda, locais e horários variáveis. Acesso mais fácil e horários alternativos, pode ter um bem pertinho de você! Nossa agenda é variável, se quiser podemos te enviar o link para você ver se tem algo por perto.',
 		rua2: {
 			1: 'AGENDA de SP',
-			2: 'AGENDA de MG',
+			2: 'Centro de Referência da Juventude – CRJ: Rua Guaicurus, 50, Centro - Praça da Estação.',
 			3: 'AGENDA de BA',
 		},
 		servico1: 'Tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode tirar suas dúvidas e falar sobre prevenção combinada.',
