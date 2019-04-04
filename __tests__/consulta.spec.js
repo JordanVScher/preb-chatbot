@@ -18,20 +18,20 @@ jest.mock('../app/utils/consulta-aux');
 
 it('verConsulta - no appointments', async () => {
 	const context = cont.quickReplyContext('verConsulta', 'greetings');
-	context.state.consulta = {};
+	context.state.consulta = {}; context.state.user = {};
 	await consulta.verConsulta(context);
 
-	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeFalsy();
 	await expect(context.sendText).toBeCalledWith(flow.verConsulta.zero, await checkConsulta(context, opt.marcarConsulta));
 });
 
 it('verConsulta - one appointment', async () => {
 	const context = cont.quickReplyContext('verConsulta', 'greetings');
-	context.state.consulta = { appointments: [{ datetime_start: '' }] };
+	context.state.consulta = { appointments: [{ datetime_start: '' }] }; context.state.user = {};
 	await consulta.verConsulta(context);
 
-	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeTruthy();
 	for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
 		await expect(context.sendText).toBeCalledWith(''
@@ -44,45 +44,14 @@ it('verConsulta - one appointment', async () => {
 	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('showCities - no extraMessage', async () => {
-	const context = cont.quickReplyContext('getCity', 'greetings');
-	context.state.cities = { calendars: [{ city: 'a', id: '1' }] };
-	const options = [];
-	await consulta.showCities(context, options);
-
-	await expect(context.setState).toBeCalledWith({ cities: await prepApi.getAvailableCities() });
-	context.state.cities.calendars.forEach(async (element) => {
-		options.push({ content_type: 'text', title: element.city, payload: `city${element.id}` });
-	});
-
-	await expect(options.length === 1).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.consulta.city, { quick_replies: options });
-});
-
-it('showCities - with extraMessage', async () => {
-	const context = cont.quickReplyContext('getCity', '');
-	context.state.cities = { calendars: [{ city: 'a', id: '1' }, { city: 'b', id: '2' }] };
-	context.state.sendExtraMessages = true;
-	const options = [];
-	await consulta.showCities(context, options);
-
-	await expect(context.state.sendExtraMessages === true).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.quizYes.text3);
-
-	await expect(context.setState).toBeCalledWith({ cities: await prepApi.getAvailableCities() });
-	context.state.cities.calendars.forEach(async (element) => {
-		options.push({ content_type: 'text', title: element.city, payload: `city${element.id}` });
-	});
-
-	await expect(options.length === 2).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.consulta.city, { quick_replies: options });
-});
-
 it('showDays - success', async () => {
 	const context = cont.quickReplyContext('showDays', '');
 	context.state.freeDays = [{ foo: 'bar' }];
-	context.state.calendar = {};
+	context.state.calendar = {}; context.state.user = {};
 	await consulta.showDays(context);
+
+	await expect(context.setState).toBeCalledWith({ paginationDate: 1, paginationHour: 1 });
+	await expect(context.setState).toBeCalledWith({ cidade: context.state.user.city });
 
 	await expect(context.setState).toBeCalledWith({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) });
 	await expect(context.setState).toBeCalledWith({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) });
@@ -93,10 +62,17 @@ it('showDays - success', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.consulta.date, { quick_replies: context.state.freeDays });
 });
 
-it('showDays - error', async () => {
+it('showDays - error with extra message', async () => {
 	const context = cont.quickReplyContext('showDays', '');
-	context.state.calendar = {};
+	context.state.calendar = {}; context.state.user = {};
+	context.state.sendExtraMessages = true;
 	await consulta.showDays(context);
+
+	await expect(context.setState).toBeCalledWith({ paginationDate: 1, paginationHour: 1 });
+	await expect(context.setState).toBeCalledWith({ cidade: context.state.user.city });
+
+	await expect(context.state.sendExtraMessages === true).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.quizYes.text3);
 
 	await expect(context.setState).toBeCalledWith({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) });
 	await expect(context.setState).toBeCalledWith({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) });

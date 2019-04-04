@@ -112,7 +112,6 @@ module.exports = async (context) => {
 				await context.setState({ dialog: 'prompt' });
 				await createIssue(context);
 			}
-			// await createIssue(context, 'Não entendi sua mensagem pois ela é muito complexa. Você pode escrever novamente, de forma mais direta?');
 		} // -- end text
 
 		switch (context.state.dialog) {
@@ -121,7 +120,6 @@ module.exports = async (context) => {
 			await context.sendText(flow.greetings.text2);
 			await desafio.asksDesafio(context);
 			// await timer.sendCarouselSus(context, opt.sus);
-			// await consulta.getCity(context);
 			// await quiz.answerQuizA(context);
 			break;
 		case 'medicaçao':
@@ -184,19 +182,13 @@ module.exports = async (context) => {
 			await context.sendText(`${flow.joinToken.view} ${context.state.user.integration_token}`);
 			await mainMenu.sendMain(context);
 			break;
-		case 'getCity': // this is the regular type of consulta
-			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
-			await consulta.showCities(context);
-			break;
-		case 'getCity2': // this is the diferent type of consulta
-			await context.setState({ categoryConsulta: 'emergencial' });
-			await consulta.showCities(context);
-			break;
 		case 'checarConsulta':
 			await context.setState({ categoryConsulta: 'emergencial' });
 			await consulta.checarConsulta(context);
 			break;
+		case 'getCity':
 		case 'showDays':
+			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await consulta.showDays(context);
 			break;
 		case 'showHours':

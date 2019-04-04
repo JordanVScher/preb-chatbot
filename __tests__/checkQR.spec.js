@@ -13,7 +13,7 @@ it('checkAnsweredQuiz - no check', async () => {
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(newOptions.find(x => x.payload === 'beginQuiz') && context.state.user.finished_quiz === 1).toBeFalsy();
-	await expect(newOptions.find(x => x.payload === 'getCity') || newOptions.find(x => x.payload === 'verConsulta')).toBeFalsy();
+	await expect(newOptions.find(x => x.payload === 'showDays') || newOptions.find(x => x.payload === 'verConsulta')).toBeFalsy();
 	await expect(newOptions === opt.asksDesafio.quick_replies).toBeTruthy();
 });
 
@@ -26,11 +26,11 @@ it('checkAnsweredQuiz - verConsulta but quiz not finished and not eligible', asy
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(newOptions.find(x => x.payload === 'beginQuiz') && context.state.user.finished_quiz === 1).toBeFalsy();
-	await expect(newOptions.find(x => x.payload === 'getCity') || newOptions.find(x => x.payload === 'verConsulta')).toBeTruthy();
+	await expect(newOptions.find(x => x.payload === 'showDays') || newOptions.find(x => x.payload === 'verConsulta')).toBeTruthy();
 	await expect(context.state.is_eligible_for_research === true).toBeFalsy();
 
 	newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta');
-	newOptions = await newOptions.filter(obj => obj.payload !== 'getCity');
+	newOptions = await newOptions.filter(obj => obj.payload !== 'showDays');
 	await expect(newOptions === opt.greetings.quick_replies).toBeFalsy();
 	await expect(newOptions.length === 1).toBeTruthy();
 	await expect(newOptions[0].payload === 'beginQuiz').toBeTruthy();
@@ -49,7 +49,7 @@ it('checkAnsweredQuiz - verConsulta, quiz finished and eligible but no consulta'
 	newOptions = await newOptions.filter(obj => obj.payload !== 'beginQuiz'); // remove quiz option
 	await expect(newOptions.length === length - 1).toBeTruthy();
 
-	await expect(newOptions.find(x => x.payload === 'getCity') || newOptions.find(x => x.payload === 'verConsulta')).toBeTruthy();
+	await expect(newOptions.find(x => x.payload === 'showDays') || newOptions.find(x => x.payload === 'verConsulta')).toBeTruthy();
 	await expect(context.state.is_eligible_for_research === true).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeFalsy();
@@ -71,11 +71,11 @@ it('checkAnsweredQuiz - verConsulta, quiz finished and eligible with consulta', 
 	newOptions = await newOptions.filter(obj => obj.payload !== 'beginQuiz'); // remove quiz option
 	await expect(newOptions.length === length - 1).toBeTruthy();
 
-	await expect(newOptions.find(x => x.payload === 'getCity') || newOptions.find(x => x.payload === 'verConsulta')).toBeTruthy();
+	await expect(newOptions.find(x => x.payload === 'showDays') || newOptions.find(x => x.payload === 'verConsulta')).toBeTruthy();
 	await expect(context.state.is_eligible_for_research === true).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeTruthy();
-	newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option to schedule appointment because he scheduled one already
+	newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option to schedule appointment because he scheduled one already
 	await expect(newOptions.length === length - 2).toBeTruthy();
 });
 
@@ -90,8 +90,8 @@ it('checkConsulta - not eligible_for_research ', async () => {
 	await expect(context.state.user.is_eligible_for_research === 1).toBeFalsy();
 	newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta'); // remove option
 	newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option
-	newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-getCity'); // remove option
-	newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option
+	newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-showDays'); // remove option
+	newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option
 	await expect(newOptions.length === 0).toBeTruthy();
 });
 
@@ -124,8 +124,8 @@ it('checkConsulta - one consulta', async () => {
 	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeTruthy();
-	newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-getCity');
-	newOptions = await newOptions.filter(obj => obj.payload !== 'getCity');
+	newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-showDays');
+	newOptions = await newOptions.filter(obj => obj.payload !== 'showDays');
 
 	await expect(newOptions.length === 1).toBeTruthy();
 });
@@ -201,7 +201,7 @@ it('checkMainMenu - on audience and research, one consulta', async () => {
 	await expect(context.state.user.is_part_of_research === 1).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeTruthy();
-	newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' });
+	newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' });
 
 	await expect(newOptions.length === 1).toBeTruthy();
 });

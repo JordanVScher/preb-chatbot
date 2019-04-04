@@ -11,17 +11,17 @@ async function checkAnsweredQuiz(context, options) {
 	}
 
 	// if Options has the consulta options we have to check if the user is able to scheduled appointments
-	if (newOptions.find(x => x.payload === 'getCity') || newOptions.find(x => x.payload === 'verConsulta')) { // checks if we have the options
+	if (newOptions.find(x => x.payload === 'showDays') || newOptions.find(x => x.payload === 'verConsulta')) { // checks if we have the options
 		if (context.state.is_eligible_for_research === true) { // if user is eligible he can schedule appointments
 			await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
 			if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
-				newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option to schedule appointment because he scheduled one already
+				newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option to schedule appointment because he scheduled one already
 			} else { // if he has one we can show it to him
 				newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option to see consulta for there isn't any consulta available
 			}
 		} else { // user shouldn't be able to see these options if he is not eligible
 			newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option
-			newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option
+			newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option
 		}
 	}
 
@@ -37,8 +37,8 @@ async function checkConsulta(context, options) {
 	if (context.state.user.is_eligible_for_research === 1) {
 		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
 		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
-			newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-getCity'); // remove option to schedule appointment because he scheduled one already
-			newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option to schedule appointment because he scheduled one already
+			newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-showDays'); // remove option to schedule appointment because he scheduled one already
+			newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option to schedule appointment because he scheduled one already
 		} else { // if he has one we can show it to him
 			newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta'); // remove option to see consulta for there isn't any consulta available
 			newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option to see consulta for there isn't any consulta available
@@ -46,8 +46,8 @@ async function checkConsulta(context, options) {
 	} else { // user shouldn't be able to see these options if he is not eligible
 		newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta'); // remove option
 		newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option
-		newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-getCity'); // remove option
-		newOptions = await newOptions.filter(obj => obj.payload !== 'getCity'); // remove option
+		newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-showDays'); // remove option
+		newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option
 	}
 
 	return { quick_replies: newOptions };
@@ -67,7 +67,7 @@ async function checkMainMenu(context) {
 			if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
 				newOptions.push({ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' });
 			} else {
-				newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' });
+				newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' });
 			}
 		} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // 1 1
 			newOptions.push({ content_type: 'text', title: 'Pesquisa', payload: 'askResearch' });
