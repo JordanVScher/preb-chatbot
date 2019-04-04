@@ -49,7 +49,7 @@ const cidadeDictionary = {
 	3: 'Salvador - BA',
 };
 
-const telefoneDictionary = { 1: '11111-1111', 2: '2222-2222', 3: '33333-3333' };
+const telefoneDictionary = { 1: '11111-1111', 2: '2222-2222', 3: '(71) 3017-9216' };
 
 const locationDictionary = { 1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA' };
 

@@ -158,13 +158,6 @@ module.exports = {
 			{ content_type: 'text', title: 'Serviço', payload: 'servico' },
 		],
 	},
-	autotesteCidades: {
-		quick_replies: [
-			{ content_type: 'text', title: 'São Paulo - SP', payload: 'optAutoTeste1' },
-			{ content_type: 'text', title: 'Belo Horizonte - MG', payload: 'optAutoTeste2' },
-			{ content_type: 'text', title: 'Salvador - BA', payload: 'optAutoTeste3' },
-		],
-	},
 	autotesteEnd: {
 		quick_replies: [
 			{ content_type: 'text', title: 'ONG', payload: 'ong' },
