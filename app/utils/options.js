@@ -2,7 +2,7 @@ module.exports = {
 	greetings: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' },
-			{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
+			{ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' },
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
@@ -13,7 +13,7 @@ module.exports = {
 	},
 	marcarConsulta: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
+			{ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' },
 			{ content_type: 'text', title: 'Voltar', payload: 'mainMenu' },
 		],
 	},
@@ -39,7 +39,7 @@ module.exports = {
 	},
 	consulta: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
+			{ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' },
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
@@ -88,9 +88,9 @@ module.exports = {
 	},
 	saidYes: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-getCity' },
+			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-showDays' },
 			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-verConsulta' },
-			{ content_type: 'text', title: 'Não aceito', payload: 'getCity' },
+			{ content_type: 'text', title: 'Não aceito', payload: 'showDays' },
 			{ content_type: 'text', title: 'Não aceito', payload: 'verConsulta' }],
 	},
 	outrasDatas: {
@@ -106,7 +106,7 @@ module.exports = {
 	},
 	consultaFail: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Tentar de Novo', payload: 'getCity' },
+			{ content_type: 'text', title: 'Tentar de Novo', payload: 'showDays' },
 			{ content_type: 'text', title: 'Cancelar', payload: 'mainMenu' },
 		],
 	},
@@ -131,7 +131,7 @@ module.exports = {
 		},
 		sendConsulta: {
 			quick_replies: [
-				{ content_type: 'text', title: 'Marcar Consulta', payload: 'getCity' },
+				{ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' },
 				// { content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 				{ content_type: 'text', title: 'Voltar', payload: 'mainMenu' },
 			],
