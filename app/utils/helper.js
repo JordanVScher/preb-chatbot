@@ -49,9 +49,9 @@ const cidadeDictionary = {
 	3: 'Salvador - BA',
 };
 
-const telefoneDictionary = {
-	1: '11111-1111', 2: '2222-2222', 3: '33333-3333',
-};
+const telefoneDictionary = { 1: '11111-1111', 2: '2222-2222', 3: '33333-3333' };
+
+const locationDictionary = { 1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA' };
 
 async function buildTermosMessage() {
 	let text = 'As informações que você digitar neste chatbot poderão ser usadas para fins de pesquisa sobre percepções, conhecimento, aceitabilidade e intenção de usar a PrEP'
@@ -65,11 +65,10 @@ async function buildTermosMessage() {
 }
 
 async function addNewUser(context, prepAPI) {
-	const answer = await prepAPI.getRecipientPrep(context.session.user.id - 1);
-	if (answer.form_error || answer.error || !answer || !answer.id) {
+	await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
+	if (context.state.user.form_error || context.state.user.error || !context.state.user || !context.state.user.id) { // check i there was an error or if user doesnt exist
 		await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, `${context.session.user.first_name} ${context.session.user.last_name}`);
-	} else {
-		await context.setState({ user: answer });
+		await context.setState({ user: {} });
 	}
 }
 
@@ -113,6 +112,7 @@ module.exports.formatDate = formatDate;
 module.exports.weekDayName = weekDayName;
 module.exports.cidadeDictionary = cidadeDictionary;
 module.exports.telefoneDictionary = telefoneDictionary;
+module.exports.locationDictionary = locationDictionary;
 module.exports.buildTermosMessage = buildTermosMessage;
 module.exports.separateIntent = separateIntent;
 module.exports.checkSuggestWaitForTest = checkSuggestWaitForTest;
