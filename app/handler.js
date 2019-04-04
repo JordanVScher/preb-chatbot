@@ -44,7 +44,7 @@ module.exports = async (context) => {
 				// await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
-				// await context.setState({ dialog: 'triagem' });
+				// await context.setState({ dialog: 'autoTeste' });
 				await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1 }); // eslint-disable-line
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
@@ -65,9 +65,6 @@ module.exports = async (context) => {
 				await triagem.handleAnswer(context, context.state.lastQRpayload.replace('tria', ''));
 			} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
 				await quiz.AnswerExtraQuestion(context);
-			} else if (context.state.lastQRpayload.slice(0, 12) === 'optAutoTeste') {
-				await context.setState({ cidade: await context.state.lastQRpayload.replace('optAutoTeste', '') });
-				await context.setState({ dialog: 'optAutoTeste' });
 			} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
 				await context.setState({ dialog: 'showHours' });
 			} else if (context.state.lastQRpayload.slice(0, 4) === 'hora') {
@@ -265,9 +262,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
 			break;
 		case 'autoTeste':
-			await context.sendText(flow.autoTeste.cidade, opt.autotesteCidades);
-			break;
-		case 'optAutoTeste':
+			await context.setState({ cidade: context.state.user.city }); // getting location id
 			await context.sendText(flow.autoTeste.start, opt.autoteste);
 			break;
 		case 'auto':
