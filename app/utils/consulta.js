@@ -31,6 +31,7 @@ async function showDays(context) { // shows available days
 	await context.setState({ cidade: context.state.user.city }); // getting location id
 	if (context.state.sendExtraMessages === true) {
 		await context.sendText(flow.quizYes.text3);
+		await context.sendText(flow.quizYes.text4);
 	} else {
 		await context.sendText(flow.consulta.checar2);
 	}

@@ -56,10 +56,10 @@ module.exports = {
 	onTheResearch: {
 		text1: 'Vc é um close keriiiiiiiii! 😻',
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
-		text2: 'Amore, sabia q existem vários tipos de prevenções? Uma delas é o PreP, previne a infecção pelo HIV através de um remedinho, tipo pílula q vc toma todo dia e é gratuito pelo SUS, acredita?',
+		text2: 'Amore, sabia q existem vários tipos de prevenções? Uma delas é a PreP, previne a infecção pelo HIV através de um remedinho, tipo pílula q vc toma todo dia e é gratuito pelo SUS, acredita?',
 		extra: 'E aí, quer participar?',
-		AC5: 'E olha que bafo. Está rolando uma pesquisa bafônica com o pessoal das universidades (USP, UFMG e UFBA) para te acompanhar nessa lacração que você vive. Bora?',
-		saidYes: 'A qualquer momento você pode pedir para desistir de participar. Se você aceitar, clique em: Aceito',
+		AC5: 'E olha que bafo. Está rolando uma pesquisa bafônica com o pessoal das universidades (USP, UFMG e UFBA) pra oferecer PrEP e outros métodos pra jovens lacradoras como a senhaora. Bora?',
+		saidYes: 'A qualquer momento você pode pedir para desistir de participar. Se você aceitar, clique em: Li e Aceito',
 		naoAceitaTermos: 'Tudo bem bb!',
 	},
 	verConsulta: {
@@ -84,15 +84,16 @@ module.exports = {
 		done: 'Eiiiiii bonita! Vc já me respondeu tudo, agora é sua vez.',
 	},
 	quizNo: {
-		text1: 'Está na dúvida, bb? Tem um professor super fofo da USP q pediu pra eu te mandar um link, cata, aki explica tudinho:',
+		text1: 'Está na dúvida, bb? Tem um professor super fofo q pediu pra eu te mandar um link, cata, aki explica tudinho:',
 		text2: 'E aí? Não quer mesmo participar?',
 		text3: 'Tudo bem.',
 	},
 	quizYes: {
 		text1: 'Tem um professor super fofo da USP q pediu pra eu te mandar um link, cata, aki explica tudinho:',
-		text15: 'Ufa! Te perguntei tudim... antes da gente bater mais papo tem um texto q vc precisa ler. Sabe como é né, humanos adoram uma burocracia 🤭',
+		text15: 'Ufa! Te perguntei tudim... antes da gente bater mais papo, dá uma lidinha num texto que eu tenho pra vc? Sabe como é né, pesquisa não é bagunça e a gente quer proteger seus dados direitinho.',
 		text2: 'Cata outra dika, se tu kisé ser bem ligera pode preencher esse formulário antes mas pode fazer isso lá tb q é sucesso, táá? Vc decide! 😉',
-		text3: 'Cola na grade pra gente agendar sua primeira consulta, eu tenho uma agenda com horários e tudo, keride!! Bem de boa receber orientações baphos sobre tudoo!! 😉',
+		text3: 'Arrasou, keriii! A pesquisa rola em 3 cidades e eu serei sua agente virtual pra agendar seu encontro com a nossa ekipe - arrazei, né?',
+		text4: 'Cola na grade pra gente agendar o melhor dia pra vc, eu tenho uma agenda com horários e tudo, keride!! Vem de boa receber orientações baphos sobre tudoo!! 😉',
 	},
 	consulta: {
 		city: 'Qual cidade vc qr q eu agende??',
