@@ -13,6 +13,7 @@ async function sendAnswer(context) { // send answer from posicionamento
 		await MaAPI.logAskedEntity(context.session.user.id, context.state.politicianData.user_id, context.state.currentTheme.entities[0].id);
 
 		if (context.state.currentTheme.answer) { // if there's a text asnwer we send it
+			console.log('SendAnswer', context.state.currentTheme.answer);
 			await context.sendText(context.state.currentTheme.answer);
 		}
 		if (context.state.currentTheme.saved_attachment_type === 'image') { // if attachment is image

@@ -87,6 +87,9 @@ module.exports = async (context) => {
 					context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 			}
 		} else if (context.event.isText) {
+			console.log('--------------------------');
+			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
+			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: `${context.event.message.text}` });
 			if (context.state.onTextQuiz === true) {
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
