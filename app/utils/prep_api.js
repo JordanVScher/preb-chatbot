@@ -80,7 +80,14 @@ module.exports = {
 	},
 
 	async deleteQuizAnswer(fb_id) {
-		const res = await request.post(`${apiUri}/api/internal/delete-answers?`).query({ security_token: security_token2, fb_id });
+		let token = '';
+		if (security_token2 && security_token2.length > 0) {
+			token = security_token2;
+		} else {
+			token = security_token;
+		}
+
+		const res = await request.post(`${apiUri}/api/internal/delete-answers?`).query({ security_token: token, fb_id });
 		// console.log('deleteQuizAnswer', res);
 		const quizData = await res.json();
 
