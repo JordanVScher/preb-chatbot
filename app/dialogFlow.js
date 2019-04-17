@@ -10,7 +10,7 @@ async function checkPosition(context) {
 	await context.setState({ dialog: 'checkPositionFunc' });
 	await context.setState({ user: await getRecipientPrep(context.session.user.id) });
 
-
+	console.log('intentName', context.state.intentName);
 	switch (context.state.intentName) {
 	case 'Greetings': // user said hi
 		await context.setState({ dialog: 'greetings' });
@@ -44,6 +44,7 @@ async function checkPosition(context) {
 		break;
 	default: // default acts for every intent - position on MA
 		await context.setState({ knowledge: await MaAPI.getknowledgeBase(context.state.politicianData.user_id, context.state.apiaiResp, context.session.user.id) });
+		console.log('knowledge', context.state.knowledge);
 		// console.log('knowledge', context.state.knowledge);
 		// check if there's at least one answer in knowledge_base
 		if (context.state.knowledge && context.state.knowledge.knowledge_base && context.state.knowledge.knowledge_base.length >= 1) {
