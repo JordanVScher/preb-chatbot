@@ -16,6 +16,7 @@ async function answerQuizA(context) {
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
+	console.log('categoryQuestion', context.state.categoryQuestion);
 
 	// user already answered the quiz (user shouldn't be here)
 	if ((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)) {
