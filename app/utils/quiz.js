@@ -7,7 +7,7 @@ const flow = require('./flow');
 async function answerQuizA(context) {
 	await context.typingOn();
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-
+	console.log(context.state.user);
 	if (context.state.user.is_target_audience === 0) {
 		await context.setState({ categoryQuestion: 'fun_questions' });
 	} else {

@@ -75,7 +75,7 @@ module.exports = {
 		} catch (error) {
 			quizData = { error: `error: ${error}` };
 		}
-		console.log(quizData);
+		// console.log(quizData);
 		return quizData;
 	},
 
