@@ -31,10 +31,7 @@ module.exports = async (context) => {
 			// session: JSON.stringify(context.state),
 		});
 
-		await help.addNewUser(context, prepAPI);
-		await timer.deleteTimers(context.session.user.id);
-		// await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-		// console.log(context.state.user);
+		console.log('user', context.state.user);
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
