@@ -33,7 +33,7 @@ module.exports = async (context) => {
 
 		await help.addNewUser(context, prepAPI);
 		await timer.deleteTimers(context.session.user.id);
-		console.log('user', context.state.user);
+		// console.log('user', context.state.user);
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
