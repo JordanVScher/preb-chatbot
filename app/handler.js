@@ -255,7 +255,7 @@ module.exports = async (context) => {
 			break;
 		case 'autoTeste':
 			await context.setState({ cidade: context.state.user.city }); // getting location id
-			await context.setState({ cidade: 2 }); // getting location id
+			console.log(context.state.user.city);
 			await context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.cidade));
 			break;
 		case 'auto':
