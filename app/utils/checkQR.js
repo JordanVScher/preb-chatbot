@@ -127,7 +127,7 @@ async function autoTesteOption(options, cityId) {
 		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
 		newOptions = await newOptions.filter(obj => obj.payload !== 'auto');
 	}
-
+	console.log('newOptions', newOptions);
 	return { quick_replies: newOptions };
 }
 
