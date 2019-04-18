@@ -31,6 +31,8 @@ module.exports = async (context) => {
 			// session: JSON.stringify(context.state),
 		});
 
+		await help.addNewUser(context, prepAPI);
+		await timer.deleteTimers(context.session.user.id);
 		console.log('user', context.state.user);
 
 		if (context.event.isPostback) {
