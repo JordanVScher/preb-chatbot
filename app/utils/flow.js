@@ -107,6 +107,7 @@ module.exports = {
 		checar1: 'Beee, bocê já tem consulta marcada:',
 		checar2: 'Bora! Vamos marcar uma nova consulta:',
 		outrasDatas: 'Estas datas não estão boas para você, entre em contato conosco pelo número WhatsApp:',
+		salvadorMsg: 'Traga seu documento e cartão SUS. Caso não tenha entre em contato pelo telefone informado para receber orientações.',
 	},
 	prevention: {
 		text1: 'Keride, colocar capinha é importante, até pq não previne só HIV nééé?? Mas não é o único método não!',
