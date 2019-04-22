@@ -23,7 +23,8 @@ it('endQuiz - not target audience', async () => {
 	context.state.user = { is_target_audience: 0 };
 	await aux.endQuiz(context, prepApi);
 
-	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: '' });
 	await expect(context.state.user.is_target_audience === 0).toBeTruthy();
 	await expect(research.notPart).toBeCalledWith(context);
 });
@@ -33,7 +34,7 @@ it('endQuiz - target audience and not eligible', async () => {
 	context.state.user = { is_target_audience: 1, is_eligible_for_research: 0 };
 	await aux.endQuiz(context, prepApi);
 
-	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: '' });
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
 	await expect(context.state.user.is_eligible_for_research === 1).toBeFalsy();
 	await expect(research.notEligible).toBeCalledWith(context);
@@ -44,7 +45,7 @@ it('endQuiz - target audience and eligible', async () => {
 	context.state.user = { is_target_audience: 1, is_eligible_for_research: 1 };
 	await aux.endQuiz(context, prepApi);
 
-	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: '' });
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
 	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
 	await expect(research.onTheResearch).toBeCalledWith(context);

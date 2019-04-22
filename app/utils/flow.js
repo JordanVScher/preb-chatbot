@@ -110,6 +110,7 @@ module.exports = {
 		view: 'More, não falte, ta bem? Importante 😉',
 		checar1: 'Beee, bocê já tem consulta marcada:',
 		checar2: 'Bora! Vamos marcar uma nova consulta:',
+		emptyCalendar: 'Não temos nenhuma data disponível. Tente novamente mais tarde.',
 		outrasDatas: 'Estas datas não estão boas para você, entre em contato conosco pelo número WhatsApp:',
 		salvadorMsg: 'Traga seu documento e cartão SUS. Caso não tenha entre em contato pelo telefone informado para receber orientações.',
 	},

@@ -46,8 +46,8 @@ it('verConsulta - one appointment', async () => {
 
 it('showDays - success', async () => {
 	const context = cont.quickReplyContext('showDays', '');
-	context.state.freeDays = [{ foo: 'bar' }];
-	context.state.calendar = {}; context.state.user = {};
+	context.state.freeDays = [{ foo: 'bar' }]; context.state.calendar = { dates: ['foo'] };
+	context.state.user = {};
 	await consulta.showDays(context);
 
 	await expect(context.setState).toBeCalledWith({ paginationDate: 1, paginationHour: 1 });
@@ -55,6 +55,7 @@ it('showDays - success', async () => {
 
 	await expect(context.setState).toBeCalledWith({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) });
 	await expect(context.setState).toBeCalledWith({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) });
+	await expect(context.state.calendar && context.state.calendar.dates && context.state.calendar.dates.length > 0).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ freeTime: await aux.cleanDates(context.state.calendar.dates) });
 	await expect(context.setState).toBeCalledWith({ freeDays: await aux.separateDaysQR(context.state.freeTime, context.state.calendarNext, context.state.paginationDate) });
@@ -64,7 +65,7 @@ it('showDays - success', async () => {
 
 it('showDays - error with extra message', async () => {
 	const context = cont.quickReplyContext('showDays', '');
-	context.state.calendar = {}; context.state.user = {};
+	context.state.calendar = {}; context.state.user = {}; context.state.calendar = { dates: ['foo'] };
 	context.state.sendExtraMessages = true;
 	await consulta.showDays(context);
 
@@ -76,6 +77,7 @@ it('showDays - error with extra message', async () => {
 
 	await expect(context.setState).toBeCalledWith({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) });
 	await expect(context.setState).toBeCalledWith({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) });
+	await expect(context.state.calendar && context.state.calendar.dates && context.state.calendar.dates.length > 0).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ freeTime: await aux.cleanDates(context.state.calendar.dates) });
 	await expect(context.setState).toBeCalledWith({ freeDays: await aux.separateDaysQR(context.state.freeTime, context.state.calendarNext, context.state.paginationDate) });
@@ -83,11 +85,25 @@ it('showDays - error with extra message', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.consulta.fail1, opt.consultaFail);
 });
 
+it('showDays - empty calendar', async () => {
+	const context = cont.quickReplyContext('showDays', '');
+	context.state.calendar = {}; context.state.user = {}; context.state.calendar = {};
+	await consulta.showDays(context);
+
+	await expect(context.setState).toBeCalledWith({ paginationDate: 1, paginationHour: 1 });
+	await expect(context.setState).toBeCalledWith({ cidade: context.state.user.city });
+
+	await expect(context.setState).toBeCalledWith({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate) });
+	await expect(context.setState).toBeCalledWith({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId, context.state.paginationDate + 1) });
+
+	await expect(context.state.calendar && context.state.calendar.dates && context.state.calendar.dates.length > 0).toBeFalsy();
+	await expect(context.sendText).toBeCalledWith(flow.consulta.emptyCalendar);
+});
+
 it('showHours - success', async () => {
 	const context = cont.quickReplyContext('showDays', '');
 	context.state.freeHours = [{ foo: 'bar' }];
-	context.state.chosenDay = {};
-	context.state.freeTime = [];
+	context.state.chosenDay = {}; context.state.freeTime = [];
 	const ymd = 'foobar';
 	await consulta.showHours(context, ymd);
 
@@ -100,8 +116,7 @@ it('showHours - success', async () => {
 
 it('showHours - error', async () => {
 	const context = cont.quickReplyContext('showDays', '');
-	context.state.chosenDay = {};
-	context.state.freeTime = [];
+	context.state.chosenDay = {}; context.state.freeTime = [];
 	const ymd = 'foobar';
 	await consulta.showHours(context, ymd);
 
@@ -112,9 +127,9 @@ it('showHours - error', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.consulta.fail2, opt.consultaFail);
 });
 
-it('finalDate - success', async () => {
+it('finalDate - success with salvador msg', async () => {
 	const context = cont.quickReplyContext('showDays', '');
-	context.state.chosenDay = { hours: [] };
+	context.state.chosenDay = { hours: [] }; context.state.user = { city: '3' };
 	context.state.calendar = {}; context.state.chosenHour = {}; context.state.response = { id: '1' };
 	const quota = '0';
 	await consulta.finalDate(context, quota);
@@ -130,9 +145,12 @@ it('finalDate - success', async () => {
 
 	await expect(context.state.response && context.state.response.id && context.state.response.id.length > 0).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(`${flow.consulta.success}`
-		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
-		+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+	+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
+	+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
+	+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+
+	await expect(context.state.user && context.state.user.city === '3').toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.consulta.salvadorMsg);
 
 	await expect(context.state.sendExtraMessages === true).toBeFalsy();
 	await expect(context.setState).toBeCalledWith({ sendExtraMessages: false });
@@ -141,7 +159,7 @@ it('finalDate - success', async () => {
 
 it('finalDate - success with extra message', async () => {
 	const context = cont.quickReplyContext('showDays', '');
-	context.state.chosenDay = { hours: [] };
+	context.state.chosenDay = { hours: [] }; context.state.user = {};
 	context.state.calendar = {}; context.state.chosenHour = {};	context.state.response = { id: '1' };
 	context.state.sendExtraMessages = true;
 	const quota = '0';
@@ -161,6 +179,8 @@ it('finalDate - success with extra message', async () => {
 		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
 		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 		+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+
+	await expect(context.state.user && context.state.user.city === '3').toBeFalsy();
 
 	await expect(context.state.sendExtraMessages === true).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ sendExtraMessages: false });

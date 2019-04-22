@@ -68,9 +68,8 @@ module.exports.sendTermos = async (context) => {
 	await context.sendText(flow.onTheResearch.saidYes, opt.termos);
 };
 
-module.exports.endQuiz = async (context, prepApi) => {
+module.exports.endQuiz = async (context) => {
 	await context.setState({ categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
 		await research.notPart(context); // não é parte do público alvo
 	} else if (context.state.user.is_eligible_for_research === 1) { // elegível pra pesquisa

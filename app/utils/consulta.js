@@ -11,7 +11,7 @@ const aux = require('./consulta-aux');
 // const { mockDates } = require('./mock-dates');
 
 async function sendSalvador(context) {
-	if (context.state.user.city === '3') { await context.sendText(flow.consulta.salvadorMsg); }
+	if (context.state.user && context.state.user.city === '3') { await context.sendText(flow.consulta.salvadorMsg); }
 }
 
 async function verConsulta(context) {
@@ -34,7 +34,7 @@ async function verConsulta(context) {
 async function showDays(context) { // shows available days
 	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
 	await context.setState({ cidade: context.state.user.city }); // getting location id
-	console.log('context.state.cidade', context.state.cidade, typeof context.state.cidade);
+	// console.log('context.state.cidade', context.state.cidade, typeof context.state.cidade);
 	if (context.state.sendExtraMessages === true) {
 		await context.sendText(flow.quizYes.text3);
 		await context.sendText(flow.quizYes.text4);
@@ -44,7 +44,7 @@ async function showDays(context) { // shows available days
 
 	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cidade, context.state.paginationDate) }); // getting calendar
 	await context.setState({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cidade, context.state.paginationDate + 1) }); // getting next page
-	console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
+	// console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
 	// await context.setState({ calendar: mockDates[context.state.paginationDate] });
 	// await context.setState({ calendarNext: mockDates[context.state.paginationDate + 1] }); // getting next page
 	if (context.state.calendar && context.state.calendar.dates && context.state.calendar.dates.length > 0) {
@@ -56,7 +56,7 @@ async function showDays(context) { // shows available days
 			await context.sendText(flow.consulta.fail1, opt.consultaFail); // Eita! Bb, parece que ocorreu um erro. Você pode tentar novamente mais tarde.
 		}
 	} else {
-		await context.sendText('Não temos nenhuma data disponível. Tente novamente mais tarde.');
+		await context.sendText(flow.consulta.emptyCalendar);
 	}
 }
 

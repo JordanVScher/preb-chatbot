@@ -41,8 +41,6 @@ module.exports = {
 	},
 
 	async getRecipientPrep(fb_id) {
-		// console.log('fb_id', fb_id);
-
 		const res = await request.get(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id });
 		// console.log('getRecipientPrep', res);
 		const recipientData = await res.json();
@@ -166,15 +164,15 @@ module.exports = {
 
 	async postSignature(fb_id, url) {
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/term-signature?security_token=${security_token}&`).query({ fb_id, url });
-		console.log('postSignature', res);
 		const sign = await res.json();
+		// console.log('postSignature', res);
 		return sign;
 	},
 
 	async resetTriagem(fb_id) {
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/reset-screening?security_token=${security_token}&`).query({ fb_id });
 		const sign = await res.json();
-		console.log('postSignature', sign);
+		// console.log('postSignature', sign);
 		return sign;
 	},
 };

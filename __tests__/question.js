@@ -40,6 +40,7 @@ module.exports.nullQuestion = {
 };
 
 module.exports.notFinished = { finished_quiz: 0, id: 75 };
+module.exports.finishedIsTarget = { finished_quiz: 1, id: 75, is_target_audience: 0 };
 module.exports.finished = {
 	finished_quiz: 1, id: 76, is_eligible_for_research: 1,	is_part_of_research: 1,
 };

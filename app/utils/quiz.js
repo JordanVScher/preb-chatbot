@@ -41,7 +41,6 @@ async function answerQuizA(context) {
 			await context.setState({ onTextQuiz: true });
 			await context.sendText(context.state.currentQuestion.text);
 		}
-		// } // -- not AC5
 		await context.typingOff();
 	} // -- answering quiz else
 }
