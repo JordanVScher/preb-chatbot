@@ -120,14 +120,14 @@ async function checkMedication(context) { // eslint-disable-line
 async function autoTesteOption(options, cityId) {
 	let newOptions = options.quick_replies;
 	// no need to filter out cityId = 1
-	if (cityId === 2) {
+	if (cityId === '2') {
 		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
 		newOptions = await newOptions.filter(obj => obj.payload !== 'ong');
-	} else if (cityId === 3) {
+	} else if (cityId === '3') {
 		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
 		newOptions = await newOptions.filter(obj => obj.payload !== 'auto');
 	}
-	console.log('newOptions', newOptions);
+	console.log('autoTesteOption', newOptions);
 	return { quick_replies: newOptions };
 }
 

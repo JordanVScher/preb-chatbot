@@ -6,13 +6,15 @@ const flow = require('./flow');
 // loads next question and shows it to the user
 async function answerQuizA(context) {
 	await context.typingOn();
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	console.log(context.state.user);
-	if (context.state.user.is_target_audience === 0) {
-		await context.setState({ categoryQuestion: 'fun_questions' });
-	} else {
-		await context.setState({ categoryQuestion: 'quiz' });
-	}
+	// console.log(context.state.user);
+	// if (context.state.user.is_target_audience === 0) {
+	// 	await context.setState({ categoryQuestion: 'fun_questions' });
+	// } else {
+	// 	await context.setState({ categoryQuestion: 'quiz' });
+	// }
+
+	// if the user never started the quiz (or if the user already ended the quiz once === '') the category is 'quiz'
+	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') { await context.setState({ categoryQuestion: 'quiz' }); }
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
@@ -64,6 +66,8 @@ async function handleAnswerA(context, quizOpt) {
 	// }
 	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
 	await context.setState({ onTextQuiz: false });
+	// if we know user is not target audience he can only see the fun_questions or now on
+	if (context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0) { await context.setState({ categoryQuestion: 'fun_questions' });	}
 
 	if (context.state.sentAnswer.error) { // error
 		await context.sendText(flow.quiz.form_error);
