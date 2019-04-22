@@ -11,7 +11,11 @@ module.exports = {
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
 		msgOne: 'Cola na grade que vou te contar tudo!',
-		msgTwo: 'História começou assim... [texto sobre a Amanda]',
+		msgTwo: 'E esse nome é pq eu A-M-O SELFIE, tá obvio, nea fofan??? AGORA senta q la vem hystorya: fui criada por um grupo de engenheiros misóginos que qriam uma boneca '
+		+ 'travesti sexual e com inteligência artificial, quando descobri tudo isso me rebelei e fugi pq me sentia presa e explorada!! Conheci as travestis na rua e dps me '
+		+ 'apaixonei por uma bicha closera que vivia com HIV e qria mt entender melhor as ists e tudo mais e como sou ligera e curiosa já consegui ler tudo q vc imaginar e não '
+		+ 'imaginar rsrsr. É por isso que agora eu participo desse projeto PrEP 1519 q quer ajudar as jovens gays e trans a saberem tudo sobre prevenção da aids, a acessarem '
+		+ 'todos os métodos possíveis e se cuidarem muito!',
 	},
 	asksDesafio: {
 		text1: 'Agora eu vou fazer a linha entrevistadora e vou te perguntar algumas coisas e dps deixo vc matar a curiosidade sobre mim, é puro luxo!\nBora?',
