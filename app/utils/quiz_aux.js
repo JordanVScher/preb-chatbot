@@ -8,17 +8,13 @@ const help = require('./helper');
 // const { checarConsulta } = require('./consulta');
 
 
-async function endTriagem(context) {
+module.exports.endTriagem = async (context) => {
 	await context.setState({ dialog: 'endTriagem' });
-	console.log('result', context.state.sentAnswer);
+	console.log('result endTriagem', context.state.sentAnswer);
 
 	if (context.state.sentAnswer && context.state.sentAnswer.suggest_wait_for_test === 1) {
-		console.log('entrei aqui');
-
 		await context.setState({ suggestWaitForTest: true });
 	} else {
-		console.log('passei nessa');
-
 		await context.setState({ suggestWaitForTest: false });
 	}
 
@@ -44,10 +40,10 @@ async function endTriagem(context) {
 	} else {
 		await sendMain(context);
 	}
-}
+};
 
 // builds quick_repliy menu from the question answer options
-async function buildMultipleChoice(question, complement) {
+module.exports.buildMultipleChoice = async (question, complement) => {
 	// complement -> quiz or triagem to put on the button payload for each type of quiz
 	const qrButtons = [];
 	Object.keys(question.multiple_choices).forEach(async (element) => {
@@ -59,23 +55,22 @@ async function buildMultipleChoice(question, complement) {
 			qrButtons.push({ content_type: 'text', title: await capQR(element.label), payload: `extraQuestion${index}` });
 		});
 	}
-
 	return { quick_replies: qrButtons };
-}
+};
 
-async function sendTermos(context) {
+module.exports.sendTermos = async (context) => {
 	if (context.state.user.is_eligible_for_research === 1) {
 		await context.sendText(flow.onTheResearch.text1);
 		await context.sendImage(flow.onTheResearch.gif);
 	}
-
 	await context.setState({ dialog: 'seeTermos' });
 	await context.sendText(flow.quizYes.text15);
 	await context.sendButtonTemplate(await help.buildTermosMessage(), opt.TCLE);
 	await context.sendText(flow.onTheResearch.saidYes, opt.termos);
-}
+};
 
-async function endQuiz(context, prepApi) {
+module.exports.endQuiz = async (context, prepApi) => {
+	await context.setState({ categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
 		await research.notPart(context); // não é parte do público alvo
@@ -84,9 +79,4 @@ async function endQuiz(context, prepApi) {
 	} else {
 		await research.notEligible(context); // não elegível pra pesquisa
 	}
-}
-
-module.exports.buildMultipleChoice = buildMultipleChoice;
-module.exports.endTriagem = endTriagem;
-module.exports.sendTermos = sendTermos;
-module.exports.endQuiz = endQuiz;
+};
