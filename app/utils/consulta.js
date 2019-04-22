@@ -14,7 +14,6 @@ async function sendSalvador(context) {
 	if (context.state.user.city === '3') { await context.sendText(flow.consulta.salvadorMsg); }
 }
 
-
 async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
@@ -24,8 +23,8 @@ async function verConsulta(context) {
 			+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`);
 		}
-		await context.sendText(flow.consulta.view);
 		await sendSalvador(context);
+		await context.sendText(flow.consulta.view);
 		await sendMain(context);
 	} else {
 		await context.sendText(flow.verConsulta.zero, await checkConsulta(context, opt.marcarConsulta));
