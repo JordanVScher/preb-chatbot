@@ -10,6 +10,11 @@ const aux = require('./consulta-aux');
 
 // const { mockDates } = require('./mock-dates');
 
+async function sendSalvador(context) {
+	if (context.state.user.city === '3') { await context.sendText(flow.consulta.salvadorMsg); }
+}
+
+
 async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
@@ -20,6 +25,7 @@ async function verConsulta(context) {
 			+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`);
 		}
 		await context.sendText(flow.consulta.view);
+		await sendSalvador(context);
 		await sendMain(context);
 	} else {
 		await context.sendText(flow.verConsulta.zero, await checkConsulta(context, opt.marcarConsulta));
@@ -29,6 +35,7 @@ async function verConsulta(context) {
 async function showDays(context) { // shows available days
 	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
 	await context.setState({ cidade: context.state.user.city }); // getting location id
+	console.log('context.state.cidade', context.state.cidade, typeof context.state.cidade);
 	if (context.state.sendExtraMessages === true) {
 		await context.sendText(flow.quizYes.text3);
 		await context.sendText(flow.quizYes.text4);
@@ -43,8 +50,6 @@ async function showDays(context) { // shows available days
 	// await context.setState({ calendarNext: mockDates[context.state.paginationDate + 1] }); // getting next page
 	if (context.state.calendar && context.state.calendar.dates && context.state.calendar.dates.length > 0) {
 		await context.setState({ freeTime: await aux.cleanDates(context.state.calendar.dates) }); // all the free time slots we have
-
-
 		await context.setState({ freeDays: await aux.separateDaysQR(context.state.freeTime, context.state.calendarNext, context.state.paginationDate) }); // builds buttons options
 		if (context.state.freeDays && context.state.freeDays.length > 0) {
 			await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays });
@@ -90,6 +95,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
 		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 		+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`);
+		await sendSalvador(context);
 		if (context.state.sendExtraMessages === true) {
 			await context.setState({ sendExtraMessages: false });
 			await context.sendButtonTemplate(flow.quizYes.text2, opt.questionario);
@@ -115,6 +121,8 @@ async function checarConsulta(context) {
 			+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`);
 		}
+
+		await sendSalvador(context);
 		await sendMain(context);
 	} else {
 		await showDays(context);

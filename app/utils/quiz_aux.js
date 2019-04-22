@@ -7,7 +7,6 @@ const { sendMain } = require('./mainMenu');
 const help = require('./helper');
 // const { checarConsulta } = require('./consulta');
 
-
 module.exports.endTriagem = async (context) => {
 	await context.setState({ dialog: 'endTriagem' });
 	console.log('result endTriagem', context.state.sentAnswer);

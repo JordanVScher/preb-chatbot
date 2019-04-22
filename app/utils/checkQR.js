@@ -73,8 +73,8 @@ async function checkMainMenu(context) {
 		} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // 0 1
 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
 		} else if (context.state.user.finished_quiz === 0) { // 0
-			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
 		}
 	} else { // not on target audience, may send quiz if there's still any fun_question to be answered
 		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
@@ -121,10 +121,10 @@ async function checkMedication(context) { // eslint-disable-line
 async function autoTesteOption(options, cityId) {
 	let newOptions = options.quick_replies;
 	// no need to filter out cityId = 1
-	if (cityId === '2') {
+	if (cityId === '2') { // belo horizonte
 		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
 		newOptions = await newOptions.filter(obj => obj.payload !== 'ong');
-	} else if (cityId === '3') {
+	} else if (cityId === '3') { // salvador
 		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
 		newOptions = await newOptions.filter(obj => obj.payload !== 'auto');
 	}
