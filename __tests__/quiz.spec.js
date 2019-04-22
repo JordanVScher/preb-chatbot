@@ -10,15 +10,18 @@ const prepApi = require('../app/utils/prep_api');
 jest.mock('../app/utils/quiz_aux');
 jest.mock('../app/utils/prep_api');
 
-it('AnswerExtraQuestion - multiple choice - 5 more', async () => {
+it('answerQuizA - multiple choice - 5 more - empty category', async () => {
 	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
-	context.state.currentQuestion = question.regularMultipleChoice; context.state.categoryQuestion = 'quiz';
+	context.state.currentQuestion = question.regularMultipleChoice; context.state.categoryQuestion = '';
 	context.state.user = { is_target_audience: 1 };
 	await quiz.answerQuizA(context);
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.typingOn).toBeCalled();
+	await expect(!context.state.categoryQuestion || context.state.categoryQuestion === '').toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
+	context.state.categoryQuestion = 'quiz'; // change quiz value
+	await quiz.answerQuizA(context);
 
 	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
@@ -26,13 +29,31 @@ it('AnswerExtraQuestion - multiple choice - 5 more', async () => {
 	await expect(context.state.currentQuestion.count_more === 5).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.quiz.count2);
 
-	await expect(context.state.currentQuestion.code === 'AC5').toBeFalsy();
 	await expect(context.state.currentQuestion.type === 'multiple_choice').toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion));
 	await expect(context.typingOff).toBeCalled();
 });
 
-it('AnswerExtraQuestion - open text - 10 more', async () => {
+it('answerQuizA - multiple choice - 5 more - fun_questions', async () => {
+	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
+	context.state.currentQuestion = question.regularMultipleChoice; context.state.categoryQuestion = 'fun_questions';
+	context.state.user = { is_target_audience: 1 };
+	await quiz.answerQuizA(context);
+
+	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.typingOn).toBeCalled();
+	await expect(!context.state.categoryQuestion || context.state.categoryQuestion === '').toBeFalsy();
+
+	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
+	await expect(context.state.categoryQuestion === 'quiz').toBeFalsy();
+
+	await expect(context.state.currentQuestion.type === 'multiple_choice').toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion));
+	await expect(context.typingOff).toBeCalled();
+});
+
+it('answerQuizA - open text - 10 more - quiz category', async () => {
 	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
 	context.state.currentQuestion = question.regularOpenText; context.state.categoryQuestion = 'quiz';
 	context.state.user = { is_target_audience: 1 };
@@ -40,7 +61,7 @@ it('AnswerExtraQuestion - open text - 10 more', async () => {
 
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.typingOn).toBeCalled();
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
+	await expect(!context.state.categoryQuestion || context.state.categoryQuestion === '').toBeFalsy();
 
 	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
@@ -48,7 +69,6 @@ it('AnswerExtraQuestion - open text - 10 more', async () => {
 	await expect(context.state.currentQuestion.count_more === 10).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.quiz.count1);
 
-	await expect(context.state.currentQuestion.code === 'AC5').toBeFalsy();
 	await expect(context.state.currentQuestion.type === 'open_text').toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: true });
 	await expect(context.sendText).toBeCalledWith(context.state.currentQuestion.text);
@@ -135,6 +155,7 @@ it('handleAnswerA - regular answer - finished and target audience', async () => 
 		),
 	});
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
+	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeFalsy();
 
 	await expect(context.state.sentAnswer.error).toBeFalsy();
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
@@ -144,6 +165,27 @@ it('handleAnswerA - regular answer - finished and target audience', async () => 
 	await expect(aux.sendTermos).toBeCalledWith(context);
 });
 
+it('handleAnswerA - regular answer - is not target audience', async () => {
+	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
+	context.state.currentQuestion = question.nullQuestion; context.state.sentAnswer = question.finishedIsTarget;
+	const quizOpt = 'a resposta';
+	await quiz.handleAnswerA(context);
+
+	await expect(context.setState).toBeCalledWith({
+		sentAnswer: await prepApi.postQuizAnswer(
+			context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt,
+		),
+	});
+	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
+	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'fun_questions' });
+
+	await expect(context.state.sentAnswer.error).toBeFalsy();
+	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
+	await expect(((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
+		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0))).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
+});
 
 it('handleAnswerA - internal error', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
