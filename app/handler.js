@@ -314,7 +314,7 @@ module.exports = async (context) => {
 		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
 
 		await help.Sentry.configureScope(async (scope) => { // sending to sentry
-			scope.setUser({ username: context.session.user.first_name });
+			scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
 			scope.setExtra('state', context.state);
 			throw error;
 		});
