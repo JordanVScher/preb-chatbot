@@ -18,7 +18,7 @@ module.exports.sendAnswer = async (context) => { // send answer from posicioname
 		}
 		try {
 			if (context.state.currentTheme.saved_attachment_type === 'image') { // if attachment is image
-				await context.sendImage({ attachment_id: context.state.currentTheme.saved_attachment_id + 1 });
+				await context.sendImage({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
 			if (context.state.currentTheme.saved_attachment_type === 'video') { // if attachment is video
 				await context.sendVideo({ attachment_id: context.state.currentTheme.saved_attachment_id });
