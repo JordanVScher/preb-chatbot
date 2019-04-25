@@ -153,6 +153,9 @@ module.exports = async (context) => {
 		case 'mainMenu':
 			await mainMenu.sendMain(context);
 			break;
+		case 'desafioRecusado':
+			await desafio.desafioRecusado(context);
+			break;
 		case 'beginQuiz':
 			await context.setState({ startedQuiz: true });
 			await context.sendText(flow.quiz.beginQuiz);
