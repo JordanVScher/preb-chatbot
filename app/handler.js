@@ -44,7 +44,6 @@ module.exports = async (context) => {
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
 				// await context.setState({ dialog: 'autoTeste' });
-				// await context.setState({ dialog: 'outrasDatas' });
 				await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1 }); // eslint-disable-line
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });

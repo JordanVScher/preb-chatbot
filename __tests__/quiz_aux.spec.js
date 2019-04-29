@@ -62,7 +62,7 @@ it('sendTermos - is_eligible_for_research', async () => {
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos' });
 	await expect(context.sendText).toBeCalledWith(flow.quizYes.text15);
-	await expect(context.sendButtonTemplate).toBeCalledWith(help.buildPhoneMsg(context.state.user.city, flow.onTheResearch.buildTermos), opt.TCLE);
+	await expect(context.sendButtonTemplate).toBeCalledWith(help.buildPhoneMsg(undefined, flow.onTheResearch.buildTermos), opt.TCLE);
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, opt.termos);
 });
 
@@ -75,7 +75,7 @@ it('sendTermos - not eligible_for_research', async () => {
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos' });
 	await expect(context.sendText).toBeCalledWith(flow.quizYes.text15);
-	await expect(context.sendButtonTemplate).toBeCalledWith(help.buildPhoneMsg(context.state.user.city, flow.onTheResearch.buildTermos), opt.TCLE);
+	await expect(context.sendButtonTemplate).toBeCalledWith(help.buildPhoneMsg(undefined, flow.onTheResearch.buildTermos), opt.TCLE);
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, opt.termos);
 });
 
