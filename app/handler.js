@@ -44,6 +44,7 @@ module.exports = async (context) => {
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'beginQuiz' });
 				// await context.setState({ dialog: 'autoTeste' });
+				// await context.setState({ dialog: 'outrasDatas' });
 				await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1 }); // eslint-disable-line
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
@@ -219,10 +220,7 @@ module.exports = async (context) => {
 			await consulta.verConsulta(context);
 			break;
 		case 'outrasDatas':
-			await context.sendText(`${flow.consulta.outrasDatas}
-			       \nSão Paulo - SP: ${help.telefoneDictionary[1]}`
-				+ `\nBelo Horizonte - MG: ${help.telefoneDictionary[2]}`
-				+ `\nSalvador - BA: ${help.telefoneDictionary[3]}`, opt.outrasDatas);
+			await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrasDatas), opt.outrasDatas);
 			break;
 		case 'listaDatas':
 			await context.setState({ paginationDate: 1, paginationHour: 1 });

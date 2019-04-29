@@ -27,7 +27,7 @@ async function waitTypingEffect(context, waitTime = 2500) {
 // separate intent
 const duvida = ['Como Pega Chato', 'Como Pega Clamidia', 'Como Pega Gonorreia', 'Como Pega Hepatite A', 'Como Pega Hepatite B', 'Como Pega HIV', 'Como Pega IST', 'Como Pega Sifilis', 'Sexo oral', 'Passivo ITS', 'Beijo IST', 'Engolir Semen', 'Sobre PREP', 'Sobre Chuca', 'Sobre Gouinage', 'Sobre Orientação Sexual', 'Sobre Orientacao Sexual', 'Quais Novidades', 'Sentido Da Vida', 'Me chupa', 'Manda Nudes', 'Espaço LGBT', 'Hipotenusa', 'Eu te amo']; // eslint-disable-line no-unused-vars
 const problema = ['Tratamento IST', 'Tratamento HIV', 'Indetectavel Transmite', 'indetectável Transmite', 'Apresenta Sintoma', 'Tenho Ferida', 'Sera HIV', 'Alternativa camisinha', 'Camisinha Estourou', 'Sem Camisinha', 'Virgem Como Faco', 'Nunca Fiz Anal', 'Tenho HIV', 'Tenho HIV Contar Parceiro'];
-const servico = ['Marcar Consulta', 'Abuso', 'Teste']; // shouldn't Abuso be here?
+const servico = ['Marcar Consulta', 'Abuso', 'Teste'];
 
 async function separateIntent(intentName) {
 	if (servico.includes(intentName)) { return 'serviço'; }
@@ -60,6 +60,22 @@ async function buildTermosMessage() {
 	text += `\nSão Paulo - SP: ${telefoneDictionary[1]}`;
 	text += `\nBelo Horizonte - MG: ${telefoneDictionary[2]}`;
 	text += `\nSalvador - BA: ${telefoneDictionary[3]}`;
+
+	return text;
+}
+
+async function buildPhoneMsg(cityId, introText) {
+	const validOptions = ['1', '2', '3'];
+	let text = '';
+	if (introText && introText.length > 0) { // check i we have a msg to send together with the phone
+		text = `${introText}\n`;
+	}
+
+	if (cityId && validOptions.includes(cityId.toString())) { // check if cityID is a valid option
+		text += `\n${locationDictionary[cityId]}: ${telefoneDictionary[cityId]}`;
+	} else { // if it isnt send every valid phone number
+		validOptions.forEach((element) => { text += `\n${locationDictionary[element]}: ${telefoneDictionary[element]}`; });
+	}
 
 	return text;
 }
@@ -114,5 +130,6 @@ module.exports.cidadeDictionary = cidadeDictionary;
 module.exports.telefoneDictionary = telefoneDictionary;
 module.exports.locationDictionary = locationDictionary;
 module.exports.buildTermosMessage = buildTermosMessage;
+module.exports.buildPhoneMsg = buildPhoneMsg;
 module.exports.separateIntent = separateIntent;
 module.exports.checkSuggestWaitForTest = checkSuggestWaitForTest;
