@@ -53,17 +53,6 @@ const telefoneDictionary = { 1: '11111-1111', 2: '2222-2222', 3: '(71) 3017-9216
 
 const locationDictionary = { 1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA' };
 
-async function buildTermosMessage() {
-	let text = 'As informações que você digitar neste chatbot poderão ser usadas para fins de pesquisa sobre percepções, conhecimento, aceitabilidade e intenção de usar a PrEP'
-	+ ' e o autoteste para HIV, entre adolescentes HSH e TrMT de 15 - 19 anos, em São Paulo, Salvador e Belo Horizonte. Você poderá obter mais informações nos seguintes telefones:\n';
-
-	text += `\nSão Paulo - SP: ${telefoneDictionary[1]}`;
-	text += `\nBelo Horizonte - MG: ${telefoneDictionary[2]}`;
-	text += `\nSalvador - BA: ${telefoneDictionary[3]}`;
-
-	return text;
-}
-
 async function buildPhoneMsg(cityId, introText) {
 	const validOptions = ['1', '2', '3'];
 	let text = '';
@@ -129,7 +118,6 @@ module.exports.weekDayName = weekDayName;
 module.exports.cidadeDictionary = cidadeDictionary;
 module.exports.telefoneDictionary = telefoneDictionary;
 module.exports.locationDictionary = locationDictionary;
-module.exports.buildTermosMessage = buildTermosMessage;
 module.exports.buildPhoneMsg = buildPhoneMsg;
 module.exports.separateIntent = separateIntent;
 module.exports.checkSuggestWaitForTest = checkSuggestWaitForTest;

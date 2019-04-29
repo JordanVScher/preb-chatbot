@@ -64,7 +64,7 @@ module.exports.sendTermos = async (context) => {
 	}
 	await context.setState({ dialog: 'seeTermos' });
 	await context.sendText(flow.quizYes.text15);
-	await context.sendButtonTemplate(await help.buildTermosMessage(), opt.TCLE);
+	await context.sendButtonTemplate(await help.buildPhoneMsg(context.state.user.city, flow.onTheResearch.buildTermos), opt.TCLE);
 	await context.sendText(flow.onTheResearch.saidYes, opt.termos);
 };
 

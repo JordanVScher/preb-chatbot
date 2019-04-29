@@ -64,6 +64,8 @@ module.exports = {
 		extra: 'E aí, quer participar?',
 		AC5: 'E olha que bafo. Está rolando uma pesquisa bafônica com o pessoal das universidades (USP, UFMG e UFBA) pra oferecer PrEP e outros métodos pra jovens lacradoras como a senhaora. Bora?',
 		saidYes: 'A qualquer momento você pode pedir para desistir de participar. Se você aceitar, clique em: Li e Aceito',
+		buildTermos: 'As informações que você digitar neste chatbot poderão ser usadas para fins de pesquisa sobre percepções, conhecimento, aceitabilidade e intenção de usar a PrEP'
+			+ ' e o autoteste para HIV, entre adolescentes HSH e TrMT de 15 - 19 anos, em São Paulo, Salvador e Belo Horizonte. Você poderá obter mais informações nos seguintes telefones:',
 		naoAceitaTermos: 'Tudo bem bb!',
 	},
 	verConsulta: {
