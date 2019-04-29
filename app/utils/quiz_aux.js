@@ -19,17 +19,11 @@ module.exports.endTriagem = async (context) => {
 
 	if (context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
 		await context.sendText(flow.triagem.emergency1);
-		await context.sendText('Telefones pra contato:'
-			+ `\nSão Paulo - SP: ${help.telefoneDictionary[1]}`
-			+ `\nBelo Horizonte - MG: ${help.telefoneDictionary[2]}`
-			+ `\nSalvador - BA: ${help.telefoneDictionary[3]}`, opt.outrasDatas);
+		await context.sendText(await help.buildPhoneMsg(context.state.user.city, 'Telefones pra contato:'));
 		await sendMain(context);
 	} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_test === 1) { // "A mais de 6 meses" + todos não
 		await context.setState({ dialog: 'autoTeste' });
-		// await context.sendText(flow.autoTeste.start, opt.autoteste);
 	} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_appointment === 1) { // quando responder sim para a SC6 -> talvez a prep seja uma boa pra vc. bora marcar?
-		// await context.setState({ categoryConsulta: 'emergencial' });
-		// await checarConsulta(context);
 		await context.setState({ dialog: 'checarConsulta' });
 	} else if (context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1) { // qualquer sim
 		await context.sendText(flow.triagem.suggest, opt.triagem1);
