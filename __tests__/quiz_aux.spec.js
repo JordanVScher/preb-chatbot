@@ -130,10 +130,7 @@ it('endTriagem - emergency_rerouting', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'endTriagem' });
 	await expect(context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.triagem.emergency1);
-	await expect(context.sendText).toBeCalledWith('Telefones pra contato:'
-		+ `\nSão Paulo - SP: ${help.telefoneDictionary[1]}`
-		+ `\nBelo Horizonte - MG: ${help.telefoneDictionary[2]}`
-		+ `\nSalvador - BA: ${help.telefoneDictionary[3]}`, opt.outrasDatas);
+	await expect(context.sendText).toBeCalledWith(await help.buildPhoneMsg(context.state.user.city, 'Telefones pra contato:'));
 	await expect(sendMain).toBeCalledWith(context);
 });
 

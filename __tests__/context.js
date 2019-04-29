@@ -1,6 +1,7 @@
 function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 	return {
 		state: {
+			user: {},
 			dialog,
 			lastQRpayload: payload,
 			politicianData: {
@@ -41,6 +42,7 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 function postbackContext(payload, title, dialog = 'prompt', lastActivity = new Date()) {
 	return {
 		state: {
+			user: {},
 			dialog,
 			lastPBpayload: payload,
 			politicianData: {
@@ -82,6 +84,7 @@ function postbackContext(payload, title, dialog = 'prompt', lastActivity = new D
 function textContext(text, dialog, lastActivity = new Date()) {
 	return {
 		state: {
+			user: {},
 			dialog,
 			politicianData: {
 				user_id: 2000,
