@@ -1,6 +1,7 @@
 const MaAPI = require('../chatbot_api');
 const { createIssue } = require('../send_issue');
 const { Sentry } = require('./helper');
+const { separateString } = require('./helper');
 
 module.exports.sendAnswer = async (context) => { // send answer from posicionamento
 	// await context.setState({ currentTheme: await context.state.knowledge.knowledge_base.find(x => x.type === 'posicionamento') });
@@ -14,7 +15,11 @@ module.exports.sendAnswer = async (context) => { // send answer from posicioname
 		await MaAPI.logAskedEntity(context.session.user.id, context.state.politicianData.user_id, context.state.currentTheme.entities[0].id);
 
 		if (context.state.currentTheme.answer) { // if there's a text asnwer we send it
-			await context.sendText(context.state.currentTheme.answer);
+			await context.setState({ resultTexts: await separateString(context.state.currentTheme.answer) });
+			if (context.state.resultTexts && context.state.resultTexts.firstString) {
+				await context.sendText(context.state.resultTexts.firstString);
+				if (context.state.resultTexts.secondString) { await context.sendText(context.state.resultTexts.secondString);	}
+			}
 		}
 		try {
 			if (context.state.currentTheme.saved_attachment_type === 'image') { // if attachment is image
