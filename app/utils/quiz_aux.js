@@ -72,3 +72,14 @@ module.exports.endQuiz = async (context) => {
 		await research.notEligible(context); // não elegível pra pesquisa
 	}
 };
+
+module.exports.halfwayPointQuiz = async (context) => {
+	await context.sendText(context.state.sentAnswer.textoProvisorio);
+	if (context.state.sentAnswer.is_target_audience === 1) {
+		await context.sendText(flow.quiz.halfway1);
+		await context.sendText(flow.quiz.halfway2);
+		await context.sendText(flow.quiz.halfway3, opt.quizHalfway);
+	} else {
+		await research.notPart(context); // não é parte do público alvo
+	}
+};

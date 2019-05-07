@@ -71,6 +71,8 @@ async function handleAnswerA(context, quizOpt) {
 	if (context.state.sentAnswer.error) { // error
 		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
+	} else if (context.state.sentAnswer.textoProvisorio) {
+		await aux.halfwayPointQuiz(context);
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
 		await context.sendText(flow.quiz.invalid);
 		// Date is: YYYY-MM-DD

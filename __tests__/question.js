@@ -47,6 +47,9 @@ module.exports.finished = {
 module.exports.finishedNotPart = {
 	finished_quiz: 1, id: 76, is_target_audience: 0,
 };
+module.exports.halfway = {
+	finished_quiz: 1, id: 76, is_target_audience: 0, textoProvisorio: 'foobar',
+};
 module.exports.serverError = { error: 'Internal server error' };
 module.exports.invalidValue = { form_error: { answer_value: 'invalid' } };
 module.exports.handleAnswer = {	finished_quiz: 1, id: 76, is_eligible_for_research: 0 };
