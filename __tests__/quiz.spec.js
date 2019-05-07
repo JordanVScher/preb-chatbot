@@ -105,8 +105,8 @@ it('handleAnswerA - regular answer - not finished', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion;
 	context.state.sentAnswer = questions.notFinished;
-	const quizOpt = 'a resposta';
-	await quiz.handleAnswerA(context);
+	const quizOpt = '1';
+	await quiz.handleAnswerA(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({
 		sentAnswer: await prepApi.postQuizAnswer(
@@ -123,8 +123,8 @@ it('handleAnswerA - regular answer - not finished', async () => {
 it('handleAnswerA - regular answer - finished but not target audience', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.finishedNotPart;
-	const quizOpt = 'a resposta';
-	await quiz.handleAnswerA(context);
+	const quizOpt = '1';
+	await quiz.handleAnswerA(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({
 		sentAnswer: await prepApi.postQuizAnswer(
@@ -144,8 +144,8 @@ it('handleAnswerA - regular answer - finished but not target audience', async ()
 it('handleAnswerA - regular answer - finished and target audience', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.finished;
-	const quizOpt = 'a resposta';
-	await quiz.handleAnswerA(context);
+	const quizOpt = '1';
+	await quiz.handleAnswerA(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({
 		sentAnswer: await prepApi.postQuizAnswer(
@@ -166,8 +166,8 @@ it('handleAnswerA - regular answer - finished and target audience', async () => 
 it('handleAnswerA - regular answer - is not target audience', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.finishedIsTarget;
-	const quizOpt = 'a resposta';
-	await quiz.handleAnswerA(context);
+	const quizOpt = '1';
+	await quiz.handleAnswerA(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({
 		sentAnswer: await prepApi.postQuizAnswer(
@@ -185,11 +185,11 @@ it('handleAnswerA - regular answer - is not target audience', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
 });
 
-it('handleAnswerA - regular answer - texto provisorio', async () => {
+it('handleAnswerA - regular answer - followup_messages', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.halfway;
-	const quizOpt = 'a resposta';
-	await quiz.handleAnswerA(context);
+	const quizOpt = '1';
+	await quiz.handleAnswerA(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({
 		sentAnswer: await prepApi.postQuizAnswer(
@@ -201,8 +201,29 @@ it('handleAnswerA - regular answer - texto provisorio', async () => {
 	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'fun_questions' });
 
 	await expect(context.state.sentAnswer.error).toBeFalsy();
-	await expect(context.state.sentAnswer.textoProvisorio).toBeTruthy();
-	await expect(aux.halfwayPointQuiz).toBeCalledWith(context);
+	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[0]);
+	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[1]);
+	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[2]);
+});
+
+it('handleAnswerA - AC7 - second option', async () => {
+	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
+	context.state.currentQuestion = questions.onAC7; context.state.sentAnswer = questions.halfway;
+	const quizOpt = '2';
+	await quiz.handleAnswerA(context, quizOpt);
+
+	await expect(context.setState).toBeCalledWith({
+		sentAnswer: await prepApi.postQuizAnswer(
+			context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt,
+		),
+	});
+	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
+
+	await expect(context.state.sentAnswer.error).toBeFalsy();
+	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
+	await expect(context.state.currentQuestion.code === 'AC7' && quizOpt.toString() === '2').toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ dialog: 'stopHalfway' });
 });
 
 it('handleAnswerA - internal error', async () => {
@@ -210,7 +231,7 @@ it('handleAnswerA - internal error', async () => {
 	context.state.currentQuestion = questions.nullQuestion;
 	context.state.sentAnswer = questions.serverError;
 	const quizOpt = 'a resposta';
-	await quiz.handleAnswerA(context);
+	await quiz.handleAnswerA(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({
 		sentAnswer: await prepApi.postQuizAnswer(
@@ -228,7 +249,7 @@ it('handleAnswerA - invalid value', async () => {
 	context.state.currentQuestion = questions.nullQuestion;
 	context.state.sentAnswer = questions.invalidValue;
 	const quizOpt = '19/19/19';
-	await quiz.handleAnswerA(context);
+	await quiz.handleAnswerA(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({
 		sentAnswer: await prepApi.postQuizAnswer(

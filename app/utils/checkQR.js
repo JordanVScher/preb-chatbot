@@ -53,6 +53,15 @@ async function checkConsulta(context, options) {
 	return { quick_replies: newOptions };
 }
 
+async function replaceTitle(options, toFind, newTitle) {
+	const result = options;
+
+	const objIndex = result.findIndex((obj => obj.title === toFind));
+	if (objIndex) { result[objIndex].title = newTitle; }
+
+	return result;
+}
+
 async function checkMainMenu(context) {
 	await context.setState({ sendExtraMessages: false });
 	let newOptions = [];
@@ -95,6 +104,9 @@ async function checkMainMenu(context) {
 	}
 
 	newOptions.push({ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' });
+	if (context.state.stoppedHalfway === true) {
+		newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
+	}
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 

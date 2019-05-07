@@ -36,7 +36,7 @@ module.exports.endTriagem = async (context) => {
 };
 
 // builds quick_repliy menu from the question answer options
-module.exports.buildMultipleChoice = async (question, complement) => {
+async function buildMultipleChoice(question, complement) {
 	// complement -> quiz or triagem to put on the button payload for each type of quiz
 	const qrButtons = [];
 	Object.keys(question.multiple_choices).forEach(async (element) => {
@@ -49,7 +49,9 @@ module.exports.buildMultipleChoice = async (question, complement) => {
 		});
 	}
 	return { quick_replies: qrButtons };
-};
+}
+
+module.exports.buildMultipleChoice = buildMultipleChoice;
 
 module.exports.sendTermos = async (context) => {
 	if (context.state.user.is_eligible_for_research === 1) {
@@ -70,16 +72,5 @@ module.exports.endQuiz = async (context) => {
 		await research.onTheResearch(context); // send AC5
 	} else {
 		await research.notEligible(context); // não elegível pra pesquisa
-	}
-};
-
-module.exports.halfwayPointQuiz = async (context) => {
-	await context.sendText(context.state.sentAnswer.textoProvisorio);
-	if (context.state.sentAnswer.is_target_audience === 1) {
-		await context.sendText(flow.quiz.halfway1);
-		await context.sendText(flow.quiz.halfway2);
-		await context.sendText(flow.quiz.halfway3, opt.quizHalfway);
-	} else {
-		await research.notPart(context); // não é parte do público alvo
 	}
 };

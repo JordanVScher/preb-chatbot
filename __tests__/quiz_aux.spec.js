@@ -178,26 +178,3 @@ it('endTriagem - default case', async () => {
 
 	await expect(sendMain).toBeCalledWith(context);
 });
-
-it('halfwayPointQuiz - not is_target_audience', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.sentAnswer = questions.halfway;
-	await aux.halfwayPointQuiz(context);
-
-	await expect(context.sendText).toBeCalledWith((context.state.sentAnswer.textoProvisorio));
-	await expect(context.state.sentAnswer.is_target_audience === 1).toBeFalsy();
-	await expect(research.notPart).toBeCalledWith(context);
-});
-
-it('halfwayPointQuiz - is_target_audience', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.sentAnswer = questions.halfway;
-	context.state.sentAnswer.is_target_audience = 1;
-	await aux.halfwayPointQuiz(context);
-
-	await expect(context.sendText).toBeCalledWith((context.state.sentAnswer.textoProvisorio));
-	await expect(context.state.sentAnswer.is_target_audience === 1).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.quiz.halfway1);
-	await expect(context.sendText).toBeCalledWith(flow.quiz.halfway2);
-	await expect(context.sendText).toBeCalledWith(flow.quiz.halfway3, opt.quizHalfway);
-});
