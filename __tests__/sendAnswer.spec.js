@@ -4,6 +4,7 @@ const MaAPI = require('../app/chatbot_api');
 const cont = require('./context');
 const { createIssue } = require('../app/send_issue');
 const { sendAnswer } = require('../app/utils/sendAnswer');
+const { separateString } = require('../app/utils/helper');
 
 jest.mock('../app/send_issue');
 jest.mock('../app/chatbot_api');
@@ -12,17 +13,23 @@ it('send Answer - answer and image', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.knowledge = cont.knowledgeBase;
 	context.state.currentTheme = context.state.knowledge.knowledge_base[0]; // eslint-disable-line
+	context.state.resultTexts = { firstString: 'foo', secondString: 'bar' };
+
 	await sendAnswer(context);
 	await expect(context.typingOn);
 	await expect(context.setState).toBeCalledWith({ currentTheme: await context.state.knowledge.knowledge_base[0] });
 	await expect(context.state.currentTheme && (context.state.currentTheme.answer
-        || (context.state.currentTheme.saved_attachment_type !== null && context.state.currentTheme.saved_attachment_id !== null))).toBeTruthy();
+  || (context.state.currentTheme.saved_attachment_type !== null && context.state.currentTheme.saved_attachment_id !== null))).toBeTruthy();
 
 	await expect(MaAPI.setIntentStatus).toBeCalledWith(context.state.politicianData.user_id, context.session.user.id, context.state.currentIntent, 1);
 	await expect(MaAPI.logAskedEntity).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id, context.state.currentTheme.entities[0].id);
 
 	await expect(context.state.currentTheme.answer).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(context.state.currentTheme.answer);
+	await expect(context.setState).toBeCalledWith({ resultTexts: await separateString(context.state.currentTheme.answer) });
+	await expect(context.state.resultTexts && context.state.resultTexts.firstString).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(context.state.resultTexts.firstString);
+	await expect(context.state.resultTexts.secondString).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(context.state.resultTexts.secondString);
 
 	await expect(context.state.currentTheme.saved_attachment_type === 'image').toBeTruthy();
 	await expect(context.sendImage).toBeCalledWith({ attachment_id: context.state.currentTheme.saved_attachment_id });
