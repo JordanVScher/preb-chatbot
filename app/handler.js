@@ -124,6 +124,10 @@ module.exports = async (context) => {
 			// await timer.sendCarouselSus(context, opt.sus);
 			// await quiz.answerQuizA(context);
 			break;
+		case 'stopHalfway':
+			await context.setState({ stoppedHalfway: true });
+			await mainMenu.sendMain(context, 'tudo bem, se mudar de ideia clique em participar');
+			break;
 		case 'medicaçao':
 			await context.sendText(flow.medication.text1, await checkQR.checkMedication(context));
 			break;

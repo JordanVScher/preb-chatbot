@@ -21,6 +21,18 @@ module.exports.extraMultiple = {
 	type: 'multiple_choice',
 };
 
+module.exports.onAC7 = {
+	code: 'AC7',
+	count_more: 14,
+	extra_quick_replies: [{ label: 'Não sei o que é', text: 'Tente descobrir' }],
+	has_more: 1,
+	multiple_choices: {
+		1: 'Bora!', 2: 'Agora não',
+	},
+	text: 'Aceita participar?',
+	type: 'multiple_choice',
+};
+
 module.exports.regularOpenText = {
 	code: 'B2',
 	count_more: 10,
@@ -48,7 +60,7 @@ module.exports.finishedNotPart = {
 	finished_quiz: 1, id: 76, is_target_audience: 0,
 };
 module.exports.halfway = {
-	finished_quiz: 1, id: 76, is_target_audience: 0, textoProvisorio: 'foobar',
+	finished_quiz: 1, id: 76, is_target_audience: 0, followup_messages: ['f', 'o', 'o'],
 };
 module.exports.serverError = { error: 'Internal server error' };
 module.exports.invalidValue = { form_error: { answer_value: 'invalid' } };

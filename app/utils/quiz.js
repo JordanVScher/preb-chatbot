@@ -45,15 +45,6 @@ async function answerQuizA(context) {
 	} // -- answering quiz else
 }
 
-// extra questions -> explanation of obscure terms
-// sends the answer to the question and sends user back to the question
-async function AnswerExtraQuestion(context) {
-	const index = context.state.lastQRpayload.replace('extraQuestion', '');
-	const answer = context.state.currentQuestion.extra_quick_replies[index].text;
-	await context.sendText(answer);
-	await context.setState({ dialog: 'startQuizA' }); // re-asks same question
-}
-
 async function handleAnswerA(context, quizOpt) {
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
@@ -71,25 +62,40 @@ async function handleAnswerA(context, quizOpt) {
 	if (context.state.sentAnswer.error) { // error
 		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
-	} else if (context.state.sentAnswer.textoProvisorio) {
-		await aux.halfwayPointQuiz(context);
-	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
-		await context.sendText(flow.quiz.invalid);
-		// Date is: YYYY-MM-DD
-		await context.setState({ dialog: 'startQuizA' }); // re-asks same question
-	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
-		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
-			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
-		} else if ((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
+	} else {
+		if (context.state.sentAnswer.followup_messages) {
+			for (let i = 0; i < context.state.sentAnswer.followup_messages.length; i++) { // eslint-disable-line no-plusplus
+				await context.sendText(context.state.sentAnswer.followup_messages[i]);
+			}
+		}
+		if (context.state.currentQuestion.code === 'AC7' && quizOpt.toString() === '2') {
+			await context.setState({ dialog: 'stopHalfway' });
+		} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
+			await context.sendText(flow.quiz.invalid);
+			// Date is: YYYY-MM-DD
+			await context.setState({ dialog: 'startQuizA' }); // re-asks same question
+		} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
+			if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
+				await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
+			} else if ((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
 		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)) {
-			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
-		} else {
-			await aux.sendTermos(context);
+				await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
+			} else {
+				await aux.sendTermos(context);
+			}
 		}
 		/* eslint-enable no-lonely-if */
 	}
 }
 
+// extra questions -> explanation of obscure terms
+// sends the answer to the question and sends user back to the question
+async function AnswerExtraQuestion(context) {
+	const index = context.state.lastQRpayload.replace('extraQuestion', '');
+	const answer = context.state.currentQuestion.extra_quick_replies[index].text;
+	await context.sendText(answer);
+	await context.setState({ dialog: 'startQuizA' }); // re-asks same question
+}
 
 module.exports.answerQuizA = answerQuizA;
 module.exports.handleAnswerA = handleAnswerA;
