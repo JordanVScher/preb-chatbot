@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const cont = require('./context');
+const questions = require('./question');
 const aux = require('../app/utils/quiz_aux');
 const opt = require('../app/utils/options');
 const flow = require('../app/utils/flow');
@@ -9,7 +10,6 @@ const prepApi = require('../app/utils/prep_api');
 const research = require('../app/utils/research');
 const { capQR } = require('../app/utils/helper');
 const { sendMain } = require('../app/utils/mainMenu');
-const questions = require('./question');
 
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/research');
@@ -177,4 +177,27 @@ it('endTriagem - default case', async () => {
 	await expect(context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1).toBeFalsy();
 
 	await expect(sendMain).toBeCalledWith(context);
+});
+
+it('halfwayPointQuiz - not is_target_audience', async () => {
+	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.sentAnswer = questions.halfway;
+	await aux.halfwayPointQuiz(context);
+
+	await expect(context.sendText).toBeCalledWith((context.state.sentAnswer.textoProvisorio));
+	await expect(context.state.sentAnswer.is_target_audience === 1).toBeFalsy();
+	await expect(research.notPart).toBeCalledWith(context);
+});
+
+it('halfwayPointQuiz - is_target_audience', async () => {
+	const context = cont.quickReplyContext('0', 'prompt');
+	context.state.sentAnswer = questions.halfway;
+	context.state.sentAnswer.is_target_audience = 1;
+	await aux.halfwayPointQuiz(context);
+
+	await expect(context.sendText).toBeCalledWith((context.state.sentAnswer.textoProvisorio));
+	await expect(context.state.sentAnswer.is_target_audience === 1).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.quiz.halfway1);
+	await expect(context.sendText).toBeCalledWith(flow.quiz.halfway2);
+	await expect(context.sendText).toBeCalledWith(flow.quiz.halfway3, opt.quizHalfway);
 });

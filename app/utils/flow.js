@@ -88,6 +88,9 @@ module.exports = {
 		invalid: 'Bee, esse formato é inválido! Vamos tentar novamente, digita aí!',
 		sintoma: '[Text explicativo dos sintomas]',
 		done: 'Eiiiiii bonita! Vc já me respondeu tudo, agora é sua vez.',
+		halfway1: 'Calma! Compartilha ainda não!',
+		halfway2: 'Agora quero te contar um bafo, tá rolando uma pesquisa MARA, que é sua cara! É sobre prevenção do HIV para a transa ficar sem neuras!',
+		halfway3: 'Para te indicar este rolê, preciso fazer umas perguntinhas mais íntimas para saber como vc se previne na SARRAÇÃO. Mas pode ficar sussa que tudo o que vc responder é SI-GI-LO-SO, ok?! Bora ? !',
 	},
 	quizNo: {
 		text1: 'Está na dúvida, bb? Tem um professor super fofo q pediu pra eu te mandar um link, cata, aki explica tudinho:',

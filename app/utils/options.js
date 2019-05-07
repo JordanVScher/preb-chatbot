@@ -37,6 +37,12 @@ module.exports = {
 			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
 		],
 	},
+	quizHalfway: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Bora!', payload: 'beginQuiz' },
+			{ content_type: 'text', title: 'Agora não', payload: 'stopHalfway' },
+		],
+	},
 	consulta: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' },
