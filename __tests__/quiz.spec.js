@@ -207,9 +207,9 @@ it('handleAnswerA - regular answer - followup_messages', async () => {
 	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[2]);
 });
 
-it('handleAnswerA - AC7 - second option', async () => {
+it('handleAnswerA - onHalfwayPoint - second option', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.onAC7; context.state.sentAnswer = questions.halfway;
+	context.state.currentQuestion = questions.onHalfwayPoint; context.state.sentAnswer = questions.halfway;
 	const quizOpt = '2';
 	await quiz.handleAnswerA(context, quizOpt);
 
@@ -222,7 +222,7 @@ it('handleAnswerA - AC7 - second option', async () => {
 
 	await expect(context.state.sentAnswer.error).toBeFalsy();
 	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
-	await expect(context.state.currentQuestion.code === 'AC7' && quizOpt.toString() === '2').toBeTruthy();
+	await expect(context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2').toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ dialog: 'stopHalfway' });
 });
 
