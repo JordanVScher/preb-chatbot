@@ -21,8 +21,8 @@ module.exports.extraMultiple = {
 	type: 'multiple_choice',
 };
 
-module.exports.onAC7 = {
-	code: 'AC7',
+module.exports.onHalfwayPoint = {
+	code: 'AC8',
 	count_more: 14,
 	extra_quick_replies: [{ label: 'Não sei o que é', text: 'Tente descobrir' }],
 	has_more: 1,
