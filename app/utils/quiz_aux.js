@@ -36,7 +36,7 @@ module.exports.endTriagem = async (context) => {
 };
 
 // builds quick_repliy menu from the question answer options
-async function buildMultipleChoice(question, complement) {
+module.exports.buildMultipleChoice = async (question, complement) => {
 	// complement -> quiz or triagem to put on the button payload for each type of quiz
 	const qrButtons = [];
 	Object.keys(question.multiple_choices).forEach(async (element) => {
@@ -49,9 +49,7 @@ async function buildMultipleChoice(question, complement) {
 		});
 	}
 	return { quick_replies: qrButtons };
-}
-
-module.exports.buildMultipleChoice = buildMultipleChoice;
+};
 
 module.exports.sendTermos = async (context) => {
 	await context.setState({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
@@ -64,7 +62,7 @@ module.exports.sendTermos = async (context) => {
 	await context.sendText(flow.onTheResearch.saidYes, opt.termos);
 };
 
-module.exports.endQuiz = async (context) => {
+module.exports.endQuiz = async (context) => { // -- not used
 	await context.setState({ categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
 	if (context.state.user.is_target_audience === 0) { // parte do publico alvo
 		await research.notPart(context); // não é parte do público alvo

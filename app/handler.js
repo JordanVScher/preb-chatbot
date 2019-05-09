@@ -165,7 +165,6 @@ module.exports = async (context) => {
 			await context.sendText(flow.quiz.beginQuiz);
 		// falls throught
 		case 'startQuizA': // this is the quiz-type of questionario
-			// await context.setState({ categoryQuestion: 'quiz' });
 			await quiz.answerQuizA(context);
 			break;
 		case 'aceitaTermos':

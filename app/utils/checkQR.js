@@ -108,7 +108,7 @@ async function checkMainMenu(context) {
 		newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
 	}
 
-	newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+	// newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' }); // -- for testing the quiz
 
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }

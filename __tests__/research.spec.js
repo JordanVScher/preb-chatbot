@@ -37,7 +37,6 @@ it('researchSaidYes', async () => {
 
 	await context.setState({ categoryConsulta: 'recrutamento' });
 	await expect(context.setState).toBeCalledWith({ sendExtraMessages: true });
-
 	await expect(checarConsulta).toBeCalledWith(context);
 });
 
