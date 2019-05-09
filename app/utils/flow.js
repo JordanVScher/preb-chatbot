@@ -6,7 +6,6 @@ module.exports = {
 		text2: 'Eu sou a Amanda Selfie, a primeira travesti robôa do Brasil 👏👏. Essa plataforma é nossa! #lacray',
 		text3: 'Aqui a gnt pode falar sobre ISTs, HIV e como se prevenir da forma mais saudável e justa para o próprio corpo. '
 			+ 'Eu tô aqui animadíssima pq pra mim é mt importante q a gnt tenha consciência sexual pra fazer escolhas com mais autonomia. Q tudo né? ',
-		// text3: 'Você pode me mandar uma mensagem a qualquer momento que irei te responder ou se não souber encaminho para minha equipe e logo lhe responderemos ',
 	},
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
@@ -19,7 +18,6 @@ module.exports = {
 	},
 	asksDesafio: {
 		text1: 'Agora eu vou fazer a linha entrevistadora e vou te perguntar algumas coisas e dps deixo vc matar a curiosidade sobre mim, é puro luxo!\nBora?',
-		// text2: 'Sabe aqueles caderninhos de enquete que rolavam nas escolas? Ain.. estou denunciando a idade dos meus criadores 🤭 😂\nVamos?',
 	},
 	desafio: {
 		text1: 'Hmm, beibe, ainda quero te fazer umas perguntinhas! Bora?',

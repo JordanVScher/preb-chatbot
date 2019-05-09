@@ -50,17 +50,17 @@ module.exports = {
 	},
 	artigoLink: [{
 		type: 'web_url',
-		url: 'https://www.google.com',
+		url: 'www.google.com',
 		title: 'Ler artigo',
 	}],
 	questionario: [{
 		type: 'web_url',
-		url: 'https://www.google.com',
+		url: 'www.google.com',
 		title: 'Ir para Pré-Cadastro',
 	}],
 	TCLE: [{
 		type: 'web_url',
-		url: 'https://www.google.com',
+		url: 'www.google.com',
 		title: 'Ler Termos',
 	}],
 	duvidaRemedio: [{
