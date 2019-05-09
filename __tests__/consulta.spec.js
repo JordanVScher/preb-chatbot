@@ -161,7 +161,7 @@ it('finalDate - success with extra message', async () => {
 	const context = cont.quickReplyContext('showDays', '');
 	context.state.chosenDay = { hours: [] }; context.state.user = {};
 	context.state.calendar = {}; context.state.chosenHour = {};	context.state.response = { id: '1' };
-	context.state.sendExtraMessages = true;
+	context.state.sendExtraMessages = true; context.state.sentAnswer = { offline_pre_registration_form: 'foobar.com' };
 	const quota = '0';
 	await consulta.finalDate(context, quota);
 
@@ -184,7 +184,9 @@ it('finalDate - success with extra message', async () => {
 
 	await expect(context.state.sendExtraMessages === true).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ sendExtraMessages: false });
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text2, opt.questionario);
+
+	await expect(context.state.sentAnswer && context.state.sentAnswer.offline_pre_registration_form && context.state.sentAnswer.offline_pre_registration_form.length > 0).toBeTruthy();
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text2, context.state.sentAnswer.offline_pre_registration_form);
 });
 
 it('finalDate - error', async () => {

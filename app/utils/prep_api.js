@@ -164,11 +164,14 @@ module.exports = {
 
 	async postSignature(fb_id, url) {
 		console.log(fb_id, url);
-
-		const res = await request.post(`${apiUri}/api/chatbot/recipient/term-signature?security_token=${security_token}&`).query({ fb_id, url });
-		const sign = await res.json();
-		// console.log('postSignature', res);
-		return sign;
+		try {
+			const res = await request.post(`${apiUri}/api/chatbot/recipient/term-signature?security_token=${security_token}&`).query({ fb_id, url });
+			const sign = await res.json();
+			return sign;
+		} catch (error) {
+			console.log(error);
+			return error;
+		}
 	},
 
 	async resetTriagem(fb_id) {

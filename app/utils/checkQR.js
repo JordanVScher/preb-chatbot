@@ -87,7 +87,7 @@ async function checkMainMenu(context) {
 		}
 	} else { // not on target audience, may send quiz if there's still any fun_question to be answered
 		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-		if (context.state.currentQuestion && context.state.currentQuestion.code !== null) {
+		if (context.state.currentQuestion && context.state.currentQuestion.code !== null && context.state.categoryQuestion === 'fun_questions') {
 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 		}
 	}
@@ -107,6 +107,7 @@ async function checkMainMenu(context) {
 	if (context.state.stoppedHalfway === true) {
 		newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
 	}
+
 
 	// newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' }); // -- for testing the quiz
 

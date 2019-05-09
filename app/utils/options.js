@@ -60,7 +60,7 @@ module.exports = {
 	}],
 	TCLE: [{
 		type: 'web_url',
-		url: 'www.google.com',
+		url: 'www.prep1519.org',
 		title: 'Ler Termos',
 	}],
 	duvidaRemedio: [{
@@ -71,6 +71,12 @@ module.exports = {
 	termos: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Li e aceito!', payload: 'aceitaTermos' },
+			{ content_type: 'text', title: 'Não aceito!', payload: 'naoAceitaTermos' },
+		],
+	},
+	termos2: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Li e aceito!', payload: 'aceitaTermos2' },
 			{ content_type: 'text', title: 'Não aceito!', payload: 'naoAceitaTermos' },
 		],
 	},
