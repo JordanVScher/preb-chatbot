@@ -67,6 +67,7 @@ const cidadeDictionary = {
 };
 
 const telefoneDictionary = { 1: '11111-1111', 2: '2222-2222', 3: '(71) 3017-9216' };
+const emergenciaDictionary = { 1: '11 98209-2911', 2: '(31) 99726-9307', 3: '(71) 99102-2234' };
 
 const locationDictionary = { 1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA' };
 
@@ -81,6 +82,22 @@ async function buildPhoneMsg(cityId, introText) {
 		text += `\n${locationDictionary[cityId]}: ${telefoneDictionary[cityId]}`;
 	} else { // if it isnt send every valid phone number
 		validOptions.forEach((element) => { text += `\n${locationDictionary[element]}: ${telefoneDictionary[element]}`; });
+	}
+
+	return text;
+}
+
+async function buildEmergenciaMsg(cityId, introText) {
+	const validOptions = ['1', '2', '3'];
+	let text = '';
+	if (introText && introText.length > 0) { // check i we have a msg to send together with the phone
+		text = `${introText}\n`;
+	}
+
+	if (cityId && validOptions.includes(cityId.toString())) { // check if cityID is a valid option
+		text += `\n${locationDictionary[cityId]}: ${emergenciaDictionary[cityId]}`;
+	} else { // if it isnt send every valid phone number
+		validOptions.forEach((element) => { text += `\n${locationDictionary[element]}: ${emergenciaDictionary[element]}`; });
 	}
 
 	return text;
@@ -136,5 +153,6 @@ module.exports.cidadeDictionary = cidadeDictionary;
 module.exports.telefoneDictionary = telefoneDictionary;
 module.exports.locationDictionary = locationDictionary;
 module.exports.buildPhoneMsg = buildPhoneMsg;
+module.exports.buildEmergenciaMsg = buildEmergenciaMsg;
 module.exports.separateIntent = separateIntent;
 module.exports.checkSuggestWaitForTest = checkSuggestWaitForTest;

@@ -51,18 +51,30 @@ it('endQuiz - target audience and eligible', async () => {
 	await expect(research.onTheResearch).toBeCalledWith(context);
 });
 
+module.exports.sendTermos = async (context) => {
+	await context.setState({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
+	if (context.state.user.is_eligible_for_research === 1) {
+		await context.sendText(flow.onTheResearch.text1);
+		await context.sendImage(flow.onTheResearch.gif);
+	}
+	await context.sendText(flow.quizYes.text15);
+	await context.sendButtonTemplate(flow.onTheResearch.buildTermos, opt.TCLE);
+	await context.sendText(flow.onTheResearch.saidYes, opt.termos);
+};
+
 it('sendTermos - is_eligible_for_research', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	context.state.user = { is_eligible_for_research: 1 };
 	await aux.sendTermos(context);
 
+	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' });
+
 	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text1);
 	await expect(context.sendImage).toBeCalledWith(flow.onTheResearch.gif);
 
-	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos' });
 	await expect(context.sendText).toBeCalledWith(flow.quizYes.text15);
-	await expect(context.sendButtonTemplate).toBeCalledWith(help.buildPhoneMsg(undefined, flow.onTheResearch.buildTermos), opt.TCLE);
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.onTheResearch.buildTermos, opt.TCLE);
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, opt.termos);
 });
 
@@ -71,11 +83,12 @@ it('sendTermos - not eligible_for_research', async () => {
 	context.state.user = { is_eligible_for_research: 0 };
 	await aux.sendTermos(context);
 
+	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' });
+
 	await expect(context.state.user.is_eligible_for_research === 1).toBeFalsy();
 
-	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos' });
 	await expect(context.sendText).toBeCalledWith(flow.quizYes.text15);
-	await expect(context.sendButtonTemplate).toBeCalledWith(help.buildPhoneMsg(undefined, flow.onTheResearch.buildTermos), opt.TCLE);
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.onTheResearch.buildTermos, opt.TCLE);
 	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, opt.termos);
 });
 

@@ -25,6 +25,7 @@ module.exports = {
 		text1: 'Hmm, beibe, ainda quero te fazer umas perguntinhas! Bora?',
 		text2: 'Tem certeza, mexxxmo?',
 		text3: 'Bb, aproveitando... Quero te conhecer melhor, topa responder? 💁‍♀',
+		text4: 'Tem certeza que não quer mesmo participar?',
 	},
 	desafioRecusado: {
 		text1: '😉',
@@ -60,13 +61,15 @@ module.exports = {
 	onTheResearch: {
 		text1: 'Vc é um close keriiiiiiiii! 😻',
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
-		text2: 'Amore, sabia q existem vários tipos de prevenções? Uma delas é a PreP, previne a infecção pelo HIV através de um remedinho, tipo pílula q vc toma todo dia e é gratuito pelo SUS, acredita?',
-		extra: 'E aí, quer participar?',
+		text2: 'Adorei te conhecer melhor! E deixa eu te contar: Sabia q existem vários tipos de prevenções? Uma delas é a PreP, previne a infecção pelo HIV através de um remedinho, tipo pílula q vc toma todo dia e é gratuito pelo SUS, acredita?',
+		text3: 'E a nossa pesquisa vai além disso, tem muito +! A gnt oferece PrEP e outros métodos pra jovens lacradores como a senhoras.',
+		extra: 'Quer saber saber mais sobre o nosso projeto?',
 		AC5: 'E olha que bafo. Está rolando uma pesquisa bafônica com o pessoal das universidades (USP, UFMG e UFBA) pra oferecer PrEP e outros métodos pra jovens lacradoras como a senhaora. Bora?',
-		saidYes: 'A qualquer momento você pode pedir para desistir de participar. Se você aceitar, clique em: Li e Aceito',
-		buildTermos: 'As informações que você digitar neste chatbot poderão ser usadas para fins de pesquisa sobre percepções, conhecimento, aceitabilidade e intenção de usar a PrEP'
-			+ ' e o autoteste para HIV, entre adolescentes HSH e TrMT de 15 - 19 anos, em São Paulo, Salvador e Belo Horizonte. Você poderá obter mais informações nos seguintes telefones:',
-		naoAceitaTermos: 'Tudo bem bb!',
+		saidYes: 'Se você aceitar, clique em: Li e Aceito.',
+		buildTermos: 'Os meus criadores são pesquisadores da UFMG, USP e UFBA e querem sua autorização para usarem as infos do nosso papo pra pesquisar o comportamento '
+		+ 'sexual e prevenção do HIV em jovens. Se tu não tiver afim de participar dessa pesquisa, pode continuar falando comigo de boas, mas se quiser, pode desistir '
+		+ 'qualquer hora e pedir pra apagar suas infos! Qualquer denúncia pode ser comunicadas ao Comitê de Ética em Pesquisa. Info da pesquisa e o contato do comitê estão no link. ',
+		naoAceitaTermos: 'Tudo bem, bb!',
 	},
 	verConsulta: {
 		zero: 'Amooooreeee, você não tem nenhuma consulta marcada!',
@@ -81,9 +84,6 @@ module.exports = {
 	},
 	quiz: {
 		beginQuiz: 'Vamo la bee!! lesgo!',
-		count1: 'Bafo! Estou adorando te conhecer...',
-		count2: 'Amando! Só mais algumas vai...',
-		count3: 'Arrasando.. só mais 3 e juro que paro de ser curiosa 🤩',
 		form_error: 'Eita, acho que me perdi. Topa responder de novo?',
 		invalid: 'Bee, esse formato é inválido! Vamos tentar novamente, digita aí!',
 		sintoma: '[Text explicativo dos sintomas]',
@@ -146,9 +146,9 @@ module.exports = {
 		},
 		rua1: 'É realização de testagem na rua e em ambientes de sociabilidade, com agenda, locais e horários variáveis. Acesso mais fácil e horários alternativos, pode ter um bem pertinho de você! Nossa agenda é variável, se quiser podemos te enviar o link para você ver se tem algo por perto.',
 		rua2: {
-			1: 'AGENDA de SP',
+			1: 'Centro de Testagem e Aconselhamento Henfil\nRua Libero Badaró, 144, Anhangabaú. São Paulo - SP - CEP: 01008001',
 			2: 'Centro de Referência da Juventude – CRJ: Rua Guaicurus, 50, Centro - Praça da Estação.',
-			3: 'AGENDA de BA',
+			3: 'Sem Agenda no momento',
 		},
 		servico1: 'Tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode tirar suas dúvidas e falar sobre prevenção combinada.',
 	},
@@ -162,7 +162,7 @@ module.exports = {
 		consulta1: 'Eiiiiii bonita! Vc tem uma consulta marcada, mas se quiser ajuda eu te mando mais informações combinady?',
 		cta: '[informações dos atendimentos]>',
 		consulta2: 'Acabei de catar q vc não tem consulta marcada.\nVc qr marcar?',
-		whatsapp: '[texto com os números do whatapp]',
+		whatsapp: 'Telefones de emergência',
 		suggestWaitAutoTest: 'Se seu risco aconteceu há menos de 30 dias, você ainda está em janela imunológica, aquele período em que o teste ainda não tem sensibilidade para identificar um contato. É melhor esperar pelo menos 30 dias para se testar.',
 		noTest: 'ok',
 	},

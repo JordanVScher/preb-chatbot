@@ -57,7 +57,7 @@ async function replaceTitle(options, toFind, newTitle) {
 	const result = options;
 
 	const objIndex = result.findIndex((obj => obj.title === toFind));
-	if (objIndex) { result[objIndex].title = newTitle; }
+	if (objIndex && objIndex >= 0) { result[objIndex].title = newTitle; }
 
 	return result;
 }
@@ -107,6 +107,9 @@ async function checkMainMenu(context) {
 	if (context.state.stoppedHalfway === true) {
 		newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
 	}
+
+	newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 

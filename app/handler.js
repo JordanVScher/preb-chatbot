@@ -14,7 +14,6 @@ const research = require('./utils/research');
 const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
-const { endQuiz } = require('./utils/quiz_aux');
 
 module.exports = async (context) => {
 	try {
@@ -96,6 +95,7 @@ module.exports = async (context) => {
 				await research.handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
+				await context.setState({ stoppedHalfway: false });
 				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
 				await context.setState({ is_target_audience: false, is_prep: false, categoryQuestion: '' });
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
@@ -126,7 +126,7 @@ module.exports = async (context) => {
 			break;
 		case 'stopHalfway':
 			await context.setState({ stoppedHalfway: true });
-			await mainMenu.sendMain(context, 'tudo bem, se mudar de ideia clique em participar');
+			await mainMenu.sendMain(context);
 			break;
 		case 'medicaçao':
 			await context.sendText(flow.medication.text1, await checkQR.checkMedication(context));
@@ -167,19 +167,16 @@ module.exports = async (context) => {
 		case 'startQuizA': // this is the quiz-type of questionario
 			// await context.setState({ categoryQuestion: 'quiz' });
 			await quiz.answerQuizA(context);
-			// await endQuiz(context, prepAPI);
 			break;
-		// case 'naoAceito':
-		// 	await context.sendText('Tudo bem. Você ainda poderá marcar uma consulta.');
-		// 	await mainMenu.sendMain(context);
-		// 	break;
 		case 'aceitaTermos':
 			await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
-			await endQuiz(context, prepAPI);
+			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
+			await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
+			await consulta.checarConsulta(context);
 			break;
 		case 'naoAceitaTermos': // regular flow
 			await context.sendText(flow.onTheResearch.naoAceitaTermos);
-			await endQuiz(context, prepAPI);
+			await mainMenu.sendMain(context);
 			break;
 		case 'joinToken':
 			await context.sendText(flow.joinToken.text1, opt.joinToken);

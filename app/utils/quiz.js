@@ -1,4 +1,4 @@
-const prepApi = require('./prep_api.js');
+const prepApi = require('./prep_api');
 const aux = require('./quiz_aux');
 const flow = require('./flow');
 
@@ -24,16 +24,6 @@ async function answerQuizA(context) {
 	if ((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)) {
 		await aux.sendTermos(context);
 	} else { // user is still answering the quiz
-		if (context.state.categoryQuestion === 'quiz') { // send encouragement only on the regular quiz
-			if (context.state.currentQuestion.count_more === 10) { // encouragement message
-				await context.sendText(flow.quiz.count1);
-			} else if (context.state.currentQuestion.count_more === 5) {
-				await context.sendText(flow.quiz.count2);
-			} else if (context.state.currentQuestion.count_more === 2) {
-				await context.sendText(flow.quiz.count3);
-			}
-		}
-
 		// showing question and answer options
 			if (context.state.currentQuestion.type === 'multiple_choice') { // eslint-disable-line
 			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
@@ -54,10 +44,12 @@ async function handleAnswerA(context, quizOpt) {
 	// await context.sendText(flow.quiz.form_error);
 	// await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 	// }
-	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
+	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
 	await context.setState({ onTextQuiz: false });
 	// if we know user is not target audience he can only see the fun_questions or now on
-	if (context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0) { await context.setState({ categoryQuestion: 'fun_questions' });	}
+	if (context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0) {
+		await context.setState({ categoryQuestion: 'fun_questions' });
+	}
 
 	if (context.state.sentAnswer.error) { // error
 		await context.sendText(flow.quiz.form_error);

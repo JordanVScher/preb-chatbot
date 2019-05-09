@@ -13,7 +13,11 @@ async function sendQuiz(context) {
 	} else {
 		await prepApi.postCountQuiz(context.session.user.id); // update quiz counter
 		if (context.state.startedQuiz === true) { // check if user started quiz
-			await context.sendText(flow.desafio.text1, opt.answer.sendQuiz); // send quiz when user has started the quiz already
+			if (context.state.stoppedHalfway === true) {
+				await context.sendText(flow.desafio.text4, opt.answer.sendQuiz);
+			} else {
+				await context.sendText(flow.desafio.text1, opt.answer.sendQuiz); // send quiz when user has started the quiz already
+			}
 		} else {
 			await context.sendText(flow.desafio.text3, opt.answer.sendQuiz); // send quiz when user hasn't even started the quiz
 		}
@@ -109,7 +113,7 @@ async function followUpIntent(context) {
 			if (context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
 				await sendQuiz(context);
 			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não) === 1
-				if (context.state.intentType === 'problema') { await context.sendText(flow.triagem.whatsapp); }
+				if (context.state.intentType === 'problema') { await context.sendText(await help.buildEmergenciaMsg(context.state.user.city, flow.triagem.whatsapp)); }
 				await sendResearch(context);
 			} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // não é elegível === 0
 				await sendCarouselSus(context, opt.sus);

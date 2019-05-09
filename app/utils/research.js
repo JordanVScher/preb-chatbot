@@ -17,8 +17,8 @@ async function handleToken(context) {
 
 async function onTheResearch(context) {
 	await context.setState({ dialog: 'onTheResearch' });
-
 	await context.sendText(flow.onTheResearch.text2);
+	await context.sendText(flow.onTheResearch.text3);
 	await context.sendText(flow.onTheResearch.AC5);
 	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
 	await context.sendText(flow.onTheResearch.extra, opt.onTheResearch);
@@ -42,7 +42,6 @@ async function notPart(context) {
 
 module.exports.onTheResearch = onTheResearch;
 module.exports.notEligible = notEligible;
-// module.exports.researchSaidNo = researchSaidNo;
 module.exports.researchSaidYes = researchSaidYes;
 module.exports.handleToken = handleToken;
 module.exports.notPart = notPart;
