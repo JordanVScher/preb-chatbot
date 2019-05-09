@@ -59,7 +59,11 @@ module.exports.sendTermos = async (context) => {
 	}
 	await context.sendText(flow.quizYes.text15);
 	await context.sendButtonTemplate(flow.onTheResearch.buildTermos, opt.TCLE);
-	await context.sendText(flow.onTheResearch.saidYes, opt.termos);
+	if (context.state.user.is_eligible_for_research === 1) {
+		await context.sendText(flow.onTheResearch.saidYes, opt.termos);
+	} else {
+		await context.sendText(flow.onTheResearch.saidYes, opt.termos2);
+	}
 };
 
 module.exports.endQuiz = async (context) => { // -- not used

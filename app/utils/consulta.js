@@ -97,7 +97,9 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		await sendSalvador(context);
 		if (context.state.sendExtraMessages === true) {
 			await context.setState({ sendExtraMessages: false });
-			await context.sendButtonTemplate(flow.quizYes.text2, opt.questionario);
+			if (context.state.sentAnswer && context.state.sentAnswer.offline_pre_registration_form && context.state.sentAnswer.offline_pre_registration_form.length > 0) {
+				await context.sendButtonTemplate(flow.quizYes.text2, context.state.sentAnswer.offline_pre_registration_form);
+			}
 		} else {
 			await context.setState({ sendExtraMessages: false });
 			await sendMain(context);

@@ -65,6 +65,14 @@ it('termos - aceitaTermos', async () => { // user clicked on extra option
 	await expect(consulta.checarConsulta).toBeCalledWith(context);
 });
 
+it('termos - aceitaTermos2', async () => { // user clicked on extra option
+	const context = cont.quickReplyContext('aceitaTermos2', 'aceitaTermos2');
+	await handler(context);
+
+	await expect(prepAPI.postSignature).toBeCalledWith(context.session.user.id, opt.TCLE[0].url);
+	await expect(mainMenu.sendMain).toBeCalledWith(context);
+});
+
 it('termos - naoAceitaTermos', async () => { // user clicked on extra option
 	const context = cont.quickReplyContext('naoAceitaTermos', 'naoAceitaTermos');
 	await handler(context);

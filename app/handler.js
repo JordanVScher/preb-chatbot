@@ -173,6 +173,10 @@ module.exports = async (context) => {
 			await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
 			await consulta.checarConsulta(context);
 			break;
+		case 'aceitaTermos2':
+			await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
+			await mainMenu.sendMain(context);
+			break;
 		case 'naoAceitaTermos': // regular flow
 			await context.sendText(flow.onTheResearch.naoAceitaTermos);
 			await mainMenu.sendMain(context);
