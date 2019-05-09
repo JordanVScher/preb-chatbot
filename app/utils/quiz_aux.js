@@ -54,13 +54,13 @@ async function buildMultipleChoice(question, complement) {
 module.exports.buildMultipleChoice = buildMultipleChoice;
 
 module.exports.sendTermos = async (context) => {
+	await context.setState({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
 	if (context.state.user.is_eligible_for_research === 1) {
 		await context.sendText(flow.onTheResearch.text1);
 		await context.sendImage(flow.onTheResearch.gif);
 	}
-	await context.setState({ dialog: 'seeTermos' });
 	await context.sendText(flow.quizYes.text15);
-	await context.sendButtonTemplate(await help.buildPhoneMsg(undefined, flow.onTheResearch.buildTermos), opt.TCLE);
+	await context.sendButtonTemplate(flow.onTheResearch.buildTermos, opt.TCLE);
 	await context.sendText(flow.onTheResearch.saidYes, opt.termos);
 };
 

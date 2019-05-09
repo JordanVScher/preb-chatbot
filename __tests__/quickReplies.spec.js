@@ -2,20 +2,22 @@ require('dotenv').config();
 
 const cont = require('./context');
 const flow = require('../app/utils/flow');
+const opt = require('../app/utils/options');
 const handler = require('../app/handler');
 // const MaAPI = require('../app/chatbot_api');
 // const desafio = require('../app/utils/desafio');
 const quiz = require('../app/utils/quiz');
-// const prepAPI = require('../app/utils/prep_api');
+const prepAPI = require('../app/utils/prep_api');
+const consulta = require('../app/utils/consulta');
 // const research = require('../app/utils/research');
-// const mainMenu = require('../app/utils/mainMenu');
+const mainMenu = require('../app/utils/mainMenu');
 // const { sendMain } = require('../app/utils/mainMenu');
 // const help = require('../app/utils/helper');
 
 jest.mock('../app/utils/helper');
 jest.mock('../app/chatbot_api');
 jest.mock('../app/utils/flow');
-jest.mock('../app/utils/desafio');
+jest.mock('../app/utils/consulta');
 jest.mock('../app/utils/quiz');
 jest.mock('../app/utils/research');
 jest.mock('../app/utils/mainMenu');
@@ -51,4 +53,22 @@ it('quiz - multiple choice extra answer', async () => { // user clicked on extra
 	await expect(context.state.lastQRpayload.slice(0, 4) === 'quiz').toBeFalsy();
 	await expect(context.state.lastQRpayload.slice(0, 13) === 'extraQuestion').toBeTruthy();
 	await expect(quiz.AnswerExtraQuestion).toBeCalledWith(context);
+});
+
+it('termos - aceitaTermos', async () => { // user clicked on extra option
+	const context = cont.quickReplyContext('aceitaTermos', 'aceitaTermos');
+	await handler(context);
+
+	await expect(prepAPI.postSignature).toBeCalledWith(context.session.user.id, opt.TCLE[0].url);
+	await expect(context.setState).toBeCalledWith({ categoryConsulta: 'recrutamento' });
+	await expect(context.setState).toBeCalledWith({ sendExtraMessages: true });
+	await expect(consulta.checarConsulta).toBeCalledWith(context);
+});
+
+it('termos - naoAceitaTermos', async () => { // user clicked on extra option
+	const context = cont.quickReplyContext('naoAceitaTermos', 'naoAceitaTermos');
+	await handler(context);
+
+	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.naoAceitaTermos);
+	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });
