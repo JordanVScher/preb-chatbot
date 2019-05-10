@@ -70,9 +70,11 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 // removes dates that don't have any available hours
 async function cleanDates(dates) {
 	const result = [];
-	dates.forEach(async (element) => {
-		if (element.hours.length !== 0) { result.push(element); }
-	});
+	if (dates && dates.length > 0) {
+		dates.forEach(async (element) => {
+			if (element.hours.length !== 0) { result.push(element); }
+		});
+	}
 
 	return result;
 }
