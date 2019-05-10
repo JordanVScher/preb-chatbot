@@ -104,9 +104,9 @@ async function checkMainMenu(context) {
 	}
 
 	newOptions.push({ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' });
-	if (context.state.stoppedHalfway === true) {
-		newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
-	}
+	// if (context.state.stoppedHalfway === true) {
+	// 	newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
+	// }
 
 
 	// newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' }); // -- for testing the quiz
@@ -182,3 +182,4 @@ module.exports.checkMainMenu = checkMainMenu;
 module.exports.checkConsulta = checkConsulta;
 module.exports.checkMedication = checkMedication;
 module.exports.autoTesteOption = autoTesteOption;
+module.exports.replaceTitle = replaceTitle;
