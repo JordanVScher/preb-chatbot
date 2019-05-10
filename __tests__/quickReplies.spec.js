@@ -4,7 +4,7 @@ const cont = require('./context');
 const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
 const handler = require('../app/handler');
-// const MaAPI = require('../app/chatbot_api');
+const MaAPI = require('../app/chatbot_api');
 // const desafio = require('../app/utils/desafio');
 const quiz = require('../app/utils/quiz');
 const prepAPI = require('../app/utils/prep_api');
@@ -39,6 +39,8 @@ it('quiz - multiple choice answer', async () => { // user clicked on option 3
 
 	await expect(context.event.isQuickReply).toBeTruthy();	// usual quickReply checking
 	await expect(context.setState).toBeCalledWith({ lastQRpayload: context.event.quickReply.payload });
+	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id,
+		context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 	await expect(context.state.lastQRpayload.slice(0, 4) === 'quiz').toBeTruthy();
 
 	await expect(quiz.handleAnswerA).toBeCalledWith(context, context.state.lastQRpayload.replace('quiz', ''));

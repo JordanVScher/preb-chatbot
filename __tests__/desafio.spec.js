@@ -46,20 +46,20 @@ it('sendQuiz - count less than 3 - started quiz', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.desafio.text1, opt.answer.sendQuiz);
 });
 
-it('sendQuiz - count less than 3 - started quiz - stoppedHalfway', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.quizCounter = { count_quiz: 2 };
-	context.state.startedQuiz = true; context.state.stoppedHalfway = true;
-	await desafio.sendQuiz(context);
+// it('sendQuiz - count less than 3 - started quiz - stoppedHalfway', async () => {
+// 	const context = cont.quickReplyContext('0', 'prompt');
+// 	context.state.quizCounter = { count_quiz: 2 };
+// 	context.state.startedQuiz = true; context.state.stoppedHalfway = true;
+// 	await desafio.sendQuiz(context);
 
-	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
-	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeFalsy();
-	await expect(prepApi.postCountQuiz).toBeCalledWith(context.session.user.id);
-	await expect(context.state.startedQuiz === true).toBeTruthy();
-	await expect(context.state.stoppedHalfway === true).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.desafio.text4, opt.answer.sendQuiz);
-});
+// 	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
+// 	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
+// 	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeFalsy();
+// 	await expect(prepApi.postCountQuiz).toBeCalledWith(context.session.user.id);
+// 	await expect(context.state.startedQuiz === true).toBeTruthy();
+// 	await expect(context.state.stoppedHalfway === true).toBeTruthy();
+// 	await expect(context.sendText).toBeCalledWith(flow.desafio.text4, opt.answer.sendQuiz);
+// });
 
 it('sendQuiz - count less than 3 - didnt start quiz', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');

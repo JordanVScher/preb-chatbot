@@ -51,6 +51,8 @@ module.exports = async (context) => {
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
 			await context.setState({ lastQRpayload: context.event.quickReply.payload });
+			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
+				context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 			if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
 				await context.setState({ selectedDate: context.state.lastQRpayload.slice(9, -1) });
 				await context.setState({ dialog: 'setEventHour' });
@@ -81,8 +83,6 @@ module.exports = async (context) => {
 				await context.setState({ dialog: await context.state.lastQRpayload.replace('NoSign-', '') });
 			} else { // regular quick_replies
 				await context.setState({ dialog: context.state.lastQRpayload });
-				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
-					context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 			}
 		} else if (context.event.isText) {
 			console.log('--------------------------');
@@ -125,7 +125,7 @@ module.exports = async (context) => {
 			// await quiz.answerQuizA(context);
 			break;
 		case 'stopHalfway':
-			await context.setState({ stoppedHalfway: true });
+			// await context.setState({ stoppedHalfway: true });
 			await mainMenu.sendMain(context);
 			break;
 		case 'medicaçao':
