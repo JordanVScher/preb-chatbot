@@ -51,7 +51,7 @@ async function handleAnswerA(context, quizOpt) {
 		await context.setState({ categoryQuestion: 'fun_questions' });
 	}
 
-	if (context.state.sentAnswer.error) { // error
+	if (context.state.sentAnswer.error || context.state.sentAnswer.form_error || !context.state.sentAnswer) { // error
 		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 	} else {
