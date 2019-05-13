@@ -64,6 +64,8 @@ module.exports = {
 	},
 
 	async postQuizAnswer(fb_id, category, code, answer_value) {
+		console.log('postQuizAnswer', `${fb_id} - ${category} - ${code} - ${answer_value}`);
+
 		let quizData;
 		try {
 			const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}&`).query({
