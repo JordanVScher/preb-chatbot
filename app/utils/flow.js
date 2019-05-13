@@ -2,10 +2,9 @@ module.exports = {
 	avatarImage: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/c38095b8-6b51-46f9-a8a9-b61ac9ac9385.png',
 	getStarted: 'Eu sou a Amanda Selfie, a primeira travesti robôa do Brasil. Clique em começar para falar comigo.',
 	greetings: {
-		text1: 'Inhai more, ta bem? ',
-		text2: 'Eu sou a Amanda Selfie, a primeira travesti robôa do Brasil 👏👏. Essa plataforma é nossa! #lacray',
-		text3: 'Aqui a gnt pode falar sobre ISTs, HIV e como se prevenir da forma mais saudável e justa para o próprio corpo. '
-			+ 'Eu tô aqui animadíssima pq pra mim é mt importante q a gnt tenha consciência sexual pra fazer escolhas com mais autonomia. Q tudo né? ',
+		text1: 'Inhaiiii gatinhe!!',
+		text2: 'Meu nome é A-manda Selfie, a primeira travesti robôa do Brasil!! 👏👏 #travestisvaodominaromundo',
+		text3: 'Cmg vc pode falar sobre ISTs, HIV, sobre prevenção e saúde sexual! Pq uma coisa q eu aprendi é q é 1 bafo ter consciência sexual pra fazer escolhas e ter mais autonomia nas nossas relações! A gnt tbm pode falar de qualquer coisa, bb, eu a-m-o conversar!',
 	},
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
@@ -17,7 +16,7 @@ module.exports = {
 		+ 'todos os métodos possíveis e se cuidarem muito!',
 	},
 	asksDesafio: {
-		text1: 'Agora eu vou fazer a linha entrevistadora e vou te perguntar algumas coisas e dps deixo vc matar a curiosidade sobre mim, é puro luxo!\nBora?',
+		text1: 'Mas antssss, vô fazer a linha entrevistadora e vô te perguntar umas coisas pq logo vamo fazer um QUIZ pra saber ""Q DIVA VC É NA SARRAÇÃO""',
 	},
 	desafio: {
 		text1: 'Hmm, beibe, ainda quero te fazer umas perguntinhas! Bora?',

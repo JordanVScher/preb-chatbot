@@ -120,6 +120,7 @@ module.exports = async (context) => {
 		case 'greetings':
 			await context.sendText(flow.greetings.text1);
 			await context.sendText(flow.greetings.text2);
+			await context.sendText(flow.greetings.text3);
 			await desafio.asksDesafio(context);
 			// await timer.sendCarouselSus(context, opt.sus);
 			// await quiz.answerQuizA(context);
