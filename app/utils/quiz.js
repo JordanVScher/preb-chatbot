@@ -51,7 +51,7 @@ async function handleAnswerA(context, quizOpt) {
 		await context.setState({ categoryQuestion: 'fun_questions' });
 	}
 
-	if (context.state.sentAnswer.error || context.state.sentAnswer.form_error || !context.state.sentAnswer) { // error
+	if (context.state.sentAnswer.error || !context.state.sentAnswer) { // error
 		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 	} else {
@@ -62,7 +62,8 @@ async function handleAnswerA(context, quizOpt) {
 		}
 		if (context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2') {
 			await context.setState({ dialog: 'stopHalfway' });
-		} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
+		} else if (context.state.sentAnswer.form_error
+			|| (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid')) { // input format is wrong (text)
 			await context.sendText(flow.quiz.invalid);
 			// Date is: YYYY-MM-DD
 			await context.setState({ dialog: 'startQuizA' }); // re-asks same question

@@ -5,6 +5,7 @@ const opt = require('./options');
 const help = require('./helper');
 const prepApi = require('./prep_api');
 const { checkConsulta } = require('./checkQR');
+const { buildButton } = require('./checkQR');
 const { sendMain } = require('./mainMenu');
 const aux = require('./consulta-aux');
 
@@ -97,8 +98,10 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		await sendSalvador(context);
 		if (context.state.sendExtraMessages === true) {
 			await context.setState({ sendExtraMessages: false });
+			// await context.setState({ sentAnswer: { offline_pre_registration_form: 'www.google.com' } }); // for testing
 			if (context.state.sentAnswer && context.state.sentAnswer.offline_pre_registration_form && context.state.sentAnswer.offline_pre_registration_form.length > 0) {
-				await context.sendButtonTemplate(flow.quizYes.text2, context.state.sentAnswer.offline_pre_registration_form);
+				await context.sendButtonTemplate(flow.quizYes.text2, await buildButton(context.state.sentAnswer.offline_pre_registration_form, 'Pré-Cadastro'));
+				await sendMain(context);
 			}
 		} else {
 			await context.setState({ sendExtraMessages: false });
