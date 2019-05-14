@@ -1,6 +1,7 @@
 const prepApi = require('./prep_api');
 const aux = require('./quiz_aux');
 const flow = require('./flow');
+const { sendShare } = require('./checkQR');
 
 
 // loads next question and shows it to the user
@@ -58,6 +59,7 @@ async function handleAnswerA(context, quizOpt) {
 		if (context.state.sentAnswer.followup_messages) {
 			for (let i = 0; i < context.state.sentAnswer.followup_messages.length; i++) { // eslint-disable-line no-plusplus
 				await context.sendText(context.state.sentAnswer.followup_messages[i]);
+				if (i === 0 && context.state.currentQuestion.code === 'AC7') { await sendShare(context, flow.share, context.state.sentAnswer.followup_messages[i].split('\n')); }
 			}
 		}
 		if (context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2') {

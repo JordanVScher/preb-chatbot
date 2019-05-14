@@ -1,5 +1,5 @@
 module.exports = {
-	avatarImage: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/c38095b8-6b51-46f9-a8a9-b61ac9ac9385.png',
+	avatarImage: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/4d25c8b3-6b4b-46ff-a527-6ec28d8b7fb4.png',
 	getStarted: 'Eu sou a Amanda Selfie, a primeira travesti robôa do Brasil. Clique em começar para falar comigo.',
 	greetings: {
 		text1: 'Inhaiiii gatinhe!!',
@@ -78,6 +78,12 @@ module.exports = {
 		// text1: 'Resultado:\nVocê é daquelas bichas recatadas, belas e do lar!\nVocê não corre riscos e gosta de segurança.\nA D O R O!',
 		text1: 'AMEI te conhecer, olha só o que você pode fazer aqui:',
 		saidNo: '[texto não aceita participar]',
+	},
+	share: {
+		siteTitle: 'Compartilhe o seu resultado',
+		siteTitle2: 'Fiz o quiz da Amanda Selfie',
+		imageURL: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/4d25c8b3-6b4b-46ff-a527-6ec28d8b7fb4.png',
+		siteURL: 'https://m.me/1900082273454205',
 	},
 	quiz: {
 		beginQuiz: 'Vamo la bee!! lesgo!',
