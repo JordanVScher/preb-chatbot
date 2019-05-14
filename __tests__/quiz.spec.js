@@ -6,9 +6,11 @@ const quiz = require('../app/utils/quiz');
 const aux = require('../app/utils/quiz_aux');
 const flow = require('../app/utils/flow');
 const prepApi = require('../app/utils/prep_api');
+const { sendShare } = require('../app/utils/checkQR');
 
 jest.mock('../app/utils/quiz_aux');
 jest.mock('../app/utils/prep_api');
+jest.mock('../app/utils/checkQR');
 
 it('answerQuizA - multiple choice - empty category', async () => {
 	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
@@ -195,7 +197,33 @@ it('handleAnswerA - regular answer - followup_messages', async () => {
 
 	await expect(context.state.sentAnswer.error).toBeFalsy();
 	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
+	await expect(context.state.currentQuestion.code === 'AC7').toBeFalsy();
 	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[0]);
+	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[1]);
+	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[2]);
+});
+
+it('handleAnswerA - regular answer - followup_messages on AC7', async () => {
+	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
+	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.halfway;
+	context.state.currentQuestion.code = 'AC7';
+	const quizOpt = '1';
+	await quiz.handleAnswerA(context, quizOpt);
+
+	await expect(context.setState).toBeCalledWith({
+		sentAnswer: await prepApi.postQuizAnswer(
+			context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt,
+		),
+	});
+	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
+	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'fun_questions' });
+
+	await expect(context.state.sentAnswer.error).toBeFalsy();
+	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
+	await expect(context.state.currentQuestion.code === 'AC7').toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[0]);
+	await expect(sendShare).toBeCalledWith(context, flow.share, context.state.sentAnswer.followup_messages[0].split('\n'));
 	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[1]);
 	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[2]);
 });

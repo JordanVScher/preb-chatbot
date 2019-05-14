@@ -183,6 +183,55 @@ module.exports.buildButton = async (url, title) => [{
 	title,
 }];
 
+module.exports.sendShare = async (context, links, results) => {
+	const subtitle = results && results[0] ? results[0] : 'Chatbot';
+	await context.sendAttachment({
+		type: 'template',
+		payload: {
+			template_type: 'generic',
+			elements: [
+				{
+					title: links.siteTitle,
+					subtitle,
+					// image_url: links.imageURL,
+					item_url: links.siteURL,
+					buttons: [
+						{
+							type: 'element_share',
+							share_contents: {
+								attachment: {
+									type: 'template',
+									payload: {
+										template_type: 'generic',
+										elements: [
+											{
+												title: links.siteTitle2,
+												subtitle,
+												image_url: links.imageURL,
+												default_action: {
+													type: 'web_url',
+													url: links.siteURL,
+												},
+												buttons: [
+													{
+														type: 'web_url',
+														url: links.siteURL,
+														title: 'Conheçer',
+													},
+												],
+											},
+										],
+									},
+								},
+							},
+						},
+					],
+				},
+			],
+		},
+	});
+};
+
 module.exports.checkAnsweredQuiz = checkAnsweredQuiz;
 module.exports.checkMainMenu = checkMainMenu;
 module.exports.checkConsulta = checkConsulta;
