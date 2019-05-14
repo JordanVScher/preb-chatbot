@@ -6,6 +6,7 @@ const flow = require('../app/utils/flow');
 const prepApi = require('../app/utils/prep_api');
 const help = require('../app/utils/helper');
 const { checkConsulta } = require('../app/utils/checkQR');
+const { buildButton } = require('../app/utils/checkQR');
 const { sendMain } = require('../app/utils/mainMenu');
 
 jest.mock('../app/utils/options');
@@ -186,7 +187,9 @@ it('finalDate - success with extra message', async () => {
 	await expect(context.setState).toBeCalledWith({ sendExtraMessages: false });
 
 	await expect(context.state.sentAnswer && context.state.sentAnswer.offline_pre_registration_form && context.state.sentAnswer.offline_pre_registration_form.length > 0).toBeTruthy();
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text2, context.state.sentAnswer.offline_pre_registration_form);
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text2, await buildButton(context.state.sentAnswer.offline_pre_registration_form, 'Pré-Cadastro'));
+
+	await expect(sendMain).toBeCalledWith(context);
 });
 
 it('finalDate - error', async () => {

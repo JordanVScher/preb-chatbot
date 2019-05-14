@@ -177,6 +177,12 @@ module.exports.getErrorQR = async (lastPostback) => { // eslint-disable-line
 	return { quick_replies: elements };
 };
 
+module.exports.buildButton = async (url, title) => [{
+	type: 'web_url',
+	url,
+	title,
+}];
+
 module.exports.checkAnsweredQuiz = checkAnsweredQuiz;
 module.exports.checkMainMenu = checkMainMenu;
 module.exports.checkConsulta = checkConsulta;
