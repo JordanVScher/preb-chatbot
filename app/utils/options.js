@@ -50,18 +50,18 @@ module.exports = {
 	},
 	artigoLink: [{
 		type: 'web_url',
-		url: 'www.google.com',
+		url: 'https://www.google.com',
 		title: 'Ler artigo',
 	}],
 	questionario: [{
 		type: 'web_url',
-		url: 'www.google.com',
+		url: 'https://www.google.com',
 		title: 'Ir para Pré-Cadastro',
 	}],
 	TCLE: [{
 		type: 'web_url',
-		url: 'www.prep1519.org',
-		title: 'Ler Termos',
+		url: 'https://www.prep1519.org',
+		title: 'Saber Mais',
 	}],
 	duvidaRemedio: [{
 		type: 'web_url',

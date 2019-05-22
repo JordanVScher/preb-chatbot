@@ -8,7 +8,7 @@ Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.ENV, capture
 moment.locale('pt-BR');
 
 // separates string in the first dot on the second half of the string
-module.exports.separateString = (someString) => {
+async function separateString(someString) {
 	if (someString.trim()[someString.length - 1] !== '.') { // trying to guarantee the last char is a dot so we never use halfLength alone as the divisor
 		someString += '.'; // eslint-disable-line no-param-reassign
 	}
@@ -22,7 +22,7 @@ module.exports.separateString = (someString) => {
 	const secondString = someString.substring(dotIndex);
 
 	return { firstString, secondString };
-};
+}
 
 async function formatDialogFlow(text) {
 	let result = text.toLowerCase();
@@ -61,15 +61,15 @@ const weekDayNameLong = {
 };
 
 const cidadeDictionary = {
-	1: 'Centro de Testagem e Aconselhamento Henfil\nRua Libero Badaró, 144, Anhangabaú. São Paulo - SP - CEP: 01008001',
-	2: 'Centro de Referência da Juventude – CRJ\nRua Guaicurus, 50, Centro (Praça da Estação, Belo Horizonte - MG)',
-	3: 'Salvador - BA',
+	1: 'Centro de Referência da Juventude – CRJ\nRua Guaicurus, 50, Centro (Praça da Estação, Belo Horizonte - MG)',
+	2: 'Salvador - BA',
+	3: 'Centro de Testagem e Aconselhamento Henfil\nRua Libero Badaró, 144, Anhangabaú. São Paulo - SP - CEP: 01008001',
 };
 
-const telefoneDictionary = { 1: '11111-1111', 2: '2222-2222', 3: '(71) 3017-9216' };
-const emergenciaDictionary = { 1: '11 98209-2911', 2: '(31) 99726-9307', 3: '(71) 99102-2234' };
-
-const locationDictionary = { 1: 'São Paulo - SP', 2: 'Belo Horizonte - MG', 3: 'Salvador - BA' };
+const telefoneDictionary = { 1: '2222-2222', 2: '(71) 3017-9216', 3: '11111-1111' };
+const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234', 3: '11 98209-2911' };
+// "1": "Belo Horizonte - MG", "2": "Salvador - BA", "3": "São Paulo e Gde SP",
+const locationDictionary = { 1: 'Belo Horizonte - MG', 2: 'Salvador - BA', 3: 'São Paulo - SP' };
 
 async function buildPhoneMsg(cityId, introText) {
 	const validOptions = ['1', '2', '3'];
@@ -139,20 +139,22 @@ function capQR(text) {
 	return result;
 }
 
-
-module.exports.Sentry = Sentry;
-module.exports.addNewUser = addNewUser;
-module.exports.apiai = dialogFlow(process.env.DIALOGFLOW_TOKEN);
-module.exports.moment = moment;
-module.exports.capQR = capQR;
-module.exports.formatDialogFlow = formatDialogFlow;
-module.exports.waitTypingEffect = waitTypingEffect;
-module.exports.formatDate = formatDate;
-module.exports.weekDayName = weekDayName;
-module.exports.cidadeDictionary = cidadeDictionary;
-module.exports.telefoneDictionary = telefoneDictionary;
-module.exports.locationDictionary = locationDictionary;
-module.exports.buildPhoneMsg = buildPhoneMsg;
-module.exports.buildEmergenciaMsg = buildEmergenciaMsg;
-module.exports.separateIntent = separateIntent;
-module.exports.checkSuggestWaitForTest = checkSuggestWaitForTest;
+module.exports = {
+	apiai: dialogFlow(process.env.DIALOGFLOW_TOKEN),
+	Sentry,
+	addNewUser,
+	moment,
+	capQR,
+	formatDialogFlow,
+	waitTypingEffect,
+	formatDate,
+	weekDayName,
+	cidadeDictionary,
+	telefoneDictionary,
+	locationDictionary,
+	buildPhoneMsg,
+	buildEmergenciaMsg,
+	separateIntent,
+	separateString,
+	checkSuggestWaitForTest,
+};

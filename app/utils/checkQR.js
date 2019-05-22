@@ -66,6 +66,7 @@ async function checkMainMenu(context) {
 	await context.setState({ sendExtraMessages: false });
 	let newOptions = [];
 	newOptions.push({ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' });
+	console.log(context.state.user);
 
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 
@@ -77,7 +78,7 @@ async function checkMainMenu(context) {
 			} else {
 				newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' });
 			}
-		} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // 1 1
+		} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1 && context.state.user.is_part_of_research !== 1) { // 1 1
 			newOptions.push({ content_type: 'text', title: 'Pesquisa', payload: 'askResearch' });
 		} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // 0 1
 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
