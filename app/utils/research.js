@@ -4,12 +4,12 @@ const checkQR = require('./checkQR');
 const { postIntegrationToken } = require('./prep_api');
 const { checarConsulta } = require('./consulta');
 
-
 module.exports.handleToken = async (context) => {
 	const answer = await postIntegrationToken(context.session.user.id, context.state.whatWasTyped);
 	if (answer.form_error) { // check if there was any errors
 		await context.sendText(flow.joinToken.fail);
-		await context.setState({ dialog: 'joinToken' });
+		await context.sendText(flow.joinToken.fail2, opt.joinToken);
+		await context.setState({ dialog: 'joinTokenErro' });
 	} else {
 		await context.sendText(flow.joinToken.success);
 		await context.setState({ dialog: 'mainMenu' });

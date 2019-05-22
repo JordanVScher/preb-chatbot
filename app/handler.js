@@ -91,7 +91,7 @@ module.exports = async (context) => {
 			await context.setState({ whatWasTyped: `${context.event.message.text}` });
 			if (context.state.onTextQuiz === true) {
 				await quiz.handleAnswerA(context, context.state.whatWasTyped);
-			} else if (context.state.dialog === 'joinToken') {
+			} else if (context.state.dialog === 'joinToken' || context.state.dialog === 'joinTokenErro') {
 				await research.handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
