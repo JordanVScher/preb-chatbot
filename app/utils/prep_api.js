@@ -171,7 +171,7 @@ module.exports = {
 			const sign = await res.json();
 			return sign;
 		} catch (error) {
-			console.log(error);
+			console.log('postSignature', error);
 			return error;
 		}
 	},
