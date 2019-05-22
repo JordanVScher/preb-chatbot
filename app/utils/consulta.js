@@ -101,7 +101,8 @@ async function finalDate(context, quota) { // where we actually schedule the con
 			// await context.setState({ sentAnswer: { offline_pre_registration_form: 'www.google.com' } }); // for testing
 			if (context.state.sentAnswer && context.state.sentAnswer.offline_pre_registration_form && context.state.sentAnswer.offline_pre_registration_form.length > 0) {
 				try {
-					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton(context.state.sentAnswer.offline_pre_registration_form, 'Pré-Cadastro'));
+					// await context.sendButtonTemplate(flow.quizYes.text2, await buildButton(context.state.sentAnswer.offline_pre_registration_form, 'Pré-Cadastro'));
+					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton('http://www.google.com/participante/pre-cadastro/00300000006', 'Pré-Cadastro'));
 				} catch (error) {
 					console.log('Erro no sendButtonTemplate', error);
 				}
