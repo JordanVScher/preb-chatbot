@@ -39,7 +39,8 @@ module.exports = {
 	joinToken: {
 		text1: 'Inhaiii! Pra vc q adquiriu lindamente seu voucher no serviço, digita ele aqui pra mim amore!',
 		success: 'Eitaaa, te encontrei no systema, q tudo!!',
-		fail: 'Vish, kd tu nesse systema? Vamo denovo? Digita aí o número do voucher, é alguma coisa tipo xxxxx-xxxxx-xxxx',
+		fail: 'Vish, kd tu nesse systema? Vamo denovo? Digita aí o número do voucher.',
+		fail2: 'Ou se não lembrar pode clicar no botão abaixo.',
 		view: 'Bb, pega seu voucher: ',
 	},
 	issueText: {
