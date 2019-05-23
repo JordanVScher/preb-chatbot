@@ -30,7 +30,7 @@ async function sendResearch(context) {
 		await mainMenu.sendShareAndMenu(context); // send regular menu
 	} else {
 		await prepApi.postCountResearch(context.session.user.id); // update quiz counter
-		await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
+		await context.sendText(flow.desafio.text4, opt.answer.sendResearch); // send research
 	}
 }
 

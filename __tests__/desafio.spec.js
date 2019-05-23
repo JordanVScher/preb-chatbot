@@ -93,7 +93,7 @@ it('sendResearch - count less than 3 ', async () => {
 	await expect(context.setState).toBeCalledWith({ researchCounter: await prepApi.getCountResearch(context.session.user.id) });
 	await expect(context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3).toBeFalsy();
 	await expect(prepApi.postCountResearch).toBeCalledWith(context.session.user.id);
-	await expect(context.sendText).toBeCalledWith(flow.desafio.text2, opt.answer.sendResearch);
+	await expect(context.sendText).toBeCalledWith(flow.desafio.text4, opt.answer.sendResearch);
 });
 
 it('sendResearch - count 3 ', async () => {
