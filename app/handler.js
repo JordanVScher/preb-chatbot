@@ -168,13 +168,14 @@ module.exports = async (context) => {
 		case 'startQuizA': // this is the quiz-type of questionario
 			await quiz.answerQuizA(context);
 			break;
-		case 'aceitaTermos':
+		case 'aceitaTermos': // aceita termos e é da pesquisa
+			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);
 			await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
 			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
 			await consulta.checarConsulta(context);
 			break;
-		case 'aceitaTermos2':
+		case 'aceitaTermos2': // aceita termos mas não é da pesquisa
 			await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
 			await mainMenu.sendMain(context);
 			break;
