@@ -79,7 +79,37 @@ async function cleanDates(dates) {
 	return result;
 }
 
+async function formatPayload(date) {
+	return date.replace('dia', '').replace(/-/g, '');
+}
+
+async function orderByDate(original) {
+	const dates = original;
+	let aux = [];
+
+	// get only the options with actual dates
+	for (let i = 0; i < dates.length; i++) { // eslint-disable-line no-plusplus
+		const element = dates[i];
+		if (element.payload && element.payload.slice(0, 3) === 'dia') {
+			aux.push({ date: await formatPayload(element.payload), title: element.title, payload: element.payload	});
+		}
+	}
+	aux = await aux.sort((obj1, obj2) => obj1.date - obj2.date); // order from closest to fartest
+
+	// replace date options
+	for (let i = 0; i < dates.length; i++) { // eslint-disable-line no-plusplus
+		if (dates[i].payload && dates[i].payload.slice(0, 3) === 'dia') {
+			const aux2 = aux.shift();
+			dates[i].title = aux2.title;
+			dates[i].payload = aux2.payload;
+		}
+	}
+
+	return dates;
+}
+
 module.exports.separateDaysQR = separateDaysQR;
 module.exports.separateHoursQR = separateHoursQR;
 module.exports.formatHour = formatHour;
 module.exports.cleanDates = cleanDates;
+module.exports.orderByDate = orderByDate;

@@ -46,12 +46,18 @@ async function showDays(context) { // shows available days
 
 	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cidade, context.state.paginationDate) }); // getting calendar
 	await context.setState({ calendarNext: await prepApi.getAvailableDates(context.session.user.id, context.state.cidade, context.state.paginationDate + 1) }); // getting next page
+	console.log('calendar', context.state.calendar);
+
 	// console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
 	// await context.setState({ calendar: mockDates[context.state.paginationDate] });
 	// await context.setState({ calendarNext: mockDates[context.state.paginationDate + 1] }); // getting next page
 	if (context.state.calendar && context.state.calendar.dates && context.state.calendar.dates.length > 0) {
 		await context.setState({ freeTime: await aux.cleanDates(context.state.calendar.dates) }); // all the free time slots we have
+		console.log('freeTime', context.state.freeTime);
 		await context.setState({ freeDays: await aux.separateDaysQR(context.state.freeTime, context.state.calendarNext, context.state.paginationDate) }); // builds buttons options
+		console.log('freeDays', context.state.freeDays);
+		await context.setState({ freeDays: await aux.orderByDate(context.state.freeDays) }); // order options
+		console.log('freeDays2', context.state.freeDays);
 		if (context.state.freeDays && context.state.freeDays.length > 0) {
 			await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays });
 		} else {
