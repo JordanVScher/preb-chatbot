@@ -66,9 +66,7 @@ async function checkMainMenu(context) {
 	await context.setState({ sendExtraMessages: false });
 	let newOptions = [];
 	newOptions.push({ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' });
-	console.log(context.state.user);
-
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	// console.log(context.state.user);
 
 	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
 		if (context.state.user.is_part_of_research === 1) { // 1
@@ -108,7 +106,6 @@ async function checkMainMenu(context) {
 	// if (context.state.stoppedHalfway === true) {
 	// 	newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
 	// }
-
 
 	// newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' }); // -- for testing the quiz
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object

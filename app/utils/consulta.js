@@ -37,6 +37,7 @@ async function showDays(context) { // shows available days
 	await context.setState({ cidade: context.state.user.city }); // getting location id
 	// console.log('context.state.cidade', context.state.cidade, typeof context.state.cidade);
 	if (context.state.sendExtraMessages === true) {
+		await context.setState({ sendExtraMessages2: true, sendExtraMessages: false }); // because of "outras datas" we cant show these again, but we still have to show the next ones
 		await context.sendText(flow.quizYes.text3);
 		await context.sendText(flow.quizYes.text4);
 	} else {
@@ -96,8 +97,8 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 		+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`);
 		await sendSalvador(context);
-		if (context.state.sendExtraMessages === true) {
-			await context.setState({ sendExtraMessages: false });
+		if (context.state.sendExtraMessages2 === true) {
+			await context.setState({ sendExtraMessages2: false });
 			// await context.setState({ sentAnswer: { offline_pre_registration_form: 'www.google.com' } }); // for testing
 			if (context.state.sentAnswer && context.state.sentAnswer.offline_pre_registration_form && context.state.sentAnswer.offline_pre_registration_form.length > 0) {
 				try {
@@ -109,7 +110,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 				await sendMain(context);
 			}
 		} else {
-			await context.setState({ sendExtraMessages: false });
+			await context.setState({ sendExtraMessages: false, sendExtraMessages2: false });
 			await sendMain(context);
 		}
 	} else {

@@ -32,7 +32,7 @@ module.exports = async (context) => {
 
 		await help.addNewUser(context, prepAPI);
 		await timer.deleteTimers(context.session.user.id);
-		// console.log('user', context.state.user);
+		console.log('user', context.state.user);
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
@@ -51,6 +51,7 @@ module.exports = async (context) => {
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
 			await context.setState({ lastQRpayload: context.event.quickReply.payload });
+			console.log('lastQRpayload', context.event.quickReply.payload);
 			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
 				context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 			if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
@@ -169,7 +170,6 @@ module.exports = async (context) => {
 			await quiz.answerQuizA(context);
 			break;
 		case 'aceitaTermos': // aceita termos e é da pesquisa
-			await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);
 			await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
 			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
@@ -225,7 +225,7 @@ module.exports = async (context) => {
 			await consulta.verConsulta(context);
 			break;
 		case 'outrasDatas':
-			await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrasDatas), opt.outrasDatas);
+			await context.sendText(await help.buildEmergenciaMsg(context.state.user.city, flow.consulta.outrasDatas), opt.outrasDatas);
 			break;
 		case 'listaDatas':
 			await context.setState({ paginationDate: 1, paginationHour: 1 });
@@ -235,12 +235,13 @@ module.exports = async (context) => {
 			await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
 			break;
 		case 'firstNoResearch':
-			await context.sendText(flow.notEligible.saidNo);
-			await mainMenu.sendMain(context);
+			await context.sendButtonTemplate(flow.onTheResearch.buildTermos, opt.TCLE);
+			await context.sendText(flow.onTheResearch.saidYes, opt.termos2);
 			break;
-		case 'firstJoinResearch':
+		case 'firstJoinResearch': // voce gostaria de saber mais sobre o nosso projeto  - sim
 			await prepAPI.postParticipar(context.session.user.id, 1);
-			await research.researchSaidYes(context);
+			await context.sendText(flow.quizYes.text15);
+			await context.sendText(flow.onTheResearch.saidYes, opt.termos);
 			break;
 		case 'noResearchAfter':
 			await mainMenu.sendMain(context, flow.foraPesquisa.text1);

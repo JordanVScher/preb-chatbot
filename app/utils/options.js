@@ -80,10 +80,10 @@ module.exports = {
 			{ content_type: 'text', title: 'Não aceito!', payload: 'naoAceitaTermos' },
 		],
 	},
-	onTheResearch: {
+	saberMais: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Quero Participar', payload: 'firstJoinResearch' },
-			{ content_type: 'text', title: 'Não quero Participar', payload: 'firstNoResearch' },
+			{ content_type: 'text', title: 'Sim', payload: 'firstJoinResearch' },
+			{ content_type: 'text', title: 'Não', payload: 'firstNoResearch' },
 		],
 	},
 	saidNo: {

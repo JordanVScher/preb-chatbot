@@ -11,18 +11,6 @@ jest.mock('../app/utils/desafio');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/consulta');
 
-it('onTheResearch', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	await research.onTheResearch(context);
-
-	await expect(context.setState).toBeCalledWith({ dialog: 'onTheResearch' });
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text2);
-
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.AC5);
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.quizYes.text1, opt.artigoLink);
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.extra, opt.onTheResearch);
-});
-
 it('notEligible', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
 	await research.notEligible(context);

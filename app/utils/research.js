@@ -16,15 +16,6 @@ module.exports.handleToken = async (context) => {
 	}
 };
 
-module.exports.onTheResearch = async (context) => { // -- not used
-	await context.setState({ dialog: 'onTheResearch' });
-	await context.sendText(flow.onTheResearch.text2);
-	await context.sendText(flow.onTheResearch.text3);
-	await context.sendText(flow.onTheResearch.AC5);
-	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
-	await context.sendText(flow.onTheResearch.extra, opt.onTheResearch);
-};
-
 module.exports.notEligible = async (context) => { // -- not used // não passou nas 3 primeiras perguntas
 	await context.setState({ dialog: 'NotEligible' });
 	await context.sendText(flow.foraPesquisa.text1, await checkQR.checkMainMenu(context));
