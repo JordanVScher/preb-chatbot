@@ -36,7 +36,7 @@ module.exports = {
 			fb_id, is_part_of_research,
 		});
 		const postParticipar = await res.json();
-		// console.log('postParticipar', postParticipar);
+		console.log('postParticipar', postParticipar);
 		return postParticipar;
 	},
 

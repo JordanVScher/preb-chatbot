@@ -84,7 +84,7 @@ module.exports = {
 		siteTitle: 'Compartilhe o seu resultado',
 		siteTitle2: 'Fiz o quiz da Amanda Selfie',
 		imageURL: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/4d25c8b3-6b4b-46ff-a527-6ec28d8b7fb4.png',
-		siteURL: 'https://m.me/1900082273454205',
+		siteURL: 'https://m.me/amandaselfie.bot',
 	},
 	quiz: {
 		beginQuiz: 'Vamo la bee!! lesgo!',

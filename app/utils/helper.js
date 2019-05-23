@@ -67,7 +67,7 @@ const cidadeDictionary = {
 };
 
 const telefoneDictionary = { 1: '2222-2222', 2: '(71) 3017-9216', 3: '11111-1111' };
-const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234', 3: '11 98209-2911' };
+const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234', 3: '(11) 98209-2911' };
 // "1": "Belo Horizonte - MG", "2": "Salvador - BA", "3": "São Paulo e Gde SP",
 const locationDictionary = { 1: 'Belo Horizonte - MG', 2: 'Salvador - BA', 3: 'São Paulo - SP' };
 
@@ -77,7 +77,6 @@ async function buildPhoneMsg(cityId, introText) {
 	if (introText && introText.length > 0) { // check i we have a msg to send together with the phone
 		text = `${introText}\n`;
 	}
-
 	if (cityId && validOptions.includes(cityId.toString())) { // check if cityID is a valid option
 		text += `\n${locationDictionary[cityId]}: ${telefoneDictionary[cityId]}`;
 	} else { // if it isnt send every valid phone number
