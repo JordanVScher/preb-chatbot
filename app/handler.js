@@ -32,12 +32,14 @@ module.exports = async (context) => {
 
 		await help.addNewUser(context, prepAPI);
 		await timer.deleteTimers(context.session.user.id);
+
 		console.log('user', context.state.user);
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'autoTeste' });
 				// await context.setState({ dialog: 'triagem' });
 				// await context.setState({ dialog: 'checarConsulta' });
@@ -80,7 +82,7 @@ module.exports = async (context) => {
 				await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
 				await context.setState({ dialog: 'showDays' });
 			} else if (context.state.lastQRpayload.slice(0, 5) === 'Sign-') {
-				await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url);
+				await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) }); // stores user accepting termos
 				await context.setState({ dialog: await context.state.lastQRpayload.replace('Sign-', '') });
 			} else if (context.state.lastQRpayload.slice(0, 7) === 'NoSign-') {
 				await context.setState({ dialog: await context.state.lastQRpayload.replace('NoSign-', '') });
@@ -172,16 +174,17 @@ module.exports = async (context) => {
 			await quiz.answerQuizA(context);
 			break;
 		case 'aceitaTermos': // aceita termos e é da pesquisa
-			await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
+			await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) }); // stores user accepting termos
 			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
 			await consulta.checarConsulta(context);
 			break;
 		case 'aceitaTermos2': // aceita termos mas não é da pesquisa
-			await prepAPI.postSignature(context.session.user.id, opt.TCLE[0].url); // stores user accepting termos
+			await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) }); // stores user accepting termos
 			await mainMenu.sendMain(context);
 			break;
 		case 'naoAceitaTermos': // regular flow
+			await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 0) }); // stores user not accepting termos
 			await context.sendText(flow.onTheResearch.naoAceitaTermos);
 			await mainMenu.sendMain(context);
 			break;
