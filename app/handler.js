@@ -38,6 +38,8 @@ module.exports = async (context) => {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'autoTeste' });
+				// await context.setState({ dialog: 'triagem' });
 				// await context.setState({ dialog: 'checarConsulta' });
 				// await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'verConsulta' });
@@ -225,7 +227,7 @@ module.exports = async (context) => {
 			await consulta.verConsulta(context);
 			break;
 		case 'outrasDatas':
-			await context.sendText(await help.buildEmergenciaMsg(context.state.user.city, flow.consulta.outrasDatas), opt.outrasDatas);
+			await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrasDatas, help.emergenciaDictionary), opt.outrasDatas);
 			break;
 		case 'listaDatas':
 			await context.setState({ paginationDate: 1, paginationHour: 1 });
