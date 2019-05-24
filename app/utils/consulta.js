@@ -103,14 +103,15 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 		+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`);
 		await sendSalvador(context);
+		// await context.setState({ sendExtraMessages2: true });
 		if (context.state.sendExtraMessages2 === true) {
 			await context.setState({ sendExtraMessages2: false });
-			// await context.setState({ sentAnswer: { offline_pre_registration_form: 'www.google.com' } }); // for testing
-			if (context.state.sentAnswer && context.state.sentAnswer.offline_pre_registration_form && context.state.sentAnswer.offline_pre_registration_form.length > 0) {
+			// console.log('offline_pre_registration_form', context.state.preCadastro.offline_pre_registration_form);
+			if (context.state.preCadastro && context.state.preCadastro.offline_pre_registration_form && context.state.preCadastro.offline_pre_registration_form.length > 0) {
 				try {
-					// await context.sendButtonTemplate(flow.quizYes.text2, await buildButton(context.state.sentAnswer.offline_pre_registration_form, 'Pré-Cadastro'));
-					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton('http://www.google.com/participante/pre-cadastro/00300000006', 'Pré-Cadastro'));
+					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton(context.state.preCadastro.offline_pre_registration_form, 'Pré-Cadastro'));
 				} catch (error) {
+					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton('http://www.google.com/falta/dns/no/link/certo', 'Pré-Cadastro'));
 					console.log('Erro no sendButtonTemplate', error);
 				}
 				await sendMain(context);
