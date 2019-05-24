@@ -113,7 +113,7 @@ async function followUpIntent(context) {
 			if (context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
 				await sendQuiz(context);
 			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não) === 1
-				if (context.state.intentType === 'problema') { await context.sendText(await help.buildEmergenciaMsg(context.state.user.city, flow.triagem.whatsapp)); }
+				if (context.state.intentType === 'problema') { await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.triagem.whatsapp, help.emergenciaDictionary)); }
 				await sendResearch(context);
 			} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // não é elegível === 0
 				await sendCarouselSus(context, opt.sus);

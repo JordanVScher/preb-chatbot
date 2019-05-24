@@ -66,37 +66,21 @@ const cidadeDictionary = {
 	3: 'Centro de Testagem e Aconselhamento Henfil\nRua Libero Badaró, 144, Anhangabaú. São Paulo - SP - CEP: 01008001',
 };
 
-const telefoneDictionary = { 1: '2222-2222', 2: '(71) 3017-9216', 3: '11111-1111' };
+const telefoneDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234', 3: '(11) 98209-2911' };
 const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234', 3: '(11) 98209-2911' };
 // "1": "Belo Horizonte - MG", "2": "Salvador - BA", "3": "São Paulo e Gde SP",
 const locationDictionary = { 1: 'Belo Horizonte - MG', 2: 'Salvador - BA', 3: 'São Paulo - SP' };
 
-async function buildPhoneMsg(cityId, introText) {
+async function buildPhoneMsg(cityId, introText, phones) {
 	const validOptions = ['1', '2', '3'];
 	let text = '';
 	if (introText && introText.length > 0) { // check i we have a msg to send together with the phone
 		text = `${introText}\n`;
 	}
 	if (cityId && validOptions.includes(cityId.toString())) { // check if cityID is a valid option
-		text += `\n${locationDictionary[cityId]}: ${telefoneDictionary[cityId]}`;
+		text += `\n${locationDictionary[cityId]}: ${phones[cityId]}`;
 	} else { // if it isnt send every valid phone number
-		validOptions.forEach((element) => { text += `\n${locationDictionary[element]}: ${telefoneDictionary[element]}`; });
-	}
-
-	return text;
-}
-
-async function buildEmergenciaMsg(cityId, introText) {
-	const validOptions = ['1', '2', '3'];
-	let text = '';
-	if (introText && introText.length > 0) { // check i we have a msg to send together with the phone
-		text = `${introText}\n`;
-	}
-
-	if (cityId && validOptions.includes(cityId.toString())) { // check if cityID is a valid option
-		text += `\n${locationDictionary[cityId]}: ${emergenciaDictionary[cityId]}`;
-	} else { // if it isnt send every valid phone number
-		validOptions.forEach((element) => { text += `\n${locationDictionary[element]}: ${emergenciaDictionary[element]}`; });
+		validOptions.forEach((element) => { text += `\n${locationDictionary[element]}: ${phones[element]}`; });
 	}
 
 	return text;
@@ -152,7 +136,7 @@ module.exports = {
 	telefoneDictionary,
 	locationDictionary,
 	buildPhoneMsg,
-	buildEmergenciaMsg,
+	emergenciaDictionary,
 	separateIntent,
 	separateString,
 	checkSuggestWaitForTest,
