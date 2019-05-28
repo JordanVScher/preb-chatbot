@@ -150,7 +150,7 @@ it('finalDate - success with salvador msg', async () => {
 	+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 	+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 
-	await expect(context.state.user && context.state.user.city === '3').toBeTruthy();
+	await expect(context.state.user && context.state.user.city === '2').toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.consulta.salvadorMsg);
 
 	await expect(context.state.sendExtraMessages === true).toBeFalsy();
@@ -181,7 +181,7 @@ it('finalDate - success with extra message', async () => {
 		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 		+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 
-	await expect(context.state.user && context.state.user.city === '3').toBeFalsy();
+	await expect(context.state.user && context.state.user.city === '2').toBeFalsy();
 
 	await expect(context.state.sendExtraMessages === true).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ sendExtraMessages: false });

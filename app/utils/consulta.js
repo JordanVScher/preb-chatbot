@@ -12,7 +12,7 @@ const aux = require('./consulta-aux');
 // const { mockDates } = require('./mock-dates');
 
 async function sendSalvador(context) {
-	if (context.state.user && context.state.user.city === '3') { await context.sendText(flow.consulta.salvadorMsg); }
+	if (context.state.user && context.state.user.city === '2') { await context.sendText(flow.consulta.salvadorMsg); }
 }
 
 async function verConsulta(context) {
