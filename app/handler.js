@@ -39,6 +39,7 @@ module.exports = async (context) => {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'firstJoinResearch' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'autoTeste' });
 				// await context.setState({ dialog: 'triagem' });
@@ -246,6 +247,7 @@ module.exports = async (context) => {
 		case 'firstJoinResearch': // voce gostaria de saber mais sobre o nosso projeto  - sim
 			await prepAPI.postParticipar(context.session.user.id, 1);
 			await context.sendText(flow.quizYes.text15);
+			await context.sendButtonTemplate(flow.onTheResearch.buildTermos, opt.TCLE);
 			await context.sendText(flow.onTheResearch.saidYes, opt.termos);
 			break;
 		case 'noResearchAfter':
