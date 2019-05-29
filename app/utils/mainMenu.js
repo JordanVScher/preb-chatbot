@@ -11,7 +11,6 @@ async function sendMain(context, text) {
 	await context.sendText(toSend, await checkQR.checkMainMenu(context));
 }
 
-
 const shareLink = process.env.SHARE_LINK; // eslint-disable-line
 async function sendFollowUp(context) { // eslint-disable-line
 	// await context.sendText(flow.followUp.preText);
