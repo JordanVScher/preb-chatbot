@@ -68,9 +68,9 @@ async function checkMainMenu(context) {
 	newOptions.push({ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' });
 	// console.log(context.state.user);
 
-	if (context.state.user.finished_quiz === 0) {
-		newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
-	}
+	// if (context.state.user.finished_quiz === 0) {
+	// 	newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+	// }
 
 	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
 		if (context.state.user.is_part_of_research === 1) { // 1
