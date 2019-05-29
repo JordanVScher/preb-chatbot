@@ -16,7 +16,6 @@ async function sendQuiz(context) {
 			if (context.state.stoppedHalfway === true) {
 				await context.sendText(flow.desafio.text4, opt.answer.sendQuiz);
 			} else {
-				// await mainMenu.backToQuiz(context);
 				await context.sendText(flow.desafio.text1, opt.answer.sendQuiz); // send quiz when user has started the quiz already
 			}
 		} else {
