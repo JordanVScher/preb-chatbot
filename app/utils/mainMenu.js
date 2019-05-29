@@ -2,13 +2,25 @@ const checkQR = require('./checkQR');
 const flow = require('./flow');
 // const opt = require('./options');
 // const prepApi = require('./prep_api');
+const { answerQuizA } = require('./quiz');
+
+async function backToQuiz(context) {
+	await context.setState({ dialog: 'backToQuiz' });
+	await context.sendText(flow.asksDesafio.backToQuiz);
+	await answerQuizA(context);
+}
+
 
 async function sendMain(context, text) {
-	let toSend = text;
-	if (!toSend || toSend.length === 0) {
-		toSend = flow.mainMenu.text1;
+	if (context.state.goBackToQuiz === true) {
+		await	backToQuiz(context);
+	} else {
+		let toSend = text;
+		if (!toSend || toSend.length === 0) {
+			toSend = flow.mainMenu.text1;
+		}
+		await context.sendText(toSend, await checkQR.checkMainMenu(context));
 	}
-	await context.sendText(toSend, await checkQR.checkMainMenu(context));
 }
 
 const shareLink = process.env.SHARE_LINK; // eslint-disable-line
@@ -38,4 +50,5 @@ async function sendShareAndMenu(context) {
 
 module.exports.sendMain = sendMain;
 module.exports.sendFollowUp = sendFollowUp;
+module.exports.backToQuiz = backToQuiz;
 module.exports.sendShareAndMenu = sendShareAndMenu;

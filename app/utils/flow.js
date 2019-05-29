@@ -17,6 +17,7 @@ module.exports = {
 	},
 	asksDesafio: {
 		text1: 'Mas antssss, vô fazer a linha entrevistadora e vô te perguntar umas coisas pq logo vamo fazer um QUIZ pra saber ""Q DIVA VC É NA SARRAÇÃO""',
+		backToQuiz: 'Então, voltando pro quiz...',
 	},
 	desafio: {
 		text1: 'Hmm, beibe, ainda quero te fazer umas perguntinhas! Bora?',
