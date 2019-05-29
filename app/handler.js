@@ -39,16 +39,8 @@ module.exports = async (context) => {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'firstJoinResearch' });
-				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'autoTeste' });
-				// await context.setState({ dialog: 'triagem' });
-				// await context.setState({ dialog: 'checarConsulta' });
-				// await context.setState({ dialog: 'getCity' });
-				// await context.setState({ dialog: 'verConsulta' });
-				// await context.setState({ dialog: 'beginQuiz' });
-				// await context.setState({ dialog: 'autoTeste' });
-				await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1 }); // eslint-disable-line
+				await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -128,8 +120,6 @@ module.exports = async (context) => {
 			await context.sendText(flow.greetings.text2);
 			await context.sendText(flow.greetings.text3);
 			await desafio.asksDesafio(context);
-			// await timer.sendCarouselSus(context, opt.sus);
-			// await quiz.answerQuizA(context);
 			break;
 		case 'stopHalfway':
 			// await context.setState({ stoppedHalfway: true });
