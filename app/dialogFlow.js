@@ -7,6 +7,18 @@ const { sendMain } = require('./utils/mainMenu');
 const flow = require('./utils/flow');
 
 async function checkPosition(context) {
+	if (['startQuizA', 'beginQuiz', 'backToQuiz'].includes(context.state.dialog)) {
+		await context.setState({ goBackToQuiz: true });
+	} else {
+		await context.setState({ goBackToQuiz: false });
+	}
+
+	if (['sendToTriagem', 'triagem', 'goBackToTriagem'].includes(context.state.dialog)) {
+		await context.setState({ goBackToTriagem: true });
+	} else {
+		await context.setState({ goBackToTriagem: false });
+	}
+
 	await context.setState({ dialog: 'checkPositionFunc' });
 	await context.setState({ user: await getRecipientPrep(context.session.user.id) });
 

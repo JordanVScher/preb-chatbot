@@ -3,37 +3,8 @@ const research = require('./research');
 const { capQR } = require('./helper');
 const opt = require('./options');
 const flow = require('./flow');
-const { sendMain } = require('./mainMenu');
-const help = require('./helper');
 // const { checarConsulta } = require('./consulta');
 
-module.exports.endTriagem = async (context) => {
-	await context.setState({ dialog: 'endTriagem' });
-	console.log('result endTriagem', context.state.sentAnswer);
-
-	if (context.state.sentAnswer && context.state.sentAnswer.suggest_wait_for_test === 1) {
-		await context.setState({ suggestWaitForTest: true });
-	} else {
-		await context.setState({ suggestWaitForTest: false });
-	}
-
-	if (context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
-		await context.sendText(flow.triagem.emergency1);
-		await context.sendText(await help.buildPhoneMsg(context.state.user.city, 'Telefones pra contato:', help.telefoneDictionary));
-		await sendMain(context);
-	} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_test === 1) { // "A mais de 6 meses" + todos não
-		await context.setState({ dialog: 'autoTeste' });
-	} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_appointment === 1) { // quando responder sim para a SC6 -> talvez a prep seja uma boa pra vc. bora marcar?
-		await context.setState({ dialog: 'checarConsulta' });
-	} else if (context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1) { // qualquer sim
-		await context.sendText(flow.triagem.suggest, opt.triagem1);
-	} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_test === 0) { // quando responder não para a SC6
-		await context.sendText(flow.triagem.noTest);
-		await sendMain(context);
-	} else {
-		await sendMain(context);
-	}
-};
 
 // builds quick_repliy menu from the question answer options
 module.exports.buildMultipleChoice = async (question, complement) => {
