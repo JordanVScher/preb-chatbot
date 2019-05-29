@@ -68,9 +68,6 @@ async function checkMainMenu(context) {
 	newOptions.push({ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' });
 	// console.log(context.state.user);
 
-	// if (context.state.user.finished_quiz === 0) {
-	// 	newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
-	// }
 
 	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
 		if (context.state.user.is_part_of_research === 1) { // 1
@@ -93,6 +90,10 @@ async function checkMainMenu(context) {
 		if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.currentQuestion && context.state.currentQuestion.code !== null && context.state.categoryQuestion === 'fun_questions') {
 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 		}
+	}
+
+	if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.user.finished_quiz === 0) {
+		newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 	}
 
 	if (context.state.user.integration_token && context.state.user.is_part_of_research === 1) {

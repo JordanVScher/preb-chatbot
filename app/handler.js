@@ -88,7 +88,12 @@ module.exports = async (context) => {
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: `${context.event.message.text}` });
 			if (context.state.onTextQuiz === true) {
-				await quiz.handleAnswerA(context, context.state.whatWasTyped);
+				if (Number.isInteger(parseInt(context.state.whatWasTyped, 10)) === true) {
+					await quiz.handleAnswerA(context, context.state.whatWasTyped);
+				} else {
+					await context.sendText('Formato inválido, digite só um número, exemplo 24');
+					await context.setState({ dialog: 'startQuizA' });
+				}
 			} else if (context.state.dialog === 'joinToken' || context.state.dialog === 'joinTokenErro') {
 				await research.handleToken(context);
 			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
