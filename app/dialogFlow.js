@@ -7,12 +7,6 @@ const { sendMain } = require('./utils/mainMenu');
 const flow = require('./utils/flow');
 
 async function checkPosition(context) {
-	if (context.state.dialog === 'startQuizA' || context.state.dialog === 'beginQuiz' || context.state.dialog === 'backToQuiz') {
-		await context.setState({ goBackToQuiz: true });
-	} else {
-		await context.setState({ goBackToQuiz: false });
-	}
-
 	await context.setState({ dialog: 'checkPositionFunc' });
 	await context.setState({ user: await getRecipientPrep(context.session.user.id) });
 
