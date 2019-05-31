@@ -11,11 +11,11 @@ async function sendQuiz(context) {
 	await context.setState({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // load quiz counter
 	await context.setState({ categoryQuestion: 'quiz' });
 	if (context.state.goBackToQuiz === true) { // check if user is on a quiz/ triagem so that we can send them back there right away instead of asking
-		await context.setState({ dialog: 'backToQuiz' });
+		await context.setState({ dialog: 'backToQuiz', goBackToQuiz: false });
 		await context.sendText(`${flow.desafio.text3}`);
 		await answerQuizA(context);
 	} else if (context.state.goBackToTriagem === true) {
-		await context.setState({ dialog: 'goBackToTriagem' });
+		await context.setState({ dialog: 'goBackToTriagem', goBackToTriagem: false });
 		await context.sendText(`${flow.desafio.text3}`);
 		await getTriagem(context);
 	} else if (context.state.quizCounter && context.state.quizCounter.count_quiz >= 3) { // check quiz counter
