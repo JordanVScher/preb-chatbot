@@ -96,7 +96,7 @@ module.exports = async (context) => {
 				}
 			} else if (context.state.dialog === 'joinToken' || context.state.dialog === 'joinTokenErro') {
 				await research.handleToken(context);
-			} else if (context.state.whatWasTyped === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
+			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ stoppedHalfway: false });
 				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
