@@ -88,7 +88,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 				try {
 					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton(context.state.preCadastro.offline_pre_registration_form, 'Pré-Cadastro'));
 				} catch (error) {
-					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton('http://www.google.com/falta/dns/no/link/certo', 'Pré-Cadastro'));
+					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton('https://sisprep1519.org/api', 'Pré-Cadastro'));
 					console.log('Erro no sendButtonTemplate', error);
 				}
 				await context.sendText(flow.mainMenu.text1, await checkMainMenu(context));

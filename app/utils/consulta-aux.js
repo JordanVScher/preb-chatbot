@@ -2,7 +2,6 @@ const help = require('./helper');
 
 function formatDate(date) {
 	let day = date.getDate();
-
 	if (day && day.toString().length === 1) { day = `0${day}`; }
 
 	let month = date.getMonth() + 1;
