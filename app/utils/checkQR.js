@@ -83,7 +83,7 @@ async function checkMainMenu(context) {
 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
 		} else if (context.state.user.finished_quiz === 0) { // 0
 			console.log('PASSEI AQUI');
-			
+
 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
 		}
@@ -93,7 +93,7 @@ async function checkMainMenu(context) {
 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 		}
 	}
- 
+
 	if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.user.finished_quiz === 0) {
 		newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 	}
