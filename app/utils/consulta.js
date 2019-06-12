@@ -32,22 +32,6 @@ async function verConsulta(context) {
 	}
 }
 
-async function loadCalendar(context) {
-	/* load and prepare calendar */
-	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
-	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cidade, context.state.paginationDate) }); // getting calendar
-	await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
-	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
-	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
-
-	if (context.state.sendExtraMessages === true) {
-		await context.setState({ sendExtraMessages2: true, sendExtraMessages: false }); // because of "outras datas" we cant show these again, but we still have to show the next ones
-		await context.sendText(flow.quizYes.text3);
-		await context.sendText(flow.quizYes.text4);
-	} else {
-		await context.sendText(flow.consulta.checar2);
-	}
-}
 
 async function showDays(context) { // shows available days
 	await context.setState({ cidade: context.state.user.city }); // getting location id
@@ -120,6 +104,25 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	}
 }
 
+async function loadCalendar(context) {
+	/* load and prepare calendar */
+	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
+	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cidade, context.state.paginationDate) }); // getting calendar
+	await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
+	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
+	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
+
+	if (context.state.sendExtraMessages === true) {
+		await context.setState({ sendExtraMessages2: true, sendExtraMessages: false }); // because of "outras datas" we cant show these again, but we still have to show the next ones
+		await context.sendText(flow.quizYes.text3);
+		await context.sendText(flow.quizYes.text4);
+	} else {
+		await context.sendText(flow.consulta.checar2);
+	}
+
+	await showDays(context);
+}
+
 async function checarConsulta(context) {
 	// await context.setState({ sendExtraMessages: false });
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
@@ -138,9 +141,10 @@ async function checarConsulta(context) {
 		await context.sendText(flow.mainMenu.text1, await checkMainMenu(context));
 		// await sendMain(context);
 	} else {
-		await showDays(context);
+		await loadCalendar(context);
 	}
 }
+
 
 module.exports.verConsulta = verConsulta;
 module.exports.showDays = showDays;

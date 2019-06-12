@@ -39,6 +39,7 @@ module.exports = async (context) => {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'aceitaTermos' });
 				// await context.setState({ dialog: 'showDays' });
 				await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			} else {
@@ -134,7 +135,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.medication.text1, await checkQR.checkMedication(context));
 			break;
 		case 'sintomas':
-			await context.sendText('<começa o quiz>');
+			// await context.sendText('<começa o quiz>');
 			break;
 		case 'acabouRemedio':
 			await context.sendText(flow.medication.acabouRemedio1);
@@ -144,7 +145,7 @@ module.exports = async (context) => {
 		case 'esqueciDeTomar':
 			await context.sendText(flow.medication.esqueci1);
 			await context.sendText(flow.medication.esqueci2);
-			await context.sendText('<começa o quiz>');
+			// await context.sendText('<começa o quiz>');
 			break;
 		case 'duvidaComRemedio':
 			await context.sendButtonTemplate(flow.medication.duvidaRemedio, opt.duvidaRemedio);
@@ -199,7 +200,6 @@ module.exports = async (context) => {
 		case 'showDays':
 			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 			await consulta.loadCalendar(context);
-			await consulta.showDays(context);
 			break;
 		case 'showHours':
 			await consulta.showHours(context, context.state.lastQRpayload.replace('dia', ''));

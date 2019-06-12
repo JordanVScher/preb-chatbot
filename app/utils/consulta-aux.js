@@ -1,5 +1,16 @@
 const help = require('./helper');
 
+function formatDate(date) {
+	let day = date.getDate();
+
+	if (day && day.toString().length === 1) { day = `0${day}`; }
+
+	let month = date.getMonth() + 1;
+	if (month && month.toString().length === 1) { month = `0${month}`; }
+
+	return `${day}/${month} - ${help.weekDayName[date.getDay()]}`;
+}
+
 
 async function separateDaysQR(dates, next, pageNumber) {
 	const dateOptions = [];
@@ -10,7 +21,7 @@ async function separateDaysQR(dates, next, pageNumber) {
 
 	dates.forEach(async (element) => { // add dates (maximum of 8)
 		const date = new Date(`${element.hours[0].datetime_start}`);
-		dateOptions.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.ymd}` });
+		dateOptions.push({ content_type: 'text', title: formatDate(date), payload: `dia${element.ymd}` });
 	});
 
 	if (next && next && next.length > 0) { // if there's still dates to send, add a button to load them
