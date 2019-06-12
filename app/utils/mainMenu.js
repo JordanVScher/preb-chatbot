@@ -15,11 +15,11 @@ async function sendMain(context, text) {
 		await context.sendText(`${flow.desafio.text3}`);
 		await getTriagem(context);
 	} else {
-	let toSend = text;
-	if (!toSend || toSend.length === 0) {
-		toSend = flow.mainMenu.text1;
-	}
-	await context.sendText(toSend, await checkQR.checkMainMenu(context));
+		let toSend = text;
+		if (!toSend || toSend.length === 0) {
+			toSend = flow.mainMenu.text1;
+		}
+		await context.sendText(toSend, await checkQR.checkMainMenu(context));
 	}
 }
 

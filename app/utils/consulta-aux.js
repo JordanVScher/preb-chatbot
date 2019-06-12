@@ -1,5 +1,6 @@
 const help = require('./helper');
 
+
 async function separateDaysQR(dates, next, pageNumber) {
 	const dateOptions = [];
 
@@ -12,7 +13,7 @@ async function separateDaysQR(dates, next, pageNumber) {
 		dateOptions.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.ymd}` });
 	});
 
-	if (next && next.dates && next.dates.length > 0) { // if there's still dates to send, add a button to load them
+	if (next && next && next.length > 0) { // if there's still dates to send, add a button to load them
 		dateOptions.push({ content_type: 'text', title: 'Próximo', payload: 'nextDay' });
 	} else { // no more dates, show extra option
 		dateOptions.push({ content_type: 'text', title: 'Outras Datas', payload: 'outrasDatas' });
@@ -20,6 +21,26 @@ async function separateDaysQR(dates, next, pageNumber) {
 
 	return dateOptions;
 }
+
+async function separateDaysIntoPages(dates) {
+	const result = {};
+	let pageNumber = 1;
+
+	result[pageNumber] = [];
+	dates.forEach(async (element) => {
+		result[pageNumber].push(element);
+		if (pageNumber === 1 && result[pageNumber].length === 9) { // first page can have more options (no "Anterior" button)
+			pageNumber += 1;
+			result[pageNumber] = [];
+		} else if (result[pageNumber].length === 8) {
+			pageNumber += 1;
+			result[pageNumber] = [];
+		}
+	});
+
+	return result;
+}
+
 
 async function formatHour(hour) {
 	let result = hour;
@@ -113,3 +134,4 @@ module.exports.separateHoursQR = separateHoursQR;
 module.exports.formatHour = formatHour;
 module.exports.cleanDates = cleanDates;
 module.exports.orderByDate = orderByDate;
+module.exports.separateDaysIntoPages = separateDaysIntoPages;
