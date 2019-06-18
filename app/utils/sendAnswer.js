@@ -31,6 +31,9 @@ module.exports.sendAnswer = async (context) => { // send answer from posicioname
 			if (context.state.currentTheme.saved_attachment_type === 'audio') { // if attachment is audio
 				await context.sendAudio({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
+			if (context.state.currentTheme.saved_attachment_type === 'file') { // if attachment is audio
+				await context.sendFile({ attachment_id: context.state.currentTheme.saved_attachment_id });
+			}
 		} catch (error) {
 			await Sentry.configureScope(async (scope) => { // sending to sentry
 				scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
