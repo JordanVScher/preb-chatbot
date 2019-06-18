@@ -131,6 +131,9 @@ async function followUpIntent(context) {
 			}
 		}
 	} else { // not part of target audience
+		// if (context.state.intentType === 'problema') { // eslint-disable-line
+		// 	await sendCarouselSus(context, opt.sus);
+		// } else {
 		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 		if (!context.state.currentQuestion || context.state.currentQuestion.code === null) {
 			await mainMenu.sendShareAndMenu(context); // send regular menu
@@ -138,6 +141,7 @@ async function followUpIntent(context) {
 			await sendQuiz(context); // if user didn't finish quiz we can send it to them, even if they aren't on target_audience
 		}
 	}
+	// }
 }
 
 async function asksDesafio(context) {

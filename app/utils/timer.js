@@ -23,16 +23,17 @@ module.exports.deleteTimers = async (userID) => {
 
 // module.exports.followUpTimer = followUpTimer;
 
-module.exports.sendCarouselSus = async (context) => {
+module.exports.sendCarouselSus = async (context, items) => {
 	const elements = [];
 
-	// items.forEach(async (element) => {
-	// 	elements.push({
-	// 		title: element.title,
-	// 		// subtitle: element.subtitle,
-	// 		buttons: element.buttons,
-	// 	});
-	// });
+
+	items.forEach(async (element) => {
+		elements.push({
+			title: element.title,
+			// subtitle: element.subtitle,
+			buttons: element.buttons,
+		});
+	});
 	await context.sendText(flow.sus.text1);
 	await context.sendAttachment({
 		type: 'template',
