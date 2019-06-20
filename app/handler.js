@@ -172,9 +172,13 @@ module.exports = async (context) => {
 			break;
 		case 'aceitaTermos': // aceita termos e é da pesquisa
 			await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) }); // stores user accepting termos
-			await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
-			await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
-			await consulta.checarConsulta(context);
+			if (context.state.user.is_part_of_research === 1) { // is_eligible_for_research && is_target_audience
+				await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
+				await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
+				await consulta.checarConsulta(context);
+			} else {
+				await mainMenu.sendMain(context);
+			}
 			break;
 		case 'aceitaTermos2': // aceita termos mas não é da pesquisa
 			await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) }); // stores user accepting termos
