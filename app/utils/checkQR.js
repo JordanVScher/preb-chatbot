@@ -190,8 +190,9 @@ module.exports.buildButton = async (url, title) => [{
 	title,
 }];
 
-module.exports.sendShare = async (context, links, results) => {
+module.exports.sendShare = async (context, links, results, imagem) => {
 	const subtitle = results && results[0] ? results[0] : 'Chatbot';
+
 	await context.sendAttachment({
 		type: 'template',
 		payload: {
@@ -200,7 +201,7 @@ module.exports.sendShare = async (context, links, results) => {
 				{
 					title: links.siteTitle,
 					subtitle,
-					// image_url: links.imageURL,
+					image_url: imagem || '',
 					item_url: links.siteURL,
 					buttons: [
 						{
@@ -214,7 +215,7 @@ module.exports.sendShare = async (context, links, results) => {
 											{
 												title: links.siteTitle2,
 												subtitle,
-												image_url: links.imageURL,
+												// image_url: imagem || '',
 												default_action: {
 													type: 'web_url',
 													url: links.siteURL,

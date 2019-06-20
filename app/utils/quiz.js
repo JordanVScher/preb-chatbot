@@ -58,8 +58,15 @@ async function handleAnswerA(context, quizOpt) {
 	} else {
 		if (context.state.sentAnswer.followup_messages) {
 			for (let i = 0; i < context.state.sentAnswer.followup_messages.length; i++) { // eslint-disable-line no-plusplus
-				await context.sendText(context.state.sentAnswer.followup_messages[i]);
-				if (i === 0 && context.state.currentQuestion.code === 'AC7') { await sendShare(context, flow.share, context.state.sentAnswer.followup_messages[i].split('\n')); }
+				if (context.state.sentAnswer.followup_messages[i].includes('.png')) {
+					await context.setState({ resultImageUrl: context.state.sentAnswer.followup_messages[i] }); // not over, sends user to next question
+				} else {
+					await context.sendText(context.state.sentAnswer.followup_messages[i]);
+					if (i === 1 && context.state.currentQuestion.code === 'AC7') {
+						await sendShare(context, flow.share, context.state.sentAnswer.followup_messages[i].split('\n'), context.state.resultImageUrl);
+						await context.sendText(flow.quiz.halfway1);
+					}
+				}
 			}
 		}
 		if (context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2') {
