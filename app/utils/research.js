@@ -2,6 +2,7 @@ const flow = require('./flow');
 const opt = require('./options');
 const checkQR = require('./checkQR');
 const { postIntegrationToken } = require('./prep_api');
+const { getRecipientPrep } = require('./prep_api');
 const { checarConsulta } = require('./consulta');
 
 module.exports.handleToken = async (context) => {
@@ -12,6 +13,7 @@ module.exports.handleToken = async (context) => {
 		await context.setState({ dialog: 'joinTokenErro' });
 	} else {
 		await context.sendText(flow.joinToken.success);
+		await context.setState({ user: await getRecipientPrep(context.session.user.id) });
 		await context.setState({ dialog: 'mainMenu' });
 	}
 };
