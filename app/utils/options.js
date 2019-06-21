@@ -219,7 +219,7 @@ module.exports = {
 			],
 		},
 		{
-			title: 'SUS em São Paulo de novo',
+			title: 'Mais links de São Paulo',
 			buttons: [
 				{
 					type: 'web_url',
@@ -253,7 +253,7 @@ module.exports = {
 				},
 				{
 					type: 'web_url',
-					url: 'http://www.aids.gov.br/pep_onde/index.html.',
+					url: 'http://www.aids.gov.br/pep_onde/index.html',
 					title: 'PEP',
 				},
 			],
