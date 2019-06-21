@@ -65,17 +65,16 @@ module.exports = {
 
 	async postQuizAnswer(fb_id, category, code, answer_value) {
 		console.log('postQuizAnswer', `${fb_id} - ${category} - ${code} - ${answer_value}`);
-
 		let quizData;
 		try {
-			const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}&`).query({
+			const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}`).query({
 				fb_id, category, code, answer_value,
 			});
 			quizData = await res.json();
 		} catch (error) {
-			quizData = { error: `error: ${error}` };
+			quizData = { error: `erro no postQuizAnswer: ${error}` };
 		}
-		// console.log(quizData);
+		// console.log('quizData', quizData);
 		return quizData;
 	},
 
@@ -128,7 +127,7 @@ module.exports = {
 
 	async postIntegrationToken(fb_id, integration_token) {
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/integration-token?security_token=${security_token}&`).query({ fb_id, integration_token });
-		// console.log('postIntegrationToken', res);
+		console.log('postIntegrationToken', res);
 		const result = await res.json();
 
 		return result;
