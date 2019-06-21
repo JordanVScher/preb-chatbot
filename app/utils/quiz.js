@@ -63,9 +63,12 @@ async function handleAnswerA(context, quizOpt) {
 				} else {
 					await context.sendText(context.state.sentAnswer.followup_messages[i]);
 					if (i === 1 && context.state.currentQuestion.code === 'AC7') {
-						await context.sendImage(context.state.resultImageUrl);
+						if (context.state.resultImageUrl && context.state.resultImageUrl.length > 0) {
+							await context.sendImage(context.state.resultImageUrl);
+							await context.setState({ resultImageUrl: '' });
+						}
 						// await sendShare(context, flow.share, context.state.sentAnswer.followup_messages[i].split('\n'), context.state.resultImageUrl);
-						await context.sendText(flow.quiz.halfway1);
+						// await context.sendText(flow.quiz.halfway1);
 					}
 				}
 			}

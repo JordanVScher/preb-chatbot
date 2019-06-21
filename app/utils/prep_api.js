@@ -169,6 +169,7 @@ module.exports = {
 		try {
 			const res = await request.post(`${apiUri}/api/chatbot/recipient/term-signature?security_token=${security_token}&`).query({ fb_id, signed });
 			const sign = await res.json();
+			console.log('postSignature', sign);
 			return sign;
 		} catch (error) {
 			console.log('postSignature', error);

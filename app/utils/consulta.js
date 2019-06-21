@@ -11,17 +11,21 @@ const { buildButton } = require('./checkQR');
 const aux = require('./consulta-aux');
 
 async function sendSalvador(context) {
-	if (context.state.user && context.state.user.city === '2') { await context.sendText(flow.consulta.salvadorMsg); }
+	if (context.state.user && context.state.user.city && context.state.user.city.toString() === '2') { await context.sendText(flow.consulta.salvadorMsg); }
 }
 
 async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
-			await context.sendText(''
-			+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
-			+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
-			+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`);
+			let msg = ''
+				+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
+				+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
+				+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
+			if (context.state.user.integration_token && context.state.user.integration_token.length > 0) {
+				msg += `\nSeu voucher: ${context.state.user.integration_token}`;
+			}
+			await context.sendText(msg);
 		}
 		await sendSalvador(context);
 		await context.sendText(flow.consulta.view);
@@ -75,12 +79,17 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	// console.log('postAppointment', context.state.response);
 
 	if (context.state.response && context.state.response.id && context.state.response.id.toString().length > 0) {
-		await context.sendText(`${flow.consulta.success}`
-		+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
-		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
-		+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`);
+		let msg = `${flow.consulta.success}`
+			+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
+			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
+			+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
+		if (context.state.user.integration_token && context.state.user.integration_token.length > 0) {
+			msg += `\nSeu voucher: ${context.state.user.integration_token}`;
+		}
+		await context.sendText(msg);
 		await sendSalvador(context);
 		// await context.setState({ sendExtraMessages2: true });
+
 		if (context.state.sendExtraMessages2 === true) {
 			await context.setState({ sendExtraMessages2: false });
 			// console.log('offline_pre_registration_form', context.state.preCadastro.offline_pre_registration_form);
@@ -131,12 +140,15 @@ async function checarConsulta(context) {
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 		await context.sendText(flow.consulta.checar1);
 		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
-			await context.sendText(''
-			+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
-			+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
-			+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`);
+			let msg = ''
+				+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
+				+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
+				+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
+			if (context.state.user.integration_token && context.state.user.integration_token.length > 0) {
+				msg += `\nSeu voucher: ${context.state.user.integration_token}`;
+			}
+			await context.sendText(msg);
 		}
-
 		await sendSalvador(context);
 		await context.sendText(flow.mainMenu.text1, await checkMainMenu(context));
 		// await sendMain(context);

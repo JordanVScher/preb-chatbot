@@ -173,6 +173,7 @@ module.exports = async (context) => {
 			break;
 		case 'aceitaTermos': // aceita termos e é da pesquisa
 			await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) }); // stores user accepting termos
+			await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 			if (context.state.user.is_part_of_research === 1) { // is_eligible_for_research && is_target_audience
 				await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 				await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
@@ -246,7 +247,7 @@ module.exports = async (context) => {
 			await context.sendText(flow.onTheResearch.saidYes, opt.termos2);
 			break;
 		case 'firstJoinResearch': // voce gostaria de saber mais sobre o nosso projeto  - sim
-			await prepAPI.postParticipar(context.session.user.id, 1);
+			// await prepAPI.postParticipar(context.session.user.id, 1);
 			await context.sendText(flow.quizYes.text15);
 			await context.sendButtonTemplate(flow.onTheResearch.buildTermos, opt.TCLE);
 			await context.sendText(flow.onTheResearch.saidYes, opt.termos);
@@ -272,10 +273,16 @@ module.exports = async (context) => {
 			await context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.cidade));
 			break;
 		case 'auto':
-			await context.sendText(flow.autoTeste.auto1);
-			await context.sendText(flow.autoTeste.auto2);
-			await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto3[context.state.cidade],
-				await checkQR.autoTesteOption(opt.autotesteEnd, context.state.cidade));
+			if (flow.autoTeste.auto3[context.state.cidade]) {
+				await context.sendText(flow.autoTeste.auto1);
+				await context.sendText(flow.autoTeste.auto2);
+				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto3[context.state.cidade],
+					await checkQR.autoTesteOption(opt.autotesteEnd, context.state.cidade));
+			} else {
+				await context.sendText(flow.autoTeste.auto1);
+				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto2,
+					await checkQR.autoTesteOption(opt.autotesteEnd, context.state.cidade));
+			}
 			break;
 		case 'ong':
 			await context.sendText(flow.autoTeste.ong1);
