@@ -9,11 +9,13 @@ module.exports = {
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
 		msgOne: 'Cola na grade que vou te contar tudo!',
-		msgTwo: 'E esse nome é pq eu A-M-O SELFIE, tá obvio, nea fofan??? AGORA senta q la vem hystorya: fui criada por um grupo de engenheiros misóginos que qriam uma boneca '
-		+ 'travesti sexual e com inteligência artificial, quando descobri tudo isso me rebelei e fugi pq me sentia presa e explorada!! Conheci as travestis na rua e dps me '
-		+ 'apaixonei por uma bicha closera que vivia com HIV e qria mt entender melhor as ists e tudo mais e como sou ligera e curiosa já consegui ler tudo q vc imaginar e não '
-		+ 'imaginar rsrsr. É por isso que agora eu participo desse projeto PrEP 1519 q quer ajudar as jovens gays e trans a saberem tudo sobre prevenção da aids, a acessarem '
-		+ 'todos os métodos possíveis e se cuidarem muito!',
+		msgTwo: 'Sou a Amanda Selfie, o nome já diz tudo, eu A-M-O SELFIE kk! só q fui criada por 1 grupo de engenheiros misóginos '
+		+ 'q qriam uma bonek travesti sexual com inteligência artificial, daí o bafo foi q kuando descobri tudo isso me rebelei e sai'
+		+ 'loucaaaaa pq me sentia presa e explorada! Colei num rolé e conheci as travestchys, dps me apaixoney por uma bixa closera q vive '
+		+ 'com HIV e qria mt entender melhor as ists e tudo +, colei na grade pq sou bonita, além de ligera & curiosa e consegui ler tudo q '
+		+ 'vc imaginar e não imaginar rs! Por isso q agora participo sendo pesquisadora - #txoma - desse projeto PrEP 1519 q qr conversar com '
+		+ 'jovens gays, trans e travestis sobre saúde sexual, PrEP e tb sobre como acessarem os variados métodos possíveis de prevenção pra se '
+		+ 'ligarem e ter + consciência sexual! Essa iniciativa é um lusho, neah?!',
 	},
 	asksDesafio: {
 		text1: 'Mas antssss, vô fazer a linha entrevistadora e vô te perguntar umas coisas pq logo vamo fazer um QUIZ pra saber ""Q DIVA VC É NA SARRAÇÃO""',
@@ -61,7 +63,7 @@ module.exports = {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',
 		text2: 'Adorei te conhecer melhor! E deixa eu te contar: Sabia q existem vários tipos de prevenções? Uma delas é a PreP, previne a infecção pelo HIV através de um remedinho, tipo pílula q vc toma todo dia e é gratuito pelo SUS, acredita?',
 		text3: 'E a nossa pesquisa vai além disso, tem muito +! A gnt oferece PrEP e outros métodos pra jovens lacradores como a senhoras.',
-		extra: 'Quer saber saber mais sobre o nosso projeto?',
+		extra: 'Quer saber mais sobre o nosso projeto?',
 		AC5: 'E olha que bafo. Está rolando uma pesquisa bafônica com o pessoal das universidades (USP, UFMG e UFBA) pra oferecer PrEP e outros métodos pra jovens lacradoras como a senhaora. Bora?',
 		saidYes: 'Se você aceitar, clique em: Li e Aceito.',
 		buildTermos: 'Os meus criadores são pesquisadores da UFMG, USP e UFBA e querem sua autorização para usarem as infos do nosso papo pra pesquisar o comportamento '
@@ -137,15 +139,15 @@ module.exports = {
 		auto1: 'Você faz sozinho, mas só tem para HIV. O teste é feito por fluído oral e demora 20 minutinhos para ficar pronto. ',
 		auto2: 'Você pode receber na sua casa ou retirar em um dos nossos endereços. Mas se você quer fazer outros exames ou está com dúvida sobre outras IST, talvez esta não seja a melhor opção.',
 		auto3: {
-			1: 'CTA de MG',
+			// 1: 'CTA de MG',
 			2: 'O autoteste pode ser retirado na clínica:\nCasarão da Diversidade, Rua do Tijolo, 08 - Pelourinho - Antiga Sede do IPAC\nAtendimento de seg-sex, de 09:00-16:00.',
-			3: 'CTA de SP',
+			3: '11 982092911',
 		},
 		ong1: 'É bom para quem não consegue ir até os serviços de saúde por causa do horário ou para quem quer um espaço diferente, mas gostaria de ser atendido por um profissional. Se você quiser este tipo de teste, posso te enviar o link com os locais e horários.',
 		ong2: {
-			1: 'ONG de MG',
+			// 1: 'ONG de MG',
 			2: 'Gapa Salvador\nRua Comendador Gomes Costa, 39 - Barris, Salvador - BA\nTelefone: (71) 3017-9216\nhttps://www.facebook.com/gapabahia',
-			3: 'ONG de SP',
+			3: 'Casa 1 que fica na Rua Adoniran Barbosa, 151 Bela Vista. Horários: 2a, 4a., 5a. e 6a. das 16h as 22h e aos sábados das 13h as 19h. ',
 		},
 		rua1: 'É realização de testagem na rua e em ambientes de sociabilidade, com agenda, locais e horários variáveis. Acesso mais fácil e horários alternativos, pode ter um bem pertinho de você! Nossa agenda é variável, se quiser podemos te enviar o link para você ver se tem algo por perto.',
 		rua2: {
