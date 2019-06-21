@@ -23,7 +23,7 @@ async function verConsulta(context) {
 				+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
 				+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
 			if (context.state.user.integration_token && context.state.user.integration_token.length > 0) {
-				msg += `\nSeu voucher: ${context.state.user.integration_token}`;
+				msg += `\nSeu identificador: ${context.state.user.integration_token}`;
 			}
 			await context.sendText(msg);
 		}
@@ -84,7 +84,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
 			+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
 		if (context.state.user.integration_token && context.state.user.integration_token.length > 0) {
-			msg += `\nSeu voucher: ${context.state.user.integration_token}`;
+			msg += `\nSeu identificador: ${context.state.user.integration_token}`;
 		}
 		await context.sendText(msg);
 		await sendSalvador(context);
@@ -145,7 +145,7 @@ async function checarConsulta(context) {
 				+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
 				+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
 			if (context.state.user.integration_token && context.state.user.integration_token.length > 0) {
-				msg += `\nSeu voucher: ${context.state.user.integration_token}`;
+				msg += `\nSeu identificador: ${context.state.user.integration_token}`;
 			}
 			await context.sendText(msg);
 		}
