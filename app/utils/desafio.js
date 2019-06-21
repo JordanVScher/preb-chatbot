@@ -48,7 +48,7 @@ async function followUp(context) {
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
 	await context.setState({ dialog: 'prompt' });
 
-	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
+	if (context.state.user.is_target_audience === 1 || context.state.user.is_target_audience === null) { // check if user is part of target audience or we dont know yet
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa
 			await mainMenu.sendShareAndMenu(context); // send regular menu, here we don't have to check if user is prep or not
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
@@ -115,7 +115,7 @@ async function followUpIntent(context) {
 	// console.log('intentType', context.state.intentType);
 	// console.log('user', context.state.user);
 
-	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
+	if (context.state.user.is_target_audience === 1 || context.state.user.is_target_audience === null) { // check if user is part of target audience or we dont know yet
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa === 1
 			await checkAconselhamento(context);
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
