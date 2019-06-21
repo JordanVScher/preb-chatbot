@@ -263,7 +263,8 @@ module.exports = async (context) => {
 			await context.sendText(flow.prevention.text1);
 			await context.sendText(flow.prevention.text2);
 			await context.sendText(flow.prevention.text3);
-			await desafio.followUp(context);
+			await mainMenu.sendMain(context);
+			// await desafio.followUp(context);
 			break;
 		case 'retryTriagem':
 			await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
@@ -306,7 +307,8 @@ module.exports = async (context) => {
 			await context.sendImage(flow.aboutAmanda.gif);
 			await context.sendText(flow.aboutAmanda.msgOne);
 			await context.sendText(flow.aboutAmanda.msgTwo);
-			await desafio.followUp(context);
+			await mainMenu.sendMain(context);
+			// await desafio.followUp(context);
 			break;
 		case 'baterPapo':
 			await context.sendText(flow.baterPapo.text1);
