@@ -169,7 +169,6 @@ module.exports = {
 		consulta2: 'Acabei de catar q vc não tem consulta marcada.\nVc qr marcar?',
 		whatsapp: 'Telefones de emergência',
 		suggestWaitAutoTest: 'Se seu risco aconteceu há menos de 30 dias, você ainda está em janela imunológica, aquele período em que o teste ainda não tem sensibilidade para identificar um contato. É melhor esperar pelo menos 30 dias para se testar.',
-		noTest: 'ok',
 	},
 	medication: {
 		text1: 'Ok BB, me diga o que vc tá precisando:',

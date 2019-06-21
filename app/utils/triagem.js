@@ -28,7 +28,6 @@ async function endTriagem(context) {
 	} else if (context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1) { // qualquer sim
 		await context.sendText(flow.triagem.suggest, opt.triagem1);
 	} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_test === 0) { // quando responder não para a SC6
-		await context.sendText(flow.triagem.noTest);
 		await mainMenu.sendMain(context);
 	} else {
 		await mainMenu.sendMain(context);
