@@ -7,14 +7,14 @@ const { checarConsulta } = require('./consulta');
 
 module.exports.handleToken = async (context) => {
 	const answer = await postIntegrationToken(context.session.user.id, context.state.whatWasTyped);
-	if (answer.form_error || answer.error) { // check if there was any errors
+	if (answer === true) {
+		await context.sendText(flow.joinToken.success);
+		await context.setState({ user: await getRecipientPrep(context.session.user.id) }); // integration_token is added to user
+		await context.setState({ dialog: 'mainMenu' });
+	} else { // error or invalid number
 		await context.sendText(flow.joinToken.fail);
 		await context.sendText(flow.joinToken.fail2, opt.joinToken);
 		await context.setState({ dialog: 'joinTokenErro' });
-	} else {
-		await context.sendText(flow.joinToken.success);
-		await context.setState({ user: await getRecipientPrep(context.session.user.id) });
-		await context.setState({ dialog: 'mainMenu' });
 	}
 };
 
