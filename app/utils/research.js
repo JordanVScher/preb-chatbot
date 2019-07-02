@@ -7,7 +7,7 @@ const { checarConsulta } = require('./consulta');
 
 module.exports.handleToken = async (context) => {
 	const answer = await postIntegrationToken(context.session.user.id, context.state.whatWasTyped);
-	if (answer.form_error) { // check if there was any errors
+	if (answer.form_error || answer.error) { // check if there was any errors
 		await context.sendText(flow.joinToken.fail);
 		await context.sendText(flow.joinToken.fail2, opt.joinToken);
 		await context.setState({ dialog: 'joinTokenErro' });
