@@ -39,6 +39,7 @@ module.exports = async (context) => {
 			await context.setState({ lastPBpayload: context.event.postback.payload });
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
 				// await context.setState({ dialog: 'autoTeste' });
 				await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
@@ -171,10 +172,11 @@ module.exports = async (context) => {
 		case 'startQuizA': // this is the quiz-type of questionario
 			await quiz.answerQuizA(context);
 			break;
+		case 'aceitaTermos2': // aceita termos mas não é da pesquisa
 		case 'aceitaTermos': // aceita termos e é da pesquisa
 			await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) }); // stores user accepting termos
 			await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-			if (context.state.user.is_part_of_research === 1) { // is_eligible_for_research && is_target_audience
+			if (context.state.user.is_eligible_for_research === 1) { // is_eligible_for_research && is_target_audience
 				await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 				await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
 				await consulta.checarConsulta(context);
@@ -182,14 +184,17 @@ module.exports = async (context) => {
 				await mainMenu.sendMain(context);
 			}
 			break;
-		case 'aceitaTermos2': // aceita termos mas não é da pesquisa
-			await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) }); // stores user accepting termos
-			await mainMenu.sendMain(context);
-			break;
 		case 'naoAceitaTermos': // regular flow
 			await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 0) }); // stores user not accepting termos
+			await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 			await context.sendText(flow.onTheResearch.naoAceitaTermos);
-			await mainMenu.sendMain(context);
+			if (context.state.user.is_eligible_for_research === 1) { // is_eligible_for_research && is_target_audience
+				await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
+				await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
+				await consulta.checarConsulta(context);
+			} else {
+				await mainMenu.sendMain(context);
+			}
 			break;
 		case 'joinToken':
 			await context.sendText(flow.joinToken.text1, opt.joinToken);
