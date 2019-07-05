@@ -18,7 +18,7 @@ module.exports = {
 		+ 'ligarem e ter + consciência sexual! Essa iniciativa é um lusho, neah?!',
 	},
 	asksDesafio: {
-		text1: 'Mas antssss, vô fazer a linha entrevistadora e vô te perguntar umas coisas pq logo vamo fazer um QUIZ pra saber ""Q DIVA VC É NA SARRAÇÃO""',
+		text1: 'Segura aí, mona, q sou curiosa! Vô te perguntar uns bafos e dps, kerydá, vamo fazer um QUIZ pra saber "Q DIVA VC É NA SARRAÇÃO"? Vai ser TUDXUUU!',
 	},
 	desafio: {
 		text1: 'Hmm, beibe, ainda quero te fazer umas perguntinhas! Bora?',
