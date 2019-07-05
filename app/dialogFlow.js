@@ -24,9 +24,9 @@ async function checkPosition(context) {
 
 	console.log('intentName', context.state.intentName);
 	switch (context.state.intentName) {
-	case 'Greetings': // user said hi
-		await context.setState({ dialog: 'greetings' });
-		break;
+	// case 'Greetings': // user said hi
+	// 	await context.setState({ dialog: 'greetings' });
+	// 	break;
 	case 'Quiz': // user wants to answer the quiz
 		if (context.state.user.finished_quiz === 1) {
 			await context.sendText(flow.quiz.done);
