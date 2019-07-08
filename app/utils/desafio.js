@@ -62,10 +62,13 @@ async function followUp(context) {
 			}
 		}
 	} else { // not part of target audience
-		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-
-		if (!context.state.currentQuestion || context.state.currentQuestion.code === null) {
-			await mainMenu.sendShareAndMenu(context); // send regular menu
+		if (context.state.categoryQuestion) { // eslint-disable-line no-lonely-if
+			await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+			if (!context.state.currentQuestion || context.state.currentQuestion.code === null || context.state.currentQuestion.form_error) {
+				await mainMenu.sendShareAndMenu(context); // send regular menu
+			} else {
+				await sendQuiz(context); // if user didn't finish quiz we can send it to them, even if they aren't on target_audience
+			}
 		} else {
 			await sendQuiz(context); // if user didn't finish quiz we can send it to them, even if they aren't on target_audience
 		}
@@ -112,7 +115,7 @@ async function followUpIntent(context) {
 	await context.setState({ intentType: await help.separateIntent(context.state.intentName), dialog: 'prompt' });
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
 
-	// console.log('intentType', context.state.intentType);
+	console.log('intentType', context.state.intentType);
 	// console.log('user', context.state.user);
 
 	if (context.state.user.is_target_audience === 1 || context.state.user.is_target_audience === null) { // check if user is part of target audience or we dont know yet
@@ -134,9 +137,14 @@ async function followUpIntent(context) {
 		// if (context.state.intentType === 'problema') { // eslint-disable-line
 		// 	await sendCarouselSus(context, opt.sus);
 		// } else {
-		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-		if (!context.state.currentQuestion || context.state.currentQuestion.code === null) {
-			await mainMenu.sendShareAndMenu(context); // send regular menu
+		// check if theres a category, if there isnt, the user probably finished the quiz and currentQuestion will receive a form_error
+		if (context.state.categoryQuestion) { // eslint-disable-line no-lonely-if
+			await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+			if (!context.state.currentQuestion || context.state.currentQuestion.code === null || context.state.currentQuestion.form_error) {
+				await mainMenu.sendShareAndMenu(context); // send regular menu
+			} else {
+				await sendQuiz(context); // if user didn't finish quiz we can send it to them, even if they aren't on target_audience
+			}
 		} else {
 			await sendQuiz(context); // if user didn't finish quiz we can send it to them, even if they aren't on target_audience
 		}

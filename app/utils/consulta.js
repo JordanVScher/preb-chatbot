@@ -42,11 +42,11 @@ async function showDays(context) { // shows available days
 	// console.log('context.state.cidade', context.state.cidade, typeof context.state.cidade);
 	await context.setState({ calendarCurrent: context.state.calendar[context.state.paginationDate], calendarNext: context.state.calendar[context.state.paginationDate + 1] });
 
-	console.log('Calendário current', context.state.calendarCurrent);
-	console.log('Calendário next', context.state.calendarNext);
+	// console.log('Calendário current', context.state.calendarCurrent);
+	// console.log('Calendário next', context.state.calendarNext);
 
 	await context.setState({ freeDays: await aux.separateDaysQR(context.state.calendarCurrent, context.state.calendarNext, context.state.paginationDate) });
-	console.log('freeDays', JSON.stringify(context.state.freeDays, null, 2));
+	// console.log('freeDays', JSON.stringify(context.state.freeDays, null, 2));
 
 	if (context.state.freeDays && context.state.freeDays.length > 0) {
 		await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays });

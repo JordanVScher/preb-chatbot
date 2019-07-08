@@ -62,10 +62,11 @@ async function formatHour(hour) {
 async function separateHoursQR(dates, ymd, pageNumber) {
 	const result = [];
 
-	if (dates.length <= 10) { // less han 10 options, no need for pagination
+	if (dates.length < 10) { // less han 10 options, no need for pagination
 		for (const element of dates) { // eslint-disable-line
 			await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
 		}
+		result.push({ content_type: 'text', title: 'Outros Horários', payload: 'outrosHorarios' });
 		return result; // return object with the result array
 	} // pagination
 
@@ -93,6 +94,10 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 		if (dates[dates.length - 1].quota !== lastQuota) {
 			result.push({ content_type: 'text', title: 'Próximo', payload: `nextHour${ymd}` });
 		}
+	}
+
+	if (result[result.length - 1].title !== 'Próximo') { // no more dates, show extra option
+		result.push({ content_type: 'text', title: 'Outros Horários', payload: 'outrosHorarios' });
 	}
 
 	return result;
