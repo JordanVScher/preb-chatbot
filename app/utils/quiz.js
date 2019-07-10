@@ -1,25 +1,26 @@
 const prepApi = require('./prep_api');
 const aux = require('./quiz_aux');
 const flow = require('./flow');
+const { linkUserToCustomLabel } = require('./labels');
+const { locationDictionary } = require('./helper');
 // const { sendShare } = require('./checkQR');
-
 
 // loads next question and shows it to the user
 async function answerQuizA(context) {
 	await context.typingOn();
-	// console.log(context.state.user);
-	// if (context.state.user.is_target_audience === 0) {
-	// 	await context.setState({ categoryQuestion: 'fun_questions' });
-	// } else {
-	// 	await context.setState({ categoryQuestion: 'quiz' });
-	// }
-
 	// if the user never started the quiz (or if the user already ended the quiz once === '') the category is 'quiz'
 	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') { await context.setState({ categoryQuestion: 'quiz' }); }
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 	console.log('categoryQuestion', context.state.categoryQuestion);
+
+	// saving city labels
+	if (context.state.currentQuestion.code === 'A2') {
+		await linkUserToCustomLabel(context.session.user.id, await locationDictionary[context.state.user.city]);
+	} else if (context.state.currentQuestion.code === 'AC1') {
+		await linkUserToCustomLabel(context.session.user.id, 'Cidade fora');
+	}
 
 	// user already answered the quiz (user shouldn't be here)
 	if ((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)) {
@@ -73,6 +74,7 @@ async function handleAnswerA(context, quizOpt) {
 				}
 			}
 		}
+
 		if (context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2') {
 			await context.setState({ dialog: 'stopHalfway' });
 		} else if (context.state.sentAnswer.form_error
