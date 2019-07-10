@@ -15,13 +15,6 @@ async function answerQuizA(context) {
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 	console.log('categoryQuestion', context.state.categoryQuestion);
 
-	// saving city labels
-	if (context.state.currentQuestion.code === 'A2') {
-		await linkUserToCustomLabel(context.session.user.id, await locationDictionary[context.state.user.city]);
-	} else if (context.state.currentQuestion.code === 'AC1') {
-		await linkUserToCustomLabel(context.session.user.id, 'Cidade fora');
-	}
-
 	// user already answered the quiz (user shouldn't be here)
 	if ((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)) {
 		await aux.sendTermos(context);
@@ -72,6 +65,15 @@ async function handleAnswerA(context, quizOpt) {
 						// await context.sendText(flow.quiz.halfway1);
 					}
 				}
+			}
+		}
+
+		// saving city labels
+		if (context.state.currentQuestion.code === 'A1') {
+			if (parseInt(quizOpt, 10) < 4) {
+				await linkUserToCustomLabel(context.session.user.id, await locationDictionary[quizOpt]);
+			} else {
+				await linkUserToCustomLabel(context.session.user.id, 'Cidade fora');
 			}
 		}
 

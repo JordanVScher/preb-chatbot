@@ -99,18 +99,16 @@ async function getLabelID(labelName) {
 async function linkUserToCustomLabel(UserID, labelName) {
 	const ourLabels = await listAllLabels(); // get all labels we have
 	const theOneLabel = await ourLabels.data.find(x => x.name === labelName); // find the one label with the name same (we need the id)
-	console.log('ourLabels', ourLabels);
-	console.log('theOneLabel', theOneLabel);
 
 	if (theOneLabel) { // if we already have that label, all we have to do is associate the user to the id
 		return associatesLabelToUser(UserID, theOneLabel.id);
 	}
 	// no theOneLabel exists so we have to create it
 	const newLabel = await createNewLabel(labelName);
-	console.log('newLabel', newLabel);
+
 
 	if (!newLabel.error) { // no errors, so we can add the user to the label
-		console.log(associatesLabelToUser(UserID, newLabel.id));
+		return associatesLabelToUser(UserID, newLabel.id);
 	}
 	return newLabel;
 }
