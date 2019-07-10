@@ -240,6 +240,9 @@ module.exports = async (context) => {
 		case 'outrasDatas':
 			await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrasDatas, help.emergenciaDictionary), opt.outrasDatas);
 			break;
+		case 'outrosHorarios':
+			await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrosHorarios, help.emergenciaDictionary), opt.outrasDatas);
+			break;
 		case 'listaDatas':
 			await context.setState({ paginationDate: 1, paginationHour: 1 });
 			await consulta.showDays(context);
