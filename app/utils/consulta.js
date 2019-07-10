@@ -116,7 +116,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 async function loadCalendar(context) {
 	/* load and prepare calendar */
 	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
-	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cidade, context.state.paginationDate) }); // getting calendar
+	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar
 	await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
 	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
 	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
