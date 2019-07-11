@@ -1,8 +1,8 @@
 const prepApi = require('./prep_api');
 const aux = require('./quiz_aux');
 const flow = require('./flow');
-const { linkUserToCustomLabel } = require('./labels');
-const { locationDictionary } = require('./helper');
+const { addCityLabel } = require('./labels');
+
 // const { sendShare } = require('./checkQR');
 
 // loads next question and shows it to the user
@@ -70,11 +70,7 @@ async function handleAnswerA(context, quizOpt) {
 
 		// saving city labels
 		if (context.state.currentQuestion.code === 'A1') {
-			if (parseInt(quizOpt, 10) < 4) {
-				await linkUserToCustomLabel(context.session.user.id, await locationDictionary[quizOpt]);
-			} else {
-				await linkUserToCustomLabel(context.session.user.id, 'Cidade fora');
-			}
+			await addCityLabel(context.session.user.id, quizOpt);
 		}
 
 		if (context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2') {

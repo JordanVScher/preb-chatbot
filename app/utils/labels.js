@@ -8,6 +8,8 @@ const client = MessengerClient.connect({
 	appSecret: config.appSecret,
 });
 
+const { locationDictionary } = require('./helper');
+
 const pageToken = config.accessToken;
 
 // creates a new label. Pass in the name of the label and add the return ID to the .env file
@@ -106,11 +108,26 @@ async function linkUserToCustomLabel(UserID, labelName) {
 	// no theOneLabel exists so we have to create it
 	const newLabel = await createNewLabel(labelName);
 
-
 	if (!newLabel.error) { // no errors, so we can add the user to the label
 		return associatesLabelToUser(UserID, newLabel.id);
 	}
 	return newLabel;
+}
+
+async function addCityLabel(userID, cityId) {
+	let labelToAdd = '';
+	if (cityId < 4) {
+		labelToAdd = await locationDictionary[cityId];
+	} else if (cityId === '4') {
+		labelToAdd = 'Nenhum desses';
+	}
+
+	if (labelToAdd) {
+		const res = await linkUserToCustomLabel(userID, labelToAdd);
+		if (res && !res.error) { return true; }
+	}
+
+	return false;
 }
 
 
@@ -125,5 +142,6 @@ module.exports = {
 	createNewLabel,
 	listAllLabels,
 	getBroadcastMetrics,
+	addCityLabel,
 
 };
