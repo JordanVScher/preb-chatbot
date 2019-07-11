@@ -90,7 +90,8 @@ module.exports = async (context) => {
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: `${context.event.message.text}` });
 			if (context.state.onTextQuiz === true) {
-				if (Number.isInteger(parseInt(context.state.whatWasTyped, 10)) === true) {
+				await context.setState({ whatWasTyped: parseInt(context.state.whatWasTyped, 10) });
+				if (Number.isInteger(context.state.whatWasTyped, 10) === true) {
 					await quiz.handleAnswerA(context, context.state.whatWasTyped);
 				} else {
 					await context.sendText('Formato inválido, digite só um número, exemplo 24');
