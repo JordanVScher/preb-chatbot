@@ -2,7 +2,6 @@ const cont = require('./context');
 const research = require('../app/utils/research');
 const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
-const { checarConsulta } = require('../app/utils/consulta');
 const { getRecipientPrep } = require('../app/utils/prep_api');
 
 jest.mock('../app/utils/flow');
@@ -10,15 +9,6 @@ jest.mock('../app/utils/options');
 jest.mock('../app/utils/desafio');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/consulta');
-
-it('researchSaidYes', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	await research.researchSaidYes(context);
-
-	await context.setState({ categoryConsulta: 'recrutamento' });
-	await expect(context.setState).toBeCalledWith({ sendExtraMessages: true });
-	await expect(checarConsulta).toBeCalledWith(context);
-});
 
 it('handleToken - success', async () => {
 	const context = cont.textContext('123123', 'joinToken');

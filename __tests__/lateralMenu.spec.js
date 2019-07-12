@@ -20,7 +20,7 @@ jest.mock('../app/utils/timer');
 it('Voltar para o inicio - menu', async () => {
 	const context = cont.postbackContext('greetings', 'Voltar para o inicio', 'greetings');
 	await handler(context);
-	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) });
+	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 	await expect(MaAPI.postRecipientMA).toBeCalledWith(context.state.politicianData.user_id, {
 		fb_id: context.session.user.id,
 		name: `${context.session.user.first_name} ${context.session.user.last_name}`,
@@ -34,7 +34,8 @@ it('Voltar para o inicio - menu', async () => {
 	await expect(timer.deleteTimers).toBeCalledWith(context.session.user.id);
 
 	await expect(context.event.isPostback).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ lastPBpayload: context.event.postback.payload });
+	await expect(context.setState).toBeCalledWith({ lastPBpayload: context.event.postback.payload, lastQRpayload: '' });
+	await expect(context.setState).toBeCalledWith({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false }); // eslint-disable-line
 	await expect(context.state.lastPBpayload === 'greetings').toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ dialog: 'greetings' });
 	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id,
@@ -51,7 +52,7 @@ it('Notifications on - menu', async () => {
 	await handler(context);
 
 	await expect(context.event.isPostback).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ lastPBpayload: context.event.postback.payload });
+	await expect(context.setState).toBeCalledWith({ lastPBpayload: context.event.postback.payload, lastQRpayload: '' });
 	await expect(context.event.postback && context.event.postback.payload === 'greetings').toBeFalsy();
 	await expect(context.setState).toBeCalledWith({ dialog: context.state.lastPBpayload });
 	await expect(MaAPI.updateBlacklistMA).toBeCalledWith(context.session.user.id, 1);
@@ -65,7 +66,7 @@ it('Notifications off - menu', async () => {
 	await handler(context);
 
 	await expect(context.event.isPostback).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ lastPBpayload: context.event.postback.payload });
+	await expect(context.setState).toBeCalledWith({ lastPBpayload: context.event.postback.payload, lastQRpayload: '' });
 	await expect(context.event.postback && context.event.postback.payload === 'greetings').toBeFalsy();
 	await expect(context.setState).toBeCalledWith({ dialog: context.state.lastPBpayload });
 	await expect(MaAPI.updateBlacklistMA).toBeCalledWith(context.session.user.id, 0);

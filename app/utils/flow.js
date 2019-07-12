@@ -79,7 +79,6 @@ module.exports = {
 	},
 	notEligible: {
 		text1: 'AMEI te conhecer, olha só o que você pode fazer aqui:',
-		// saidNo: '[texto não aceita participar]',
 	},
 	share: {
 		siteTitle: 'Compartilhe o seu resultado',

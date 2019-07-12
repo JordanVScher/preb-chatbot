@@ -19,8 +19,9 @@ it('Loading data and Free text - DF disabled', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.politicianData.use_dialogflow = 0; // test text with use_dialogflow === 0
 	await handler(context);
-	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) });
-	await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text });
+	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
+
+	await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
 	await expect(context.state.whatWasTyped === process.env.GET_PERFILDATA).toBeFalsy();
 	await expect(context.state.whatWasTyped === process.env.TEST_KEYWORD).toBeFalsy();
 	await expect(context.state.politicianData.use_dialogflow === 1).toBeFalsy();
@@ -32,14 +33,14 @@ it('Free text - DF enabled', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.politicianData.use_dialogflow = 1; // default
 	await handler(context);
-	await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text });
+	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
+
+	await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
 	await expect(context.state.whatWasTyped === process.env.GET_PERFILDATA).toBeFalsy();
 	await expect(context.state.whatWasTyped === process.env.TEST_KEYWORD).toBeFalsy();
 	await expect(context.state.politicianData.use_dialogflow === 1).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({
-		apiaiResp: await apiai.textRequest(
-			await help.formatDialogFlow(context.state.whatWasTyped), { sessionId: context.session.user.id },
-		),
+		apiaiResp: await apiai.textRequest(await help.formatDialogFlow(context.state.whatWasTyped), { sessionId: context.session.user.id }),
 	});
 	await expect(context.setState).toBeCalledWith({ intentName: context.state.apiaiResp.result.metadata.intentName });
 	await expect(checkPosition).toBeCalledWith(context);
