@@ -1,4 +1,5 @@
 const prepApi = require('./prep_api');
+const { moment } = require('./helper');
 
 // check if user has already answered the quiz to remove the quick_reply option from the menu UNUSED
 async function checkAnsweredQuiz(context, options) {
@@ -12,7 +13,7 @@ async function checkAnsweredQuiz(context, options) {
 
 	// if Options has the consulta options we have to check if the user is able to scheduled appointments
 	if (newOptions.find(x => x.payload === 'showDays') || newOptions.find(x => x.payload === 'verConsulta')) { // checks if we have the options
-		if (context.state.is_eligible_for_research === true) { // if user is eligible he can schedule appointments
+		if (context.state.user.is_eligible_for_research === 1) { // if user is eligible he can schedule appointments
 			await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
 			if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
 				newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option to schedule appointment because he scheduled one already
@@ -53,14 +54,14 @@ async function checkConsulta(context, options) {
 	return { quick_replies: newOptions };
 }
 
-async function replaceTitle(options, toFind, newTitle) {
-	const result = options;
+// async function replaceTitle(options, toFind, newTitle) {
+// 	const result = options;
 
-	const objIndex = result.findIndex((obj => obj.title === toFind));
-	if (objIndex && objIndex >= 0) { result[objIndex].title = newTitle; }
+// 	const objIndex = result.findIndex((obj => obj.title === toFind));
+// 	if (objIndex && objIndex >= 0) { result[objIndex].title = newTitle; }
 
-	return result;
-}
+// 	return result;
+// }
 
 async function checkMainMenu(context) {
 	await context.setState({ sendExtraMessages: false });
@@ -82,8 +83,6 @@ async function checkMainMenu(context) {
 		} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // 0 1
 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
 		} else if (context.state.user.finished_quiz === 0) { // 0
-			console.log('PASSEI AQUI');
-
 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
 		}
@@ -121,18 +120,18 @@ async function checkMainMenu(context) {
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
-async function checkMedication(context) { // eslint-disable-line
+async function checkMedication(prepSince) { // eslint-disable-line
 	const newOptions = [];
+	const months = 4; // the time range for the user to be in the first stage of the treatment
 
-	const fourMonths = 7776000; // the time range for the user to be in the first stage of the treatment
-	// const userJoined = 1552080090000 / 1000 | 0; // eslint-disable-line
-	// when the user became prep (without mili)
-	const userJoined = context.state.user.prep_since / 1000 | 0; // eslint-disable-line 
-	// now (without mili)
-	const now = Date.now() / 1000 | 0; // eslint-disable-line
-	// if the difference between now and the user date is bigger than 4 months than he is not on the first stage anymore
-	if (now - userJoined <= fourMonths) {
-		newOptions.push({ content_type: 'text', title: 'Sintomas', payload: 'sintomas' });
+	if (prepSince) {
+		const modxDate = moment(prepSince);
+		const diff = Math.abs(modxDate.diff(Date.now(), 'months'));
+
+		// if the difference between now and the user prepSince date is bigger than 4 months than he is not on the first stage anymore
+		if (diff >= months) {
+			newOptions.push({ content_type: 'text', title: 'Sintomas', payload: 'sintomas' });
+		}
 	}
 	newOptions.push({ content_type: 'text', title: 'Acabou o Remédio', payload: 'acabouRemedio' });
 	newOptions.push({ content_type: 'text', title: 'Esqueci de tomar', payload: 'esqueciDeTomar' });
@@ -143,15 +142,14 @@ async function checkMedication(context) { // eslint-disable-line
 
 async function autoTesteOption(options, cityId) {
 	let newOptions = options.quick_replies;
-	// no need to filter out cityId = 1
-	if (cityId.toString() === '1') { // belo horizonte
+	// no need to filter out cityId = 3
+	if (cityId && cityId.toString() === '1') { // belo horizonte
 		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
 		newOptions = await newOptions.filter(obj => obj.payload !== 'ong');
-	} else if (cityId.toString() === '2') { // salvador
+	} else if (cityId && cityId.toString() === '2') { // salvador
 		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
 		newOptions = await newOptions.filter(obj => obj.payload !== 'auto');
 	}
-	console.log('autoTesteOption', newOptions);
 	return { quick_replies: newOptions };
 }
 
@@ -240,9 +238,10 @@ module.exports.sendShare = async (context, links, results, imagem) => {
 	});
 };
 
-module.exports.checkAnsweredQuiz = checkAnsweredQuiz;
-module.exports.checkMainMenu = checkMainMenu;
-module.exports.checkConsulta = checkConsulta;
-module.exports.checkMedication = checkMedication;
-module.exports.autoTesteOption = autoTesteOption;
-module.exports.replaceTitle = replaceTitle;
+module.exports = {
+	checkAnsweredQuiz,
+	checkMainMenu,
+	checkConsulta,
+	checkMedication,
+	autoTesteOption,
+};
