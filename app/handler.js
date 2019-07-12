@@ -102,7 +102,7 @@ module.exports = async (context) => {
 					await context.setState({ dialog: 'startQuizA' });
 				}
 			} else if (context.state.dialog === 'joinToken' || context.state.dialog === 'joinTokenErro') {
-				await research.handleToken(context);
+				await research.handleToken(context, await prepAPI(context.session.user.id, context.state.whatWasTyped));
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
