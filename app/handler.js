@@ -140,7 +140,7 @@ module.exports = async (context) => {
 				await mainMenu.sendMain(context);
 				break;
 			case 'medicaçao':
-				await context.sendText(flow.medication.text1, await checkQR.checkMedication(context));
+				await context.sendText(flow.medication.text1, await checkQR.checkMedication(context.state.user.prep_since));
 				break;
 			case 'sintomas':
 			// await context.sendText('<começa o quiz>');

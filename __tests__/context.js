@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 	return {
 		state: {

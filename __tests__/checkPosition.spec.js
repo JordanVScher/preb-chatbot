@@ -51,12 +51,12 @@ it('checkPosition - Fallback case', async () => {
 	await expect(desafio.followUpIntent).toBeCalledWith(context);
 });
 
-it('checkPosition - Greetings case', async () => {
-	const context = cont.textContext('oi, isso é um teste', 'test');
-	context.state.intentName = 'Greetings';
-	await checkPosition(context);
-	await expect(context.setState).toBeCalledWith({ dialog: 'greetings' });
-});
+// it('checkPosition - Greetings case', async () => {
+// 	const context = cont.textContext('oi, isso é um teste', 'test');
+// 	context.state.intentName = 'Greetings';
+// 	await checkPosition(context);
+// 	await expect(context.setState).toBeCalledWith({ dialog: 'greetings' });
+// });
 
 it('checkPosition - quiz case - not finished', async () => {
 	const context = cont.textContext('oi, quero fazer o quiz', 'test');
