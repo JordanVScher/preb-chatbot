@@ -4,8 +4,7 @@ module.exports.regularMultipleChoice = {
 	extra_quick_replies: null,
 	has_more: 1,
 	multiple_choices: { 1: 'Sim', 2: 'Não' },
-	text:
-        'Você vai?',
+	text: 'Você vai?',
 	type: 'multiple_choice',
 };
 
@@ -14,9 +13,7 @@ module.exports.extraMultiple = {
 	count_more: 14,
 	extra_quick_replies: [{ label: 'Não sei o que é', text: 'Tente descobrir' }],
 	has_more: 1,
-	multiple_choices: {
-		1: 'Sempre!', 2: 'Às vezes', 3: 'Já fui', 4: 'Nunca!',
-	},
+	multiple_choices: { 1: 'Sim', 2: 'Não' },
 	text: 'Você vai?',
 	type: 'multiple_choice',
 };
@@ -60,7 +57,7 @@ module.exports.finishedNotPart = {
 	finished_quiz: 1, id: 76, is_target_audience: 0,
 };
 module.exports.halfway = {
-	finished_quiz: 1, id: 76, is_target_audience: 0, followup_messages: ['f', 'o', 'o'],
+	finished_quiz: 1, id: 76, is_target_audience: 0, followup_messages: ['image.png', 'foo', 'bar'],
 };
 module.exports.serverError = { error: 'Internal server error' };
 module.exports.invalidValue = { form_error: { answer_value: 'invalid' } };

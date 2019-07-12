@@ -61,8 +61,6 @@ async function handleAnswerA(context, quizOpt) {
 							await context.sendImage(context.state.resultImageUrl);
 							await context.setState({ resultImageUrl: '' });
 						}
-						// await sendShare(context, flow.share, context.state.sentAnswer.followup_messages[i].split('\n'), context.state.resultImageUrl);
-						// await context.sendText(flow.quiz.halfway1);
 					}
 				}
 			}
@@ -77,8 +75,7 @@ async function handleAnswerA(context, quizOpt) {
 			await context.setState({ dialog: 'stopHalfway' });
 		} else if (context.state.sentAnswer.form_error
 			|| (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid')) { // input format is wrong (text)
-			await context.sendText(flow.quiz.invalid);
-			// Date is: YYYY-MM-DD
+			await context.sendText(flow.quiz.invalid); // Date is: YYYY-MM-DD
 			await context.setState({ dialog: 'startQuizA' }); // re-asks same question
 		} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
 			if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
@@ -101,6 +98,7 @@ async function AnswerExtraQuestion(context) {
 	const answer = context.state.currentQuestion.extra_quick_replies[index].text;
 	await context.sendText(answer);
 	await context.setState({ dialog: 'startQuizA' }); // re-asks same question
+	return answer;
 }
 
 module.exports.answerQuizA = answerQuizA;
