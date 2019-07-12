@@ -37,12 +37,12 @@ module.exports = async (context) => {
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload, lastQRpayload: '' });
+			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
 				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
 				// await context.setState({ dialog: 'autoTeste' });
-					await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -271,7 +271,8 @@ module.exports = async (context) => {
 				break;
 			case 'joinResearchAfter':
 				await prepAPI.putUpdatePartOfResearch(context.session.user.id, 1);
-				await research.researchSaidYes(context);
+				await context.setState({ categoryConsulta: 'recrutamento', sendExtraMessages: true }); // sendExtraMessages: used only to show a few different messages on consulta
+				await consulta.checarConsulta(context);
 				break;
 			case 'seePreventions':
 				await context.sendText(flow.prevention.text1);

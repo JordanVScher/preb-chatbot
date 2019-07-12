@@ -86,12 +86,6 @@ module.exports = {
 			{ content_type: 'text', title: 'Não', payload: 'firstNoResearch' },
 		],
 	},
-	saidNo: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Quero!', payload: 'joinResearchAfter' },
-			{ content_type: 'text', title: 'Não quero!', payload: 'noResearchAfter' },
-		],
-	},
 	saidYes: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-showDays' },

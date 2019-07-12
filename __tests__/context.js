@@ -3,6 +3,7 @@ require('dotenv').config();
 function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 	return {
 		state: {
+			ignore: false,
 			user: {},
 			dialog,
 			lastQRpayload: payload,
@@ -21,7 +22,7 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 		},
 		event: {
 			isQuickReply: true,
-			quickReply: { payload },
+			quickReply: { payload: `novo${payload}` },
 			message: {
 				quick_reply: { payload },
 				text: 'This qr was clicked',
@@ -44,6 +45,7 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 function postbackContext(payload, title, dialog = 'prompt', lastActivity = new Date()) {
 	return {
 		state: {
+			ignore: false,
 			user: {},
 			dialog,
 			lastPBpayload: payload,
@@ -86,6 +88,7 @@ function postbackContext(payload, title, dialog = 'prompt', lastActivity = new D
 function textContext(text, dialog, lastActivity = new Date()) {
 	return {
 		state: {
+			ignore: false,
 			user: {},
 			dialog,
 			politicianData: {
