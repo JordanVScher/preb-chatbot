@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const cont = require('./context');
 const questions = require('./question');
 const quiz = require('../app/utils/quiz');

@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const cont = require('./context');
 const questions = require('./question');
 const aux = require('../app/utils/quiz_aux');
@@ -64,71 +62,3 @@ it('buildMultipleChoice - extra option', async () => {
 	await expect(result.quick_replies[2].title === questions.extraMultiple.extra_quick_replies[0].label).toBeTruthy();
 	await expect(result.quick_replies[2].payload === 'extraQuestion0').toBeTruthy();
 });
-
-// it('endTriagem - suggest_wait_for_test', async () => {
-// 	const context = cont.quickReplyContext('0', 'prompt');
-// 	context.state.sentAnswer = { suggest_wait_for_test: 1, go_to_test: 1 };
-// 	await aux.endTriagem(context);
-
-// 	await expect(context.setState).toBeCalledWith({ dialog: 'endTriagem' });
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.suggest_wait_for_test === 1).toBeTruthy();
-// 	await expect(context.setState).toBeCalledWith({ suggestWaitForTest: true });
-// 	await expect(context.setState).toBeCalledWith({ dialog: 'autoTeste' });
-// });
-
-// it('endTriagem - emergency_rerouting', async () => {
-// 	const context = cont.quickReplyContext('0', 'prompt');
-// 	context.state.sentAnswer = { emergency_rerouting: 1 };
-// 	await aux.endTriagem(context);
-
-// 	await expect(context.setState).toBeCalledWith({ dialog: 'endTriagem' });
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1).toBeTruthy();
-// 	await expect(context.sendText).toBeCalledWith(flow.triagem.emergency1);
-// 	await expect(context.sendText).toBeCalledWith(await help.buildPhoneMsg(context.state.user.city, 'Telefones pra contato:'));
-// 	await expect(sendMain).toBeCalledWith(context);
-// });
-
-// it('endTriagem - go_to_test', async () => {
-// 	const context = cont.quickReplyContext('0', 'prompt');
-// 	context.state.sentAnswer = { go_to_test: 1 };
-// 	await aux.endTriagem(context);
-
-// 	await expect(context.setState).toBeCalledWith({ dialog: 'endTriagem' });
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.go_to_test === 1).toBeTruthy();
-// 	await expect(context.setState).toBeCalledWith({ dialog: 'autoTeste' });
-// });
-
-// it('endTriagem - go_to_appointment', async () => {
-// 	const context = cont.quickReplyContext('0', 'prompt');
-// 	context.state.sentAnswer = { go_to_appointment: 1 };
-// 	await aux.endTriagem(context);
-
-// 	await expect(context.setState).toBeCalledWith({ dialog: 'endTriagem' });
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.go_to_appointment === 1).toBeTruthy();
-// 	await expect(context.setState).toBeCalledWith({ dialog: 'checarConsulta' });
-// });
-
-// it('endTriagem - suggest_appointment', async () => {
-// 	const context = cont.quickReplyContext('0', 'prompt');
-// 	context.state.sentAnswer = { suggest_appointment: 1 };
-// 	await aux.endTriagem(context);
-
-// 	await expect(context.setState).toBeCalledWith({ dialog: 'endTriagem' });
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1).toBeTruthy();
-// 	await expect(context.sendText).toBeCalledWith(flow.triagem.suggest, opt.triagem1);
-// 	await context.sendText(flow.triagem.suggest, opt.triagem1);
-// });
-
-// it('endTriagem - default case', async () => {
-// 	const context = cont.quickReplyContext('0', 'prompt');
-// 	await aux.endTriagem(context);
-
-// 	await expect(context.setState).toBeCalledWith({ dialog: 'endTriagem' });
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.suggest_wait_for_test === 1).toBeFalsy();
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1).toBeFalsy();
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.go_to_test === 1).toBeFalsy();
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.go_to_appointment === 1).toBeFalsy();
-// 	await expect(context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1).toBeFalsy();
-
-// 	await expect(sendMain).toBeCalledWith(context);
-// });
