@@ -53,15 +53,15 @@ async function getTriagem(context) {
 			await context.setState({ onTextQuiz: true });
 			await context.sendText(context.state.currentQuestion.text);
 		}
-		await context.typingOff();
 	}
+	await context.typingOff();
 }
 
 async function handleAnswer(context, quizOpt) {
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, 'screening', context.state.currentQuestion.code, quizOpt) });
 	console.log('sentAnswer', context.state.sentAnswer);
 
-	if (context.state.sentAnswer.error || context.state.sentAnswer.form_error) { // error
+	if (!context.state.sentAnswer || context.state.sentAnswer.error) { // error
 		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'triagem' });
 	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)

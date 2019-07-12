@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const MaAPI = require('../app/chatbot_api');
 const cont = require('./context');
 const { createIssue } = require('../app/send_issue');
