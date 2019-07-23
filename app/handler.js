@@ -49,8 +49,7 @@ module.exports = async (context) => {
 			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
-			// console.log('context.state.lastQRpayload', context.state.lastQRpayload);
-			// console.log('context.state.quickReply.payload', context.event.quickReplyayload);
+			console.log(context.session.user.first_name, 'clicks lastQRpayload => new payload:', `${context.state.lastQRpayload} => ${context.event.quickReply.payload}`);
 			if (context.state.lastQRpayload !== context.event.quickReply.payload) { // check if last clicked button is the same as the new one
 				await context.setState({ lastQRpayload: context.event.quickReply.payload }); // update last quick reply chosen
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
