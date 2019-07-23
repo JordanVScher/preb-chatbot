@@ -49,9 +49,10 @@ module.exports = async (context) => {
 			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
+			// console.log('context.state.lastQRpayload', context.state.lastQRpayload);
+			// console.log('context.state.quickReply.payload', context.event.quickReplyayload);
 			if (context.state.lastQRpayload !== context.event.quickReply.payload) { // check if last clicked button is the same as the new one
 				await context.setState({ lastQRpayload: context.event.quickReply.payload }); // update last quick reply chosen
-				console.log('lastQRpayload', context.event.quickReply.payload);
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
 					context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 				if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
@@ -61,9 +62,10 @@ module.exports = async (context) => {
 					await context.setState({ selectedHour: context.state.lastQRpayload.slice(9, -1) });
 					await context.setState({ dialog: 'setEvent' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
-					await quiz.handleAnswerA(context, context.state.lastQRpayload.replace('quiz', ''));
+					// await quiz.handleAnswerA(context, context.state.lastQRpayload.replace('quiz', ''));
+					await quiz.handleAnswerA(context, context.state.lastQRpayload.charAt(4));
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'tria') {
-					await triagem.handleAnswer(context, context.state.lastQRpayload.replace('tria', ''));
+					await triagem.handleAnswer(context, context.state.lastQRpayload.charAt(4));
 				} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
 					await quiz.AnswerExtraQuestion(context);
 				} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
