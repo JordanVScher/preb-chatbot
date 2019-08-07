@@ -144,9 +144,11 @@ async function orderByDate(original) {
 	return dates;
 }
 
-module.exports.separateDaysQR = separateDaysQR;
-module.exports.separateHoursQR = separateHoursQR;
-module.exports.formatHour = formatHour;
-module.exports.cleanDates = cleanDates;
-module.exports.orderByDate = orderByDate;
-module.exports.separateDaysIntoPages = separateDaysIntoPages;
+module.exports = {
+	separateDaysQR,
+	separateHoursQR,
+	formatHour,
+	cleanDates,
+	orderByDate,
+	separateDaysIntoPages,
+};

@@ -11,7 +11,6 @@ async function formatString(text) {
 	result = await accents.remove(result);
 	return result.trim();
 }
-module.exports.formatString = formatString;
 
 // check if we should create an issue with that text message.If it returns true, we send the appropriate message.
 async function createIssue(context) {
@@ -31,4 +30,7 @@ async function createIssue(context) {
 	console.log('created issue? false');
 	return false;
 }
-module.exports.createIssue = createIssue;
+
+module.exports = {
+	createIssue, formatString,
+};

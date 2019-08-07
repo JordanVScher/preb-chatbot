@@ -76,7 +76,8 @@ async function handleAnswer(context, quizOpt) {
 	}
 }
 
-
-module.exports.getTriagem = getTriagem;
-module.exports.handleAnswer = handleAnswer;
-module.exports.endTriagem = endTriagem;
+module.exports = {
+	getTriagem,
+	handleAnswer,
+	endTriagem,
+};

@@ -170,12 +170,14 @@ async function desafioAceito(context) {
 	await context.sendText(flow.desafioAceito.text1, opt.desafioAceito);
 }
 
-module.exports.asksDesafio = asksDesafio;
-module.exports.desafioRecusado = desafioRecusado;
-module.exports.desafioAceito = desafioAceito;
-module.exports.followUp = followUp;
-module.exports.followUpIntent = followUpIntent;
-module.exports.sendQuiz = sendQuiz;
-module.exports.sendResearch = sendResearch;
-module.exports.sendConsulta = sendConsulta;
-module.exports.checkAconselhamento = checkAconselhamento;
+module.exports = {
+	asksDesafio,
+	desafioRecusado,
+	desafioAceito,
+	followUp,
+	followUpIntent,
+	sendQuiz,
+	sendResearch,
+	sendConsulta,
+	checkAconselhamento,
+};
