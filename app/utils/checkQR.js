@@ -153,7 +153,7 @@ async function autoTesteOption(options, cityId) {
 	return { quick_replies: newOptions };
 }
 
-module.exports.getErrorQR = async (lastPostback) => { // eslint-disable-line
+async function getErrorQR(lastPostback) { // eslint-disable-line
 	const elements = [];
 	// const firstArray = opt.menuOptions;
 
@@ -180,15 +180,17 @@ module.exports.getErrorQR = async (lastPostback) => { // eslint-disable-line
 	// }
 
 	return { quick_replies: elements };
-};
+}
 
-module.exports.buildButton = async (url, title) => [{
-	type: 'web_url',
-	url,
-	title,
-}];
+async function buildButton(url, title) {
+	return [{
+		type: 'web_url',
+		url,
+		title,
+	}];
+}
 
-module.exports.sendShare = async (context, links, results, imagem) => {
+async function sendShare(context, links, results, imagem) {
 	const subtitle = results && results[0] ? results[0] : 'Chatbot';
 
 	await context.sendAttachment({
@@ -236,7 +238,7 @@ module.exports.sendShare = async (context, links, results, imagem) => {
 			],
 		},
 	});
-};
+}
 
 module.exports = {
 	checkAnsweredQuiz,
@@ -244,4 +246,7 @@ module.exports = {
 	checkConsulta,
 	checkMedication,
 	autoTesteOption,
+	getErrorQR,
+	buildButton,
+	sendShare,
 };

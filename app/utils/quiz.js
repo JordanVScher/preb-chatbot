@@ -104,6 +104,8 @@ async function AnswerExtraQuestion(context) {
 	return answer;
 }
 
-module.exports.answerQuizA = answerQuizA;
-module.exports.handleAnswerA = handleAnswerA;
-module.exports.AnswerExtraQuestion = AnswerExtraQuestion;
+module.exports = {
+	answerQuizA,
+	handleAnswerA,
+	AnswerExtraQuestion,
+};

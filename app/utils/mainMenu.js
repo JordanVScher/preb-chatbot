@@ -48,6 +48,8 @@ async function sendShareAndMenu(context) {
 	await sendMain(context);
 }
 
-module.exports.sendMain = sendMain;
-module.exports.sendFollowUp = sendFollowUp;
-module.exports.sendShareAndMenu = sendShareAndMenu;
+module.exports = {
+	sendMain,
+	sendFollowUp,
+	sendShareAndMenu,
+};

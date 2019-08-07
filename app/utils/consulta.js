@@ -157,10 +157,11 @@ async function checarConsulta(context) {
 	}
 }
 
-
-module.exports.verConsulta = verConsulta;
-module.exports.showDays = showDays;
-module.exports.showHours = showHours;
-module.exports.finalDate = finalDate;
-module.exports.checarConsulta = checarConsulta;
-module.exports.loadCalendar = loadCalendar;
+module.exports = {
+	verConsulta,
+	showDays,
+	showHours,
+	finalDate,
+	checarConsulta,
+	loadCalendar,
+};
