@@ -136,7 +136,7 @@ it('loadCalendar with sendExtraMessages', async () => {
 
 	await expect(context.state.sendExtraMessages === true).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ sendExtraMessages2: true, sendExtraMessages: false });
-	await expect(context.sendText).toBeCalledWith(flow.quizYes.text3);
+	await expect(context.sendText).toBeCalledWith(flow.quizYes.text3.replace('<LOCAL>', help.extraMessageDictionary[context.state.user.city]));
 	await expect(context.sendText).toBeCalledWith(flow.quizYes.text4);
 
 	await expect(context.setState).toBeCalledWith({ cidade: context.state.user.city }); // showDays

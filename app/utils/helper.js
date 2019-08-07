@@ -70,6 +70,7 @@ const telefoneDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234', 3: '(11
 const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234', 3: '(11) 98209-2911' };
 // "1": "Belo Horizonte - MG", "2": "Salvador - BA", "3": "São Paulo e Gde SP",
 const locationDictionary = { 1: 'Belo Horizonte - MG', 2: 'Salvador - BA', 3: 'São Paulo - SP' };
+const extraMessageDictionary = { 1: 'Centro de referência da juventude, Centro de BH', 2: 'Casarão da Diversidade, Pelourinho', 3: 'CTA Henfil, Centro de São Paulo' };
 
 async function buildPhoneMsg(cityId, introText, phones) {
 	const validOptions = ['1', '2', '3'];
@@ -139,5 +140,6 @@ module.exports = {
 	emergenciaDictionary,
 	separateIntent,
 	separateString,
+	extraMessageDictionary,
 	checkSuggestWaitForTest,
 };

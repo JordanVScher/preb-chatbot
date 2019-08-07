@@ -123,7 +123,7 @@ async function loadCalendar(context) {
 
 	if (context.state.sendExtraMessages === true) {
 		await context.setState({ sendExtraMessages2: true, sendExtraMessages: false }); // because of "outras datas" we cant show these again, but we still have to show the next ones
-		await context.sendText(flow.quizYes.text3);
+		await context.sendText(flow.quizYes.text3.replace('<LOCAL>', help.extraMessageDictionary[context.state.user.city]));
 		await context.sendText(flow.quizYes.text4);
 	} else {
 		await context.sendText(flow.consulta.checar2);

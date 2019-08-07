@@ -105,8 +105,8 @@ module.exports = {
 		text1: 'Tem um professor super fofo da USP q pediu pra eu te mandar um link, cata, aki explica tudinho:',
 		text15: 'Antes de eu te oferecer os nossos serviços, da uma olhadinha no texto aí em baixo.',
 		text2: 'Cata outra dika, se tu kisé ser bem ligera pode preencher esse formulário antes mas pode fazer isso lá tb q é sucesso, táá? Vc decide! 😉',
-		text3: 'Arrasou, keriii! A pesquisa rola em 3 cidades e eu serei sua agente virtual pra agendar seu encontro com a nossa ekipe - arrazei, né?',
-		text4: 'Cola na grade pra gente agendar o melhor dia pra vc, eu tenho uma agenda com horários e tudo, keride!! Vem de boa receber orientações baphos sobre tudoo!! 😉',
+		text3: 'Arrasou, keriii! A pesquisa rola em 3 cidades e eu serei sua agente virtual pra marcar seu encontro com a nossa ekipe no <LOCAL> - arrazei, né? ',
+		text4: 'Cola na grade pra gente escolher melhor dia e horário pra tu, tenho uma agenda, keride!! Vem de boa receber todas as orientações baphos! 😉',
 	},
 	consulta: {
 		city: 'Qual cidade vc qr q eu agende??',
