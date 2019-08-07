@@ -50,7 +50,7 @@ module.exports = async (context) => {
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
 			console.log(context.session.user.first_name, 'clicks lastQRpayload => new payload:', `${context.state.lastQRpayload} => ${context.event.quickReply.payload}`);
-			if (context.state.lastQRpayload !== context.event.quickReply.payload) { // check if last clicked button is the same as the new one
+			if (!context.state.lastQRpayload || context.state.lastQRpayload !== context.event.quickReply.payload) { // check if last clicked button is the same as the new one
 				await context.setState({ lastQRpayload: context.event.quickReply.payload }); // update last quick reply chosen
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
 					context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
@@ -61,7 +61,7 @@ module.exports = async (context) => {
 					await context.setState({ selectedHour: context.state.lastQRpayload.slice(9, -1) });
 					await context.setState({ dialog: 'setEvent' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
-					// await quiz.handleAnswerA(context, context.state.lastQRpayload.replace('quiz', ''));
+					// await quiz.handleAnswerA(context, context.state.lastQRpayload.replace('quiz', '').replace(context.state.currentQuestion.code), '');
 					await quiz.handleAnswerA(context, context.state.lastQRpayload.charAt(4));
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'tria') {
 					await triagem.handleAnswer(context, context.state.lastQRpayload.charAt(4));
@@ -93,7 +93,7 @@ module.exports = async (context) => {
 			console.log('--------------------------');
 			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
-			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
+			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '', oldQuestionId: '' });
 			if (context.state.onTextQuiz === true) {
 				await context.setState({ whatWasTyped: parseInt(context.state.whatWasTyped, 10) });
 				if (Number.isInteger(context.state.whatWasTyped, 10) === true) {
@@ -107,7 +107,7 @@ module.exports = async (context) => {
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-				await context.setState({ stoppedHalfway: false });
+				await context.setState({ stoppedHalfway: false, oldQuestionId: '' });
 				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
 				await context.setState({ is_target_audience: false, is_prep: false, categoryQuestion: '' });
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
