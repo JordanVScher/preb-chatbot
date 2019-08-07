@@ -21,7 +21,7 @@ it('Loading data and Free text - DF disabled', async () => {
 	await handler(context);
 	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 
-	await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text, lastQRpayload: '', oldQuestionId: '' });
+	await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
 	await expect(context.state.whatWasTyped === process.env.GET_PERFILDATA).toBeFalsy();
 	await expect(context.state.whatWasTyped === process.env.TEST_KEYWORD).toBeFalsy();
 	await expect(context.state.politicianData.use_dialogflow === 1).toBeFalsy();
@@ -35,7 +35,7 @@ it('Free text - DF enabled', async () => {
 	await handler(context);
 	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 
-	await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text, lastQRpayload: '', oldQuestionId: '' });
+	await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
 	await expect(context.state.whatWasTyped === process.env.GET_PERFILDATA).toBeFalsy();
 	await expect(context.state.whatWasTyped === process.env.TEST_KEYWORD).toBeFalsy();
 	await expect(context.state.politicianData.use_dialogflow === 1).toBeTruthy();
