@@ -93,7 +93,7 @@ module.exports = async (context) => {
 			console.log('--------------------------');
 			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
-			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '', oldQuestionId: '' });
+			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
 			if (context.state.onTextQuiz === true) {
 				await context.setState({ whatWasTyped: parseInt(context.state.whatWasTyped, 10) });
 				if (Number.isInteger(context.state.whatWasTyped, 10) === true) {
@@ -107,7 +107,7 @@ module.exports = async (context) => {
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-				await context.setState({ stoppedHalfway: false, oldQuestionId: '' });
+				await context.setState({ stoppedHalfway: false });
 				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
 				await context.setState({ is_target_audience: false, is_prep: false, categoryQuestion: '' });
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
