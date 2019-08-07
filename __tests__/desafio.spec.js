@@ -8,7 +8,7 @@ const opt = require('../app/utils/options');
 const prepApi = require('../app/utils/prep_api');
 const mainMenu = require('../app/utils/mainMenu');
 const help = require('../app/utils/helper');
-const { sendCarouselSus } = require('../app/utils/timer');
+const { sendCarouselSus } = require('../app/utils/carousel');
 
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
@@ -16,7 +16,7 @@ jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/helper');
-jest.mock('../app/utils/timer');
+jest.mock('../app/utils/carousel');
 
 it('desafioAceito', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
