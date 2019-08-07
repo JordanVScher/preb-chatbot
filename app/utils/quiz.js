@@ -31,7 +31,7 @@ async function answerQuizA(context) {
 }
 
 async function handleAnswerA(context, quizOpt) {
-	if (context.state.currentQuestion.code !== context.state.oldQuestionId) {
+	if (context.state.currentQuestion.code !== context.state.oldQuestionId || !context.state.oldQuestionId) {
 		// context.state.currentQuestion.code -> the code for the current question
 		// quizOpt -> the quiz option the user clicked/wrote
 		// try {
