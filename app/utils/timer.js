@@ -1,5 +1,8 @@
 const flow = require('./flow');
 const { sendMain } = require('./mainMenu');
+const desafio = require('./desafio');
+
+console.log(desafio);
 
 // timeOut timers
 // 24 hours -> send follow-up -> 1000 * 60 * 60 * 24
@@ -9,40 +12,36 @@ const { sendMain } = require('./mainMenu');
 const FollowUps = {};
 // FollowUps -> stores timers for the regular follow-up message
 
-module.exports.createBaterPapoTimer = async (userID, context) => {
+async function createBaterPapoTimer(userID, context) {
 	if (FollowUps[userID]) { clearTimeout(FollowUps[userID]); delete FollowUps[userID]; }
 	FollowUps[userID] = setTimeout(async () => { // wait 'MenuTimerlimit' to show options menu
 		await sendMain(context);
 		delete FollowUps[userID]; // deleting this timer from timers object
 	}, 1000 * 20);
-};
+}
 
-module.exports.deleteTimers = async (userID) => {
+
+const intentAnswerTimer = {};
+
+async function createAnswerTimer(userID, context) {
+	console.log(console.log('Criando o timer'));
+	if (intentAnswerTimer[userID]) { clearTimeout(intentAnswerTimer[userID]); delete intentAnswerTimer[userID]; }
+	intentAnswerTimer[userID] = setTimeout(async () => {
+		await desafio.followUpIntent(context);
+		delete FollowUps[userID]; // deleting this timer from timers object
+	}, 1000 * 60);
+}
+
+async function deleteTimers(userID) {
 	if (FollowUps[userID]) { clearTimeout(FollowUps[userID]); delete FollowUps[userID]; }
-};
+	if (intentAnswerTimer[userID]) { clearTimeout(intentAnswerTimer[userID]); delete intentAnswerTimer[userID]; }
+}
 
 // module.exports.followUpTimer = followUpTimer;
 
-module.exports.sendCarouselSus = async (context, items) => {
-	const elements = [];
 
-
-	items.forEach(async (element) => {
-		elements.push({
-			title: element.title,
-			// subtitle: element.subtitle,
-			buttons: element.buttons,
-		});
-	});
-	await context.sendText(flow.sus.text1);
-	await context.sendAttachment({
-		type: 'template',
-		payload: {
-			template_type: 'generic',
-			elements,
-		},
-	});
-	await sendMain(context);
+module.exports = {
+	deleteTimers, createAnswerTimer, createBaterPapoTimer,
 };
 
 // what we had for timer on handler.js

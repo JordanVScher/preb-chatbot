@@ -3,7 +3,7 @@ const opt = require('./options');
 const prepApi = require('./prep_api');
 const mainMenu = require('./mainMenu');
 const help = require('./helper');
-const { sendCarouselSus } = require('./timer');
+const { sendCarouselSus } = require('./carousel');
 const { answerQuizA } = require('./quiz');
 const { getTriagem } = require('./triagem');
 
