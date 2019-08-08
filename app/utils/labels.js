@@ -10,8 +10,6 @@ const client = MessengerClient.connect({
 
 const { locationDictionary } = require('./helper');
 
-console.log(locationDictionary);
-
 
 const pageToken = config.accessToken;
 
