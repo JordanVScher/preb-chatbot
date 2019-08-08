@@ -62,6 +62,16 @@ async function checkUserOnLabel(UserID, labelID) { // checks if user is on the l
 	return false;
 }
 
+async function removeAllUserLabels(UserID) {
+	const userLabels = await client.getAssociatedLabels(UserID);
+
+
+	for (let i = 0; i < userLabels.data.length; i++) {
+		const element = userLabels.data[i];
+		await client.dissociateLabel(UserID, element.id);
+	}
+}
+
 // Associates user to a label. Pass in the custom label id and the user psid
 // associatesLabelToUser('123123', process.env.LABEL_ADMIN);
 async function associatesLabelToUser(userID, labelID) {
@@ -143,5 +153,5 @@ module.exports = {
 	listAllLabels,
 	getBroadcastMetrics,
 	addCityLabel,
-
+	removeAllUserLabels,
 };
