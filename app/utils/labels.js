@@ -69,14 +69,14 @@ async function associatesLabelToUser(userID, labelID) {
 		return true;
 	}
 
-	const userLabels = await client.getAssociatedLabels(userID);
-	if (userLabels.data.length >= 20) { // actual facebook limit is 25 (by limit i mean before pagination starts to act up)
-		userLabels.data.forEach(async (element) => {
-			if (element.id !== process.env.LABEL_ADMIN) { // remove every tag except for admin
-				client.dissociateLabel(userID, element.id);
-			}
-		});
-	}
+	// const userLabels = await client.getAssociatedLabels(userID);
+	// if (userLabels.data.length >= 20) { // actual facebook limit is 25 (by limit i mean before pagination starts to act up)
+	// 	userLabels.data.forEach(async (element) => {
+	// 		if (element.id !== process.env.LABEL_ADMIN) { // remove every tag except for admin
+	// 			client.dissociateLabel(userID, element.id);
+	// 		}
+	// 	});
+	// }
 
 	return client.associateLabel(userID, labelID);
 }

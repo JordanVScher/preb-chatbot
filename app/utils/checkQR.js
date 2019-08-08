@@ -117,6 +117,8 @@ async function checkMainMenu(context) {
 	// }
 
 	// newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' }); // -- for testing the quiz
+	// newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
