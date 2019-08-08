@@ -14,6 +14,7 @@ const research = require('./utils/research');
 const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
+const { addNewUser } = require('./utils/labels');
 
 module.exports = async (context) => {
 	try {
@@ -30,7 +31,7 @@ module.exports = async (context) => {
 			// session: JSON.stringify(context.state),
 		});
 
-		await help.addNewUser(context, prepAPI);
+		await addNewUser(context, prepAPI);
 		await timer.deleteTimers(context.session.user.id);
 
 		console.log('user', context.state.user);

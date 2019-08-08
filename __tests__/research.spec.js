@@ -3,14 +3,14 @@ const research = require('../app/utils/research');
 const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
 const { getRecipientPrep } = require('../app/utils/prep_api');
-const { linkIntegrationTokenLabel } = require('../app/utils/helper');
+const { linkIntegrationTokenLabel } = require('../app/utils/labels');
 
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
 jest.mock('../app/utils/desafio');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/consulta');
-jest.mock('../app/utils/helper');
+jest.mock('../app/utils/labels');
 
 it('handleToken - success', async () => {
 	const context = cont.textContext('123123', 'joinToken');
