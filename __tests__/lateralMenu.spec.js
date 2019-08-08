@@ -6,8 +6,9 @@ const flow = require('../app/utils/flow');
 const MaAPI = require('../app/chatbot_api');
 const prepAPI = require('../app/utils/prep_api');
 const desafio = require('../app/utils/desafio');
-const help = require('../app/utils/helper');
+// const help = require('../app/utils/helper');
 const timer = require('../app/utils/timer');
+const { addNewUser } = require('../app/utils/labels');
 
 jest.mock('../app/chatbot_api');
 jest.mock('../app/utils/prep_api');
@@ -16,6 +17,7 @@ jest.mock('../app/utils/options');
 jest.mock('../app/utils/desafio');
 jest.mock('../app/utils/helper');
 jest.mock('../app/utils/timer');
+jest.mock('../app/utils/labels');
 
 it('Voltar para o inicio - menu', async () => {
 	const context = cont.postbackContext('greetings', 'Voltar para o inicio', 'greetings');
@@ -30,7 +32,7 @@ it('Voltar para o inicio - menu', async () => {
 		// session: JSON.stringify(context.state),
 	});
 
-	await expect(help.addNewUser).toBeCalledWith(context, prepAPI);
+	await expect(addNewUser).toBeCalledWith(context, prepAPI);
 	await expect(timer.deleteTimers).toBeCalledWith(context.session.user.id);
 
 	await expect(context.event.isPostback).toBeTruthy();

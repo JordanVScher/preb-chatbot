@@ -10,6 +10,9 @@ const client = MessengerClient.connect({
 
 const { locationDictionary } = require('./helper');
 
+console.log(locationDictionary);
+
+
 const pageToken = config.accessToken;
 
 // creates a new label. Pass in the name of the label and add the return ID to the .env file
@@ -127,7 +130,7 @@ async function linkUserToCustomLabel(UserID, labelName) {
 async function addCityLabel(userID, cityId) {
 	let labelToAdd = '';
 	if (cityId < 4) {
-		labelToAdd = await locationDictionary[cityId];
+		labelToAdd = locationDictionary[cityId];
 	} else if (cityId === '4') {
 		labelToAdd = 'Nenhum desses';
 	}
@@ -138,6 +141,24 @@ async function addCityLabel(userID, cityId) {
 	}
 
 	return false;
+}
+
+async function linkIntegrationTokenLabel(context) {
+	// check if user has a integration_voucher but we haven't saved it yet (voucher) because we need to create a label
+	if (context.state.user.integration_token && !context.state.voucher) {
+		if (await linkUserToCustomLabel(context.session.user.id, `voucher_${context.state.user.integration_token}`) === true) {
+			await context.setState({ voucher: context.state.user.integration_token });
+		}
+	}
+}
+
+async function addNewUser(context, prepAPI) {
+	await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
+	await linkIntegrationTokenLabel(context);
+	if (context.state.user.form_error || context.state.user.error || !context.state.user || !context.state.user.id) { // check i there was an error or if user doesnt exist
+		await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, `${context.session.user.first_name} ${context.session.user.last_name}`);
+		await context.setState({ user: {} });
+	}
 }
 
 
@@ -154,4 +175,6 @@ module.exports = {
 	getBroadcastMetrics,
 	addCityLabel,
 	removeAllUserLabels,
+	linkIntegrationTokenLabel,
+	addNewUser,
 };

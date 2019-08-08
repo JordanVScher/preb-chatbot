@@ -1,7 +1,7 @@
 const flow = require('./flow');
 const opt = require('./options');
 const { getRecipientPrep } = require('./prep_api');
-const { linkIntegrationTokenLabel } = require('./helper');
+const { linkIntegrationTokenLabel } = require('./labels');
 
 module.exports.handleToken = async (context, answer) => {
 	if (answer === true) {
