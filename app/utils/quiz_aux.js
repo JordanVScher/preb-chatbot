@@ -5,12 +5,13 @@ const flow = require('./flow');
 module.exports.sendTermos = async (context) => {
 	await context.setState({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
 	if (context.state.user.is_eligible_for_research === 1) {
-		await context.sendText(flow.onTheResearch.text1);
-		await context.sendImage(flow.onTheResearch.gif);
-		await context.sendText(flow.onTheResearch.text2);
-		await context.sendText(flow.onTheResearch.text3);
-		// quer saber mais sobre o nosso projeto
-		await context.sendText(flow.onTheResearch.extra, opt.saberMais);
+		console.log('This shouldnt ever happen!');
+		// await context.sendText(flow.onTheResearch.text1);
+		// await context.sendImage(flow.onTheResearch.gif);
+		// await context.sendText(flow.onTheResearch.text2);
+		// await context.sendText(flow.onTheResearch.text3);
+		// // quer saber mais sobre o nosso projeto
+		// await context.sendText(flow.onTheResearch.extra, opt.saberMais);
 	} else {
 		await context.sendText(flow.onTheResearch.text2);
 		await context.sendText(flow.quizYes.text15);

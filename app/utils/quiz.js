@@ -20,6 +20,15 @@ async function answerQuizA(context) {
 		await aux.sendTermos(context);
 	} else { // user is still answering the quiz
 		// showing question and answer options
+
+		if (context.state.currentQuestion.code === 'AC9') {
+			await context.sendText(flow.onTheResearch.text1);
+			await context.sendImage(flow.onTheResearch.gif);
+			await context.sendText(flow.onTheResearch.text2);
+			await context.sendText(flow.onTheResearch.text3);
+		// quer saber mais sobre o nosso projeto -> agora é uma pergunta do quiz
+		}
+
 			if (context.state.currentQuestion.type === 'multiple_choice') { // eslint-disable-line
 			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
 		} else if (context.state.currentQuestion.type === 'open_text') {
@@ -71,7 +80,17 @@ async function handleAnswerA(context, quizOpt) {
 			await addCityLabel(context.session.user.id, quizOpt);
 		}
 
-		if (context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2') {
+		if (context.state.sentAnswer.offline_pre_registration_form) {
+			await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
+		}
+
+		if (context.state.currentQuestion.code === 'AC9') {
+			if (quizOpt.toString() === '1') {
+				await context.setState({ dialog: 'firstJoinResearch' });
+			} else {
+				await context.setState({ dialog: 'firstNoResearch' });
+			}
+		} else if (context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2') {
 			await context.setState({ dialog: 'stopHalfway' });
 		} else if (context.state.sentAnswer.form_error
 			|| (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid')) { // input format is wrong (text)

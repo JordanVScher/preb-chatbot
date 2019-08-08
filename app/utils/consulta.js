@@ -89,13 +89,12 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		await context.sendText(msg);
 		await sendSalvador(context);
 		// await context.setState({ sendExtraMessages2: true });
-
 		if (context.state.sendExtraMessages2 === true) {
 			await context.setState({ sendExtraMessages2: false });
-			// console.log('offline_pre_registration_form', context.state.preCadastro.offline_pre_registration_form);
-			if (context.state.preCadastro && context.state.preCadastro.offline_pre_registration_form && context.state.preCadastro.offline_pre_registration_form.length > 0) {
+			// console.log('offline_pre_registration_form', context.state.registrationForm);
+			if (context.state.registrationForm && context.state.registrationForm.length > 0) {
 				try {
-					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton(context.state.preCadastro.offline_pre_registration_form, 'Pré-Cadastro'));
+					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton(context.state.registrationForm, 'Pré-Cadastro'));
 				} catch (error) {
 					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton('https://sisprep1519.org/api', 'Pré-Cadastro'));
 					console.log('Erro no sendButtonTemplate', error);
