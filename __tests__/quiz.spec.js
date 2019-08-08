@@ -10,6 +10,7 @@ jest.mock('../app/utils/quiz_aux');
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/labels');
+jest.mock('../app/utils/helper');
 
 it('answerQuizA - multiple choice - empty category', async () => {
 	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');

@@ -128,6 +128,8 @@ module.exports = {
 	async postIntegrationToken(fb_id, integration_token) {
 		const res = await request.post(`${apiUri}/api/chatbot/recipient/integration-token?security_token=${security_token}&`).query({ fb_id, integration_token });
 		// const result = await res.json();
+		// console.log(result);
+
 		if (res.statusCode && res.statusCode.toString() === '200') { // integration token found successfully
 			return true;
 		}

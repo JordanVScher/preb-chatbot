@@ -2,6 +2,7 @@ const Sentry = require('@sentry/node');
 const dialogFlow = require('apiai-promise');
 const moment = require('moment');
 const accents = require('remove-accents');
+const { linkUserToCustomLabel } = require('./labels');
 
 // Sentry - error reporting
 Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.ENV, captureUnhandledRejections: false });
@@ -87,8 +88,18 @@ async function buildPhoneMsg(cityId, introText, phones) {
 	return text;
 }
 
+async function linkIntegrationTokenLabel(context) {
+	// check if user has a integration_voucher but we haven't saved it yet (voucher) because we need to create a label
+	if (context.state.user.integration_token && !context.state.voucher) {
+		if (await linkUserToCustomLabel(context.session.user.id, `voucher_${context.state.user.integration_token}`) === true) {
+			await context.setState({ voucher: context.state.user.integration_token });
+		}
+	}
+}
+
 async function addNewUser(context, prepAPI) {
 	await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
+	await linkIntegrationTokenLabel(context);
 	if (context.state.user.form_error || context.state.user.error || !context.state.user || !context.state.user.id) { // check i there was an error or if user doesnt exist
 		await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, `${context.session.user.first_name} ${context.session.user.last_name}`);
 		await context.setState({ user: {} });
@@ -142,4 +153,5 @@ module.exports = {
 	separateString,
 	extraMessageDictionary,
 	checkSuggestWaitForTest,
+	linkIntegrationTokenLabel,
 };

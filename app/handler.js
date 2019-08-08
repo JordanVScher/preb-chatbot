@@ -103,11 +103,11 @@ module.exports = async (context) => {
 					await context.setState({ dialog: 'startQuizA' });
 				}
 			} else if (context.state.dialog === 'joinToken' || context.state.dialog === 'joinTokenErro') {
-				await research.handleToken(context, await prepAPI(context.session.user.id, context.state.whatWasTyped));
+				await research.handleToken(context, await prepAPI.postIntegrationToken(context.session.user.id, context.state.whatWasTyped));
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-				await context.setState({ stoppedHalfway: false });
+				await context.setState({ stoppedHalfway: false, voucher: '' });
 				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
 				await context.setState({ is_target_audience: false, is_prep: false, categoryQuestion: '' });
 				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));

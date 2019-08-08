@@ -1,8 +1,5 @@
-const flow = require('./flow');
 const { sendMain } = require('./mainMenu');
 const desafio = require('./desafio');
-
-console.log(desafio);
 
 // timeOut timers
 // 24 hours -> send follow-up -> 1000 * 60 * 60 * 24
@@ -24,7 +21,6 @@ async function createBaterPapoTimer(userID, context) {
 const intentAnswerTimer = {};
 
 async function createAnswerTimer(userID, context) {
-	console.log(console.log('Criando o timer'));
 	if (intentAnswerTimer[userID]) { clearTimeout(intentAnswerTimer[userID]); delete intentAnswerTimer[userID]; }
 	intentAnswerTimer[userID] = setTimeout(async () => {
 		await desafio.followUpIntent(context);
@@ -37,20 +33,7 @@ async function deleteTimers(userID) {
 	if (intentAnswerTimer[userID]) { clearTimeout(intentAnswerTimer[userID]); delete intentAnswerTimer[userID]; }
 }
 
-// module.exports.followUpTimer = followUpTimer;
-
 
 module.exports = {
 	deleteTimers, createAnswerTimer, createBaterPapoTimer,
 };
-
-// what we had for timer on handler.js
-// if (!context.state.timerOneSent || context.state.timerOneSent === false) { // checks if we haven't sent the followup Timer already
-// 	// checks if last activity has happened after the "timer" time period
-// 	if ((context.event.rawEvent.timestamp - context.session.lastActivity) >= (timer.followUpTimer + 1000)) {
-// 		// if it has, that means and the user interacted with the chatbot after we sent the timer (so, there's no need to send the timer again)
-// 		await context.setState({ timerOneSent: true });
-// 	} else { // creates the timer
-// 		timer.createFollowUpTimer(context.session.user.id, context);
-// 	}
-// }
