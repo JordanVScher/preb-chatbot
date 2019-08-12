@@ -46,7 +46,7 @@ module.exports = {
 		view: 'Bb, pega seu voucher: ',
 	},
 	issueText: {
-		success: 'Nhaaaai, não acredito! Meus algoritmos não entenderam sua pergunta! Mas tudo bem amore, vou mandar para os humanos que logo te responderão 😉',
+		success: 'M.O.R.T.A kerida 😀 sorry rsrs 👾 as vzs é babado pq minha inteligência artificial funciona assim: qnto + a gnt conversa, mais yo apriendo 😍 se ñ entendirr é pq oq vc falou ñ tá na minha base de dados 😅, mas sou ligeira viu & logo tô te respondendo ❣ PS: se tu tivé usando facebook lite, infelizment esse app ñ liberou meus botoezinios, ou seja, me chama por outro app ou pelo computador okRR? 👅',
 		failure: 'Hmm..não entendi. Topa escrever novamente?',
 	},
 	followUp: {
