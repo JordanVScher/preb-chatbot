@@ -143,7 +143,7 @@ async function addCityLabel(userID, cityId) {
 
 async function linkIntegrationTokenLabel(context) {
 	// check if user has a integration_voucher but we haven't saved it yet (voucher) because we need to create a label
-	if (context.state.user.integration_token && !context.state.voucher) {
+	if (context.state.user.integration_token) {
 		if (await linkUserToCustomLabel(context.session.user.id, `${context.state.user.integration_token}`) === true) {
 			await context.setState({ voucher: context.state.user.integration_token });
 		}
