@@ -185,7 +185,7 @@ module.exports = async (context) => {
 			case 'aceitaTermos': // aceita termos e é da pesquisa
 				await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) }); // stores user accepting termos
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-				if (context.state.registrationForm === 1) { // is_eligible_for_research && is_target_audience
+				if (context.state.registrationForm) { // is_eligible_for_research && is_target_audience
 					await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 					await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
 					await consulta.checarConsulta(context);
@@ -197,7 +197,7 @@ module.exports = async (context) => {
 				await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 0) }); // stores user not accepting termos
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 				await context.sendText(flow.onTheResearch.naoAceitaTermos);
-				if (context.state.registrationForm === 1) { // is_eligible_for_research && is_target_audience
+				if (context.state.registrationForm) { // is_eligible_for_research && is_target_audience
 					await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 					await context.setState({ sendExtraMessages: true }); // used only to show a few different messages on consulta
 					await consulta.checarConsulta(context);
