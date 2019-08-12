@@ -5,7 +5,7 @@ const mainMenu = require('./mainMenu');
 const help = require('./helper');
 const { sendCarouselSus } = require('./carousel');
 const { answerQuizA } = require('./quiz');
-const { getTriagem } = require('./triagem');
+const triagem = require('./triagem');
 
 async function sendQuiz(context) {
 	await context.setState({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // load quiz counter
@@ -17,7 +17,7 @@ async function sendQuiz(context) {
 	} else if (context.state.goBackToTriagem === true) {
 		await context.setState({ dialog: 'goBackToTriagem', goBackToTriagem: false });
 		await context.sendText(`${flow.desafio.text3}`);
-		await getTriagem(context);
+		await triagem.getTriagem(context);
 	} else if (context.state.quizCounter && context.state.quizCounter.count_quiz >= 3) { // check quiz counter
 		await mainMenu.sendShareAndMenu(context); // send regular menu
 	} else {
@@ -106,7 +106,7 @@ async function checkAconselhamento(context) {
 			await sendConsulta(context); // is prep, === 1
 		} else { // user isn't prep, goes to triagem
 			await context.sendText(flow.triagem.send);
-			await context.setState({ dialog: 'triagem' });
+			await triagem.getTriagem(context);
 		}
 	}
 }
@@ -116,7 +116,7 @@ async function followUpIntent(context) {
 	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
 
 	console.log('intentType', context.state.intentType);
-	// console.log('user', context.state.user);
+	console.log('user', context.state.user);
 
 	if (context.state.user.is_target_audience === 1 || context.state.user.is_target_audience === null) { // check if user is part of target audience or we dont know yet
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa === 1

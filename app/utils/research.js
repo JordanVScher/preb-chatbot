@@ -3,7 +3,7 @@ const opt = require('./options');
 const { getRecipientPrep } = require('./prep_api');
 const { linkIntegrationTokenLabel } = require('./labels');
 
-module.exports.handleToken = async (context, answer) => {
+async function handleToken(context, answer) {
 	if (answer === true) {
 		await context.sendText(flow.joinToken.success);
 		await context.setState({ user: await getRecipientPrep(context.session.user.id) }); // integration_token is added to user
@@ -14,4 +14,8 @@ module.exports.handleToken = async (context, answer) => {
 		await context.sendText(flow.joinToken.fail2, opt.joinToken);
 		await context.setState({ dialog: 'joinTokenErro' });
 	}
+}
+
+module.exports = {
+	handleToken,
 };
