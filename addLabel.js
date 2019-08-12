@@ -22,7 +22,7 @@ async function addVoucherLabels() { // eslint-disable-line
 		console.log(obj._state.user);
 
 		if (obj && obj._state && obj._state.user && obj._state.user.fb_id && obj._state.user.integration_token) {
-			const res = await labels.linkUserToCustomLabel(obj._state.user.fb_id, `voucher_${obj._state.user.integration_token}`);
+			const res = await labels.linkUserToCustomLabel(obj._state.user.fb_id, `${obj._state.user.integration_token}`);
 			console.log(`Added ${obj.user.first_name} to label integration_token ${obj._state.user.integration_token} ->`, res);
 		}
 	});
@@ -32,7 +32,6 @@ async function removeEveryLabel() { // eslint-disable-line
 	fs.readdirSync(testFolder).forEach(async (file) => {
 		const obj = JSON.parse(await fs.readFileSync(testFolder + file, 'utf8'));
 		console.log(obj._state.user.fb_id);
-
-		await labels.removeAllUserLabels(obj._state.user.fb_id);
+		console.log(await labels.removeAllUserLabels(obj._state.user.fb_id));
 	});
 }
