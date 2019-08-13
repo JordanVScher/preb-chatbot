@@ -179,6 +179,11 @@ module.exports = {
 		+ '\n-Não tome mais de um comprimido no mesmo dia. ',
 		duvidaRemedio: 'Temos um panfleto pra tirar suas dúvidas',
 	},
+	leavePhone: {
+		text1: 'Deixe seu telefone que entraremos em contato.',
+		success: 'Salvei seu tefone com sucesso!',
+		failure: 'Esse telefone não é válido! Tente de novo',
+	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',
 	},
