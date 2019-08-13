@@ -181,8 +181,9 @@ module.exports = {
 	},
 	leavePhone: {
 		text1: 'Deixe seu telefone que entraremos em contato.',
-		success: 'Salvei seu tefone com sucesso!',
+		success: 'Salvei seu telefone com sucesso!',
 		failure: 'Esse telefone não é válido! Tente de novo',
+		sendMail: '<USERNAME> quer que entre em contato pelo telefone <PHONE> depois de receber a notificação.',
 	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',

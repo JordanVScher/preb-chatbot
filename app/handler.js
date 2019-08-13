@@ -14,6 +14,7 @@ const research = require('./utils/research');
 const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
+const { sendMail } = require('./utils/mailer');
 const { addNewUser } = require('./utils/labels');
 
 module.exports = async (context) => {
@@ -225,6 +226,8 @@ module.exports = async (context) => {
 				break;
 			case 'phoneValid':
 				await context.sendText(flow.leavePhone.success);
+				await sendMail('Novo telefone de contato', await help.buildMail(context.session.user.name, context.state.phone), context.state.user.city);
+				await mainMenu.sendMain(context);
 				break;
 			case 'phoneInvalid':
 				await context.sendText(flow.leavePhone.failure, opt.leavePhone);

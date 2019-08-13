@@ -2,6 +2,7 @@ const Sentry = require('@sentry/node');
 const dialogFlow = require('apiai-promise');
 const moment = require('moment');
 const accents = require('remove-accents');
+const flow = require('./flow');
 
 // Sentry - error reporting
 Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.ENV, captureUnhandledRejections: false });
@@ -116,6 +117,11 @@ function capQR(text) {
 	return result;
 }
 
+
+function buildMail(name, phone) {
+	return flow.leavePhone.sendMail.replace('<USERNAME>', name).replace('<PHONE>', phone);
+}
+
 module.exports = {
 	apiai: dialogFlow(process.env.DIALOGFLOW_TOKEN),
 	Sentry,
@@ -134,4 +140,5 @@ module.exports = {
 	separateString,
 	extraMessageDictionary,
 	checkSuggestWaitForTest,
+	buildMail,
 };
