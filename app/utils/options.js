@@ -68,6 +68,11 @@ module.exports = {
 		url: 'http://www.aids.gov.br/system/tdf/pub/2017/65141/folder_essencial_prep_08_2017.pdf?file=1&type=node&id=65141&force=1',
 		title: 'Baixar Panfleto',
 	}],
+	leavePhone: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Não deixar telefone', payload: 'mainMenu' },
+		],
+	},
 	termos: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Li e aceito!', payload: 'aceitaTermos' },

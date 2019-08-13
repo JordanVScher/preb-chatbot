@@ -41,6 +41,7 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'leavePhone' });
 				// await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
@@ -96,7 +97,14 @@ module.exports = async (context) => {
 			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
-			if (context.state.onTextQuiz === true) {
+			if (context.state.dialog === 'leavePhone' || context.state.dialog === 'phoneInvalid') {
+				await context.setState({ phone: context.state.whatWasTyped.replace(/[^\d.-]/g, '') });
+				if (context.state.phone) {
+					await context.setState({ dialog: 'phoneValid' });
+				} else {
+					await context.setState({ dialog: 'phoneInvalid', phone: '' });
+				}
+			} else if (context.state.onTextQuiz === true) {
 				await context.setState({ whatWasTyped: parseInt(context.state.whatWasTyped, 10) });
 				if (Number.isInteger(context.state.whatWasTyped, 10) === true) {
 					await quiz.handleAnswerA(context, context.state.whatWasTyped);
@@ -211,6 +219,15 @@ module.exports = async (context) => {
 			case 'seeToken':
 				await context.sendText(`${flow.joinToken.view} ${context.state.user.integration_token}`);
 				await mainMenu.sendMain(context);
+				break;
+			case 'leavePhone':
+				await context.sendText(flow.leavePhone.text1, opt.leavePhone);
+				break;
+			case 'phoneValid':
+				await context.sendText(flow.leavePhone.success);
+				break;
+			case 'phoneInvalid':
+				await context.sendText(flow.leavePhone.failure, opt.leavePhone);
 				break;
 			case 'checarConsulta':
 				await context.setState({ categoryConsulta: 'emergencial' });

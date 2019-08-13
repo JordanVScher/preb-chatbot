@@ -6,6 +6,7 @@ module.exports.sendTermos = async (context) => {
 	await context.setState({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
 	if (context.state.user.is_eligible_for_research === 1) {
 		console.log('This shouldnt ever happen!');
+		await context.setState({ dialog: 'mainMenu' });
 		// await context.sendText(flow.onTheResearch.text1);
 		// await context.sendImage(flow.onTheResearch.gif);
 		// await context.sendText(flow.onTheResearch.text2);
