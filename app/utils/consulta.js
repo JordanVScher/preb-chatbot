@@ -18,13 +18,7 @@ async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
-			let msg = ''
-				+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
-				+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
-				+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
-			if (context.state.user.integration_token && context.state.user.integration_token.length > 0) {
-				msg += `\nSeu identificador: ${context.state.user.integration_token}`;
-			}
+			const msg = await help.buildConsultaFinal(context.state, iterator);
 			await context.sendText(msg);
 		}
 		await sendSalvador(context);
@@ -79,13 +73,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	// console.log('postAppointment', context.state.response);
 
 	if (context.state.response && context.state.response.id && context.state.response.id.toString().length > 0) {
-		let msg = `${flow.consulta.success}`
-			+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
-			+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
-			+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
-		if (context.state.user.integration_token && context.state.user.integration_token.length > 0) {
-			msg += `\nSeu identificador: ${context.state.user.integration_token}`;
-		}
+		const msg = `${flow.consulta.success}\n${await help.buildConsultaFinal(context.state, context.state.chosenHour)}`;
 		await context.sendText(msg);
 		await sendSalvador(context);
 		// await context.setState({ sendExtraMessages2: true });
@@ -139,13 +127,7 @@ async function checarConsulta(context) {
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 		await context.sendText(flow.consulta.checar1);
 		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
-			let msg = ''
-				+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
-				+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
-				+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
-			if (context.state.user.integration_token && context.state.user.integration_token.length > 0) {
-				msg += `\nSeu identificador: ${context.state.user.integration_token}`;
-			}
+			const msg = await help.buildConsultaFinal(context.state, iterator);
 			await context.sendText(msg);
 		}
 		await sendSalvador(context);

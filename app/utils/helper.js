@@ -122,6 +122,19 @@ function buildMail(name, phone) {
 	return flow.leavePhone.sendMail.replace('<USERNAME>', name).replace('<PHONE>', phone);
 }
 
+async function buildConsultaFinal(state, chosenHour) {
+	let result = '';
+
+	result += `🏠: ${cidadeDictionary[state.cidade]}\n`;
+	result += `⏰: ${await formatDate(chosenHour.datetime_start, chosenHour.time)}\n`;
+	result += `📞: ${telefoneDictionary[state.cidade]}\n`;
+	if (state.user.integration_token && state.user.integration_token.length > 0) {
+		result += `\nSeu identificador: ${state.user.integration_token}\n`;
+	}
+
+	return result.trim();
+}
+
 module.exports = {
 	apiai: dialogFlow(process.env.DIALOGFLOW_TOKEN),
 	Sentry,
@@ -141,4 +154,5 @@ module.exports = {
 	extraMessageDictionary,
 	checkSuggestWaitForTest,
 	buildMail,
+	buildConsultaFinal,
 };
