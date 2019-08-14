@@ -128,10 +128,6 @@ async function buildConsultaFinal(state, chosenHour) {
 	result += `🏠: ${cidadeDictionary[state.cidade]}\n`;
 	result += `⏰: ${await formatDate(chosenHour.datetime_start, chosenHour.time)}\n`;
 	result += `📞: ${telefoneDictionary[state.cidade]}\n`;
-	if (state.user.integration_token && state.user.integration_token.length > 0) {
-		result += `\nSeu identificador: ${state.user.integration_token}\n`;
-	}
-
 	return result.trim();
 }
 

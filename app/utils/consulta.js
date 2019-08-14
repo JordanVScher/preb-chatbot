@@ -4,32 +4,35 @@ const flow = require('./flow');
 const opt = require('./options');
 const help = require('./helper');
 const prepApi = require('./prep_api');
-const { checkConsulta } = require('./checkQR');
-const { checkMainMenu } = require('./checkQR');
-const { buildButton } = require('./checkQR');
-// const { sendMain } = require('./mainMenu');
+const checkQR = require('./checkQR');
 const aux = require('./consulta-aux');
 
 async function sendSalvador(context) {
 	if (context.state.user && context.state.user.city && context.state.user.city.toString() === '2') { await context.sendText(flow.consulta.salvadorMsg); }
 }
 
+async function sendConsultas(context) {
+		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
+		const msg = await help.buildConsultaFinal(context.state, iterator);
+		await context.sendText(msg);
+	}
+
+	if (context.state.voucher && context.state.voucher.length > 0) {
+		await context.sendText(`Seu identificador: ${context.state.voucher}`);
+	}
+	await sendSalvador(context);
+}
+
 async function verConsulta(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
-		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
-			const msg = await help.buildConsultaFinal(context.state, iterator);
-			await context.sendText(msg);
-		}
-		await sendSalvador(context);
+		await sendConsultas(context);
 		await context.sendText(flow.consulta.view);
-		await context.sendText(flow.mainMenu.text1, await checkMainMenu(context));
-		// await sendMain(context);
+		await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
 	} else {
-		await context.sendText(flow.verConsulta.zero, await checkConsulta(context, opt.marcarConsulta));
+		await context.sendText(flow.verConsulta.zero, await checkQR.checkConsulta(context, opt.marcarConsulta));
 	}
 }
-
 
 async function showDays(context) { // shows available days
 	await context.setState({ cidade: context.state.user.city }); // getting location id
@@ -71,7 +74,6 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	});
 
 	// console.log('postAppointment', context.state.response);
-
 	if (context.state.response && context.state.response.id && context.state.response.id.toString().length > 0) {
 		const msg = `${flow.consulta.success}\n${await help.buildConsultaFinal(context.state, context.state.chosenHour)}`;
 		await context.sendText(msg);
@@ -82,18 +84,16 @@ async function finalDate(context, quota) { // where we actually schedule the con
 			// console.log('offline_pre_registration_form', context.state.registrationForm);
 			if (context.state.registrationForm && context.state.registrationForm.length > 0) {
 				try {
-					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton(context.state.registrationForm, 'Pré-Cadastro'));
+					await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton(context.state.registrationForm, 'Pré-Cadastro'));
 				} catch (error) {
-					await context.sendButtonTemplate(flow.quizYes.text2, await buildButton('https://sisprep1519.org/api', 'Pré-Cadastro'));
+					await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton('https://sisprep1519.org/api', 'Pré-Cadastro'));
 					console.log('Erro no sendButtonTemplate', error);
 				}
-				await context.sendText(flow.mainMenu.text1, await checkMainMenu(context));
-				// await sendMain(context);
+				await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
 			}
 		} else {
 			await context.setState({ sendExtraMessages: false, sendExtraMessages2: false });
-			await context.sendText(flow.mainMenu.text1, await checkMainMenu(context));
-			// await sendMain(context);
+			await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
 		}
 	} else {
 		await context.sendText(flow.consulta.fail3, opt.consultaFail);
@@ -120,19 +120,11 @@ async function loadCalendar(context) {
 }
 
 async function checarConsulta(context) {
-	// await context.setState({ sendExtraMessages: false });
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
-	console.log('CONSULTA', context.state.consulta);
-
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 		await context.sendText(flow.consulta.checar1);
-		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
-			const msg = await help.buildConsultaFinal(context.state, iterator);
-			await context.sendText(msg);
-		}
-		await sendSalvador(context);
-		await context.sendText(flow.mainMenu.text1, await checkMainMenu(context));
-		// await sendMain(context);
+		await sendConsultas(context);
+		await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
 	} else {
 		await loadCalendar(context);
 	}
