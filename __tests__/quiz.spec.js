@@ -132,7 +132,12 @@ it('handleAnswerA - regular answer - finished and target audience', async () => 
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
 	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeFalsy();
 
+
 	await expect(context.state.sentAnswer.error).toBeFalsy();
+
+	await expect(context.state.sentAnswer.offline_pre_registration_form).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
+
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
 	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeFalsy();
 	await expect((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)

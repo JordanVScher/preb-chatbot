@@ -15,12 +15,7 @@ it('sendTermos - is_eligible_for_research', async () => {
 
 	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' });
 	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
-
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text1);
-	await expect(context.sendImage).toBeCalledWith(flow.onTheResearch.gif);
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text2);
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text3);
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.extra, opt.saberMais);
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
 });
 
 it('sendTermos - not eligible_for_research', async () => {

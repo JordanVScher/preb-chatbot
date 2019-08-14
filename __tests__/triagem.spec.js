@@ -8,14 +8,12 @@ const triagem = require('../app/utils/triagem');
 const aux = require('../app/utils/quiz_aux');
 const prepApi = require('../app/utils/prep_api');
 const help = require('../app/utils/helper');
-const { sendMain } = require('../app/utils/mainMenu');
 
 jest.mock('../app/utils/quiz_aux');
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/labels');
 jest.mock('../app/utils/helper');
-jest.mock('../app/utils/mainMenu');
 
 it('endTriagem - suggest_wait_for_test and dont go_to_test', async () => {
 	const context = cont.quickReplyContext('0', 'prompt');
@@ -27,7 +25,7 @@ it('endTriagem - suggest_wait_for_test and dont go_to_test', async () => {
 	await expect(context.setState).toBeCalledWith({ suggestWaitForTest: true });
 
 	await expect(context.state.sentAnswer && context.state.sentAnswer.go_to_test === 0).toBeTruthy();
-	await expect(sendMain).toBeCalledWith(context);
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
 });
 
 it('endTriagem - emergency_rerouting', async () => {
@@ -42,7 +40,7 @@ it('endTriagem - emergency_rerouting', async () => {
 	await expect(context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.triagem.emergency1);
 	await expect(context.sendText).toBeCalledWith(await help.buildPhoneMsg(context.state.user.city, 'Telefones pra contato:'));
-	await expect(sendMain).toBeCalledWith(context);
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
 });
 
 it('endTriagem - go_to_test', async () => {
@@ -88,7 +86,7 @@ it('endTriagem - default case', async () => {
 	await expect(context.state.sentAnswer && context.state.sentAnswer.go_to_appointment === 1).toBeFalsy();
 	await expect(context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1).toBeFalsy();
 
-	await expect(sendMain).toBeCalledWith(context);
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
 });
 
 it('handleAnswer - default case', async () => {
