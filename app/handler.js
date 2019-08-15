@@ -99,12 +99,7 @@ module.exports = async (context) => {
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
 			if (context.state.dialog === 'leavePhone' || context.state.dialog === 'phoneInvalid') {
-				await context.setState({ phone: context.state.whatWasTyped.replace(/[^\d.-]/g, '') });
-				if (context.state.phone) {
-					await context.setState({ dialog: 'phoneValid' });
-				} else {
-					await context.setState({ dialog: 'phoneInvalid', phone: '' });
-				}
+				await research.checkPhone(context);
 			} else if (context.state.onTextQuiz === true) {
 				await context.setState({ whatWasTyped: parseInt(context.state.whatWasTyped, 10) });
 				if (Number.isInteger(context.state.whatWasTyped, 10) === true) {

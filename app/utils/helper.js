@@ -131,6 +131,20 @@ async function buildConsultaFinal(state, chosenHour) {
 	return result.trim();
 }
 
+async function getPhoneValid(phone) {
+	let result = phone.replace(/[^0-9]+/ig, '');
+	if (!result || !parseInt(result, 10)) {
+		return false;
+	}
+	result = parseInt(result, 10);
+
+	if (result.toString().length < 8 || result.toString().length > 18) {
+		return false;
+	}
+
+	return result;
+}
+
 module.exports = {
 	apiai: dialogFlow(process.env.DIALOGFLOW_TOKEN),
 	Sentry,
@@ -151,4 +165,5 @@ module.exports = {
 	checkSuggestWaitForTest,
 	buildMail,
 	buildConsultaFinal,
+	getPhoneValid,
 };
