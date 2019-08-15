@@ -21,12 +21,9 @@ async function createBaterPapoTimer(userID, context) {
 const intentAnswerTimer = {};
 
 async function createAnswerTimer(userID, context) {
+	await context.typing(1000 * 30);
+	await context.typing(1000 * 27);
 	await desafio.followUpIntent(context);
-	// if (intentAnswerTimer[userID]) { clearTimeout(intentAnswerTimer[userID]); delete intentAnswerTimer[userID]; }
-	// intentAnswerTimer[userID] = setTimeout(async () => {
-	// 	await desafio.followUpIntent(context);
-	// 	delete FollowUps[userID]; // deleting this timer from timers object
-	// }, 1000);
 }
 
 async function deleteTimers(userID) {
