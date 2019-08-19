@@ -63,13 +63,13 @@ const weekDayNameLong = {
 
 const cidadeDictionary = {
 	1: 'Centro de Referência da Juventude – CRJ\nRua Guaicurus, 50, Centro (Praça da Estação, Belo Horizonte - MG)',
-	2: 'Salvador - BA',
+	2: 'Casarão da Diversidade, Pelourinho\nR. do Tijolo, 8 - Centro, Salvador - BA, 40020-290',
 	3: 'Centro de Testagem e Aconselhamento Henfil\nRua Libero Badaró, 144, Anhangabaú. São Paulo - SP - CEP: 01008001',
 };
 
-const telefoneDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234', 3: '(11) 98209-2911' };
-const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234', 3: '(11) 98209-2911' };
-// "1": "Belo Horizonte - MG", "2": "Salvador - BA", "3": "São Paulo e Gde SP",
+const telefoneDictionary = { 1: '(31) 99726-9307', 2: '(71) 99640-9030', 3: '(11) 98209-2911' };
+const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99640-9030', 3: '(11) 98209-2911' };
+
 const locationDictionary = { 1: 'Belo Horizonte - MG', 2: 'Salvador - BA', 3: 'São Paulo - SP' };
 const extraMessageDictionary = { 1: 'Centro de referência da juventude, Centro de BH', 2: 'Casarão da Diversidade, Pelourinho', 3: 'CTA Henfil, Centro de São Paulo' };
 
@@ -90,7 +90,7 @@ async function buildPhoneMsg(cityId, introText, phones) {
 
 
 async function formatHour(hour) {
-	if (hour.toString().length === 1) { return `0${hour}`;	}
+	if (hour.toString().length === 1) { return `0${hour}`; }
 	return hour;
 }
 
