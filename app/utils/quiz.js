@@ -3,8 +3,6 @@ const aux = require('./quiz_aux');
 const flow = require('./flow');
 const { addCityLabel } = require('./labels');
 
-// const { sendShare } = require('./checkQR');
-
 // loads next question and shows it to the user
 async function answerQuizA(context) {
 	await context.typingOn();
