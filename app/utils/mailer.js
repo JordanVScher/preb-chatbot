@@ -51,7 +51,8 @@ async function sendMail(subject, text, cityId) {
 	}
 }
 
-async function sendMailError(text) {
+async function sendMailError(msg) {
+	const text = msg.replace(/(?:\r\n|\r|\n)/g, '\n\n');
 	const to = process.env.MAILERROR.split(',');
 	const subject = `Erro no Prep - ${process.env.ENV}`;
 	const options = {
