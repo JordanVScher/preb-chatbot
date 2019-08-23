@@ -25,7 +25,7 @@ async function handleErrorApi(options, res, err) {
 	console.log('----------------------------------------------', `\n${msg}`, '\n\n');
 
 	if ((res && (res.error || res.form_error)) || (!res && err)) {
-		if (process.env.ENV !== 'local1') {
+		if (process.env.ENV !== 'local') {
 			msg += `\nEnv: ${process.env.ENV}`;
 			await	Sentry.captureMessage(msg);
 			await sendMailError(msg);
