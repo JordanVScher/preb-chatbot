@@ -1,81 +1,47 @@
 /* eslint camelcase: 0 */ // --> OFF
 /* eslint no-param-reassign: 0 */ // --> OFF
 const request = require('requisition');
-// const queryString = require('query-string');
+const { handleRequestAnswer } = require('./error');
 
 const apiUri = process.env.PREP_API_URL;
 const security_token = process.env.SECURITY_TOKEN_PREP;
 const security_token2 = process.env.SECURITY_TOKEN_PREP2;
 
+
 module.exports = {
 	async postRecipientPrep(fb_id, page_id, name) {
-		const res = await request.post(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, page_id, name });
-		// console.log('postRecipientPrep', res);
-		const recipientData = await res.json();
-
-		return recipientData;
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, page_id, name }));
 	},
 
 	async putRecipientPrep(fb_id, name) {
-		const res = await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, name });
-		// console.log('putRecipientPrep', res);
-		const recipientData = await res.json();
-
-		return recipientData;
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, name }));
 	},
 
 	async putUpdatePartOfResearch(fb_id, is_part_of_research) {
-		const res = await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, is_part_of_research });
-		const recipientData = await res.json();
-		// console.log('putUpdatePartOfResearch', recipientData);
-		return recipientData;
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, is_part_of_research }));
 	},
 
 	async postParticipar(fb_id, is_part_of_research) {
-		const res = await request.post(`${apiUri}/api/chatbot/recipient/research-participation?security_token=${security_token}&`).query({
-			fb_id, is_part_of_research,
-		});
-		const postParticipar = await res.json();
-		console.log('postParticipar', postParticipar);
-		return postParticipar;
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/research-participation?security_token=${security_token}`).query({ fb_id, is_part_of_research }));
 	},
 
 	async getRecipientPrep(fb_id) {
-		const res = await request.get(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id });
-		// console.log('getRecipientPrep', res);
-		const recipientData = await res.json();
-		return recipientData;
+		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id }));
 	},
 
+	// opt_in: 0 -> turn off notifications; 1 -> turn on notifications
 	async putRecipientNotification(fb_id, opt_in) {
-		// opt_in: 0 -> turn off notifications; 1 -> turn on notifications
-		const res = await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}&`).query({ fb_id, opt_in });
-		// console.log('putRecipientNotification', res);
-		const recipientData = await res.json();
-		return recipientData;
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, opt_in }));
 	},
 
 	async getPendinQuestion(fb_id, category) {
-		const res = await request.get(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}&`).query({ fb_id, category });
-		// console.log('getPendinQuestion', res);
-		const quizData = await res.json();
-
-		return quizData;
+		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient/pending-question?security_token=${security_token}`).query({ fb_id, category }));
 	},
 
 	async postQuizAnswer(fb_id, category, code, answer_value) {
-		console.log('postQuizAnswer', `${fb_id} - ${category} - ${code} - ${answer_value}`);
-		let quizData;
-		try {
-			const res = await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}`).query({
-				fb_id, category, code, answer_value,
-			});
-			quizData = await res.json();
-		} catch (error) {
-			quizData = { error: `erro no postQuizAnswer: ${error}` };
-		}
-		// console.log('quizData', quizData);
-		return quizData;
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}`).query({
+			fb_id, category, code, answer_value,
+		}));
 	},
 
 	async deleteQuizAnswer(fb_id) {
@@ -86,50 +52,29 @@ module.exports = {
 			token = security_token;
 		}
 
-		const res = await request.post(`${apiUri}/api/internal/delete-answers?`).query({ security_token: token, fb_id });
-		// console.log('deleteQuizAnswer', res);
-		const quizData = await res.json();
-
-		return quizData;
+		return handleRequestAnswer(await request.post(`${apiUri}/api/internal/delete-answers?`).query({ security_token: token, fb_id }));
 	},
 
 	async getAvailableCities() {
-		const res = await request.get(`${apiUri}/api/chatbot/appointment/available-calendars?security_token=${security_token}`);
-		// console.log('getAvailableCities', res);
-		const cities = await res.json();
-
-		return cities;
+		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/appointment/available-calendars?security_token=${security_token}`));
 	},
 
 	async getAvailableDates(fb_id, calendar_id, page) {
-		const res = await request.get(`${apiUri}/api/chatbot/appointment/available-dates?security_token=${security_token}&`).query({ fb_id, calendar_id, page });
-		// console.log('getAvailableDates', res);
-		const dates = await res.json();
-		return dates;
+		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/appointment/available-dates?security_token=${security_token}`).query({ fb_id, calendar_id, page }));
 	},
 
 	async postAppointment(fb_id, calendar_id, type, appointment_window_id, quota_number, datetime_start, datetime_end) {
-		const res = await request.post(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}&`).query({
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}`).query({
 			fb_id, calendar_id, type, appointment_window_id, quota_number, datetime_start, datetime_end,
-		});
-		// console.log('postAppointment', res);
-		const dates = await res.json();
-
-		return dates;
+		}));
 	},
 
 	async getAppointment(fb_id) {
-		const res = await request.get(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}&`).query({ fb_id });
-		// console.log('getAppointment', res);
-		const dates = await res.json();
-		return dates;
+		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}`).query({ fb_id }));
 	},
 
 	async postIntegrationToken(fb_id, integration_token) {
-		const res = await request.post(`${apiUri}/api/chatbot/recipient/integration-token?security_token=${security_token}&`).query({ fb_id, integration_token });
-		// const result = await res.json();
-		// console.log(result);
-
+		const res = await handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/integration-token?security_token=${security_token}`).query({ fb_id, integration_token }));
 		if (res.statusCode && res.statusCode.toString() === '200') { // integration token found successfully
 			return true;
 		}
@@ -137,52 +82,26 @@ module.exports = {
 	},
 
 	async getCountQuiz(fb_id) {
-		const res = await request.get(`${apiUri}/api/chatbot/recipient/count-quiz?security_token=${security_token}&`).query({ fb_id });
-		// console.log('getCountQuiz', res);
-		const count = await res.json();
-
-		return count;
+		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient/count-quiz?security_token=${security_token}`).query({ fb_id }));
 	},
 
 	async postCountQuiz(fb_id) {
-		const res = await request.post(`${apiUri}/api/chatbot/recipient/count-quiz?security_token=${security_token}&`).query({ fb_id });
-		// console.log('postCountQuiz', res);
-		const count = await res.json();
-
-		return count;
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/count-quiz?security_token=${security_token}`).query({ fb_id }));
 	},
 
 	async getCountResearch(fb_id) {
-		const res = await request.get(`${apiUri}/api/chatbot/recipient/count-research-invite?security_token=${security_token}&`).query({ fb_id });
-		// console.log('getCountResearch', res);
-		const count = await res.json();
-		return count;
+		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient/count-research-invite?security_token=${security_token}`).query({ fb_id }));
 	},
 
 	async postCountResearch(fb_id) {
-		const res = await request.post(`${apiUri}/api/chatbot/recipient/count-research-invite?security_token=${security_token}&`).query({ fb_id });
-		// console.log('postCountResearch', res);
-		const count = await res.json();
-		return count;
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/count-research-invite?security_token=${security_token}`).query({ fb_id }));
 	},
 
 	async postSignature(fb_id, signed) {
-		console.log(fb_id, signed);
-		try {
-			const res = await request.post(`${apiUri}/api/chatbot/recipient/term-signature?security_token=${security_token}&`).query({ fb_id, signed });
-			const sign = await res.json();
-			console.log('postSignature', sign);
-			return sign;
-		} catch (error) {
-			console.log('postSignature', error);
-			return error;
-		}
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/term-signature?security_token=${security_token}`).query({ fb_id, signed }));
 	},
 
 	async resetTriagem(fb_id) {
-		const res = await request.post(`${apiUri}/api/chatbot/recipient/reset-screening?security_token=${security_token}&`).query({ fb_id });
-		const sign = await res.json();
-		// console.log('postSignature', sign);
-		return sign;
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/reset-screening?security_token=${security_token}`).query({ fb_id }));
 	},
 };

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-const { Sentry } = require('./helper');
+const error = require('./error');
+
 
 const user = process.env.MAIL_USER;
 const pass = process.env.MAIL_PASS;
@@ -22,11 +23,11 @@ const transporter = nodemailer.createTransport({
 	auth: {
 		user,
 		pass,
-		secure: true, // use SSL
 	},
 	tls: { rejectUnauthorized: false },
 	debug: true,
 });
+
 
 async function sendMail(subject, text, cityId) {
 	let to = '';
@@ -44,13 +45,37 @@ async function sendMail(subject, text, cityId) {
 	try {
 		const info = await transporter.sendMail(options);
 		console.log(`'${subject}' para ${to}:`, info.messageId);
-	} catch (error) {
-		console.log('Could not send mail to ', to);
-		console.log(`Error seding mail to ${to} => `, error);
-		Sentry.captureMessage('Error seding mail');
+	} catch (err) {
+		console.log(`Error seding mail to ${to} => `, err);
+		error.Sentry.captureMessage('Error sending mail');
 	}
 }
 
+async function sendMailError(text) {
+	const to = process.env.MAILERROR.split(',');
+	const subject = `Erro no Prep - ${process.env.ENV}`;
+	const options = {
+		from, to, subject, text,
+	};
+
+	try {
+		const info = await transporter.sendMail(options);
+		console.log(`'${subject}' para ${to}:`, info.messageId);
+	} catch (err) {
+		console.log(`Error seding mail to ${to} => `, err);
+		error.Sentry.captureMessage('Error semding error mail');
+	}
+}
+
+async function sentryError(name, msg, err, state) {
+	console.log(msg, err || '');
+	if (process.env.ENV !== 'local') {
+		await error.Sentry.captureMessage(msg);
+		await sendMailError(await error.buildNormalErrorMsg(name, err, state));
+	}
+	return false;
+}
+
 module.exports = {
-	sendMail,
+	sendMail, sendMailError, sentryError,
 };

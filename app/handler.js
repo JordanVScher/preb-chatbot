@@ -16,6 +16,7 @@ const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
 const { sendMail } = require('./utils/mailer');
 const { addNewUser } = require('./utils/labels');
+const { sentryError } = require('./utils/mailer');
 
 module.exports = async (context) => {
 	try {
@@ -35,8 +36,6 @@ module.exports = async (context) => {
 		await addNewUser(context, prepAPI);
 		await timer.deleteTimers(context.session.user.id);
 
-		console.log('user', context.state.user);
-
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload, lastQRpayload: '' });
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
@@ -53,7 +52,7 @@ module.exports = async (context) => {
 			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
-			console.log(context.session.user.first_name, 'clicks lastQRpayload => new payload:', `${context.state.lastQRpayload} => ${context.event.quickReply.payload}`);
+			// console.log(context.session.user.first_name, 'clicks lastQRpayload => new payload:', `${context.state.lastQRpayload} => ${context.event.quickReply.payload}`);
 			if (!context.state.lastQRpayload || context.state.lastQRpayload !== context.event.quickReply.payload) { // check if last clicked button is the same as the new one
 				await context.setState({ lastQRpayload: context.event.quickReply.payload }); // update last quick reply chosen
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
@@ -363,15 +362,16 @@ module.exports = async (context) => {
 			} // end switch case
 		}
 	} catch (error) {
-		const date = new Date();
-		console.log(`Parece que aconteceu um erro as ${date.toLocaleTimeString('pt-BR')} de ${date.getDate()}/${date.getMonth() + 1} =>`);
-		console.log(error);
 		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
 
-		await help.Sentry.configureScope(async (scope) => { // sending to sentry
-			scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
-			scope.setExtra('state', context.state);
-			throw error;
-		});
+		await sentryError(`${context.session.user.first_name} ${context.session.user.last_name}`, 'teste', error.stack, context.state);
+
+		if (process.env.ENV !== 'local') {
+			await help.Sentry.configureScope(async (scope) => { // sending to sentry
+				scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
+				scope.setExtra('state', context.state);
+				throw error;
+			});
+		}
 	} // catch
 }; // handler function
