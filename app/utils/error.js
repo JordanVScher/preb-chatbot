@@ -20,12 +20,12 @@ async function handleErrorApi(options, res, err) {
 	msg += `\nQuery: ${JSON.stringify(options.query, null, 2)}`;
 	msg += `\nMethod: ${options.method}`;
 	if (res) msg += `\nResposta: ${JSON.stringify(res, null, 2)}`;
-	if (err) msg += `\nErro: ${JSON.stringify(err, null, 2)}`;
+	if (err) msg += `\nErro: ${err.stack}`;
 
 	console.log('----------------------------------------------', `\n${msg}`, '\n\n');
 
 	if ((res && (res.error || res.form_error)) || (!res && err)) {
-		if (process.env.ENV !== 'local') {
+		if (process.env.ENV !== 'local1') {
 			msg += `\nEnv: ${process.env.ENV}`;
 			await	Sentry.captureMessage(msg);
 			await sendMailError(msg);
@@ -37,10 +37,10 @@ async function handleErrorApi(options, res, err) {
 async function handleRequestAnswer(response) {
 	try {
 		const res = await response.json();
-		await handleErrorApi(response.options, res, null);
+		await handleErrorApi(response.options, res, false);
 		return res;
 	} catch (error) {
-		await handleErrorApi(response.options, null, error);
+		await handleErrorApi(response.options, false, error);
 		return {};
 	}
 }
