@@ -17,6 +17,7 @@ const checkQR = require('./utils/checkQR');
 const { sendMail } = require('./utils/mailer');
 const { addNewUser } = require('./utils/labels');
 const { sentryError } = require('./utils/mailer');
+const { buildNormalErrorMsg } = require('./utils/error');
 
 module.exports = async (context) => {
 	try {
@@ -119,6 +120,7 @@ module.exports = async (context) => {
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
 				await context.setState({ dialog: 'greetings' });
+				console.log(context.aaa.aa.aa);
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
@@ -364,7 +366,7 @@ module.exports = async (context) => {
 	} catch (error) {
 		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
 
-		await sentryError(`${context.session.user.first_name} ${context.session.user.last_name}`, 'teste', error.stack, context.state);
+		await sentryError(await buildNormalErrorMsg(`${context.session.user.first_name} ${context.session.user.last_name}`, error.stack, context.state));
 
 		if (process.env.ENV !== 'local') {
 			await help.Sentry.configureScope(async (scope) => { // sending to sentry
