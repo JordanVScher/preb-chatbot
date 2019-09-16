@@ -43,7 +43,6 @@ module.exports = async (context) => {
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
 				// await context.setState({ dialog: 'leavePhone' });
-				// await context.setState({ dialog: 'getCity' });
 				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
 				// await context.setState({ dialog: 'autoTeste' });
@@ -227,6 +226,16 @@ module.exports = async (context) => {
 				break;
 			case 'phoneInvalid':
 				await context.sendText(flow.leavePhone.failure, opt.leavePhone);
+				break;
+			case 'getContact':
+				await context.setState({ contatoMsg: await help.buildContatoMsg(context.state.user.city) });
+				if (context.state.contatoMsg) {
+					await context.sendText(context.state.contatoMsg);
+					await context.typing(1000 * 5);
+					await mainMenu.sendMain(context);
+				} else {
+					await mainMenu.sendMain(context);
+				}
 				break;
 			case 'checarConsulta':
 				await context.setState({ categoryConsulta: 'emergencial' });
