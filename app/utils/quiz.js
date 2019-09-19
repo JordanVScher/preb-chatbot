@@ -2,6 +2,7 @@ const prepApi = require('./prep_api');
 const aux = require('./quiz_aux');
 const flow = require('./flow');
 const { addCityLabel } = require('./labels');
+const { Sentry } = require('./helper');
 
 // loads next question and shows it to the user
 async function answerQuizA(context) {
@@ -24,10 +25,10 @@ async function answerQuizA(context) {
 			await context.sendImage(flow.onTheResearch.gif);
 			await context.sendText(flow.onTheResearch.text2);
 			await context.sendText(flow.onTheResearch.text3);
-		// quer saber mais sobre o nosso projeto -> agora é uma pergunta do quiz
+			// quer saber mais sobre o nosso projeto -> agora é uma pergunta do quiz
 		}
 
-			if (context.state.currentQuestion.type === 'multiple_choice') { // eslint-disable-line
+		if (context.state.currentQuestion.type === 'multiple_choice') { // eslint-disable-line
 			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
 		} else if (context.state.currentQuestion.type === 'open_text') {
 			await context.setState({ onTextQuiz: true });
@@ -52,10 +53,20 @@ async function handleAnswerA(context, quizOpt) {
 	if (context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0) {
 		await context.setState({ categoryQuestion: 'fun_questions' });
 	}
-
 	if (context.state.sentAnswer.error || !context.state.sentAnswer) { // error
 		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
+
+		if (process.env.ENV !== 'local') {
+			await Sentry.configureScope(async (scope) => { // sending to sentry
+				scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
+				scope.setExtra('intent', context.state.currentQuestion);
+				scope.setExtra('quizOpt', quizOpt);
+				scope.setExtra('sentAnswer', context.state.sentAnswer);
+				scope.setExtra('state', context.state);
+				await Sentry.captureMessage('Houve um erro ao enviar resposta no quiz');
+			});
+		}
 	} else {
 		if (context.state.sentAnswer.followup_messages) {
 			for (let i = 0; i < context.state.sentAnswer.followup_messages.length; i++) { // eslint-disable-line no-plusplus
@@ -98,7 +109,7 @@ async function handleAnswerA(context, quizOpt) {
 			if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 				await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 			} else if ((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
-			|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)) {
+				|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)) {
 				await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 			} else {
 				await aux.sendTermos(context);
