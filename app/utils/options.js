@@ -70,6 +70,12 @@ module.exports = {
 	}],
 	leavePhone: {
 		quick_replies: [
+			{ content_type: 'text', title: 'insta', payload: 'leaveInsta' },
+			{ content_type: 'text', title: 'whats', payload: 'leavePhoneTwo' },
+		],
+	},
+	leavePhone2: {
+		quick_replies: [
 			{ content_type: 'text', title: 'Não deixar telefone', payload: 'mainMenu' },
 		],
 	},
