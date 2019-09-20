@@ -87,7 +87,7 @@ async function checkMainMenu(context) {
 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
 		}
 	} else { // not on target audience, may send quiz if there's still any fun_question to be answered
-		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion || 'quiz') });
 		if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.currentQuestion && context.state.currentQuestion.code !== null && context.state.categoryQuestion === 'fun_questions') {
 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
 		}
