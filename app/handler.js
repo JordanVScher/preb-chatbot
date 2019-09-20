@@ -97,8 +97,10 @@ module.exports = async (context) => {
 			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
-			if (context.state.dialog === 'leavePhone' || context.state.dialog === 'phoneInvalid') {
+			if (context.state.dialog === 'leavePhoneTwo' || context.state.dialog === 'phoneInvalid') {
 				await research.checkPhone(context);
+			} else if (context.state.dialog === 'leaveInsta') {
+				await context.setState({ insta: context.state.whatWasTyped, dialog: 'leaveInstaValid' });
 			} else if (context.state.onTextQuiz === true) {
 				await context.setState({ whatWasTyped: parseInt(context.state.whatWasTyped, 10) });
 				if (Number.isInteger(context.state.whatWasTyped, 10) === true) {
@@ -217,15 +219,38 @@ module.exports = async (context) => {
 				await mainMenu.sendMain(context);
 				break;
 			case 'leavePhone':
-				await context.sendText(flow.leavePhone.text1, opt.leavePhone);
+				await context.sendText(flow.leavePhone.opening, opt.leavePhone);
+				break;
+			case 'leavePhoneTwo':
+				await context.sendText(flow.leavePhone.phone);
+				// await context.sendText(flow.leavePhone.text1, opt.leavePhone2);
+				break;
+			case 'leaveInsta':
+				await context.sendText(flow.leavePhone.insta);
+				break;
+			case 'leaveInstaValid':
+				await context.sendText(flow.leavePhone.success);
+				await sendMail('Novo instagram de contato', await help.buildMail(context.session.user.name, context.state.insta, 'instagram'), context.state.user.city);
+				await mainMenu.sendMain(context);
 				break;
 			case 'phoneValid':
 				await context.sendText(flow.leavePhone.success);
-				await sendMail('Novo telefone de contato', await help.buildMail(context.session.user.name, context.state.phone), context.state.user.city);
+				await sendMail('Novo telefone de contato', await help.buildMail(context.session.user.name, context.state.phone, 'telefone'), context.state.user.city);
 				await mainMenu.sendMain(context);
 				break;
 			case 'phoneInvalid':
-				await context.sendText(flow.leavePhone.failure, opt.leavePhone);
+				await context.sendText(flow.leavePhone.failure);
+				// await context.sendText(flow.leavePhone.failure, opt.leavePhone2);
+				break;
+			case 'getContact':
+				await context.setState({ contatoMsg: await help.buildContatoMsg(context.state.user.city) });
+				if (context.state.contatoMsg) {
+					await context.sendText(context.state.contatoMsg);
+					await context.typing(1000 * 5);
+					await mainMenu.sendMain(context);
+				} else {
+					await mainMenu.sendMain(context);
+				}
 				break;
 			case 'getContact':
 				await context.setState({ contatoMsg: await help.buildContatoMsg(context.state.user.city) });

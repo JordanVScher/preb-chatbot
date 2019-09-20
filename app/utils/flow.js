@@ -180,10 +180,12 @@ module.exports = {
 		duvidaRemedio: 'Temos um panfleto pra tirar suas dúvidas',
 	},
 	leavePhone: {
-		text1: 'Deixe seu telefone que entraremos em contato.',
-		success: 'Salvei seu telefone com sucesso!',
+		opening: 'Qual contato qr me passar?',
+		phone: 'Deixe seu telefone que entraremos em contato',
+		insta: 'Deixe seu instagram que entraremos em contato',
+		success: 'O mais rapidinho possível a gnt te xama 💙',
 		failure: 'Esse telefone não é válido! Tente de novo',
-		sendMail: '<USERNAME> quer que entre em contato pelo telefone <PHONE> depois de receber a notificação.',
+		sendMail: '<USERNAME> quer que entre em contato pelo <CONTATO> <PHONE> depois de receber a notificação.',
 	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',

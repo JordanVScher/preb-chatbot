@@ -127,8 +127,8 @@ function capQR(text) {
 }
 
 
-function buildMail(name, phone) {
-	return flow.leavePhone.sendMail.replace('<USERNAME>', name).replace('<PHONE>', phone);
+function buildMail(name, phone, contato) {
+	return flow.leavePhone.sendMail.replace('<USERNAME>', name).replace('<PHONE>', phone).replace('<CONTATO>', contato);
 }
 
 async function buildConsultaFinal(state, chosenHour) {
