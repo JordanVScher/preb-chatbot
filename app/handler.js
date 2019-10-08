@@ -121,7 +121,6 @@ module.exports = async (context) => {
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
 				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
 				await context.setState({ dialog: 'greetings' });
-				console.log(context.aaa.aa.aa);
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
@@ -241,16 +240,6 @@ module.exports = async (context) => {
 			case 'phoneInvalid':
 				await context.sendText(flow.leavePhone.failure);
 				// await context.sendText(flow.leavePhone.failure, opt.leavePhone2);
-				break;
-			case 'getContact':
-				await context.setState({ contatoMsg: await help.buildContatoMsg(context.state.user.city) });
-				if (context.state.contatoMsg) {
-					await context.sendText(context.state.contatoMsg);
-					await context.typing(1000 * 5);
-					await mainMenu.sendMain(context);
-				} else {
-					await mainMenu.sendMain(context);
-				}
 				break;
 			case 'getContact':
 				await context.setState({ contatoMsg: await help.buildContatoMsg(context.state.user.city) });
