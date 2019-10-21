@@ -1,5 +1,4 @@
 const Sentry = require('@sentry/node');
-const dialogFlow = require('apiai-promise');
 const moment = require('moment');
 const accents = require('remove-accents');
 const flow = require('./flow');
@@ -155,7 +154,6 @@ async function getPhoneValid(phone) {
 }
 
 module.exports = {
-	apiai: dialogFlow(process.env.DIALOGFLOW_TOKEN),
 	Sentry,
 	moment,
 	capQR,

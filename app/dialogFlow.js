@@ -1,3 +1,4 @@
+const dialogflow = require('dialogflow');
 const MaAPI = require('./chatbot_api.js');
 const { createIssue } = require('./send_issue');
 const { sendAnswer } = require('./utils/sendAnswer');
@@ -6,6 +7,51 @@ const timer = require('./utils/timer');
 const { getRecipientPrep } = require('./utils/prep_api');
 const { sendMain } = require('./utils/mainMenu');
 const flow = require('./utils/flow');
+const help = require('./utils/helper');
+
+/* Initialize DialogFlow agent */
+/* set GOOGLE_APPLICATION_CREDENTIALS on .env */
+const sessionClient = new dialogflow.SessionsClient();
+const projectId = process.env.GOOGLE_PROJECT_ID;
+
+/**
+ * Send a text query to the dialogflow agent, and return the query result.
+ * @param {string} text The text to be queried
+ * @param {string} sessionId A unique identifier for the given session
+ */
+async function textRequestDF(text, sessionId) {
+	const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+	const request = { session: sessionPath, queryInput: { text: { text, languageCode: 'pt-BR' } } };
+	const responses = await sessionClient.detectIntent(request);
+	return responses;
+}
+
+/**
+ * Build object with the entity name and it's values from the dialogflow response
+ * @param {string} res result from dialogflow request
+ */
+async function getEntity(res) {
+	const result = {};
+	const entities = res[0] && res[0].queryResult && res[0].queryResult.parameters ? res[0].queryResult.parameters.fields : [];
+	if (entities) {
+		Object.keys(entities).forEach((e) => {
+			const aux = [];
+			if (entities[e] && entities[e].listValue && entities[e].listValue.values) {
+				entities[e].listValue.values.forEach((name) => { aux.push(name.stringValue); });
+			}
+			result[e] = aux;
+		});
+	}
+
+	return result || {};
+}
+
+async function getExistingRes(res) {
+	let result = null;
+	res.forEach((e) => { if (e !== null && result === null) result = e; });
+	return result;
+}
+
 
 async function checkPosition(context) {
 	if (['startQuizA', 'beginQuiz', 'backToQuiz'].includes(context.state.dialog)) {
@@ -56,7 +102,9 @@ async function checkPosition(context) {
 		await desafio.followUpIntent(context);
 		break;
 	default: // default acts for every intent - position on MA
-		await context.setState({ knowledge: await MaAPI.getknowledgeBase(context.state.politicianData.user_id, context.state.apiaiResp, context.session.user.id) });
+		await context.setState(
+			{ knowledge: await MaAPI.getknowledgeBase(context.state.politicianData.user_id, await getExistingRes(context.state.apiaiResp), context.session.user.id) },
+		);
 		console.log('knowledge', context.state.knowledge);
 		// console.log('knowledge', context.state.knowledge);
 		// check if there's at least one answer in knowledge_base
@@ -71,4 +119,18 @@ async function checkPosition(context) {
 	}
 }
 
-module.exports.checkPosition = checkPosition;
+async function dialogFlow(context) {
+	console.log(`\n${context.session.user.name} digitou ${context.event.message.text} - DF Status: ${context.state.politicianData.use_dialogflow}`);
+	if (context.state.politicianData.use_dialogflow === 1) { // check if 'politician' is using dialogFlow
+		await context.setState({ apiaiResp: await textRequestDF(await help.formatDialogFlow(context.state.whatWasTyped), context.session.user.id) });
+		await context.setState({ intentName: context.state.apiaiResp[0].queryResult.intent.displayName || '' }); // intent name
+		await context.setState({ resultParameters: await getEntity(context.state.apiaiResp) }); // entities
+		await context.setState({ apiaiTextAnswer: context.state.apiaiResp[0].queryResult.fulfillmentText || '' }); // response text
+		await checkPosition(context);
+	} else {
+		await context.setState({ dialog: 'prompt' });
+		await createIssue(context);
+	}
+}
+
+module.exports = { checkPosition, dialogFlow };

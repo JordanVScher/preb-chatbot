@@ -88,4 +88,5 @@ test.js
 
 # google calendar apikey
 googleapi-key.json
+google_private_key.json
 

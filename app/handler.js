@@ -1,8 +1,6 @@
 const MaAPI = require('./chatbot_api.js');
 const prepAPI = require('./utils/prep_api.js');
-const { createIssue } = require('./send_issue');
-const { checkPosition } = require('./dialogFlow');
-const { apiai } = require('./utils/helper');
+const DF = require('./dialogFlow');
 const flow = require('./utils/flow');
 const opt = require('./utils/options');
 const help = require('./utils/helper');
@@ -21,7 +19,6 @@ const { buildNormalErrorMsg } = require('./utils/error');
 
 module.exports = async (context) => {
 	try {
-		// we reload politicianData on every useful event
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 		// console.log(context.state.politicianData);
 		// we update context data at every interaction (post ony on the first time)
@@ -124,14 +121,8 @@ module.exports = async (context) => {
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
 				await context.setState({ dialog: 'setEventHour' });
-			} else if (context.state.politicianData.use_dialogflow === 1) { // check if politician is using dialogFlow
-				await context.setState({ apiaiResp: await apiai.textRequest(await help.formatDialogFlow(context.state.whatWasTyped), { sessionId: context.session.user.id }) });
-				// await context.setState({ resultParameters: context.state.apiaiResp.result.parameters }); // getting the entities
-				await context.setState({ intentName: context.state.apiaiResp.result.metadata.intentName }); // getting the intent
-				await checkPosition(context);
-			} else { // not using dialogFlow
-				await context.setState({ dialog: 'prompt' });
-				await createIssue(context);
+			} else {
+				await DF.dialogFlow(context);
 			}
 		} // -- end text
 
