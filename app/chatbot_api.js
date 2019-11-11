@@ -22,7 +22,9 @@ module.exports = {
 	},
 
 	async postRecipientMA(user_id, recipient) {
+		if (!recipient.extra_fields) delete recipient.extra_fields;
 		const recipientData_qs = queryString.stringify(recipient);
+		console.log('recipientData_qs', recipientData_qs);
 		const res = await request.post(`${apiUri}/api/chatbot/recipient?${recipientData_qs}&security_token=${security_token}&`).query({ politician_id: user_id });
 		const recipientData = await res.json();
 		// console.log('recipientData', recipientData);
@@ -39,6 +41,31 @@ module.exports = {
 		const res = await request(`${apiUri}/api/chatbot/poll-result?fb_id=${fb_id}&poll_id=${poll_id}&security_token=${security_token}`);
 		const pollAnswer = await res.json();
 		return pollAnswer;
+	},
+
+	async getRecipient(politician_id, fb_id) {
+		const res = await request.get(`${apiUri}/api/chatbot/recipient?fb_id=${fb_id}&security_token=${security_token}&`).query({ politician_id });
+		const recipientData = await res.json();
+		console.log('getRecipient', JSON.stringify(recipientData));
+		return recipientData;
+	},
+
+	async postRecipientLabel(politician_id, fb_id, label) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient?security_token=${security_token}&}`).query({
+			politician_id, security_token, fb_id, extra_fields: JSON.stringify({ system_labels: [{ name: label }] }),
+		});
+		const recipientData = await res.json();
+		console.log('postRecipientLabel', recipientData);
+		return recipientData;
+	},
+
+	async deleteRecipientLabel(politician_id, fb_id, label) {
+		const res = await request.post(`${apiUri}/api/chatbot/recipient?security_token=${security_token}&}`).query({
+			politician_id, security_token, fb_id, extra_fields: JSON.stringify({ system_labels: [{ name: label, deleted: 1 }] }),
+		});
+		const recipientData = await res.json();
+		console.log('deleteRecipientLabel', recipientData);
+		return recipientData;
 	},
 
 	async getDialog(politician_id, dialog_name) {

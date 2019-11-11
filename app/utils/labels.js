@@ -10,7 +10,6 @@ const client = MessengerClient.connect({
 
 const { locationDictionary } = require('./helper');
 
-
 const pageToken = config.accessToken;
 
 // creates a new label. Pass in the name of the label and add the return ID to the .env file
@@ -27,11 +26,15 @@ async function listAllLabels() { // eslint-disable-line no-unused-vars
 	return response;
 }
 
-
 async function getBroadcastMetrics(broadcastID) {
 	const res = await req.get(`https://graph.facebook.com/v2.11/${broadcastID}/insights/messages_sent?access_token=${pageToken}`);
 	const response = await res.json();
 	return response;
+}
+
+async function getUserLabels(PSID) {
+	const res = await req.get(`https://graph.facebook.com/v4.0/${PSID}/custom_labels`).query({ access_token: pageToken, fields: 'name' });
+	return res.json();
 }
 
 async function dissociateLabelsFromUser(UserID) {
@@ -175,4 +178,5 @@ module.exports = {
 	removeAllUserLabels,
 	linkIntegrationTokenLabel,
 	addNewUser,
+	getUserLabels,
 };

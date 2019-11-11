@@ -28,9 +28,12 @@ module.exports = async (context) => {
 			gender: context.session.user.gender === 'male' ? 'M' : 'F',
 			origin_dialog: 'greetings',
 			picture: context.session.user.profile_pic,
+			extra_fields: await help.buildLabels(context.state.user.system_labels),
 			// session: JSON.stringify(context.state),
 		});
 
+		console.log('context.state.user', context.state.user);
+		console.log('context.state.user.system_labels', await help.buildLabels(context.state.user.system_labels));
 		await addNewUser(context, prepAPI);
 		await timer.deleteTimers(context.session.user.id);
 

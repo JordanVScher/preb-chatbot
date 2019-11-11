@@ -153,6 +153,14 @@ async function getPhoneValid(phone) {
 	return result;
 }
 
+async function buildLabels(labels) {
+	if (!labels) {
+		return {};
+	}
+
+	return { system_labels: labels };
+}
+
 module.exports = {
 	Sentry,
 	moment,
@@ -174,4 +182,5 @@ module.exports = {
 	buildConsultaFinal,
 	getPhoneValid,
 	buildContatoMsg,
+	buildLabels,
 };
