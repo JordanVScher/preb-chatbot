@@ -3,7 +3,7 @@ const chatbotAPI = require('./chatbot_api.js');
 const { issueText } = require('./utils/flow.js');
 const { Sentry } = require('./utils/helper');
 
-const blacklist = ['sim', 'nao'];
+const blacklist = [];
 
 async function formatString(text) {
 	let result = text.toLowerCase();
@@ -26,7 +26,7 @@ async function createIssue(context) {
 				scope.setExtra('state', context.state);
 				scope.setExtra('intent', context.state.intentName);
 				scope.setExtra('knowledge', context.state.knowledge);
-				await Sentry.captureMessage(`Não entendemos mensagem do DialogFlow`);
+				await Sentry.captureMessage('Não entendemos mensagem do DialogFlow');
 			});
 		}
 
