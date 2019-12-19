@@ -2,7 +2,7 @@ const prepApi = require('./prep_api');
 const aux = require('./quiz_aux');
 const flow = require('./flow');
 const { addCityLabel } = require('./labels');
-const { Sentry } = require('./helper');
+const help = require('./helper');
 
 // loads next question and shows it to the user
 async function answerQuizA(context) {
@@ -29,7 +29,10 @@ async function answerQuizA(context) {
 		}
 
 		if (context.state.currentQuestion.type === 'multiple_choice') { // eslint-disable-line
-			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
+			await context.setState({ onButtonQuiz: true });
+			await context.setState({ buttonsFull: await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz') });
+			await context.setState({ buttonTexts: await help.getButtonTextList(context.state.buttonsFull) });
+			await context.sendText(context.state.currentQuestion.text, context.state.buttonsFull);
 		} else if (context.state.currentQuestion.type === 'open_text') {
 			await context.setState({ onTextQuiz: true });
 			await context.sendText(context.state.currentQuestion.text);
@@ -39,6 +42,8 @@ async function answerQuizA(context) {
 }
 
 async function handleAnswerA(context, quizOpt) {
+	console.log('quizOpt', quizOpt);
+
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
 	// try {
@@ -48,7 +53,7 @@ async function handleAnswerA(context, quizOpt) {
 	// await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 	// }
 	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
-	await context.setState({ onTextQuiz: false });
+	await context.setState({ onTextQuiz: false, onButtonQuiz: false });
 	// if we know user is not target audience he can only see the fun_questions or now on
 	if (context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0) {
 		await context.setState({ categoryQuestion: 'fun_questions' });
@@ -58,13 +63,13 @@ async function handleAnswerA(context, quizOpt) {
 		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
 
 		if (process.env.ENV !== 'local') {
-			await Sentry.configureScope(async (scope) => { // sending to sentry
+			await help.Sentry.configureScope(async (scope) => { // sending to sentry
 				scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
 				scope.setExtra('intent', context.state.currentQuestion);
 				scope.setExtra('quizOpt', quizOpt);
 				scope.setExtra('sentAnswer', context.state.sentAnswer);
 				scope.setExtra('state', context.state);
-				await Sentry.captureMessage('Houve um erro ao enviar resposta no quiz');
+				await help.Sentry.captureMessage('Houve um erro ao enviar resposta no quiz');
 			});
 		}
 	} else {
@@ -130,8 +135,28 @@ async function AnswerExtraQuestion(context) {
 	return answer;
 }
 
+async function handleText(context) {
+	if (!context.state.whatWasTyped) return null;
+	let text = context.state.whatWasTyped.toLowerCase();
+	text = await help.accents.remove(text);
+	console.log('text user typed on quiz', text);
+	console.log('context.state.buttonTexts', context.state.buttonTexts);
+
+	let getIndex = null;
+	context.state.buttonTexts.forEach((e, i) => {
+		if (e.trim() === text.trim() && getIndex === null) {
+		// if (e.includes(text) && getIndex === null) {
+			getIndex = i + 1;
+		}
+	});
+
+	if (getIndex === null) return null;
+	return getIndex;
+}
+
 module.exports = {
 	answerQuizA,
 	handleAnswerA,
 	AnswerExtraQuestion,
+	handleText,
 };

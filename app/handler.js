@@ -109,6 +109,13 @@ module.exports = async (context) => {
 					await context.sendText('Formato inválido, digite só um número, exemplo 24');
 					await context.setState({ dialog: 'startQuizA' });
 				}
+			} else if (context.state.onButtonQuiz === true) {
+				const quizOpt = await quiz.handleText(context);
+				if (quizOpt === null) {
+					await DF.dialogFlow(context);
+				} else {
+					await quiz.handleAnswerA(context, quizOpt);
+				}
 			} else if (context.state.dialog === 'joinToken' || context.state.dialog === 'joinTokenErro') {
 				await research.handleToken(context, await prepAPI.postIntegrationToken(context.session.user.id, context.state.whatWasTyped));
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
@@ -292,11 +299,11 @@ module.exports = async (context) => {
 			case 'askResearch':
 				await context.sendText(flow.desafio.text2, opt.answer.sendResearch); // send research
 				break;
-			case 'firstNoResearch':
+			case 'firstNoResearch': // voce gostaria de saber mais sobre o nosso projeto - não
 				await context.sendButtonTemplate(flow.onTheResearch.buildTermos, opt.TCLE);
 				await context.sendText(flow.onTheResearch.saidYes, opt.termos2);
 				break;
-			case 'firstJoinResearch': // voce gostaria de saber mais sobre o nosso projeto  - sim
+			case 'firstJoinResearch': // voce gostaria de saber mais sobre o nosso projeto - sim
 			// await prepAPI.postParticipar(context.session.user.id, 1);
 				await context.sendText(flow.quizYes.text15);
 				await context.sendButtonTemplate(flow.onTheResearch.buildTermos, opt.TCLE);
@@ -382,7 +389,7 @@ module.exports = async (context) => {
 		}
 	} catch (error) {
 		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
-
+		console.log('error', error);
 		await sentryError(await buildNormalErrorMsg(`${context.session.user.first_name} ${context.session.user.last_name}`, error.stack, context.state));
 
 		if (process.env.ENV !== 'local') {

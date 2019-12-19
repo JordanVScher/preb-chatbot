@@ -25,7 +25,7 @@ async function sendConsultas(context) {
 }
 
 async function verConsulta(context) {
-	if (context.state.user.is_part_of_research === 1) {
+	if (context.state.user.is_eligible_for_research === 1) {
 		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 			await sendConsultas(context);
@@ -106,7 +106,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 }
 
 async function loadCalendar(context) {
-	if (context.state.user.is_part_of_research === 1) {
+	if (context.state.user.is_eligible_for_research === 1) {
 	/* load and prepare calendar */
 		await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
 		await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar
