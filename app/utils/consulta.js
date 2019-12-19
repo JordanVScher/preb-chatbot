@@ -6,6 +6,7 @@ const help = require('./helper');
 const prepApi = require('./prep_api');
 const checkQR = require('./checkQR');
 const aux = require('./consulta-aux');
+const { sendMain } = require('./mainMenu');
 
 async function sendSalvador(context) {
 	if (context.state.user && context.state.user.city && context.state.user.city.toString() === '2') { await context.sendText(flow.consulta.salvadorMsg); }
@@ -24,13 +25,17 @@ async function sendConsultas(context) {
 }
 
 async function verConsulta(context) {
-	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
-	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
-		await sendConsultas(context);
-		await context.sendText(flow.consulta.view);
-		await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
+	if (context.state.user.is_part_of_research === 1) {
+		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
+		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
+			await sendConsultas(context);
+			await context.sendText(flow.consulta.view);
+			await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
+		} else {
+			await context.sendText(flow.verConsulta.zero, await checkQR.checkConsulta(context, opt.marcarConsulta));
+		}
 	} else {
-		await context.sendText(flow.verConsulta.zero, await checkQR.checkConsulta(context, opt.marcarConsulta));
+		await sendMain(context);
 	}
 }
 
@@ -101,22 +106,26 @@ async function finalDate(context, quota) { // where we actually schedule the con
 }
 
 async function loadCalendar(context) {
+	if (context.state.user.is_part_of_research === 1) {
 	/* load and prepare calendar */
-	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
-	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar
-	await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
-	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
-	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
+		await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
+		await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar
+		await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
+		await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
+		await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
 
-	if (context.state.sendExtraMessages === true) {
-		await context.setState({ sendExtraMessages2: true, sendExtraMessages: false }); // because of "outras datas" we cant show these again, but we still have to show the next ones
-		await context.sendText(flow.quizYes.text3.replace('<LOCAL>', help.extraMessageDictionary[context.state.user.city]));
-		await context.sendText(flow.quizYes.text4);
+		if (context.state.sendExtraMessages === true) {
+			// because of "outras datas" we cant show the extraMessages again, but we still have to show the next ones
+			await context.setState({ sendExtraMessages2: true, sendExtraMessages: false });
+			await context.sendText(flow.quizYes.text3.replace('<LOCAL>', help.extraMessageDictionary[context.state.user.city]));
+			await context.sendText(flow.quizYes.text4);
+		} else {
+			await context.sendText(flow.consulta.checar2);
+		}
+		await showDays(context);
 	} else {
-		await context.sendText(flow.consulta.checar2);
+		await sendMain(context);
 	}
-
-	await showDays(context);
 }
 
 async function checarConsulta(context) {
