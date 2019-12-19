@@ -5,7 +5,12 @@
   "scripts": {
     "dev": "nodemon app/index.js",
     "start": "node app/index.js",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "add": "pm2 start app/index --name \"prep-homol\"",
+    "restart": "pm2 restart \"prep-homol\" --update-env",
+    "logs": "pm2 logs \"prep-homol\" --lines 1000",
+    "stop": "pm2 stop \"prep-homol\"",
+    "remove": "pm2 remove \"prep-homol\""
   },
   "dependencies": {
     "@sentry/node": "^4.6.6",
