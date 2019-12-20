@@ -26,19 +26,11 @@ async function separateString(someString) {
 
 async function formatDialogFlow(text) {
 	let result = text.toLowerCase();
-	result = await result.replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF])/g, '');
 	result = await accents.remove(result);
 	if (result.length >= 250) {
 		result = result.slice(0, 250);
 	}
 	return result.trim();
-}
-
-async function waitTypingEffect(context, waitTime = 2500) {
-	await context.typingOn();
-	setTimeout(async () => {
-		await context.typingOff();
-	}, waitTime);
 }
 
 // separate intent
@@ -180,7 +172,6 @@ module.exports = {
 	moment,
 	capQR,
 	formatDialogFlow,
-	waitTypingEffect,
 	formatDate,
 	weekDayName,
 	cidadeDictionary,
