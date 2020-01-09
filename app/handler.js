@@ -19,6 +19,7 @@ const { buildNormalErrorMsg } = require('./utils/error');
 
 module.exports = async (context) => {
 	try {
+		await addNewUser(context, prepAPI);
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 		// console.log(context.state.politicianData);
 		// we update context data at every interaction (post ony on the first time)
@@ -34,7 +35,6 @@ module.exports = async (context) => {
 
 		console.log('context.state.user', context.state.user);
 		console.log('context.state.user.system_labels', await help.buildLabels(context.state.user.system_labels));
-		await addNewUser(context, prepAPI);
 		await timer.deleteTimers(context.session.user.id);
 
 		if (context.event.isPostback) {
