@@ -87,7 +87,7 @@ module.exports = {
 		siteURL: 'https://m.me/amandaselfie.bot',
 	},
 	quiz: {
-		beginQuiz: 'Vamo la bee!! lesgo!',
+		beginQuiz: 'Adoron!!',
 		form_error: 'Eita, acho que me perdi. Topa responder de novo?',
 		invalid: 'Bee, esse formato é inválido! Vamos tentar novamente, digita aí!',
 		sintoma: 'Não se esqueça de fazer seu teste depois de 30 dias do seu último risco! Se fizer antes, mesmo que você tenha tido contato com alguma coisa, pode ainda não aparecer no seu exame!',
