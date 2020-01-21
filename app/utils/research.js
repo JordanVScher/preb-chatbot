@@ -1,6 +1,7 @@
 const flow = require('./flow');
 const opt = require('./options');
 const { getQR } = require('./attach');
+const { sendMain } = require('./mainMenu');
 const { getRecipientPrep } = require('./prep_api');
 const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
@@ -38,8 +39,35 @@ async function ofertaPesquisaSim(context) {
 }
 
 async function ofertaPesquisaEnd(context) {
-	await context.setState({ nextDialog: '' });
-	await context.sendText('ofertaPesquisaEnd');
+	await context.setState({ nextDialog: '', dialog: '' });
+	if (!context.state.user.is_target_audience) { // não é público de interesse
+		await sendMain(context);
+	} else if (context.state.user.risk_group) { // é público de interesse com risco
+		await context.setState({ nextDialog: 'preTCLE' });
+		await context.sendText('Manda pro recrutamento e dps pro pre-tcle');
+	} else { // é público de interesse sem risco
+		await context.sendText('Manda pro Pré-TCLE');
+	}
+}
+async function TCLE(context) {
+	return false;
+}
+
+async function preTCLE(context) {
+	if (context.state.user.is_eligible_for_research) { // é elegível pra pesquisa
+		await context.sendText(flow.preTCLE.eligible);
+	} else { // não é elegivel pra pesquisa
+		await context.sendText(flow.preTCLE.not_eligible);
+	}
+
+	if (!context.state.user.is_target_audience) { // não é público de interesse
+		await TCLE();
+	} else if (context.state.leftContact || context.state.hasAppointment) { // é público de interesse, já fez agendamento ou deixou contato
+		await TCLE();
+	} else { // é público de interesse, não fez agendamento nem deixou contato
+		await context.setState({ nextDialog: 'TCLE', dialog: '' });
+		await context.sendText('Agendamento');
+	}
 }
 
 module.exports = {

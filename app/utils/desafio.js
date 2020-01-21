@@ -19,7 +19,7 @@ async function sendQuiz(context) {
 		await context.sendText(`${flow.desafio.text3}`);
 		await triagem.getTriagem(context);
 	} else if (context.state.quizCounter && context.state.quizCounter.count_quiz >= 3) { // check quiz counter
-		await mainMenu.sendShareAndMenu(context); // send regular menu
+		await mainMenu.sendMain(context); // send regular menu
 	} else {
 		await prepApi.postCountQuiz(context.session.user.id); // update quiz counter
 		if (context.state.startedQuiz === true) { // check if user started quiz
@@ -37,7 +37,7 @@ async function sendQuiz(context) {
 async function sendResearch(context) {
 	await context.setState({ researchCounter: await prepApi.getCountResearch(context.session.user.id) }); // load quiz counter
 	if (context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3) { // check quiz counter
-		await mainMenu.sendShareAndMenu(context); // send regular menu
+		await mainMenu.sendMain(context); // send regular menu
 	} else {
 		await prepApi.postCountResearch(context.session.user.id); // update quiz counter
 		await context.sendText(flow.desafio.text4, opt.answer.sendResearch); // send research
@@ -50,7 +50,7 @@ async function followUp(context) {
 
 	if (context.state.user.is_target_audience === 1 || context.state.user.is_target_audience === null) { // check if user is part of target audience or we dont know yet
 		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa
-			await mainMenu.sendShareAndMenu(context); // send regular menu, here we don't have to check if user is prep or not
+			await mainMenu.sendMain(context); // send regular menu, here we don't have to check if user is prep or not
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
 			if (context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if
 				await sendQuiz(context);
@@ -58,14 +58,14 @@ async function followUp(context) {
 				await sendResearch(context);
 			} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // não é elegível
 				await sendCarouselSus(context, opt.sus);
-			// await mainMenu.sendShareAndMenu(context); // send regular menu
+			// await mainMenu.sendMain(context); // send regular menu
 			}
 		}
 	} else { // not part of target audience
 		if (context.state.categoryQuestion) { // eslint-disable-line no-lonely-if
 			await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 			if (!context.state.currentQuestion || context.state.currentQuestion.code === null || context.state.currentQuestion.form_error) {
-				await mainMenu.sendShareAndMenu(context); // send regular menu
+				await mainMenu.sendMain(context); // send regular menu
 			} else {
 				await sendQuiz(context); // if user didn't finish quiz we can send it to them, even if they aren't on target_audience
 			}
@@ -97,7 +97,7 @@ async function checkAconselhamento(context) {
 	await prepApi.resetTriagem(context.session.user.id); // clear old triagem
 	if (context.state.intentType === 'duvida') {
 		if (context.state.user.is_prep === 1) { // user is prep
-			await mainMenu.sendShareAndMenu(context); // send regular menu
+			await mainMenu.sendMain(context); // send regular menu
 		} else { // user isn't prep, send to triagem
 			await context.sendText(flow.triagem.invite, opt.answer.isPrep);
 		}
@@ -130,7 +130,7 @@ async function followUpIntent(context) {
 				await sendResearch(context);
 			} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // não é elegível === 0
 				await sendCarouselSus(context, opt.sus);
-				// await mainMenu.sendShareAndMenu(context); // send regular menu
+				// await mainMenu.sendMain(context); // send regular menu
 			}
 		}
 	} else { // not part of target audience
@@ -141,7 +141,7 @@ async function followUpIntent(context) {
 		if (context.state.categoryQuestion) { // eslint-disable-line no-lonely-if
 			await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 			if (!context.state.currentQuestion || context.state.currentQuestion.code === null || context.state.currentQuestion.form_error) {
-				await mainMenu.sendShareAndMenu(context); // send regular menu
+				await mainMenu.sendMain(context); // send regular menu
 			} else {
 				await sendQuiz(context); // if user didn't finish quiz we can send it to them, even if they aren't on target_audience
 			}

@@ -54,7 +54,7 @@ async function getExistingRes(res) {
 
 
 async function checkPosition(context) {
-	if (['startQuizA', 'beginQuiz', 'backToQuiz'].includes(context.state.dialog)) {
+	if (['startQuiz', 'beginQuiz', 'backToQuiz'].includes(context.state.dialog)) {
 		await context.setState({ goBackToQuiz: true });
 	} else {
 		await context.setState({ goBackToQuiz: false });

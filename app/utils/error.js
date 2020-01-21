@@ -1,6 +1,5 @@
 const { Sentry } = require('./helper');
-const { sendMailError } = require('./mailer');
-
+const { sendHTMLMail } = require('./mailer');
 
 async function buildNormalErrorMsg(nome, err, state) {
 	const date = new Date();
@@ -22,13 +21,12 @@ async function handleErrorApi(options, res, err) {
 	if (res) msg += `\nResposta: ${JSON.stringify(res, null, 2)}`;
 	if (err) msg += `\nErro: ${err.stack}`;
 
-	console.log('----------------------------------------------', `\n${msg}`, '\n\n');
+	// console.log('----------------------------------------------', `\n${msg}`, '\n\n');
 
 	if ((res && (res.error || res.form_error)) || (!res && err)) {
 		if (process.env.ENV !== 'local') {
 			msg += `\nEnv: ${process.env.ENV}`;
 			await	Sentry.captureMessage(msg);
-			await sendMailError(msg);
 		}
 	}
 }
@@ -45,8 +43,22 @@ async function handleRequestAnswer(response) {
 	}
 }
 
+async function sentryError(msg, err) {
+	let erro = err;
+	if (typeof err === 'object' && err !== null) {
+		erro = JSON.stringify(err, null, 2);
+	}
+	if (process.env.ENV !== 'local') {
+		Sentry.captureMessage(msg);
+		await sendHTMLMail(`Erro no bot do ELAS - ${process.env.ENV || ''}`, process.env.MAILDEV, `${msg || ''}\n\n${erro}`);
+		console.log(`Error sent at ${new Date()}!\n `);
+	}
+	return false;
+}
+
 module.exports = {
 	handleRequestAnswer,
 	buildNormalErrorMsg,
 	Sentry,
+	sentryError,
 };

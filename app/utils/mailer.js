@@ -1,6 +1,5 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-const { Sentry } = require('./helper');
 
 
 const user = process.env.MAIL_USER;
@@ -28,6 +27,23 @@ const transporter = nodemailer.createTransport({
 	debug: true,
 });
 
+async function sendMailError(msg, double) {
+	const text = double ? msg.replace(/(?:\r\n|\r|\n)/g, '\n\n') : msg;
+	const to = process.env.MAILERROR.split(',');
+	const subject = `Erro no Prep - ${process.env.ENV}`;
+	const options = {
+		from, to, subject, text,
+	};
+
+	try {
+		const info = await transporter.sendMail(options);
+		console.log(`'${subject}' para ${to}:`, info.messageId);
+		console.log('sendMailError', text);
+	} catch (err) {
+		console.log(`Error sending mail to ${to} => `, err);
+	}
+}
+
 
 async function sendMail(subject, text, cityId) {
 	let to = '';
@@ -46,37 +62,25 @@ async function sendMail(subject, text, cityId) {
 		const info = await transporter.sendMail(options);
 		console.log(`'${subject}' para ${to}:`, info.messageId);
 	} catch (err) {
-		console.log(`Error seding mail to ${to} => `, err);
-		Sentry.captureMessage('Error sending mail');
+		await sendMailError(`Error seding mail to ${to} => \n\n`, console.log(JSON.stringify(err, null, 2)));
 	}
 }
 
-async function sendMailError(msg, double) {
-	const text = double ? msg.replace(/(?:\r\n|\r|\n)/g, '\n\n') : msg;
-	const to = process.env.MAILERROR.split(',');
-	const subject = `Erro no Prep - ${process.env.ENV}`;
+
+async function sendHTMLMail(subject, to, html, anexo) {
 	const options = {
-		from, to, subject, text,
+		from, to, subject, html, attachments: anexo,
 	};
+
 
 	try {
 		const info = await transporter.sendMail(options);
 		console.log(`'${subject}' para ${to}:`, info.messageId);
 	} catch (err) {
-		console.log(`Error sending mail to ${to} => `, err);
-		Sentry.captureMessage('Error sending error mail');
+		await sendMailError(`Error seding mail to ${to} => \n\n`, console.log(JSON.stringify(err, null, 2)));
 	}
-}
-
-async function sentryError(msg) {
-	console.log(msg);
-	if (process.env.ENV !== 'local') {
-		await Sentry.captureMessage(msg);
-		await sendMailError(msg, true);
-	}
-	return false;
 }
 
 module.exports = {
-	sendMail, sendMailError, sentryError,
+	sendMail, sendMailError, sendHTMLMail,
 };

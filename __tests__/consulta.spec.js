@@ -118,7 +118,6 @@ it('loadCalendar', async () => {
 	await expect(context.setState).toBeCalledWith({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
 
 	await expect(context.state.sendExtraMessages === true).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.consulta.checar2);
 
 	await expect(context.setState).toBeCalledWith({ cidade: context.state.user.city }); // showDays
 });

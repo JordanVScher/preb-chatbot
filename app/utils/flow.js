@@ -129,7 +129,6 @@ module.exports = {
 		success: 'Tráááááá, a gnt conseguiu!!! Kkk foi tudo! Anota aí tudinho ou salva no celular: :\n',
 		view: 'More, não falte, ta bem? Importante 😉',
 		checar1: 'Beee, você já tem consulta marcada:',
-		checar2: 'Bora! Vamos marcar uma nova consulta:',
 		emptyCalendar: 'Não temos nenhuma data disponível. Tente novamente mais tarde.',
 		outrasDatas: 'Estas datas não estão boas para você, entre em contato conosco pelo número WhatsApp:',
 		outrosHorarios: 'Estes horários não estão bons para você, entre em contato conosco pelo número WhatsApp:',
@@ -197,6 +196,10 @@ module.exports = {
 		success: 'Valeu! Logo vamos entrar em contato.',
 		failure: 'Esse telefone não é válido! Tente de novo',
 		sendMail: '<USERNAME> quer que entre em contato pelo <CONTATO> "<PHONE>" depois de receber a notificação.',
+	},
+	preTCLE: {
+		eligible: 'Pelo o que vejo vc já se colocou em risco! Mas nao pira, vemk q posso ajudar!',
+		not_eligible: 'Arrasou! Parece q vc tá por dentro de prevenção!',
 	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',

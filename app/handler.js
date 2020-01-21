@@ -17,6 +17,18 @@ const { addNewUser } = require('./utils/labels');
 const { sentryError } = require('./utils/mailer');
 const { buildNormalErrorMsg } = require('./utils/error');
 
+
+async function contactFollowUp(context) {
+	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+		await research.ofertaPesquisaEnd(context);
+	} else if (context.state.nextDialog === 'calendario') {
+		await consulta.loadCalendar(context);
+	} else {
+		await mainMenu.sendMain(context);
+	}
+}
+
+
 module.exports = async (context) => {
 	try {
 		await addNewUser(context, prepAPI);
@@ -42,6 +54,7 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'leavePhone' });
 				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
@@ -63,7 +76,6 @@ module.exports = async (context) => {
 					await context.setState({ selectedHour: context.state.lastQRpayload.slice(9, -1) });
 					await context.setState({ dialog: 'setEvent' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
-					// await quiz.handleAnswer(context, context.state.lastQRpayload.replace('quiz', '').replace(context.state.currentQuestion.code), '');
 					await quiz.handleAnswer(context, context.state.lastQRpayload.charAt(4));
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'tria') {
 					await triagem.handleAnswer(context, context.state.lastQRpayload.charAt(4));
@@ -106,7 +118,7 @@ module.exports = async (context) => {
 					await quiz.handleAnswer(context, context.state.whatWasTyped);
 				} else {
 					await context.sendText('Formato inválido, digite só um número, exemplo 24');
-					await context.setState({ dialog: 'startQuizA' });
+					await context.setState({ dialog: 'startQuiz' });
 				}
 			} else if (context.state.onButtonQuiz === true) {
 				const quizOpt = await quiz.handleText(context);
@@ -119,13 +131,11 @@ module.exports = async (context) => {
 				await research.handleToken(context, await prepAPI.postIntegrationToken(context.session.user.id, context.state.whatWasTyped));
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
+				await context.resetState();
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-				await context.setState({ stoppedHalfway: false, voucher: '', registrationForm: '' });
-				await context.setState({ startedQuiz: false, is_eligible_for_research: 0, is_target_audience: 0 });
-				await context.setState({ is_target_audience: false, is_prep: false, categoryQuestion: '' });
-				console.log('Recipient atual', await prepAPI.getRecipientPrep(context.session.user.id));
-				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, undefined, 2)}`);
-				await context.setState({ is_eligible_for_research: null, is_part_of_research: null, finished_quiz: null });
+				console.log('Recipient atual', context.state.user);
+				await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
+				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, null, 2)}`);
 				await context.setState({ dialog: 'greetings' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ selectedDate: 11 });
@@ -170,9 +180,6 @@ module.exports = async (context) => {
 			case 'desafio':
 				await context.sendText(flow.desafio.text1, opt.desafio);
 				break;
-			case 'sendFollowUp':
-				await mainMenu.sendFollowUp(context);
-				// falls throught
 			case 'mainMenu':
 				await mainMenu.sendMain(context);
 				break;
@@ -183,7 +190,7 @@ module.exports = async (context) => {
 				await context.setState({ startedQuiz: true });
 				await context.sendText(flow.quiz.beginQuiz);
 				// falls throught
-			case 'startQuizA': // this is the quiz-type of questionario
+			case 'startQuiz': // this is the quiz-type of questionario
 				await quiz.answerQuizA(context);
 				break;
 			case 'aceitaTermos2': // aceita termos mas não é da pesquisa
@@ -235,26 +242,23 @@ module.exports = async (context) => {
 				await context.sendText(flow.leavePhone.insta);
 				break;
 			case 'leaveInstaValid':
+				await context.setState({ leftContact: true });
 				await context.sendText(flow.leavePhone.success);
 				await sendMail('AMANDA - Novo instagram de contato', await help.buildMail(context.session.user.name, context.state.insta, 'instagram'), context.state.user.city);
-				if (context.state.nextDialog === 'ofertaPesquisaEnd') {
-					await research.ofertaPesquisaEnd(context);
-				} else {
-					await mainMenu.sendMain(context);
-				}
+				await contactFollowUp(context);
 				break;
 			case 'phoneValid':
+				await context.setState({ leftContact: true });
 				await context.sendText(flow.leavePhone.success);
 				await sendMail('AMANDA - Novo telefone de contato', await help.buildMail(context.session.user.name, context.state.phone, 'telefone'), context.state.user.city);
-				if (context.state.nextDialog === 'ofertaPesquisaEnd') {
-					await research.ofertaPesquisaEnd(context);
-				} else {
-					await mainMenu.sendMain(context);
-				}
+				await contactFollowUp(context);
 				break;
 			case 'phoneInvalid':
 				await context.sendText(flow.leavePhone.failure);
 				// await context.sendText(flow.leavePhone.failure, opt.leavePhone2);
+				break;
+			case 'dontLeaveContact':
+				await contactFollowUp(context);
 				break;
 			case 'getContact':
 				await context.setState({ contatoMsg: await help.buildContatoMsg(context.state.user.city) });

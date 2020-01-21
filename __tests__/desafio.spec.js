@@ -84,7 +84,7 @@ it('sendQuiz - count 3 ', async () => {
 	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
 	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
 	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeTruthy();
-	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
+	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });
 
 it('sendResearch - count less than 3 ', async () => {
@@ -105,7 +105,7 @@ it('sendResearch - count 3 ', async () => {
 
 	await expect(context.setState).toBeCalledWith({ researchCounter: await prepApi.getCountResearch(context.session.user.id) });
 	await expect(context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3).toBeTruthy();
-	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
+	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });
 
 it('sendConsulta - has consulta', async () => {
@@ -175,7 +175,7 @@ it('checkAconselhamento - duvida and prep', async () => {
 	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id);
 	await expect(context.state.intentType === 'duvida').toBeTruthy();
 	await expect(context.state.user.is_prep === 1).toBeTruthy();
-	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
+	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });
 
 it('checkAconselhamento - duvida and not prep', async () => {
@@ -259,7 +259,7 @@ it('followUpIntent - not target audience, didnt finish quiz', async () => {
 	await expect(context.state.user.is_target_audience === 1).toBeFalsy();
 	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	await expect(!context.state.currentQuestion || context.state.currentQuestion.code === null).toBeTruthy();
-	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
+	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });
 
 it('followUpIntent - user already part on research', async () => {

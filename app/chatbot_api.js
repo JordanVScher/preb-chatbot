@@ -24,7 +24,7 @@ module.exports = {
 	async postRecipientMA(user_id, recipient) {
 		if (!recipient.extra_fields) delete recipient.extra_fields;
 		const recipientData_qs = queryString.stringify(recipient);
-		console.log('recipientData_qs', recipientData_qs);
+		// console.log('recipientData_qs', recipientData_qs);
 		const res = await request.post(`${apiUri}/api/chatbot/recipient?${recipientData_qs}&security_token=${security_token}&`).query({ politician_id: user_id });
 		const recipientData = await res.json();
 		// console.log('recipientData', recipientData);
@@ -46,7 +46,7 @@ module.exports = {
 	async getRecipient(politician_id, fb_id) {
 		const res = await request.get(`${apiUri}/api/chatbot/recipient?fb_id=${fb_id}&security_token=${security_token}&`).query({ politician_id });
 		const recipientData = await res.json();
-		console.log('getRecipient', JSON.stringify(recipientData));
+		// console.log('getRecipient', JSON.stringify(recipientData));
 		return recipientData;
 	},
 
@@ -55,7 +55,7 @@ module.exports = {
 			politician_id, security_token, fb_id, extra_fields: JSON.stringify({ system_labels: [{ name: label }] }),
 		});
 		const recipientData = await res.json();
-		console.log('postRecipientLabel', recipientData);
+		// console.log('postRecipientLabel', recipientData);
 		return recipientData;
 	},
 
@@ -64,7 +64,7 @@ module.exports = {
 			politician_id, security_token, fb_id, extra_fields: JSON.stringify({ system_labels: [{ name: label, deleted: 1 }] }),
 		});
 		const recipientData = await res.json();
-		console.log('deleteRecipientLabel', recipientData);
+		// console.log('deleteRecipientLabel', recipientData);
 		return recipientData;
 	},
 

@@ -72,6 +72,7 @@ module.exports = {
 		quick_replies: [
 			{ content_type: 'text', title: 'Instagram', payload: 'leaveInsta' },
 			{ content_type: 'text', title: 'WhatsApp', payload: 'leavePhoneTwo' },
+			{ content_type: 'text', title: 'Não quero deixar contato', payload: 'dontLeaveContact' },
 		],
 	},
 	leavePhone2: {
@@ -132,12 +133,6 @@ module.exports = {
 			quick_replies: [
 				{ content_type: 'text', title: 'Quero participar', payload: 'joinResearchAfter' },
 				{ content_type: 'text', title: 'Não quero', payload: 'noResearchAfter' },
-			],
-		},
-		isPrep: {
-			quick_replies: [
-				{ content_type: 'text', title: 'Sim', payload: 'sendToTriagem' },
-				{ content_type: 'text', title: 'Não', payload: 'sendFollowUp' },
 			],
 		},
 		sendConsulta: {

@@ -86,7 +86,7 @@ it('AnswerExtraQuestion', async () => {
 
 	await expect(result === questions.extraMultiple.extra_quick_replies[0].text).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(result);
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
 });
 
 it('handleAnswer - regular answer - not finished', async () => {
@@ -101,7 +101,7 @@ it('handleAnswer - regular answer - not finished', async () => {
 	await expect(context.state.sentAnswer.error).toBeFalsy();
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
 	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
 });
 
 it('handleAnswer - regular answer - finished but not target audience', async () => {
@@ -118,7 +118,7 @@ it('handleAnswer - regular answer - finished but not target audience', async () 
 	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeFalsy();
 	await expect((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
 		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
 });
 
 it('handleAnswer - regular answer - finished and target audience', async () => {
@@ -160,7 +160,7 @@ it('handleAnswer - regular answer - is not target audience', async () => {
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
 	await expect(((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
 		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0))).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
 });
 
 it('handleAnswer - regular answer - followup_messages', async () => {
@@ -249,7 +249,7 @@ it('handleAnswer - internal error', async () => {
 
 	await expect(context.state.sentAnswer.error || !context.state.sentAnswer).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.quiz.form_error);
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
 });
 
 it('handleAnswer - invalid value', async () => {
@@ -264,5 +264,5 @@ it('handleAnswer - invalid value', async () => {
 
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.quiz.invalid);
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
 });
