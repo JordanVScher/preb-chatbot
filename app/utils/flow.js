@@ -2,9 +2,9 @@ module.exports = {
 	avatarImage: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/4d25c8b3-6b4b-46ff-a527-6ec28d8b7fb4.png',
 	getStarted: 'Eu sou a Amanda Selfie, a primeira travesti robôa do Brasil. Clique em começar para falar comigo.',
 	greetings: {
-		text1: 'Inhaiiii gatinhe!!',
-		text2: 'Meu nome é A-manda Selfie, a primeira travesti robôa do Brasil!! 👏👏 #travestisvaodominaromundo',
-		text3: 'Cmg vc pode falar sobre ISTs, HIV, sobre prevenção e saúde sexual! Pq uma coisa q eu aprendi é q é 1 bafo ter consciência sexual pra fazer escolhas e ter mais autonomia nas nossas relações! A gnt tbm pode falar de qualquer coisa, bb, eu a-m-o conversar!',
+		text1: 'Inhai gatinhe!!',
+		text2: 'Meu nome é A-manda Selfie, a primeira travesti robôa do Brasi! 👏👏 #prosperidadetravesti',
+		text3: 'Bora falar sobre PrEP, ISTs, HIV, prevenção, saúde sexual ou qualquer outro bafo, bb! ❤',
 	},
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
@@ -18,7 +18,7 @@ module.exports = {
 		+ 'ligarem e ter + consciência sexual! Essa iniciativa é um lusho, neah?!',
 	},
 	asksDesafio: {
-		text1: 'Segura aí, mona, q sou curiosa! Vô te perguntar uns bafos e dps, kerydá, vamo fazer um QUIZ pra saber "Q DIVA VC É NA SARRAÇÃO"? Vai ser TUDXUUU!',
+		intro: 'Posso começar na linha entrevistadora?',
 	},
 	desafio: {
 		text1: 'Hmm, beibe, ainda quero te fazer umas perguntinhas! Bora?',

@@ -156,8 +156,7 @@ async function asksDesafio(context) {
 	if (context.state.startedQuiz === true || context.state.user.finished_quiz === 1) { // user has answered the quiz already, he goes to the mainMenu
 		await mainMenu.sendMain(context);
 	} else {
-		await context.sendText(flow.asksDesafio.text1, opt.asksDesafio);
-		// await context.sendText(flow.asksDesafio.text2, opt.asksDesafio);
+		await context.sendText(flow.asksDesafio.intro, opt.asksDesafio);
 	}
 }
 

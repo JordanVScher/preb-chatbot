@@ -163,7 +163,7 @@ it('asksDesafio - didnt startedQuiz', async () => {
 	await desafio.asksDesafio(context);
 
 	await expect(context.state.startedQuiz === true || context.state.user.finished_quiz === 1).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text1, opt.asksDesafio);
+	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.intro, opt.asksDesafio);
 });
 
 it('checkAconselhamento - duvida and prep', async () => {
