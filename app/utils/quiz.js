@@ -41,7 +41,7 @@ async function answerQuizA(context) {
 	} // -- answering quiz else
 }
 
-async function handleAnswerA(context, quizOpt) {
+async function handleAnswer(context, quizOpt) {
 	console.log('quizOpt', quizOpt);
 
 	// context.state.currentQuestion.code -> the code for the current question
@@ -156,7 +156,7 @@ async function handleText(context) {
 
 module.exports = {
 	answerQuizA,
-	handleAnswerA,
+	handleAnswer,
 	AnswerExtraQuestion,
 	handleText,
 };

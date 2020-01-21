@@ -89,12 +89,12 @@ it('AnswerExtraQuestion', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
 });
 
-it('handleAnswerA - regular answer - not finished', async () => {
+it('handleAnswer - regular answer - not finished', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion;
 	context.state.sentAnswer = questions.notFinished;
 	const quizOpt = '1';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
@@ -104,11 +104,11 @@ it('handleAnswerA - regular answer - not finished', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
 });
 
-it('handleAnswerA - regular answer - finished but not target audience', async () => {
+it('handleAnswer - regular answer - finished but not target audience', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.finishedNotPart;
 	const quizOpt = '1';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
@@ -121,11 +121,11 @@ it('handleAnswerA - regular answer - finished but not target audience', async ()
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
 });
 
-it('handleAnswerA - regular answer - finished and target audience', async () => {
+it('handleAnswer - regular answer - finished and target audience', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.finished;
 	const quizOpt = '1';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 
@@ -145,11 +145,11 @@ it('handleAnswerA - regular answer - finished and target audience', async () => 
 	await expect(aux.sendTermos).toBeCalledWith(context);
 });
 
-it('handleAnswerA - regular answer - is not target audience', async () => {
+it('handleAnswer - regular answer - is not target audience', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.finishedIsTarget;
 	const quizOpt = '1';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
@@ -163,11 +163,11 @@ it('handleAnswerA - regular answer - is not target audience', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
 });
 
-it('handleAnswerA - regular answer - followup_messages', async () => {
+it('handleAnswer - regular answer - followup_messages', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.halfway;
 	const quizOpt = '1';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
@@ -185,13 +185,13 @@ it('handleAnswerA - regular answer - followup_messages', async () => {
 	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[2]);
 });
 
-it('handleAnswerA - regular answer - followup_messages on AC7', async () => {
+it('handleAnswer - regular answer - followup_messages on AC7', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.halfway;
 	context.state.currentQuestion.code = 'AC7';
 	context.state.resultImageUrl = questions.halfway.followup_messages[0]; // eslint-disable-line
 	const quizOpt = '1';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
@@ -211,22 +211,22 @@ it('handleAnswerA - regular answer - followup_messages on AC7', async () => {
 	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[2]);
 });
 
-it('handleAnswerA - regular answer - saving city', async () => {
+it('handleAnswer - regular answer - saving city', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.notFinished;
 	context.state.currentQuestion.code = 'A1';
 	const quizOpt = '1';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.state.currentQuestion.code === 'A1').toBeTruthy();
 	await expect(addCityLabel).toBeCalledWith(context.session.user.id, quizOpt);
 });
 
-it('handleAnswerA - onHalfwayPoint - second option', async () => {
+it('handleAnswer - onHalfwayPoint - second option', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.onHalfwayPoint; context.state.sentAnswer = questions.halfway;
 	const quizOpt = '2';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
@@ -237,12 +237,12 @@ it('handleAnswerA - onHalfwayPoint - second option', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'stopHalfway' });
 });
 
-it('handleAnswerA - internal error', async () => {
+it('handleAnswer - internal error', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion;
 	context.state.sentAnswer = questions.serverError;
 	const quizOpt = 'a resposta';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
@@ -252,12 +252,12 @@ it('handleAnswerA - internal error', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuizA' });
 });
 
-it('handleAnswerA - invalid value', async () => {
+it('handleAnswer - invalid value', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion;
 	context.state.sentAnswer = questions.invalidValue;
 	const quizOpt = '19/19/19';
-	await quiz.handleAnswerA(context, quizOpt);
+	await quiz.handleAnswer(context, quizOpt);
 
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });

@@ -38,7 +38,7 @@ it('quiz - multiple choice answer', async () => {
 		context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
 	await expect(context.state.lastQRpayload.slice(0, 4) === 'quiz').toBeTruthy();
 
-	await expect(quiz.handleAnswerA).toBeCalledWith(context, context.state.lastQRpayload.replace('quiz', ''));
+	await expect(quiz.handleAnswer).toBeCalledWith(context, context.state.lastQRpayload.replace('quiz', ''));
 });
 
 it('quiz - multiple choice extra answer', async () => {

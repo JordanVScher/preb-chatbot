@@ -64,8 +64,8 @@ module.exports = async (context) => {
 					await context.setState({ selectedHour: context.state.lastQRpayload.slice(9, -1) });
 					await context.setState({ dialog: 'setEvent' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
-					// await quiz.handleAnswerA(context, context.state.lastQRpayload.replace('quiz', '').replace(context.state.currentQuestion.code), '');
-					await quiz.handleAnswerA(context, context.state.lastQRpayload.charAt(4));
+					// await quiz.handleAnswer(context, context.state.lastQRpayload.replace('quiz', '').replace(context.state.currentQuestion.code), '');
+					await quiz.handleAnswer(context, context.state.lastQRpayload.charAt(4));
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'tria') {
 					await triagem.handleAnswer(context, context.state.lastQRpayload.charAt(4));
 				} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
@@ -104,7 +104,7 @@ module.exports = async (context) => {
 			} else if (context.state.onTextQuiz === true) {
 				await context.setState({ whatWasTyped: parseInt(context.state.whatWasTyped, 10) });
 				if (Number.isInteger(context.state.whatWasTyped, 10) === true) {
-					await quiz.handleAnswerA(context, context.state.whatWasTyped);
+					await quiz.handleAnswer(context, context.state.whatWasTyped);
 				} else {
 					await context.sendText('Formato inválido, digite só um número, exemplo 24');
 					await context.setState({ dialog: 'startQuizA' });
@@ -114,7 +114,7 @@ module.exports = async (context) => {
 				if (quizOpt === null) {
 					await DF.dialogFlow(context);
 				} else {
-					await quiz.handleAnswerA(context, quizOpt);
+					await quiz.handleAnswer(context, quizOpt);
 				}
 			} else if (context.state.dialog === 'joinToken' || context.state.dialog === 'joinTokenErro') {
 				await research.handleToken(context, await prepAPI.postIntegrationToken(context.session.user.id, context.state.whatWasTyped));
