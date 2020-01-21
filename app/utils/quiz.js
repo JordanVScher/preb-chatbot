@@ -42,16 +42,11 @@ async function answerQuizA(context) {
 }
 
 async function handleAnswer(context, quizOpt) {
-	console.log('quizOpt', quizOpt);
-
 	// context.state.currentQuestion.code -> the code for the current question
 	// quizOpt -> the quiz option the user clicked/wrote
-	// try {
+
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
-	// } catch (err) {
-	// await context.sendText(flow.quiz.form_error);
-	// await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
-	// }
+
 	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
 	await context.setState({ onTextQuiz: false, onButtonQuiz: false });
 	// if we know user is not target audience he can only see the fun_questions or now on

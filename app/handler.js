@@ -45,7 +45,6 @@ module.exports = async (context) => {
 				// await context.setState({ dialog: 'leavePhone' });
 				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
-				// await context.setState({ dialog: 'autoTeste' });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -218,6 +217,13 @@ module.exports = async (context) => {
 				await context.sendText(`${flow.joinToken.view} ${context.state.user.integration_token}`);
 				await mainMenu.sendMain(context);
 				break;
+			case 'ofertaPesquisaStart':
+				await research.ofertaPesquisaStart(context);
+				break;
+			case 'pesquisaSim':
+				await research.ofertaPesquisaSim(context);
+				break;
+			case 'pesquisaVirtual':
 			case 'leavePhone':
 				await context.sendText(flow.leavePhone.opening, opt.leavePhone);
 				break;
@@ -230,13 +236,21 @@ module.exports = async (context) => {
 				break;
 			case 'leaveInstaValid':
 				await context.sendText(flow.leavePhone.success);
-				await sendMail('Novo instagram de contato', await help.buildMail(context.session.user.name, context.state.insta, 'instagram'), context.state.user.city);
-				await mainMenu.sendMain(context);
+				await sendMail('AMANDA - Novo instagram de contato', await help.buildMail(context.session.user.name, context.state.insta, 'instagram'), context.state.user.city);
+				if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+					await research.ofertaPesquisaEnd(context);
+				} else {
+					await mainMenu.sendMain(context);
+				}
 				break;
 			case 'phoneValid':
 				await context.sendText(flow.leavePhone.success);
-				await sendMail('Novo telefone de contato', await help.buildMail(context.session.user.name, context.state.phone, 'telefone'), context.state.user.city);
-				await mainMenu.sendMain(context);
+				await sendMail('AMANDA - Novo telefone de contato', await help.buildMail(context.session.user.name, context.state.phone, 'telefone'), context.state.user.city);
+				if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+					await research.ofertaPesquisaEnd(context);
+				} else {
+					await mainMenu.sendMain(context);
+				}
 				break;
 			case 'phoneInvalid':
 				await context.sendText(flow.leavePhone.failure);

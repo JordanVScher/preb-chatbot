@@ -1,5 +1,6 @@
 const flow = require('./flow');
 const opt = require('./options');
+const { getQR } = require('./attach');
 const { getRecipientPrep } = require('./prep_api');
 const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
@@ -26,6 +27,21 @@ async function checkPhone(context) {
 	}
 }
 
+async function ofertaPesquisaStart(context) {
+	await context.sendText(flow.ofertaPesquisaStart.text1, await getQR(flow.ofertaPesquisaStart));
+}
+
+async function ofertaPesquisaSim(context) {
+	await context.setState({ nextDialog: 'ofertaPesquisaEnd' });
+	await context.sendText(flow.ofertaPesquisaSim.text1);
+	await context.sendText(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
+}
+
+async function ofertaPesquisaEnd(context) {
+	await context.setState({ nextDialog: '' });
+	await context.sendText('ofertaPesquisaEnd');
+}
+
 module.exports = {
-	handleToken, checkPhone,
+	handleToken, checkPhone, ofertaPesquisaStart, ofertaPesquisaSim, ofertaPesquisaEnd,
 };

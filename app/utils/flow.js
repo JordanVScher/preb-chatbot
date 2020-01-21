@@ -86,6 +86,17 @@ module.exports = {
 		imageURL: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/4d25c8b3-6b4b-46ff-a527-6ec28d8b7fb4.png',
 		siteURL: 'https://m.me/amandaselfie.bot',
 	},
+	ofertaPesquisaStart: {
+		text1: 'Amei conhecer vc!! Sabia q o projeto q trabalho tem tudu a ver contigo, bb?',
+		menuOptions: ['Me conta esse babado', 'Me conta depois'],
+		menuPostback: ['pesquisaSim', 'pesquisaNao'],
+	},
+	ofertaPesquisaSim: {
+		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa sem pegar HIV ✌ Como? Tem eu, Amandinha pra falar de PrEP, sexo, prevenção, inseguranças, autoteste pra HIV, gel e xuca 👏👏 Qm toca o projeto é a USP, UFMG e UFBA, chic né? Seguro e 0800 💙 Ñ é obrigatório ta com adulto responsável e se o $ tiver curto, a gnt te ajuda com a passagem!',
+		text2: 'Tá afim de conversar com meus amigles humanes?',
+		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],
+		menuPostback: ['pesquisaPresencial', 'pesquisaVirtual', 'pesquisaNao'],
+	},
 	quiz: {
 		beginQuiz: 'Adoron!!',
 		form_error: 'Eita, acho que me perdi. Topa responder de novo?',
@@ -180,12 +191,12 @@ module.exports = {
 		duvidaRemedio: 'Temos um panfleto pra tirar suas dúvidas',
 	},
 	leavePhone: {
-		opening: 'Qual contato qr me passar?',
+		opening: 'Close! Q contato vai me passar?',
 		phone: 'Deixe seu telefone que entraremos em contato',
 		insta: 'Deixe seu instagram que entraremos em contato',
-		success: 'O mais rapidinho possível a gnt te xama 💙',
+		success: 'Valeu! Logo vamos entrar em contato.',
 		failure: 'Esse telefone não é válido! Tente de novo',
-		sendMail: '<USERNAME> quer que entre em contato pelo <CONTATO> <PHONE> depois de receber a notificação.',
+		sendMail: '<USERNAME> quer que entre em contato pelo <CONTATO> "<PHONE>" depois de receber a notificação.',
 	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',
