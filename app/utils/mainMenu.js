@@ -6,7 +6,7 @@ const { answerQuizA } = require('./quiz');
 const { getTriagem } = require('./triagem');
 
 async function sendMain(context, text) {
-	await context.setState({ nextDialog: '', onButtonQuiz: false });
+	await context.setState({ nextDialog: '', originalDialog: '', onButtonQuiz: false });
 	await context.setState({ calendar: '', calendarCurrent: '', freeHours: '' });
 	if (context.state.goBackToQuiz === true) { // check if user is on a quiz/triagem so that we can send them back there right away instead of asking
 		await context.setState({ dialog: 'backToQuiz', goBackToQuiz: false });

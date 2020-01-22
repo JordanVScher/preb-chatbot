@@ -9,6 +9,16 @@ const aux = require('./consulta-aux');
 const { sendMain } = require('./mainMenu');
 const { sentryError } = require('./error');
 
+
+async function checkAppointment(context) {
+	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
+	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
+		return true;
+	}
+
+	return false;
+}
+
 async function sendSalvador(context) {
 	if (context.state.user && context.state.user.city && context.state.user.city.toString() === '2') { await context.sendText(flow.consulta.salvadorMsg); }
 }
@@ -165,4 +175,5 @@ module.exports = {
 	finalDate,
 	checarConsulta,
 	loadCalendar,
+	checkAppointment,
 };

@@ -92,10 +92,15 @@ module.exports = {
 		menuPostback: ['pesquisaSim', 'pesquisaNao'],
 	},
 	ofertaPesquisaSim: {
-		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa sem pegar HIV ✌ Como? Tem eu, Amandinha pra falar de PrEP, sexo, prevenção, inseguranças, autoteste pra HIV, gel e xuca 👏👏 Qm toca o projeto é a USP, UFMG e UFBA, chic né? Seguro e 0800 💙 Ñ é obrigatório ta com adulto responsável e se o $ tiver curto, a gnt te ajuda com a passagem!',
+		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa sem pegar HIV ✌ Como? Tem eu, Amandinha pra falar de PrEP, sexo, prevenção, inseguranças, autoteste pra HIV, gel e xuca 👏👏 Qm toca o projeto é a USP, UFMG e UFBA, chic né? Seguro e 0800 💙 Ñ é obrigatório ta com adulto responsável e se o $ tiver curto, a gnt te ajuda com a passagem! ',
 		text2: 'Tá afim de conversar com meus amigles humanes?',
 		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],
 		menuPostback: ['pesquisaPresencial', 'pesquisaVirtual', 'pesquisaNao'],
+	},
+	TCLE: {
+		text1: 'Calma! Cata esse textinho pq preciso pedir sua autorização!',
+		text2: 'Fui criada por pesquisadores da UFMG, USP e UFBA e queremos sua autorização pra usar as infos do nosso papo pra pesquisar o comportamento sexual e prevenção do HIV em jovens. Se tu não curtir participar da pesquisa, a gente continua conversando, mas se curtir, relaxa q pode desistir qualquer hora e eu deleto suas infos! 😊 Qualquer denúncia pode ser comunicada ao Comitê de Ética em Pesquisa! Info da pesquisa e o contato do comitê botão abaixo!',
+		text3: 'Tá afim? clica em Li e Aceito',
 	},
 	quiz: {
 		beginQuiz: 'Adoron!!',

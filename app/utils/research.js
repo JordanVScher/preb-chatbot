@@ -6,8 +6,7 @@ const { getRecipientPrep } = require('./prep_api');
 const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
 const { loadCalendar } = require('./consulta');
-
-console.log('loadCalendar', loadCalendar);
+const { checkAppointment } = require('./consulta');
 
 async function handleToken(context, answer) {
 	if (answer === true) {
@@ -42,7 +41,17 @@ async function ofertaPesquisaSim(context) {
 }
 
 async function TCLE(context) {
-	await context.sendText('TCLE');
+	if (context.state.meContaDepois) {
+		await context.sendText('.... (introdução)');
+		await context.sendText(flow.ofertaPesquisaSim.text1);
+	} else {
+		await context.sendText(flow.ofertaPesquisaSim.text2);
+	}
+	await context.sendText(flow.ofertaPesquisaSim.text3);
+
+	await context.sendButtonTemplate(flow.ofertaPesquisaSim.text3, opt.TCLE);
+	await context.sendText(flow.onTheResearch.saidYes, opt.termos2);
+
 	return false;
 }
 
@@ -55,13 +64,14 @@ async function preTCLE(context) {
 
 	if (!context.state.user.is_target_audience) { // não é público de interesse
 		await TCLE();
-	} else if (context.state.leftContact || context.state.hasAppointment) { // é público de interesse, já fez agendamento ou deixou contato
+	} else if (context.state.leftContact || await checkAppointment(context) === true) { // é público de interesse, já fez agendamento ou deixou contato
 		await TCLE();
 	} else { // é público de interesse, não fez agendamento nem deixou contato
 		await context.setState({ nextDialog: 'TCLE', dialog: '' });
 		await loadCalendar(context);
 	}
 }
+
 
 async function ofertaPesquisaEnd(context) {
 	await context.setState({ nextDialog: '', dialog: '' });

@@ -58,8 +58,7 @@ module.exports = async (context) => {
 				// await context.setState({ dialog: 'leavePhone' });
 				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
-
-				// await consulta.finalDate(context, context.state.finalDate);
+				// await context.setState({ dialog: 'ofertaPesquisaEnd' });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
