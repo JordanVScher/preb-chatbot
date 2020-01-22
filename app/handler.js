@@ -54,10 +54,12 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				await context.setState({ dialog: 'showDays' });
+				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'leavePhone' });
 				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
+
+				// await consulta.finalDate(context, context.state.finalDate);
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -82,9 +84,11 @@ module.exports = async (context) => {
 				} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
 					await quiz.AnswerExtraQuestion(context);
 				} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
+					await context.setState({ showHours: context.state.lastQRpayload.replace('dia', '') });
 					await context.setState({ dialog: 'showHours' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'hora') {
-					await context.setState({ dialog: 'finalDate' });
+					await context.setState({ finalDate: context.state.lastQRpayload.replace('hora', '').replace(':', '-') });
+					await consulta.finalDate(context, context.state.finalDate);
 				} else if (context.state.lastQRpayload.slice(0, 8) === 'nextHour') {
 					await context.setState({ dialog: 'nextHour' });
 				} else if (context.state.lastQRpayload.slice(0, 12) === 'previousHour') {
@@ -237,13 +241,15 @@ module.exports = async (context) => {
 				// await context.setState({ categoryConsulta: 'BATE PAPO PRESENCIAL' });
 				await consulta.loadCalendar(context);
 				break;
+			case 'ofertaPesquisaEnd':
+				await research.ofertaPesquisaEnd(context);
+				break;
 			case 'pesquisaVirtual':
 			case 'leavePhone':
 				await context.sendText(flow.leavePhone.opening, opt.leavePhone);
 				break;
 			case 'leavePhoneTwo':
 				await context.sendText(flow.leavePhone.phone);
-				// await context.sendText(flow.leavePhone.text1, opt.leavePhone2);
 				break;
 			case 'leaveInsta':
 				await context.sendText(flow.leavePhone.insta);
@@ -290,11 +296,11 @@ module.exports = async (context) => {
 				await consulta.showDays(context);
 				break;
 			case 'showHours':
-				await consulta.showHours(context, context.state.lastQRpayload.replace('dia', ''));
+				await consulta.showHours(context, context.state.showHours);
 				break;
-			case 'finalDate':
-				await consulta.finalDate(context, context.state.lastQRpayload.replace('hora', '').replace(':', '-'));
-				break;
+			// case 'finalDate':
+			// moved up, to send user to ofertaPesquisaEnd by changing the dialog state and avoiding cross importing
+			// 	break;
 			case 'nextDay':
 				await context.setState({ paginationDate: context.state.paginationDate + 1 });
 				await consulta.showDays(context);

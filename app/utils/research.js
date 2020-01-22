@@ -5,6 +5,9 @@ const { sendMain } = require('./mainMenu');
 const { getRecipientPrep } = require('./prep_api');
 const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
+const { loadCalendar } = require('./consulta');
+
+console.log('loadCalendar', loadCalendar);
 
 async function handleToken(context, answer) {
 	if (answer === true) {
@@ -38,18 +41,8 @@ async function ofertaPesquisaSim(context) {
 	await context.sendText(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
 }
 
-async function ofertaPesquisaEnd(context) {
-	await context.setState({ nextDialog: '', dialog: '' });
-	if (!context.state.user.is_target_audience) { // não é público de interesse
-		await sendMain(context);
-	} else if (context.state.user.risk_group) { // é público de interesse com risco
-		await context.setState({ nextDialog: 'preTCLE' });
-		await context.sendText('Manda pro recrutamento e dps pro pre-tcle');
-	} else { // é público de interesse sem risco
-		await context.sendText('Manda pro Pré-TCLE');
-	}
-}
 async function TCLE(context) {
+	await context.sendText('TCLE');
 	return false;
 }
 
@@ -66,9 +59,22 @@ async function preTCLE(context) {
 		await TCLE();
 	} else { // é público de interesse, não fez agendamento nem deixou contato
 		await context.setState({ nextDialog: 'TCLE', dialog: '' });
-		await context.sendText('Agendamento');
+		await loadCalendar(context);
 	}
 }
+
+async function ofertaPesquisaEnd(context) {
+	await context.setState({ nextDialog: '', dialog: '' });
+	if (!context.state.user.is_target_audience) { // não é público de interesse
+		await sendMain(context);
+	} else if (context.state.user.risk_group) { // é público de interesse com risco
+		await context.setState({ nextDialog: 'preTCLE' });
+		await context.sendText('Manda pro recrutamento e dps pro pre-tcle');
+	} else { // é público de interesse sem risco
+		await preTCLE(context);
+	}
+}
+
 
 module.exports = {
 	handleToken, checkPhone, ofertaPesquisaStart, ofertaPesquisaSim, ofertaPesquisaEnd,

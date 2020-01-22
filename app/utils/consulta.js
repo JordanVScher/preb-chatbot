@@ -6,12 +6,27 @@ const help = require('./helper');
 const prepApi = require('./prep_api');
 const checkQR = require('./checkQR');
 const aux = require('./consulta-aux');
-const { ofertaPesquisaEnd } = require('./research');
 const { sendMain } = require('./mainMenu');
 const { sentryError } = require('./error');
 
 async function sendSalvador(context) {
 	if (context.state.user && context.state.user.city && context.state.user.city.toString() === '2') { await context.sendText(flow.consulta.salvadorMsg); }
+}
+
+async function sendExtraMessages(context) {
+	// await context.setState({ sendExtraMessages2: true });
+	if (context.state.sendExtraMessages2 === true) {
+		await context.setState({ sendExtraMessages2: false, sendExtraMessages: false });
+		// console.log('offline_pre_registration_form', context.state.registrationForm);
+		if (context.state.registrationForm && context.state.registrationForm.length > 0) {
+			try {
+				await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton(context.state.registrationForm, 'Pré-Cadastro'));
+			} catch (error) {
+				await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton('https://sisprep1519.org/api', 'Pré-Cadastro'));
+				await sentryError('Consulta - Não foi possível enviar o form de registro', context.state);
+			}
+		}
+	}
 }
 
 async function sendConsultas(context) {
@@ -27,7 +42,7 @@ async function sendConsultas(context) {
 }
 
 async function verConsulta(context) {
-	if (context.state.user.is_eligible_for_research === 1 || true) {
+	if (context.state.user.is_target_audience === 1 || true) {
 		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 			await sendConsultas(context);
@@ -72,7 +87,7 @@ async function showHours(context, ymd) {
 }
 
 async function finalDate(context, quota) { // where we actually schedule the consulta
-	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
+	await context.setState({ paginationDate: 1, paginationHour: 1, dialog: '' }); // resetting pagination
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
 
 	await context.setState({
@@ -82,39 +97,27 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		),
 	});
 
-	if (context.state.appointmentResponse && context.state.appointmentResponse.id && context.state.appointmentResponse.id.toString().length > 0) {
+	if (context.state.appointmentResponse && context.state.appointmentResponse.id && !context.state.appointmentResponse.form_error) {
 		const msg = `${flow.consulta.success}\n${await help.buildConsultaFinal(context.state, context.state.chosenHour)}`;
 		await context.sendText(msg);
 		await context.sendText(flow.consulta.view);
 		await sendSalvador(context);
-		// await context.setState({ sendExtraMessages2: true });
-		if (context.state.sendExtraMessages2 === true) {
-			await context.setState({ sendExtraMessages2: false, sendExtraMessages: false });
-			// console.log('offline_pre_registration_form', context.state.registrationForm);
-			if (context.state.registrationForm && context.state.registrationForm.length > 0) {
-				try {
-					await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton(context.state.registrationForm, 'Pré-Cadastro'));
-				} catch (error) {
-					await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton('https://sisprep1519.org/api', 'Pré-Cadastro'));
-					await sentryError('Consulta - Não foi possível enviar o form de registro', context.state);
-				}
-			}
+		await sendExtraMessages(context);
 
-			if (context.state.nextDialog === 'ofertaPesquisaEnd') {
-				await ofertaPesquisaEnd(context);
-			} else {
-				await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
-			}
+		if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+			await context.setState({ dialog: 'ofertaPesquisaEnd' });
 		} else {
-			await context.sendText(flow.consulta.fail3, opt.consultaFail);
-			// console.log('context.state.appointmentResponse', context.state.appointmentResponse);
-			await sentryError('Consulta - Não foi possível marcar a consulta', context.state);
+			await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
 		}
+	} else {
+		await context.sendText(flow.consulta.fail3, opt.consultaFail);
+		console.log('context.state.appointmentResponse', context.state.appointmentResponse);
+		await sentryError('Consulta - Não foi possível marcar a consulta', context.state);
 	}
 }
 
 async function loadCalendar(context) { // consulta starts here
-	if (context.state.user.is_eligible_for_research === 1 || true) {
+	if (context.state.user.is_target_audience === 1 || true) {
 	/* load and prepare calendar */
 		await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
 		await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar
