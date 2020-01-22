@@ -81,7 +81,7 @@ async function sendConsulta(context) {
 		await context.sendText(flow.triagem.consulta1);
 		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
 			await context.sendText(''
-				+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
+				+ `\n🏠: ${await help.cidadeDictionary(context.state.cityId)}`
 				+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`
 				+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
 		}

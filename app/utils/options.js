@@ -107,8 +107,10 @@ module.exports = {
 	},
 	outrasDatas: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Lista de Datas', payload: 'listaDatas' },
-			{ content_type: 'text', title: 'Voltar pro Menu', payload: 'mainMenu' },
+			{ content_type: 'text', title: 'Instagram', payload: 'leaveInsta' },
+			{ content_type: 'text', title: 'WhatsApp', payload: 'leavePhoneTwo' },
+			{ content_type: 'text', title: 'Não deixar contato', payload: 'dontLeaveContact' },
+			// { content_type: 'text', title: 'Lista de Datas', payload: 'listaDatas' },
 		],
 	},
 	prevention: {
@@ -142,6 +144,12 @@ module.exports = {
 				{ content_type: 'text', title: 'Voltar', payload: 'mainMenu' },
 			],
 		},
+	},
+	askTypeSP: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Casa 1', payload: 'askTypeSP1' },
+			{ content_type: 'text', title: 'CTA Henfil', payload: 'askTypeSP2' },
+		],
 	},
 	triagem1: {
 		quick_replies: [

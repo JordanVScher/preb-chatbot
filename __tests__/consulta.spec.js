@@ -145,7 +145,7 @@ it('loadCalendar with sendExtraMessages', async () => {
 // it('finalDate - success with salvador and extra message and url', async () => {
 // 	const context = cont.quickReplyContext('showDays', '');
 // 	context.state.chosenDay = { hours: [] }; context.state.user = { city: '2', integration_token: 'foobar' };
-// 	context.state.calendar = {}; context.state.chosenHour = {}; context.state.response = { id: '1' }; context.state.sendExtraMessages2 = true;
+// 	context.state.calendar = {}; context.state.chosenHour = {}; context.state.appointmentResponse = { id: '1' }; context.state.sendExtraMessages2 = true;
 // 	context.state.preCadastro = { offline_pre_registration_form: 'www.foobar.com/' };
 // 	const quota = '0';
 // 	await consulta.finalDate(context, quota);
@@ -159,7 +159,7 @@ it('loadCalendar with sendExtraMessages', async () => {
 // 		),
 // 	});
 
-// 	await expect(context.state.response && context.state.response.id && context.state.response.id.length > 0).toBeTruthy();
+// 	await expect(context.state.appointmentResponse && context.state.appointmentResponse.id && context.state.appointmentResponse.id.length > 0).toBeTruthy();
 // 	let msg = `${flow.consulta.success}`
 // 	+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
 // 	+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
@@ -184,7 +184,7 @@ it('loadCalendar with sendExtraMessages', async () => {
 // it('finalDate - success with extra message', async () => {
 // 	const context = cont.quickReplyContext('showDays', '');
 // 	context.state.chosenDay = { hours: [] }; context.state.user = {};
-// 	context.state.calendar = {}; context.state.chosenHour = {};	context.state.response = { id: '1' };
+// 	context.state.calendar = {}; context.state.chosenHour = {};	context.state.appointmentResponse = { id: '1' };
 // 	context.state.sendExtraMessages = true; context.state.sentAnswer = { offline_pre_registration_form: 'foobar.com' };
 // 	const quota = '0';
 // 	await consulta.finalDate(context, quota);
@@ -198,7 +198,7 @@ it('loadCalendar with sendExtraMessages', async () => {
 // 		),
 // 	});
 
-// 	await expect(context.state.response && context.state.response.id && context.state.response.id.length > 0).toBeTruthy();
+// 	await expect(context.state.appointmentResponse && context.state.appointmentResponse.id && context.state.appointmentResponse.id.length > 0).toBeTruthy();
 // 	await expect(context.sendText).toBeCalledWith(`${flow.consulta.success}`
 // 		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
 // 		+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
@@ -218,7 +218,7 @@ it('loadCalendar with sendExtraMessages', async () => {
 // it('finalDate - error', async () => {
 // 	const context = cont.quickReplyContext('showDays', '');
 // 	context.state.chosenDay = { hours: [] };
-// 	context.state.calendar = {}; context.state.chosenHour = {};	context.state.response = {};
+// 	context.state.calendar = {}; context.state.chosenHour = {};	context.state.appointmentResponse = {};
 // 	const quota = '0';
 // 	await consulta.finalDate(context, quota);
 
@@ -231,6 +231,6 @@ it('loadCalendar with sendExtraMessages', async () => {
 // 		),
 // 	});
 
-// 	await expect(context.state.response && context.state.response.id && context.state.response.id.length > 0).toBeFalsy();
+// 	await expect(context.state.appointmentResponse && context.state.appointmentResponse.id && context.state.appointmentResponse.id.length > 0).toBeFalsy();
 // 	await expect(context.sendText).toBeCalledWith(flow.consulta.fail3, opt.consultaFail);
 // });

@@ -54,7 +54,7 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'showDays' });
+				await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'leavePhone' });
 				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
@@ -89,6 +89,9 @@ module.exports = async (context) => {
 					await context.setState({ dialog: 'nextHour' });
 				} else if (context.state.lastQRpayload.slice(0, 12) === 'previousHour') {
 					await context.setState({ dialog: 'previousHour' });
+				} else if (context.state.lastQRpayload.slice(0, 9) === 'askTypeSP') {
+					await context.setState({ cityType: await context.state.lastQRpayload.replace('askTypeSP', '') });
+					await context.setState({ dialog: 'showDate' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
 					await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
 					await context.setState({ dialog: 'showDays' });
@@ -230,6 +233,10 @@ module.exports = async (context) => {
 			case 'pesquisaSim':
 				await research.ofertaPesquisaSim(context);
 				break;
+			case 'pesquisaPresencial':
+				// await context.setState({ categoryConsulta: 'BATE PAPO PRESENCIAL' });
+				await consulta.loadCalendar(context);
+				break;
 			case 'pesquisaVirtual':
 			case 'leavePhone':
 				await context.sendText(flow.leavePhone.opening, opt.leavePhone);
@@ -279,6 +286,9 @@ module.exports = async (context) => {
 				await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
 				await consulta.loadCalendar(context);
 				break;
+			case 'showDate':
+				await consulta.showDays(context);
+				break;
 			case 'showHours':
 				await consulta.showHours(context, context.state.lastQRpayload.replace('dia', ''));
 				break;
@@ -305,11 +315,16 @@ module.exports = async (context) => {
 				await consulta.verConsulta(context);
 				break;
 			case 'outrasDatas':
-				await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrasDatas, help.emergenciaDictionary), opt.outrasDatas);
-				break;
 			case 'outrosHorarios':
-				await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrosHorarios, help.emergenciaDictionary), opt.outrasDatas);
+				await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrasDatas, help.emergenciaDictionary, flow.consulta.askContato),
+					opt.outrasDatas);
 				break;
+			// case 'outrasDatas':
+			// 	await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrasDatas, help.emergenciaDictionary), opt.outrasDatas);
+			// 	break;
+			// case 'outrosHorarios':
+			// 	await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.consulta.outrosHorarios, help.emergenciaDictionary), opt.outrasDatas);
+			// 	break;
 			case 'listaDatas':
 				await context.setState({ paginationDate: 1, paginationHour: 1 });
 				await consulta.showDays(context);

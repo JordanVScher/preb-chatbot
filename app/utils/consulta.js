@@ -6,7 +6,9 @@ const help = require('./helper');
 const prepApi = require('./prep_api');
 const checkQR = require('./checkQR');
 const aux = require('./consulta-aux');
+const { ofertaPesquisaEnd } = require('./research');
 const { sendMain } = require('./mainMenu');
+const { sentryError } = require('./error');
 
 async function sendSalvador(context) {
 	if (context.state.user && context.state.user.city && context.state.user.city.toString() === '2') { await context.sendText(flow.consulta.salvadorMsg); }
@@ -25,7 +27,7 @@ async function sendConsultas(context) {
 }
 
 async function verConsulta(context) {
-	if (context.state.user.is_eligible_for_research === 1) {
+	if (context.state.user.is_eligible_for_research === 1 || true) {
 		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 			await sendConsultas(context);
@@ -53,7 +55,8 @@ async function showDays(context) { // shows available days
 	if (context.state.freeDays && context.state.freeDays.length > 0) {
 		await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays });
 	} else {
-		await context.sendText(flow.consulta.fail1, opt.consultaFail); // Eita! Bb, parece que ocorreu um erro. Você pode tentar novamente mais tarde.
+		await context.sendText(flow.consulta.fail1, opt.consultaFail);
+		await sentryError('Consulta - Não foi possível exibir os dias', context.state);
 	}
 }
 
@@ -64,6 +67,7 @@ async function showHours(context, ymd) {
 		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours });
 	} else {
 		await context.sendText(flow.consulta.fail2, opt.consultaFail);
+		await sentryError('Consulta - Não foi possível exibir as horas', context.state);
 	}
 }
 
@@ -72,41 +76,45 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
 
 	await context.setState({
-		response: await prepApi.postAppointment(
-			context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta && context.state.categoryConsulta.length > 0 ? context.state.categoryConsulta : 'recrutamento',
+		appointmentResponse: await prepApi.postAppointment(
+			context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta || 'recrutamento',
 			context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
 		),
 	});
 
-	// console.log('postAppointment', context.state.response);
-	if (context.state.response && context.state.response.id && context.state.response.id.toString().length > 0) {
+	if (context.state.appointmentResponse && context.state.appointmentResponse.id && context.state.appointmentResponse.id.toString().length > 0) {
 		const msg = `${flow.consulta.success}\n${await help.buildConsultaFinal(context.state, context.state.chosenHour)}`;
 		await context.sendText(msg);
+		await context.sendText(flow.consulta.view);
 		await sendSalvador(context);
 		// await context.setState({ sendExtraMessages2: true });
 		if (context.state.sendExtraMessages2 === true) {
-			await context.setState({ sendExtraMessages2: false });
+			await context.setState({ sendExtraMessages2: false, sendExtraMessages: false });
 			// console.log('offline_pre_registration_form', context.state.registrationForm);
 			if (context.state.registrationForm && context.state.registrationForm.length > 0) {
 				try {
 					await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton(context.state.registrationForm, 'Pré-Cadastro'));
 				} catch (error) {
 					await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton('https://sisprep1519.org/api', 'Pré-Cadastro'));
-					console.log('Erro no sendButtonTemplate', error);
+					await sentryError('Consulta - Não foi possível enviar o form de registro', context.state);
 				}
+			}
+
+			if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+				await ofertaPesquisaEnd(context);
+			} else {
 				await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
 			}
 		} else {
-			await context.setState({ sendExtraMessages: false, sendExtraMessages2: false });
-			await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
+			await context.sendText(flow.consulta.fail3, opt.consultaFail);
+			// console.log('context.state.appointmentResponse', context.state.appointmentResponse);
+			await sentryError('Consulta - Não foi possível marcar a consulta', context.state);
 		}
-	} else {
-		await context.sendText(flow.consulta.fail3, opt.consultaFail);
 	}
 }
 
-async function loadCalendar(context) {
-	if (context.state.user.is_eligible_for_research === 1) {
+async function loadCalendar(context) { // consulta starts here
+	if (context.state.user.is_eligible_for_research === 1 || true) {
 	/* load and prepare calendar */
 		await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
 		await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar
@@ -119,10 +127,18 @@ async function loadCalendar(context) {
 			await context.setState({ sendExtraMessages2: true, sendExtraMessages: false });
 			await context.sendText(flow.quizYes.text3.replace('<LOCAL>', help.extraMessageDictionary[context.state.user.city]));
 			await context.sendText(flow.quizYes.text4);
-		} else {
-			await context.sendText(flow.consulta.checar2);
+			await context.setState({ sendExtraMessages: false });
 		}
-		await showDays(context);
+
+		await context.setState({ cidade: context.state.user.city });
+		if (!context.state.cidade) {
+			await sendMain(context);
+		} else if (context.state.cidade.toString() === '3') { // ask location for SP
+			await context.sendText(`O bate papo pode ser na ${await help.cidadeDictionary(context.state.cidade, '0')}`, opt.askTypeSP);
+		} else {
+			await context.sendText(`O bate papo pode ser no ${await help.cidadeDictionary(context.state.cidade)}`);
+			await showDays(context);
+		}
 	} else {
 		await sendMain(context);
 	}

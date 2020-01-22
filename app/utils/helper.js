@@ -52,11 +52,20 @@ const weekDayNameLong = {
 	0: 'Domingo', 1: 'Segunda-Feira', 2: 'Terça-Feira', 3: 'Quarta-Feira', 4: 'Quinta-Feira', 5: 'Sexta-Feira', 6: 'Sábado', 7: 'Domingo',
 };
 
-const cidadeDictionary = {
-	1: 'Centro de Referência da Juventude – CRJ\nRua Guaicurus, 50, Centro (Praça da Estação, Belo Horizonte - MG)',
-	2: 'Casarão da Diversidade, Pelourinho\nR. do Tijolo, 8 - Centro, Salvador - BA, 40020-290',
-	3: 'Centro de Testagem e Aconselhamento Henfil\nRua Libero Badaró, 144, Anhangabaú. São Paulo - SP - CEP: 01008001',
-};
+async function cidadeDictionary(cityID, cityType) {
+	if (cityID.toString() === '1') return 'Centro de Referência da Juventude – CRJ\nRua Guaicurus, 50, Centro(Praça da Estação, Belo Horizonte - MG)';
+	if (cityID.toString() === '2') return 'Casarão da Diversidade, Pelourinho\nR. do Tijolo, 8 - Centro, Salvador - BA, 40020-290';
+	if (cityID.toString() === '3') { // SP has two locations, if we dont know the type send both locations, type 0 is a special case,
+		const one = 'Casa 1 - Rua Adoniran Barbosa, 151 Bela Vista - São Paulo';
+		const two = 'CTA Henfil - Rua Libero Badaró, 144 Anhangabau - São Paulo';
+		if (cityType && cityType.toString() === '0') return 'Casa 1 q fica na Rua Adoniran Barbosa, 151 Bela Vista - São Paulo ou no CTA Henfil na Rua Libero Badaró, 144 Anhangabau - São Paulo.';
+		if (cityType && cityType.toString() === '1') return one;
+		if (cityType && cityType.toString() === '2') return two;
+		return `${one} ou ${two}`;
+	}
+
+	return null;
+}
 
 const telefoneDictionary = { 1: '(31) 99726-9307', 2: '(71) 99640-9030', 3: '(11) 98209-2911' };
 const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99640-9030', 3: '(11) 98209-2911' };
@@ -64,7 +73,7 @@ const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99640-9030', 3: '(
 const locationDictionary = { 1: 'Belo Horizonte - MG', 2: 'Salvador - BA', 3: 'São Paulo - SP' };
 const extraMessageDictionary = { 1: 'Centro de referência da juventude, Centro de BH', 2: 'Casarão da Diversidade, Pelourinho', 3: 'CTA Henfil, Centro de São Paulo' };
 
-async function buildPhoneMsg(cityId, introText, phones) {
+async function buildPhoneMsg(cityId, introText, phones, extraMsg) {
 	const validOptions = ['1', '2', '3'];
 	let text = '';
 	if (introText && introText.length > 0) { // check i we have a msg to send together with the phone
@@ -75,6 +84,8 @@ async function buildPhoneMsg(cityId, introText, phones) {
 	} else { // if it isnt send every valid phone number
 		validOptions.forEach((element) => { text += `\n${locationDictionary[element]}: ${phones[element]}`; });
 	}
+
+	text += `\n\n${extraMsg}`;
 
 	return text;
 }
@@ -125,7 +136,7 @@ function buildMail(name, phone, contato) {
 async function buildConsultaFinal(state, chosenHour) {
 	let result = '';
 
-	result += `🏠: ${cidadeDictionary[state.cidade]}\n`;
+	result += `🏠: ${await cidadeDictionary(state.cidade, state.cityType)}\n`;
 	result += `⏰: ${await formatDate(chosenHour.datetime_start, chosenHour.time)}\n`;
 	result += `📞: ${telefoneDictionary[state.cidade]}\n`;
 	return result.trim();
