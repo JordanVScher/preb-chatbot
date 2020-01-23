@@ -128,7 +128,7 @@ async function checkMainMenu(context) {
 	const quiz = { content_type: 'text', title: 'Quiz', payload: 'beginQuiz' };
 	const prevencoes = { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' };
 	const jaFacoParte = { content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' };
-	const verToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' };
+	const seeToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' };
 	const sobreAmanda = { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' };
 
 	if (!context.state.user.is_target_audience) {
@@ -143,7 +143,7 @@ async function checkMainMenu(context) {
 
 	if (context.state.user.integration_token) { // replace token options if user has one
 		const index = opt.findIndex(x => x.payload === 'joinToken');
-		if (index) opt[index] = verToken;
+		if (index) opt[index] = seeToken;
 	}
 
 	return { quick_replies: opt };

@@ -52,7 +52,8 @@ async function TCLE(context) {
 	await context.sendText(flow.TCLE.text3, opt.Research_Termos); // ask for termos acceptance
 }
 
-async function preTCLE(context) {
+// temConsulta = await checkAppointment(context)
+async function preTCLE(context, temConsulta) {
 	if (context.state.user.is_eligible_for_research) { // é elegível pra pesquisa
 		await context.sendText(flow.preTCLE.eligible);
 	} else { // não é elegivel pra pesquisa
@@ -61,7 +62,7 @@ async function preTCLE(context) {
 
 	if (!context.state.user.is_target_audience) { // não é público de interesse
 		await TCLE(context);
-	} else if (context.state.leftContact || await checkAppointment(context) === true) { // é público de interesse, já fez agendamento ou deixou contato
+	} else if (context.state.leftContact || temConsulta) { // é público de interesse, já fez agendamento ou deixou contato
 		await TCLE(context);
 	} else { // é público de interesse, não fez agendamento nem deixou contato
 		await context.setState({ nextDialog: 'TCLE', dialog: '' });
@@ -78,11 +79,11 @@ async function ofertaPesquisaEnd(context) {
 		await context.setState({ nextDialog: 'preTCLE' });
 		await context.sendText('Manda pro recrutamento e dps pro pre-tcle');
 	} else { // é público de interesse sem risco
-		await preTCLE(context);
+		await preTCLE(context, await checkAppointment(context));
 	}
 }
 
 
 module.exports = {
-	handleToken, checkPhone, ofertaPesquisaStart, ofertaPesquisaSim, ofertaPesquisaEnd,
+	handleToken, checkPhone, ofertaPesquisaStart, ofertaPesquisaSim, ofertaPesquisaEnd, TCLE, preTCLE,
 };
