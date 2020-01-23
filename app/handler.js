@@ -230,6 +230,17 @@ module.exports = async (context) => {
 				await context.sendText(`${flow.joinToken.view} ${context.state.user.integration_token}`);
 				await mainMenu.sendMain(context);
 				break;
+			case 'TCLE':
+				await research.TCLE(context);
+				break;
+			case 'termosAccept':
+				await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1), userAnsweredTermos: true }); // stores user accepting termos
+				await mainMenu.sendMain(context);
+				break;
+			case 'termosDontAccept':
+				await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 0), userAnsweredTermos: true }); // stores user accepting termos
+				await mainMenu.sendMain(context);
+				break;
 			case 'ofertaPesquisaStart':
 				await research.ofertaPesquisaStart(context);
 				break;

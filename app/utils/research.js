@@ -41,18 +41,15 @@ async function ofertaPesquisaSim(context) {
 }
 
 async function TCLE(context) {
-	if (context.state.meContaDepois) {
-		await context.sendText('.... (introdução)');
+	await context.setState({ dialog: '' });
+	if (context.state.meContaDepois) { // se usuário escolheu "me conta depois"
+		await context.sendText('..... (introdução)');
 		await context.sendText(flow.ofertaPesquisaSim.text1);
 	} else {
-		await context.sendText(flow.ofertaPesquisaSim.text2);
+		await context.sendText(flow.TCLE.text1);
 	}
-	await context.sendText(flow.ofertaPesquisaSim.text3);
-
-	await context.sendButtonTemplate(flow.ofertaPesquisaSim.text3, opt.TCLE);
-	await context.sendText(flow.onTheResearch.saidYes, opt.termos2);
-
-	return false;
+	await context.sendButtonTemplate(flow.TCLE.text2, opt.Research_TCLE); // send info button
+	await context.sendText(flow.TCLE.text3, opt.Research_Termos); // ask for termos acceptance
 }
 
 async function preTCLE(context) {
@@ -63,9 +60,9 @@ async function preTCLE(context) {
 	}
 
 	if (!context.state.user.is_target_audience) { // não é público de interesse
-		await TCLE();
+		await TCLE(context);
 	} else if (context.state.leftContact || await checkAppointment(context) === true) { // é público de interesse, já fez agendamento ou deixou contato
-		await TCLE();
+		await TCLE(context);
 	} else { // é público de interesse, não fez agendamento nem deixou contato
 		await context.setState({ nextDialog: 'TCLE', dialog: '' });
 		await loadCalendar(context);

@@ -116,6 +116,8 @@ async function finalDate(context, quota) { // where we actually schedule the con
 
 		if (context.state.nextDialog === 'ofertaPesquisaEnd') {
 			await context.setState({ dialog: 'ofertaPesquisaEnd' });
+		} else if (context.state.nextDialog === 'TCLE') {
+			await context.setState({ dialog: 'TCLE' });
 		} else {
 			await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
 		}

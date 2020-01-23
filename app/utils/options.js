@@ -63,6 +63,17 @@ module.exports = {
 		url: 'https://www.prep1519.org',
 		title: 'Saber Mais',
 	}],
+	Research_TCLE: [{
+		type: 'web_url',
+		url: 'https://www.prep1519.org',
+		title: 'Infos e Contatos',
+	}],
+	Research_Termos: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Li e Aceito', payload: 'termosAccept' },
+			{ content_type: 'text', title: 'Não aceito', payload: 'termosDontAccept' },
+		],
+	},
 	duvidaRemedio: [{
 		type: 'web_url',
 		url: 'http://www.aids.gov.br/system/tdf/pub/2017/65141/folder_essencial_prep_08_2017.pdf?file=1&type=node&id=65141&force=1',

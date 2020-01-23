@@ -63,63 +63,90 @@ async function checkConsulta(context, options) {
 // 	return result;
 // }
 
+// async function checkMainMenu(context) {
+// 	await context.setState({ sendExtraMessages: false });
+// 	let newOptions = [];
+// 	newOptions.push({ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' });
+// 	// console.log(context.state.user);
+
+
+// 	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
+// 		if (context.state.user.is_part_of_research === 1) { // 1
+// 			await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
+// 			if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
+// 				newOptions.push({ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' });
+// 			} else {
+// 				newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' });
+// 			}
+// 		} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1 && context.state.user.is_part_of_research !== 1) { // 1 1
+// 			newOptions.push({ content_type: 'text', title: 'Pesquisa', payload: 'askResearch' });
+// 		} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // 0 1
+// 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+// 		} else if (context.state.user.finished_quiz === 0) { // 0
+// 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+// 			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+// 		}
+// 	} else { // not on target audience, may send quiz if there's still any fun_question to be answered
+// 		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion || 'quiz') });
+// 		if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.currentQuestion && context.state.currentQuestion.code !== null && context.state.categoryQuestion === 'fun_questions') {
+// 			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+// 		}
+// 	}
+
+// 	if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.user.finished_quiz === 0) {
+// 		newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+// 	}
+
+// 	if (context.state.user.integration_token) {
+// 		newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
+// 		newOptions.push({ content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' }); // if user already has an integration token we remove the option to enter the token and show the option to see it
+// 	} else {
+// 		newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
+// 		newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+// 	}
+
+// 	newOptions.splice(2, 0, { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' });
+
+// 	if (context.state.user.is_part_of_research === 1 && context.state.user.is_prep === 1) {
+// 		newOptions.push({ content_type: 'text', title: 'Medicação', payload: 'medicaçao' });
+// 	}
+
+// 	newOptions.push({ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' });
+// 	// if (context.state.stoppedHalfway === true) {
+// 	// 	newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
+// 	// }
+
+// 	// newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' }); // -- for testing the quiz
+// 	// newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+
+// 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
+// }
+
 async function checkMainMenu(context) {
-	await context.setState({ sendExtraMessages: false });
-	let newOptions = [];
-	newOptions.push({ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' });
-	// console.log(context.state.user);
+	let opt = [];
+	const baterPapo = { content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' };
+	const quiz = { content_type: 'text', title: 'Quiz', payload: 'beginQuiz' };
+	const prevencoes = { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' };
+	const jaFacoParte = { content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' };
+	const verToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' };
+	const sobreAmanda = { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' };
 
-
-	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
-		if (context.state.user.is_part_of_research === 1) { // 1
-			await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
-			if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
-				newOptions.push({ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' });
-			} else {
-				newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' });
-			}
-		} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1 && context.state.user.is_part_of_research !== 1) { // 1 1
-			newOptions.push({ content_type: 'text', title: 'Pesquisa', payload: 'askResearch' });
-		} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // 0 1
-			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
-		} else if (context.state.user.finished_quiz === 0) { // 0
-			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
-			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
-		}
-	} else { // not on target audience, may send quiz if there's still any fun_question to be answered
-		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion || 'quiz') });
-		if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.currentQuestion && context.state.currentQuestion.code !== null && context.state.categoryQuestion === 'fun_questions') {
-			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
-		}
+	if (!context.state.user.is_target_audience) {
+		opt.push(baterPapo);
+		opt.push(quiz);
+		opt.push(prevencoes);
+		opt.push(jaFacoParte);
+		opt.push(sobreAmanda);
 	}
 
-	if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.user.finished_quiz === 0) {
-		newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+	if (context.state.user.finished_quiz) {	opt = await opt.filter(x => x.payload !== 'beginQuiz'); } // dont show quiz option if user has finished the quiz
+
+	if (context.state.user.integration_token) { // replace token options if user has one
+		const index = opt.findIndex(x => x.payload === 'joinToken');
+		if (index) opt[index] = verToken;
 	}
 
-	if (context.state.user.integration_token) {
-		newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
-		newOptions.push({ content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' }); // if user already has an integration token we remove the option to enter the token and show the option to see it
-	} else {
-		newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
-		newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
-	}
-
-	newOptions.splice(2, 0, { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' });
-
-	if (context.state.user.is_part_of_research === 1 && context.state.user.is_prep === 1) {
-		newOptions.push({ content_type: 'text', title: 'Medicação', payload: 'medicaçao' });
-	}
-
-	newOptions.push({ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' });
-	// if (context.state.stoppedHalfway === true) {
-	// 	newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
-	// }
-
-	// newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' }); // -- for testing the quiz
-	// newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
-
-	return { quick_replies: newOptions }; // putting the filtered array on a QR object
+	return { quick_replies: opt };
 }
 
 async function checkMedication(prepSince) { // eslint-disable-line
