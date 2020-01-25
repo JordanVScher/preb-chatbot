@@ -52,7 +52,7 @@ async function sendConsultas(context) {
 }
 
 async function verConsulta(context) {
-	if (context.state.user.is_target_audience === 1 || true) {
+	if (context.state.user.is_target_audience || context.state.is_target_audience || process.env.ENV === 'local') {
 		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 			await sendConsultas(context);
@@ -86,7 +86,7 @@ async function showDays(context) { // shows available days
 }
 
 async function showHours(context, ymd) {
-	await context.setState({ chosenDay: context.state.calendarCurrent.find(date => date.ymd === ymd) }); // any day chosen from freeDays is in the calendarCurrent
+	await context.setState({ chosenDay: context.state.calendarCurrent.find((date) => date.ymd === ymd) }); // any day chosen from freeDays is in the calendarCurrent
 	await context.setState({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
 	if (context.state.freeHours && context.state.freeHours.length > 0) {
 		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours });
@@ -98,7 +98,7 @@ async function showHours(context, ymd) {
 
 async function finalDate(context, quota) { // where we actually schedule the consulta
 	await context.setState({ paginationDate: 1, paginationHour: 1, dialog: '' }); // resetting pagination
-	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
+	await context.setState({ chosenHour: context.state.chosenDay.hours.find((hour) => hour.quota === parseInt(quota, 10)) });
 
 	await context.setState({
 		appointmentResponse: await prepApi.postAppointment(
@@ -129,7 +129,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 }
 
 async function loadCalendar(context) { // consulta starts here
-	if (context.state.user.is_target_audience === 1 || true) {
+	if (context.state.user.is_target_audience || context.state.is_target_audience || process.env.ENV === 'local') {
 	/* load and prepare calendar */
 		await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
 		await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar

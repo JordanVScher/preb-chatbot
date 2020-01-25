@@ -24,7 +24,7 @@ it('quiz - begin', async () => {
 
 	await expect(context.setState).toBeCalledWith({ startedQuiz: true });
 	await expect(context.sendText).toBeCalledWith(flow.quiz.beginQuiz);
-	await expect(quiz.answerQuizA).toBeCalledWith(context);
+	await expect(quiz.answerQuiz).toBeCalledWith(context);
 });
 
 it('quiz - multiple choice answer', async () => {

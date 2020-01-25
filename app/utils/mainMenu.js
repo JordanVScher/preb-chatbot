@@ -2,7 +2,7 @@ const checkQR = require('./checkQR');
 const flow = require('./flow');
 // const opt = require('./options');
 // const prepApi = require('./prep_api');
-const { answerQuizA } = require('./quiz');
+const { answerQuiz } = require('./quiz');
 const { getTriagem } = require('./triagem');
 
 async function sendMain(context, text) {
@@ -11,7 +11,7 @@ async function sendMain(context, text) {
 	if (context.state.goBackToQuiz === true) { // check if user is on a quiz/triagem so that we can send them back there right away instead of asking
 		await context.setState({ dialog: 'backToQuiz', goBackToQuiz: false });
 		await context.sendText(`${flow.desafio.text3}`);
-		await answerQuizA(context);
+		await answerQuiz(context);
 	} else if (context.state.goBackToTriagem === true) {
 		await context.setState({ dialog: 'goBackToTriagem', goBackToTriagem: false });
 		await context.sendText(`${flow.desafio.text3}`);

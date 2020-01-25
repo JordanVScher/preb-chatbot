@@ -89,7 +89,7 @@ module.exports = {
 	ofertaPesquisaStart: {
 		text1: 'Amei conhecer vc!! Sabia q o projeto q trabalho tem tudu a ver contigo, bb?',
 		menuOptions: ['Me conta esse babado', 'Me conta depois'],
-		menuPostback: ['pesquisaSim', 'pesquisaNao'],
+		menuPostback: ['pesquisaSim', 'meContaDepois'],
 	},
 	ofertaPesquisaSim: {
 		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa sem pegar HIV ✌ Como? Tem eu, Amandinha pra falar de PrEP, sexo, prevenção, inseguranças, autoteste pra HIV, gel e xuca 👏👏 Qm toca o projeto é a USP, UFMG e UFBA, chic né? Seguro e 0800 💙 Ñ é obrigatório ta com adulto responsável e se o $ tiver curto, a gnt te ajuda com a passagem! ',
@@ -101,6 +101,11 @@ module.exports = {
 		text1: 'Calma! Cata esse textinho pq preciso pedir sua autorização!',
 		text2: 'Fui criada por pesquisadores da UFMG, USP e UFBA e queremos sua autorização pra usar as infos do nosso papo pra pesquisar o comportamento sexual e prevenção do HIV em jovens. Se tu não curtir participar da pesquisa, a gente continua conversando, mas se curtir, relaxa q pode desistir qualquer hora e eu deleto suas infos! 😊 Qualquer denúncia pode ser comunicada ao Comitê de Ética em Pesquisa! Info da pesquisa e o contato do comitê botão abaixo!',
 		text3: 'Tá afim? clica em Li e Aceito',
+	},
+	offerBrincadeira: {
+		text1: 'Okrr! Bora conversar ou q tal fazer um QUIZ pra saber q DIVA É VC NA SARRAÇÃO?',
+		menuOptions: ['Conversar', 'Quiz'],
+		menuPostback: ['offerConversar', 'querBrincadeira'],
 	},
 	quiz: {
 		beginQuiz: 'Adoron!!',
@@ -202,6 +207,8 @@ module.exports = {
 		success: 'Valeu! Logo vamos entrar em contato.',
 		failure: 'Esse telefone não é válido! Tente de novo',
 		sendMail: '<USERNAME> quer que entre em contato pelo <CONTATO> "<PHONE>" depois de receber a notificação.',
+		menuOptions: ['Instagram', 'WhatsApp', 'Não deixar contato'],
+		menuPostback: ['leaveInsta', 'leavePhoneTwo', 'dontLeaveContact'],
 	},
 	preTCLE: {
 		eligible: 'Pelo o que vejo vc já se colocou em risco! Mas nao pira, vemk q posso ajudar!',

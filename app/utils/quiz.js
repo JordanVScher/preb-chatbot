@@ -6,49 +6,33 @@ const help = require('./helper');
 const { sentryError } = require('./error');
 
 // loads next question and shows it to the user
-async function answerQuizA(context) {
-	await context.typingOn();
-	// if the user never started the quiz (or if the user already ended the quiz once === '') the category is 'quiz'
-	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') { await context.setState({ categoryQuestion: 'quiz' }); }
+async function answerQuiz(context) {
+	// await context.typingOn();
+	// if the user never started the quiz the category is 'quiz'
+	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') {
+		await context.setState({ categoryQuestion: 'quiz' });
+	}
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
 	console.log('categoryQuestion', context.state.categoryQuestion);
 
-	// user already answered the quiz (user shouldn't be here)
-	if ((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)) {
-		await aux.sendTermos(context);
-	} else { // user is still answering the quiz
-		if (context.state.currentQuestion.code === 'AC9') {
-			await context.sendText(flow.onTheResearch.text1);
-			await context.sendImage(flow.onTheResearch.gif);
-			await context.sendText(flow.onTheResearch.text2);
-			await context.sendText(flow.onTheResearch.text3);
-			// quer saber mais sobre o nosso projeto -> agora é uma pergunta do quiz
-		}
 
-		// show question code for dev purposes
-		const quizText = process.env.ENV !== 'local' ? context.state.currentQuestion.text : `${context.state.currentQuestion.code}. ${context.state.currentQuestion.text}`;
-		if (context.state.currentQuestion.type === 'multiple_choice') {
-			await context.setState({ onButtonQuiz: true });
-			await context.setState({ buttonsFull: await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz') });
-			await context.setState({ buttonTexts: await help.getButtonTextList(context.state.buttonsFull) });
-			await context.sendText(quizText, context.state.buttonsFull);
-		} else if (context.state.currentQuestion.type === 'open_text') {
-			await context.setState({ onTextQuiz: true });
-			await context.sendText(quizText);
-		}
-		await context.typingOff();
+	// show question code for dev purposes
+	const quizText = process.env.ENV !== 'local' ? context.state.currentQuestion.text : `${context.state.currentQuestion.code}. ${context.state.currentQuestion.text}`;
+	if (context.state.currentQuestion.type === 'multiple_choice') {
+		await context.setState({ onButtonQuiz: true });
+		await context.setState({ buttonsFull: await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz') });
+		await context.setState({ buttonTexts: await help.getButtonTextList(context.state.buttonsFull) });
+		await context.sendText(quizText, context.state.buttonsFull);
+	} else if (context.state.currentQuestion.type === 'open_text') {
+		await context.setState({ onTextQuiz: true });
+		await context.sendText(quizText);
 	}
+	// await context.typingOff();
 }
 
-async function handleAnswer(context, quizOpt) {
-	// context.state.currentQuestion.code -> the code for the current question
-	// quizOpt -> the quiz option the user clicked/wrote
-	await context.setState({ onTextQuiz: false, onButtonQuiz: false });
-	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
-	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
-	if (process.env.ENV === 'local') { await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2)); }
+async function handleQuizResposta(context, quizOpt) {
 	// error sending message to API, send user to same question and send error to the devs
 	if (context.state.sentAnswer.error || !context.state.sentAnswer) {
 		await context.sendText(flow.quiz.form_error);
@@ -95,43 +79,64 @@ async function handleAnswer(context, quizOpt) {
 		await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
 	}
 
-	if (context.state.currentQuestion.code === 'A6a' || context.state.sentAnswer.is_target_audience === 1) {
+	// from here on out, the flow of the quiz actually changes, so remember to return something to stop the rest from executing
+
+	// api issue: after A6a is_target_audience should be 1 instead of null, send to pesquisa after A6a
+	if (context.state.currentQuestion.code === 'A6a') {
+		if (quizOpt === '1') await context.setState({ risk_group: true });
+		await context.setState({ is_target_audience: true });
+		await context.setState({ dialog: 'ofertaPesquisaStart' });
+		return false;
+	}
+
+	if (context.state.categoryQuestion === 'quiz' && context.state.sentAnswer.finished_quiz && !context.state.sentAnswer.is_target_audience) {
+		await context.setState({ dialog: 'querBrincadeira' });
+		return false;
+	}
+
+	if (context.state.categoryQuestion === 'quiz' && context.state.sentAnswer.finished_quiz && context.state.sentAnswer.is_target_audience) {
 		await context.setState({ dialog: 'ofertaPesquisaStart' });
 		return false;
 	}
 
 
-	// from here on out, the flow  of the quiz actually changes, so remember to return something to stop the rest from executing
-	if (context.state.currentQuestion.code === 'AC9') {
-		if (quizOpt.toString() === '1') {
-			await context.setState({ dialog: 'firstJoinResearch' });
-		} else {
-			await context.setState({ dialog: 'firstNoResearch' });
-		}
+	// if (context.state.currentQuestion.code === 'AC9') {
+	// 	if (quizOpt === '1') {
+	// 		await context.setState({ dialog: 'firstJoinResearch' });
+	// 	} else {
+	// 		await context.setState({ dialog: 'firstNoResearch' });
+	// 	}
+	// 	return false;
+	// }
+
+	if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.currentQuestion.code === 'AC1' && context.state.sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'recrutamento' });
 		return false;
 	}
 
-	if (context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2') {
-		await context.setState({ dialog: 'stopHalfway' });
+	if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.currentQuestion.code === 'AC7' && context.state.sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'preTCLE' });
 		return false;
 	}
-
 
 	if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 		await context.setState({ dialog: 'startQuiz' });
 		return false;
 	}
 
-	if ((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
-	|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)) {
-		await context.setState({ dialog: 'startQuiz' });
-		return false;
-	}
-	await aux.sendTermos(context);
-
-
-	/* eslint-enable no-lonely-if */
 	return true;
+}
+
+async function handleAnswer(context, quizOpt) {
+	// context.state.currentQuestion.code -> the code for the current question
+	// quizOpt -> the quiz option the user clicked/wrote
+	await context.setState({ onTextQuiz: false, onButtonQuiz: false });
+	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
+	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
+	if (process.env.ENV === 'local') { await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2)); }
+
+	quizOpt = quizOpt.toString() || '';
+	await handleQuizResposta(context, quizOpt);
 }
 
 
@@ -163,7 +168,7 @@ async function handleText(context) {
 }
 
 module.exports = {
-	answerQuizA,
+	answerQuiz,
 	handleAnswer,
 	AnswerExtraQuestion,
 	handleText,

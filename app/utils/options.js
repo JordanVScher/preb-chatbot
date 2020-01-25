@@ -68,7 +68,7 @@ module.exports = {
 		url: 'https://www.prep1519.org',
 		title: 'Infos e Contatos',
 	}],
-	Research_Termos: {
+	Research_Termos: { // é esse que usa só
 		quick_replies: [
 			{ content_type: 'text', title: 'Li e Aceito', payload: 'termosAccept' },
 			{ content_type: 'text', title: 'Não aceito', payload: 'termosDontAccept' },
@@ -79,13 +79,6 @@ module.exports = {
 		url: 'http://www.aids.gov.br/system/tdf/pub/2017/65141/folder_essencial_prep_08_2017.pdf?file=1&type=node&id=65141&force=1',
 		title: 'Baixar Panfleto',
 	}],
-	leavePhone: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Instagram', payload: 'leaveInsta' },
-			{ content_type: 'text', title: 'WhatsApp', payload: 'leavePhoneTwo' },
-			{ content_type: 'text', title: 'Não quero deixar contato', payload: 'dontLeaveContact' },
-		],
-	},
 	leavePhone2: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Não deixar telefone', payload: 'mainMenu' },

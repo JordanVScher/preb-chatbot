@@ -4,7 +4,7 @@ const prepApi = require('./prep_api');
 const mainMenu = require('./mainMenu');
 const help = require('./helper');
 const { sendCarouselSus } = require('./carousel');
-const { answerQuizA } = require('./quiz');
+const { answerQuiz } = require('./quiz');
 const triagem = require('./triagem');
 
 async function sendQuiz(context) {
@@ -13,7 +13,7 @@ async function sendQuiz(context) {
 	if (context.state.goBackToQuiz === true) { // check if user is on a quiz/ triagem so that we can send them back there right away instead of asking
 		await context.setState({ dialog: 'backToQuiz', goBackToQuiz: false });
 		await context.sendText(`${flow.desafio.text3}`);
-		await answerQuizA(context);
+		await answerQuiz(context);
 	} else if (context.state.goBackToTriagem === true) {
 		await context.setState({ dialog: 'goBackToTriagem', goBackToTriagem: false });
 		await context.sendText(`${flow.desafio.text3}`);
@@ -123,7 +123,7 @@ async function followUpIntent(context) {
 			await checkAconselhamento(context);
 		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
 			if (context.state.intentType === 'serviço') { await context.sendText(flow.triagem.posto); }
-			if (context.state.user.finished_quiz === 0) { // eslint-disable-line no-lonely-if === 0
+			if (context.state.user.finished_quiz === 0) {
 				await sendQuiz(context);
 			} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1) { // elegível mas não parte da pesquisa (disse não) === 1
 				if (context.state.intentType === 'problema') { await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.triagem.whatsapp, help.emergenciaDictionary)); }

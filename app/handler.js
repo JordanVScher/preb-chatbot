@@ -13,10 +13,10 @@ const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
 const { sendMail } = require('./utils/mailer');
+const { getQR } = require('./utils/attach');
 const { addNewUser } = require('./utils/labels');
 const { sentryError } = require('./utils/mailer');
 const { buildNormalErrorMsg } = require('./utils/error');
-
 
 async function contactFollowUp(context) {
 	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
@@ -27,7 +27,6 @@ async function contactFollowUp(context) {
 		await mainMenu.sendMain(context);
 	}
 }
-
 
 module.exports = async (context) => {
 	try {
@@ -46,7 +45,7 @@ module.exports = async (context) => {
 		});
 
 		console.log('context.state.user', context.state.user);
-		console.log('context.state.user.system_labels', await help.buildLabels(context.state.user.system_labels));
+		// console.log('context.state.user.system_labels', await help.buildLabels(context.state.user.system_labels));
 		await timer.deleteTimers(context.session.user.id);
 
 		if (context.event.isPostback) {
@@ -110,9 +109,9 @@ module.exports = async (context) => {
 				await context.setState({ ignore: true });
 			}
 		} else if (context.event.isText) {
-			console.log('--------------------------');
-			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
-			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
+			// console.log('--------------------------');
+			// console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
+			// console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
 			if (context.state.dialog === 'leavePhoneTwo' || context.state.dialog === 'phoneInvalid') {
 				await research.checkPhone(context);
@@ -197,7 +196,7 @@ module.exports = async (context) => {
 				await context.sendText(flow.quiz.beginQuiz);
 				// falls throught
 			case 'startQuiz': // this is the quiz-type of questionario
-				await quiz.answerQuizA(context);
+				await quiz.answerQuiz(context);
 				break;
 			case 'aceitaTermos2': // aceita termos mas não é da pesquisa
 			case 'aceitaTermos': // aceita termos e é da pesquisa
@@ -233,6 +232,9 @@ module.exports = async (context) => {
 			case 'TCLE':
 				await research.TCLE(context);
 				break;
+			case 'preTCLE':
+				await research.preTCLE(context);
+				break;
 			case 'termosAccept':
 				await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1), userAnsweredTermos: true }); // stores user accepting termos
 				await mainMenu.sendMain(context);
@@ -251,12 +253,16 @@ module.exports = async (context) => {
 				// await context.setState({ categoryConsulta: 'BATE PAPO PRESENCIAL' });
 				await consulta.loadCalendar(context);
 				break;
+			case 'meContaDepois':
+				await context.setState({ meContaDepois: true });
+				// falls through
+			case 'pesquisaNao':
 			case 'ofertaPesquisaEnd':
 				await research.ofertaPesquisaEnd(context);
 				break;
 			case 'pesquisaVirtual':
 			case 'leavePhone':
-				await context.sendText(flow.leavePhone.opening, opt.leavePhone);
+				await context.sendText(flow.leavePhone.opening, await getQR(flow.leavePhone));
 				break;
 			case 'leavePhoneTwo':
 				await context.sendText(flow.leavePhone.phone);
@@ -292,6 +298,17 @@ module.exports = async (context) => {
 				} else {
 					await mainMenu.sendMain(context);
 				}
+				break;
+			case 'offerConversar':
+			case 'recrutamento':
+				await research.recrutamento(context);
+				break;
+			case 'offerBrincadeira':
+				await context.sendText(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
+				break;
+			case 'querBrincadeira':
+				await context.setState({ categoryQuestion: 'quiz_brincadeira' });
+				await quiz.answerQuiz(context);
 				break;
 			case 'checarConsulta':
 				await context.setState({ categoryConsulta: 'emergencial' });

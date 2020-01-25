@@ -7,6 +7,7 @@ const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
 const { loadCalendar } = require('./consulta');
 const { checkAppointment } = require('./consulta');
+const { answerQuiz } = require('./quiz');
 
 async function handleToken(context, answer) {
 	if (answer === true) {
@@ -40,6 +41,15 @@ async function ofertaPesquisaSim(context) {
 	await context.sendText(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
 }
 
+async function recrutamento(context) {
+	if (context.state.user.is_target_audience || context.state.is_target_audience) {
+		await context.sendText('Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉');
+		await context.setState({ categoryQuestion: 'recrutamento' });
+		await answerQuiz(context);
+	} else {
+		await sendMain(context);
+	}
+}
 async function TCLE(context) {
 	await context.setState({ dialog: '' });
 	if (context.state.meContaDepois) { // se usuário escolheu "me conta depois"
@@ -60,7 +70,7 @@ async function preTCLE(context, temConsulta) {
 		await context.sendText(flow.preTCLE.not_eligible);
 	}
 
-	if (!context.state.user.is_target_audience) { // não é público de interesse
+	if (!context.state.user.is_target_audience || !context.state.is_target_audience) { // não é público de interesse
 		await TCLE(context);
 	} else if (context.state.leftContact || temConsulta) { // é público de interesse, já fez agendamento ou deixou contato
 		await TCLE(context);
@@ -73,13 +83,15 @@ async function preTCLE(context, temConsulta) {
 
 async function ofertaPesquisaEnd(context) {
 	await context.setState({ nextDialog: '', dialog: '' });
-	if (!context.state.user.is_target_audience) { // não é público de interesse
+	if (context.state.user.is_target_audience || context.state.is_target_audience) { // é público de interesse
+		if (context.state.user.risk_group || context.state.risk_group) { // é público de interesse com risco
+			await context.setState({ nextDialog: 'preTCLE' });
+			await recrutamento(context);
+		} else { // é público de interesse sem risco
+			await preTCLE(context, await checkAppointment(context));
+		}
+	} else { // não é público de interesse
 		await sendMain(context);
-	} else if (context.state.user.risk_group) { // é público de interesse com risco
-		await context.setState({ nextDialog: 'preTCLE' });
-		await context.sendText('Manda pro recrutamento e dps pro pre-tcle');
-	} else { // é público de interesse sem risco
-		await preTCLE(context, await checkAppointment(context));
 	}
 }
 
