@@ -21,7 +21,7 @@ async function handleErrorApi(options, res, err) {
 	if (res) msg += `\nResposta: ${JSON.stringify(res, null, 2)}`;
 	if (err) msg += `\nErro: ${err.stack}`;
 
-	// console.log('----------------------------------------------', `\n${msg}`, '\n\n');
+	console.log('----------------------------------------------', `\n${msg}`, '\n\n');
 
 	if ((res && (res.error || res.form_error)) || (!res && err)) {
 		if (process.env.ENV !== 'local') {
@@ -50,8 +50,9 @@ async function sentryError(msg, err) {
 	}
 	if (process.env.ENV !== 'local') {
 		Sentry.captureMessage(msg);
-		await sendHTMLMail(`Erro no bot do ELAS - ${process.env.ENV || ''}`, process.env.MAILDEV, `${msg || ''}\n\n${erro}`);
+		await sendHTMLMail(`Erro no bot do ELAS - ${process.env.ENV || ''}`, process.env.MAILERROR, `${msg || ''}\n\n${erro}`);
 		console.log(`Error sent at ${new Date()}!\n `);
+		console.log(`${msg} => ${err}`);
 	}
 	return false;
 }

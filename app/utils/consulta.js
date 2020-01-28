@@ -122,6 +122,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		}
 	} else {
 		await context.sendText(flow.consulta.fail3, opt.consultaFail);
+		console.log('context.state.appointmentResponse', context.state.appointmentResponse);
 		await sentryError('Consulta - Não foi possível marcar a consulta', context.state);
 	}
 }
