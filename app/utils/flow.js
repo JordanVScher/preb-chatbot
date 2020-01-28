@@ -103,9 +103,19 @@ module.exports = {
 		text3: 'Tá afim? clica em Li e Aceito',
 	},
 	offerBrincadeira: {
+		text1: 'FIM! Adorei te conhecer! Tá afim de fazer um QUIZ pra saber Q DIVA VC É NA SARRAÇÃO? Ou qr conversar?',
+		menuOptions: ['Quiz', 'Conversar'],
+		menuPostback: ['querBrincadeira', 'offerConversar'],
+	},
+	quizMistoStart: {
+		text1: 'Amei saber tudu!! Sabia q o projeto q trabalho tem tudu a ver com vc, bb?',
+		menuOptions: ['Me conta esse babado', 'Me conta depois'],
+		menuPostback: ['pesquisaSim', 'offerMisto'],
+	},
+	offerMisto: {
 		text1: 'Okrr! Bora conversar ou q tal fazer um QUIZ pra saber q DIVA É VC NA SARRAÇÃO?',
-		menuOptions: ['Conversar', 'Quiz'],
-		menuPostback: ['offerConversar', 'querBrincadeira'],
+		menuOptions: ['Conversar', 'Me conta depois'],
+		menuPostback: ['offerMistoConversa', 'mistoEnd'],
 	},
 	quiz: {
 		beginQuiz: 'Adoron!!',

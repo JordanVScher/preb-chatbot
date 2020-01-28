@@ -10,7 +10,15 @@ async function answerQuiz(context) {
 	// await context.typingOn();
 	// if the user never started the quiz the category is 'quiz'
 	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') {
-		await context.setState({ categoryQuestion: 'publico_interesse' });
+		await context.setState({ categoryQuestion: 'publico_interesse', toggleQuiz: false });
+	}
+
+	if (context.state.toggleQuiz === true) { // on mixedQuiz, toggle between types of quiz
+		if (context.state.categoryQuestion === 'recrutamento' && !context.state.quizBrincadeiraEnd) { // quiz_brincadeira ends before recrutamento
+			await context.setState({ categoryQuestion: 'quiz_brincadeira' });
+		} else if (context.state.categoryQuestion === 'quiz_brincadeira') {
+			await context.setState({ categoryQuestion: 'recrutamento' });
+		}
 	}
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
@@ -52,54 +60,39 @@ async function handleQuizResposta(context, quizOpt) {
 		await addCityLabel(context.session.user.id, quizOpt);
 	}
 
-	// if we have any follow-up messages, send them
-	if (context.state.sentAnswer.followup_messages) {
-		for (let i = 0; i < context.state.sentAnswer.followup_messages.length; i++) {
-			if (context.state.sentAnswer.followup_messages[i].includes('.png')) {
-				await context.setState({ resultImageUrl: context.state.sentAnswer.followup_messages[i] });
-			} else {
-				await context.sendText(context.state.sentAnswer.followup_messages[i]);
-				if (i === 1 && context.state.currentQuestion.code === 'AC7') {
-					if (context.state.resultImageUrl && context.state.resultImageUrl.length > 0) {
-						await context.sendImage(context.state.resultImageUrl); // send fun_questions result
-						await context.setState({ resultImageUrl: '' });
-					}
-				}
-			}
-		}
-	}
-
 	// add registration form link to send later
 	if (context.state.sentAnswer.offline_pre_registration_form) {
 		await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
 	}
 
-	if (context.state.toggleQuiz === true) {
-		if (context.state.categoryQuestion === 'recrutamento' && !context.state.quizBrincadeiraEnd) {
-			await context.setState({ categoryQuestion: 'quiz_brincadeira' });
-		} else if (context.state.categoryQuestion === 'quiz_brincadeira') {
-			await context.setState({ categoryQuestion: 'recrutamento' });
-		}
-	}
 
 	// from here on out, the flow of the quiz actually changes, so remember to return something to stop the rest from executing
 
+	if (context.state.toggleQuiz) { // on mixedQuiz
+		if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.sentAnswer.finished_quiz === 1) {
+			// save followUp msgs for later and keep going to the quiz
+			await context.setState({ followUpMsgs: context.state.sentAnswer.followup_messages });
+			await context.setState({ dialog: 'startQuiz', quizBrincadeiraEnd: true });
+			return false;
+		} if (context.state.categoryQuestion === 'recrutamento' && context.state.sentAnswer.finished_quiz === 1) {
+			await context.setState({ dialog: 'preTCLE', recrutamentoEnd: true });
+		}
+	}
+
+
 	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz && !context.state.sentAnswer.is_target_audience) {
-		await context.setState({ dialog: 'querBrincadeira', publicoInteresseEnd: true });
+		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
 		return false;
 	}
 
 	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz && context.state.sentAnswer.is_target_audience) {
 		await context.setState({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true });
+		await context.setState({ dialog: 'quizMistoStart', publicoInteresseEnd: true });
 		return false;
 	}
 
-	if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.currentQuestion.code === 'AC1' && context.state.sentAnswer.finished_quiz === 1) {
-		await context.setState({ dialog: 'recrutamento', quizBrincadeiraEnd: true });
-		return false;
-	}
-
-	if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.currentQuestion.code === 'AC7' && context.state.sentAnswer.finished_quiz === 1) {
+	if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.sentAnswer.finished_quiz === 1) {
+		await aux.sendFollowUp(context);// if not on mixedQuiz, send the brincadeira results and keep going
 		await context.setState({ dialog: 'preTCLE', quizBrincadeiraEnd: true });
 		return false;
 	}

@@ -223,6 +223,21 @@ module.exports = async (context) => {
 					await mainMenu.sendMain(context);
 				}
 				break;
+			case 'quizMistoStart':
+				await context.sendText(flow.quizMistoStart.text1, await getQR(flow.quizMistoStart));
+				break;
+			case 'offerMisto':
+				await context.sendText(flow.offerMisto.text1, await getQR(flow.offerMisto));
+				break;
+			case 'offerMistoConversa':
+				await context.sendText('Ahazou! Vou começar! 💙');
+				await context.setState({ categoryQuestion: 'recrutamento', toggleQuiz: false });
+				await quiz.answerQuiz(context);
+				break;
+			case 'offerMistoQuiz':
+				await context.setState({ categoryQuestion: 'recrutamento', toggleQuiz: true });
+				await quiz.answerQuiz(context);
+				break;
 			case 'joinToken':
 				await context.sendText(flow.joinToken.text1, opt.joinToken);
 				break;
@@ -248,6 +263,7 @@ module.exports = async (context) => {
 				await research.ofertaPesquisaStart(context);
 				break;
 			case 'pesquisaSim':
+			case 'ofertaPesquisaSim':
 				await research.ofertaPesquisaSim(context);
 				break;
 			case 'pesquisaPresencial':
@@ -308,7 +324,7 @@ module.exports = async (context) => {
 				await context.sendText(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
 				break;
 			case 'querBrincadeira':
-				await context.setState({ categoryQuestion: 'quiz_brincadeira' });
+				await context.setState({ categoryQuestion: 'quiz_brincadeira', toggleQuiz: false });
 				await quiz.answerQuiz(context);
 				break;
 			case 'checarConsulta':

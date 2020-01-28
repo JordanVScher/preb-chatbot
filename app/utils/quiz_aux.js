@@ -2,6 +2,24 @@ const { capQR } = require('./helper');
 const opt = require('./options');
 const flow = require('./flow');
 
+module.exports.sendFollowUp = async (context) => {
+	if (context.state.sentAnswer.followup_messages) {
+		for (let i = 0; i < context.state.sentAnswer.followup_messages.length; i++) {
+			if (context.state.sentAnswer.followup_messages[i].includes('.png')) {
+				await context.setState({ resultImageUrl: context.state.sentAnswer.followup_messages[i] });
+			} else {
+				await context.sendText(context.state.sentAnswer.followup_messages[i]);
+				if (i === 1 && context.state.currentQuestion.code === 'AC7') {
+					if (context.state.resultImageUrl && context.state.resultImageUrl.length > 0) {
+						await context.sendImage(context.state.resultImageUrl); // send fun_questions result
+						await context.setState({ resultImageUrl: '' });
+					}
+				}
+			}
+		}
+	}
+};
+
 module.exports.sendTermos = async (context) => {
 	await context.setState({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
 	if (context.state.user.is_eligible_for_research === 1) {

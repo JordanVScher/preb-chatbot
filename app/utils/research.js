@@ -32,7 +32,6 @@ async function checkPhone(context) {
 }
 
 async function ofertaPesquisaStart(context) {
-	await context.setState({ toggleQuiz: true });
 	await context.sendText(flow.ofertaPesquisaStart.text1, await getQR(flow.ofertaPesquisaStart));
 }
 
@@ -45,7 +44,7 @@ async function ofertaPesquisaSim(context) {
 async function recrutamento(context) {
 	if (context.state.user.is_target_audience) {
 		await context.sendText('Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉');
-		await context.setState({ categoryQuestion: 'recrutamento', dialog: '' });
+		await context.setState({ categoryQuestion: 'recrutamento', dialog: '', toggleQuiz: false });
 		await answerQuiz(context);
 	} else {
 		await sendMain(context);
@@ -96,7 +95,6 @@ async function ofertaPesquisaEnd(context) {
 	}
 }
 
-
 module.exports = {
-	handleToken, checkPhone, ofertaPesquisaStart, ofertaPesquisaSim, ofertaPesquisaEnd, TCLE, preTCLE,
+	handleToken, checkPhone, ofertaPesquisaStart, ofertaPesquisaSim, ofertaPesquisaEnd, TCLE, preTCLE, recrutamento,
 };
