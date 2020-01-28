@@ -112,6 +112,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		await context.sendText(flow.consulta.view);
 		await sendSalvador(context);
 		await sendExtraMessages(context);
+		await context.typing(1000 * 3);
 
 		if (context.state.nextDialog === 'ofertaPesquisaEnd') {
 			await context.setState({ dialog: 'ofertaPesquisaEnd' });

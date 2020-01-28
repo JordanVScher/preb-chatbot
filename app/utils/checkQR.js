@@ -131,13 +131,11 @@ async function checkMainMenu(context) {
 	const seeToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' };
 	const sobreAmanda = { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' };
 
-	if (!context.state.user.is_target_audience) {
-		opt.push(baterPapo);
-		opt.push(quiz);
-		opt.push(prevencoes);
-		opt.push(jaFacoParte);
-		opt.push(sobreAmanda);
-	}
+	opt.push(baterPapo);
+	opt.push(quiz);
+	opt.push(prevencoes);
+	opt.push(jaFacoParte);
+	opt.push(sobreAmanda);
 
 	if (context.state.user.finished_quiz) {	opt = await opt.filter(x => x.payload !== 'beginQuiz'); } // dont show quiz option if user has finished the quiz
 
