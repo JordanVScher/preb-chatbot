@@ -126,6 +126,8 @@ async function checkMainMenu(context) {
 	let opt = [];
 	const baterPapo = { content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' };
 	const quiz = { content_type: 'text', title: 'Quiz', payload: 'beginQuiz' };
+	const quizRecrutamento = { content_type: 'text', title: 'Quiz', payload: 'recrutamento' };
+	const quizBrincadeira = { content_type: 'text', title: 'Quiz', payload: 'querBrincadeira' };
 	const prevencoes = { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' };
 	const jaFacoParte = { content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' };
 	const seeToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' };
@@ -137,11 +139,17 @@ async function checkMainMenu(context) {
 	opt.push(jaFacoParte);
 	opt.push(sobreAmanda);
 
-	if (context.state.user.finished_quiz) {	opt = await opt.filter(x => x.payload !== 'beginQuiz'); } // dont show quiz option if user has finished the quiz
+	if (context.state.publicoInteresseEnd) {
+		const index = opt.findIndex(x => x.title === 'Quiz');
+		if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) { if (index) opt[index] = quizRecrutamento; }
+		if (!context.state.user.is_target_audience && !context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; }
+	}
+
+	if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || context.state.recrutamentoEnd)) { opt = await opt.filter(x => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
+
 
 	if (context.state.user.integration_token) { // replace token options if user has one
-		const index = opt.findIndex(x => x.payload === 'joinToken');
-		if (index) opt[index] = seeToken;
+		const index = opt.findIndex(x => x.title === 'Já Faço Parte'); if (index) opt[index] = seeToken;
 	}
 
 	return { quick_replies: opt };

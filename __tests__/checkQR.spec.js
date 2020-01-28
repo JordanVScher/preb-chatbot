@@ -4,216 +4,156 @@ const opt = require('../app/utils/options');
 
 jest.mock('../app/utils/prep_api');
 
-it('checkAnsweredQuiz - no check', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { finished_quiz: 0 };
-	const result = await checkQR.checkAnsweredQuiz(context, opt.asksDesafio);
+// it('checkAnsweredQuiz - no check', async () => {
+// 	const context = cont.quickReplyContext('greetings', 'greetings');
+// 	context.state.user = { finished_quiz: 0 };
+// 	const result = await checkQR.checkAnsweredQuiz(context, opt.asksDesafio);
 
-	await expect(result.quick_replies.length === 3).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Vamos!').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Agora não').toBeTruthy();
+// 	await expect(result.quick_replies.length === 3).toBeTruthy();
+// 	await expect(result.quick_replies[0].title === 'Vamos!').toBeTruthy();
+// 	await expect(result.quick_replies[1].title === 'Agora não').toBeTruthy();
+// 	await expect(result.quick_replies[2].title === 'Já Faço Parte').toBeTruthy();
+// });
+
+// it('checkAnsweredQuiz - verConsulta but quiz not finished and not eligible', async () => {
+// 	const context = cont.quickReplyContext('greetings', 'greetings');
+// 	context.state.user = { finished_quiz: 0, is_eligible_for_research: 0 };
+// 	const result = await checkQR.checkAnsweredQuiz(context, opt.greetings);
+
+// 	await expect(result.quick_replies.length === 1).toBeTruthy();
+// 	await expect(result.quick_replies[0].title === 'Quiz').toBeTruthy();
+// });
+
+// it('checkAnsweredQuiz - verConsulta, quiz finished and eligible but no consulta', async () => {
+// 	const context = cont.quickReplyContext('greetings', 'greetings');
+// 	context.state.user = { finished_quiz: 1, is_eligible_for_research: 1 };
+// 	const result = await checkQR.checkAnsweredQuiz(context, opt.greetings);
+
+// 	await expect(result.quick_replies.length === 1).toBeTruthy();
+// 	await expect(result.quick_replies[0].title === 'Marcar Consulta').toBeTruthy();
+// });
+
+// it('checkAnsweredQuiz - verConsulta, quiz finished and eligible with consulta', async () => {
+// 	const context = cont.quickReplyContext('greetings', 'greetings');
+// 	context.state.user = { finished_quiz: 1, is_eligible_for_research: 1 };
+// 	context.state.consulta = { appointments: ['foobar'] };
+// 	const result = await checkQR.checkAnsweredQuiz(context, opt.greetings);
+
+// 	await expect(result.quick_replies.length === 1).toBeTruthy();
+// 	await expect(result.quick_replies[0].title === 'Ver Consulta').toBeTruthy();
+// });
+
+// it('checkConsulta - not eligible_for_research ', async () => {
+// 	const context = cont.quickReplyContext('greetings', 'greetings');
+// 	context.state.user = { is_eligible_for_research: 0 };
+// 	const result = await checkQR.checkConsulta(context, opt.consulta);
+
+// 	await expect(result.quick_replies.length === 0).toBeTruthy();
+// });
+
+// it('checkConsulta - zero consulta', async () => {
+// 	const context = cont.quickReplyContext('greetings', 'greetings');
+// 	context.state.user = { is_eligible_for_research: 1 };
+// 	const result = await checkQR.checkConsulta(context, opt.consulta);
+
+// 	await expect(result.quick_replies.length === 1).toBeTruthy();
+// 	await expect(result.quick_replies[0].title === 'Marcar Consulta').toBeTruthy();
+// });
+
+// it('checkConsulta - one or more consultas', async () => {
+// 	const context = cont.quickReplyContext('greetings', 'greetings');
+// 	context.state.user = { is_eligible_for_research: 1 };
+// 	context.state.consulta = { appointments: ['foo'] };
+// 	const result = await checkQR.checkConsulta(context, opt.consulta);
+
+// 	await expect(result.quick_replies.length === 1).toBeTruthy();
+// 	await expect(result.quick_replies[0].title === 'Ver Consulta').toBeTruthy();
+// });
+
+it('checkMainMenu - not on audience, didnt finish quiz -> faz quiz', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { is_target_audience: 0, is_part_of_research: 0 }; context.state.currentQuestion = { code: 'a5' };
+	context.state.publicoInteresseEnd = false;
+	const result = await checkQR.checkMainMenu(context);
+
+	await expect(result.quick_replies.length === 5).toBeTruthy();
+	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
+	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
+	await expect(result.quick_replies[1].payload === 'beginQuiz').toBeTruthy();
+	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
+});
+
+it('checkMainMenu - not on audience, didnt finish quiz, has token -> faz quiz', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { is_target_audience: 0, is_part_of_research: 0, integration_token: 'foobar' }; context.state.currentQuestion = { code: 'a5' };
+	context.state.publicoInteresseEnd = false;
+	const result = await checkQR.checkMainMenu(context);
+
+	await expect(result.quick_replies.length === 5).toBeTruthy();
+	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
+	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
+	await expect(result.quick_replies[1].payload === 'beginQuiz').toBeTruthy();
+	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Ver meu Voucher').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
+});
+
+it('checkMainMenu - on audience, finished quiz -> recrutamento', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { is_target_audience: 1, is_part_of_research: 0 };
+	context.state.publicoInteresseEnd = true;
+	const result = await checkQR.checkMainMenu(context);
+
+	await expect(result.quick_replies.length === 5).toBeTruthy();
+	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
+	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
+	await expect(result.quick_replies[1].payload === 'recrutamento').toBeTruthy();
+	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
+});
+
+it('checkMainMenu - on audience, finished quiz and regulamento -> no quiz', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { is_target_audience: 1, is_part_of_research: 0 };
+	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = true;
+	const result = await checkQR.checkMainMenu(context);
+
+	await expect(result.quick_replies.length === 4).toBeTruthy();
+	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
+	await expect(result.quick_replies[1].title === 'Prevenções').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Sobre a Amanda').toBeTruthy();
 });
 
-it('checkAnsweredQuiz - verConsulta but quiz not finished and not eligible', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { finished_quiz: 0, is_eligible_for_research: 0 };
-	const result = await checkQR.checkAnsweredQuiz(context, opt.greetings);
-
-	await expect(result.quick_replies.length === 1).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Quiz').toBeTruthy();
-});
-
-it('checkAnsweredQuiz - verConsulta, quiz finished and eligible but no consulta', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { finished_quiz: 1, is_eligible_for_research: 1 };
-	const result = await checkQR.checkAnsweredQuiz(context, opt.greetings);
-
-	await expect(result.quick_replies.length === 1).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Marcar Consulta').toBeTruthy();
-});
-
-it('checkAnsweredQuiz - verConsulta, quiz finished and eligible with consulta', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { finished_quiz: 1, is_eligible_for_research: 1 };
-	context.state.consulta = { appointments: ['foobar'] };
-	const result = await checkQR.checkAnsweredQuiz(context, opt.greetings);
-
-	await expect(result.quick_replies.length === 1).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Ver Consulta').toBeTruthy();
-});
-
-it('checkConsulta - not eligible_for_research ', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_eligible_for_research: 0 };
-	const result = await checkQR.checkConsulta(context, opt.consulta);
-
-	await expect(result.quick_replies.length === 0).toBeTruthy();
-});
-
-it('checkConsulta - zero consulta', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_eligible_for_research: 1 };
-	const result = await checkQR.checkConsulta(context, opt.consulta);
-
-	await expect(result.quick_replies.length === 1).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Marcar Consulta').toBeTruthy();
-});
-
-it('checkConsulta - one or more consultas', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_eligible_for_research: 1 };
-	context.state.consulta = { appointments: ['foo'] };
-	const result = await checkQR.checkConsulta(context, opt.consulta);
-
-	await expect(result.quick_replies.length === 1).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Ver Consulta').toBeTruthy();
-});
-
-
-it('checkMainMenu - not on audience, finished quiz, no token', async () => {
+it('checkMainMenu - not on audience, finished quiz -> brincadeira', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
 	context.state.user = { is_target_audience: 0, is_part_of_research: 0 };
-	context.state.currentQuestion = { code: null };
+	context.state.publicoInteresseEnd = true;
+	const result = await checkQR.checkMainMenu(context);
+
+	await expect(result.quick_replies.length === 5).toBeTruthy();
+	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
+	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
+	await expect(result.quick_replies[1].payload === 'querBrincadeira').toBeTruthy();
+	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
+});
+
+it('checkMainMenu - not on audience, finished quiz and brincadeira -> no quiz', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { is_target_audience: 0, is_part_of_research: 0 };
+	context.state.publicoInteresseEnd = true; context.state.quizBrincadeiraEnd = true;
 	const result = await checkQR.checkMainMenu(context);
 
 	await expect(result.quick_replies.length === 4).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
+	await expect(result.quick_replies[1].title === 'Prevenções').toBeTruthy();
+	await expect(result.quick_replies[2].title === 'Já Faço Parte').toBeTruthy();
 	await expect(result.quick_replies[3].title === 'Sobre a Amanda').toBeTruthy();
-});
-
-it('checkMainMenu - not on audience, didnt finish quiz, no token', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 0, is_part_of_research: 0, finished_quiz: 0 }; context.state.currentQuestion = { code: 'a5' };
-	const result = await checkQR.checkMainMenu(context);
-
-	await expect(result.quick_replies.length === 5).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
-});
-
-it('checkMainMenu - on audience and research, no consulta', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1, is_part_of_research: 1 };
-	context.state.consulta = { appointments: [] };
-	const result = await checkQR.checkMainMenu(context);
-
-	await expect(result.quick_replies.length === 5).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Marcar Consulta').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
-});
-
-it('checkMainMenu - on audience and research, one or more consultas', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1, is_part_of_research: 1 };
-	context.state.consulta = { appointments: ['foo'] };
-	const result = await checkQR.checkMainMenu(context);
-
-	await expect(result.quick_replies.length === 5).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Ver Consulta').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
-});
-
-it('checkMainMenu - on audience, no research, eligible', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = {
-		is_target_audience: 1, is_part_of_research: 0, is_eligible_for_research: 1, finished_quiz: 1,
-	};
-	const result = 	await checkQR.checkMainMenu(context);
-
-	await expect(result.quick_replies.length === 5).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Pesquisa').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
-});
-
-it('checkMainMenu - on audience, no research, not eligible and finished_quiz ', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = {
-		is_target_audience: 1, is_part_of_research: 0, is_eligible_for_research: 0, finished_quiz: 1,
-	};
-	const result = await checkQR.checkMainMenu(context);
-
-	await expect(result.quick_replies.length === 4).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Sobre a Amanda').toBeTruthy();
-});
-
-it('checkMainMenu - on audience, no research, not eligible and not finished_quiz ', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = {
-		is_target_audience: 1, is_part_of_research: 0, is_eligible_for_research: 0, finished_quiz: 0,
-	};
-	const result = await checkQR.checkMainMenu(context);
-
-	await expect(result.quick_replies.length === 5).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
-});
-
-it('checkMainMenu - is prep ', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = {
-		is_target_audience: 1, is_part_of_research: 0, is_eligible_for_research: 0, finished_quiz: 0,
-	};
-	const result = await checkQR.checkMainMenu(context);
-
-	await expect(result.quick_replies.length === 5).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
-});
-
-it('checkMainMenu - on audience and research, is_prep, no consulta', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1, is_part_of_research: 1, is_prep: 1 };
-	context.state.consulta = { appointments: [] };
-
-	const result = await checkQR.checkMainMenu(context);
-
-	await expect(result.quick_replies.length === 6).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Marcar Consulta').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Medicação').toBeTruthy();
-	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
-});
-
-it('checkMainMenu - on audience and research, is_prep, with consulta', async () => {
-	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1, is_part_of_research: 1, is_prep: 1 };
-	context.state.consulta = { appointments: ['foobar'] };
-
-	const result = await checkQR.checkMainMenu(context);
-
-	await expect(result.quick_replies.length === 6).toBeTruthy();
-	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-	await expect(result.quick_replies[1].title === 'Ver Consulta').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Medicação').toBeTruthy();
-	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 });
 
 it('checkMedication - less than four months', async () => {
