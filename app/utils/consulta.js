@@ -9,7 +9,6 @@ const aux = require('./consulta-aux');
 const { sendMain } = require('./mainMenu');
 const { sentryError } = require('./error');
 
-
 async function checkAppointment(context) {
 	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
@@ -52,7 +51,7 @@ async function sendConsultas(context) {
 }
 
 async function verConsulta(context) {
-	if (context.state.user.is_target_audience || context.state.is_target_audience || process.env.ENV === 'local') {
+	if (context.state.user.is_target_audience || process.env.ENV === 'local') {
 		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
 		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 			await sendConsultas(context);
@@ -86,7 +85,7 @@ async function showDays(context) { // shows available days
 }
 
 async function showHours(context, ymd) {
-	await context.setState({ chosenDay: context.state.calendarCurrent.find((date) => date.ymd === ymd) }); // any day chosen from freeDays is in the calendarCurrent
+	await context.setState({ chosenDay: context.state.calendarCurrent.find(date => date.ymd === ymd) }); // any day chosen from freeDays is in the calendarCurrent
 	await context.setState({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
 	if (context.state.freeHours && context.state.freeHours.length > 0) {
 		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours });
@@ -98,7 +97,7 @@ async function showHours(context, ymd) {
 
 async function finalDate(context, quota) { // where we actually schedule the consulta
 	await context.setState({ paginationDate: 1, paginationHour: 1, dialog: '' }); // resetting pagination
-	await context.setState({ chosenHour: context.state.chosenDay.hours.find((hour) => hour.quota === parseInt(quota, 10)) });
+	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
 
 	await context.setState({
 		appointmentResponse: await prepApi.postAppointment(
@@ -123,7 +122,6 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		}
 	} else {
 		await context.sendText(flow.consulta.fail3, opt.consultaFail);
-		console.log('context.state.appointmentResponse', context.state.appointmentResponse);
 		await sentryError('Consulta - Não foi possível marcar a consulta', context.state);
 	}
 }

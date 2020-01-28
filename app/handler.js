@@ -150,6 +150,7 @@ module.exports = async (context) => {
 			}
 		} // -- end text
 
+
 		if (context.state.ignore === false) {
 			switch (context.state.dialog) {
 			case 'greetings':
@@ -233,7 +234,7 @@ module.exports = async (context) => {
 				await research.TCLE(context);
 				break;
 			case 'preTCLE':
-				await research.preTCLE(context);
+				await research.preTCLE(context, await consulta.checkAppointment(context));
 				break;
 			case 'termosAccept':
 				await context.setState({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1), userAnsweredTermos: true }); // stores user accepting termos

@@ -10,12 +10,12 @@ async function answerQuiz(context) {
 	// await context.typingOn();
 	// if the user never started the quiz the category is 'quiz'
 	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') {
-		await context.setState({ categoryQuestion: 'quiz' });
+		await context.setState({ categoryQuestion: 'publico_interesse' });
 	}
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
-	console.log('categoryQuestion', context.state.categoryQuestion);
+	// console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
+	// console.log('categoryQuestion', context.state.categoryQuestion);
 
 
 	// show question code for dev purposes
@@ -47,11 +47,6 @@ async function handleQuizResposta(context, quizOpt) {
 		return false;
 	}
 
-	// if we know user is not target audience he can see only the fun_questions from now on
-	if (context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0) {
-		await context.setState({ categoryQuestion: 'fun_questions' });
-	}
-
 	// saving city labels
 	if (context.state.currentQuestion.code === 'A1') {
 		await addCityLabel(context.session.user.id, quizOpt);
@@ -79,43 +74,38 @@ async function handleQuizResposta(context, quizOpt) {
 		await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
 	}
 
+	if (context.state.toggleQuiz === true) {
+		if (context.state.categoryQuestion === 'recrutamento' && !context.state.quizBrincadeiraEnd) {
+			await context.setState({ categoryQuestion: 'quiz_brincadeira' });
+		} else if (context.state.categoryQuestion === 'quiz_brincadeira') {
+			await context.setState({ categoryQuestion: 'recrutamento' });
+		}
+	}
+
 	// from here on out, the flow of the quiz actually changes, so remember to return something to stop the rest from executing
 
-	// api issue: after A6a is_target_audience should be 1 instead of null, send to pesquisa after A6a
-	if (context.state.currentQuestion.code === 'A6a') {
-		if (quizOpt === '1') await context.setState({ risk_group: true });
-		await context.setState({ is_target_audience: true });
-		await context.setState({ dialog: 'ofertaPesquisaStart' });
+	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz && !context.state.sentAnswer.is_target_audience) {
+		await context.setState({ dialog: 'querBrincadeira', publicoInteresseEnd: true });
 		return false;
 	}
 
-	if (context.state.categoryQuestion === 'quiz' && context.state.sentAnswer.finished_quiz && !context.state.sentAnswer.is_target_audience) {
-		await context.setState({ dialog: 'querBrincadeira' });
+	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz && context.state.sentAnswer.is_target_audience) {
+		await context.setState({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true });
 		return false;
 	}
-
-	if (context.state.categoryQuestion === 'quiz' && context.state.sentAnswer.finished_quiz && context.state.sentAnswer.is_target_audience) {
-		await context.setState({ dialog: 'ofertaPesquisaStart' });
-		return false;
-	}
-
-
-	// if (context.state.currentQuestion.code === 'AC9') {
-	// 	if (quizOpt === '1') {
-	// 		await context.setState({ dialog: 'firstJoinResearch' });
-	// 	} else {
-	// 		await context.setState({ dialog: 'firstNoResearch' });
-	// 	}
-	// 	return false;
-	// }
 
 	if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.currentQuestion.code === 'AC1' && context.state.sentAnswer.finished_quiz === 1) {
-		await context.setState({ dialog: 'recrutamento' });
+		await context.setState({ dialog: 'recrutamento', quizBrincadeiraEnd: true });
 		return false;
 	}
 
 	if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.currentQuestion.code === 'AC7' && context.state.sentAnswer.finished_quiz === 1) {
-		await context.setState({ dialog: 'preTCLE' });
+		await context.setState({ dialog: 'preTCLE', quizBrincadeiraEnd: true });
+		return false;
+	}
+
+	if (context.state.categoryQuestion === 'recrutamento' && context.state.sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'preTCLE', recrutamentoEnd: true });
 		return false;
 	}
 
@@ -132,7 +122,7 @@ async function handleAnswer(context, quizOpt) {
 	// quizOpt -> the quiz option the user clicked/wrote
 	await context.setState({ onTextQuiz: false, onButtonQuiz: false });
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
-	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
+	// console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
 	if (process.env.ENV === 'local') { await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2)); }
 
 	quizOpt = quizOpt.toString() || '';

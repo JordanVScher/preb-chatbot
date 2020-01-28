@@ -32,6 +32,7 @@ async function checkPhone(context) {
 }
 
 async function ofertaPesquisaStart(context) {
+	await context.setState({ toggleQuiz: true });
 	await context.sendText(flow.ofertaPesquisaStart.text1, await getQR(flow.ofertaPesquisaStart));
 }
 
@@ -42,9 +43,9 @@ async function ofertaPesquisaSim(context) {
 }
 
 async function recrutamento(context) {
-	if (context.state.user.is_target_audience || context.state.is_target_audience) {
+	if (context.state.user.is_target_audience) {
 		await context.sendText('Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉');
-		await context.setState({ categoryQuestion: 'recrutamento' });
+		await context.setState({ categoryQuestion: 'recrutamento', dialog: '' });
 		await answerQuiz(context);
 	} else {
 		await sendMain(context);
@@ -70,7 +71,7 @@ async function preTCLE(context, temConsulta) {
 		await context.sendText(flow.preTCLE.not_eligible);
 	}
 
-	if (!context.state.user.is_target_audience || !context.state.is_target_audience) { // não é público de interesse
+	if (!context.state.user.is_target_audience) { // não é público de interesse
 		await TCLE(context);
 	} else if (context.state.leftContact || temConsulta) { // é público de interesse, já fez agendamento ou deixou contato
 		await TCLE(context);
@@ -83,8 +84,8 @@ async function preTCLE(context, temConsulta) {
 
 async function ofertaPesquisaEnd(context) {
 	await context.setState({ nextDialog: '', dialog: '' });
-	if (context.state.user.is_target_audience || context.state.is_target_audience) { // é público de interesse
-		if (context.state.user.risk_group || context.state.risk_group) { // é público de interesse com risco
+	if (context.state.user.is_target_audience) { // é público de interesse
+		if (context.state.user.risk_group) { // é público de interesse com risco
 			await context.setState({ nextDialog: 'preTCLE' });
 			await recrutamento(context);
 		} else { // é público de interesse sem risco

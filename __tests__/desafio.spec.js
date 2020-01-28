@@ -41,7 +41,7 @@ it('sendQuiz - count less than 3 - started quiz', async () => {
 
 
 	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'publico_interesse' });
 	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeFalsy();
 	await expect(prepApi.postCountQuiz).toBeCalledWith(context.session.user.id);
 	await expect(context.state.startedQuiz === true).toBeTruthy();
@@ -55,7 +55,7 @@ it('sendQuiz - count less than 3 - started quiz', async () => {
 // 	await desafio.sendQuiz(context);
 
 // 	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
-// 	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
+// 	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'publico_interesse' });
 // 	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeFalsy();
 // 	await expect(prepApi.postCountQuiz).toBeCalledWith(context.session.user.id);
 // 	await expect(context.state.startedQuiz === true).toBeTruthy();
@@ -70,7 +70,7 @@ it('sendQuiz - count less than 3 - didnt start quiz', async () => {
 	await desafio.sendQuiz(context);
 
 	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'publico_interesse' });
 	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeFalsy();
 	await expect(prepApi.postCountQuiz).toBeCalledWith(context.session.user.id);
 	await expect(context.state.startedQuiz === true).toBeFalsy();
@@ -82,7 +82,7 @@ it('sendQuiz - count 3 ', async () => {
 	context.state.quizCounter = { count_quiz: 3 };
 	await desafio.sendQuiz(context);
 	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'publico_interesse' });
 	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeTruthy();
 	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });

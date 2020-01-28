@@ -40,7 +40,7 @@ module.exports = {
 
 	async postQuizAnswer(fb_id, category, code, answer_value) {
 		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/answer?security_token=${security_token}`).query({
-			fb_id, category, code, answer_value,
+			fb_id, category, code, answer_value: await parseInt(answer_value, 10),
 		}));
 	},
 

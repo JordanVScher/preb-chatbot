@@ -20,7 +20,7 @@ it('answerQuiz - multiple choice - empty category', async () => {
 	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
 	await expect(context.typingOn).toBeCalled();
 	await expect(!context.state.categoryQuestion || context.state.categoryQuestion === '').toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'publico_interesse' });
 	context.state.categoryQuestion = 'quiz'; // change quiz value
 	await quiz.answerQuiz(context);
 
@@ -154,7 +154,7 @@ it('handleAnswer - regular answer - is not target audience', async () => {
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
 	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'fun_questions' });
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'brincadeira' });
 
 	await expect(context.state.sentAnswer.error).toBeFalsy();
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
@@ -172,7 +172,7 @@ it('handleAnswer - regular answer - followup_messages', async () => {
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
 	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'fun_questions' });
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'brincadeira' });
 
 	await expect(context.state.sentAnswer.error).toBeFalsy();
 	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
@@ -196,7 +196,7 @@ it('handleAnswer - regular answer - followup_messages on AC7', async () => {
 	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
 	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
 	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'fun_questions' });
+	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'brincadeira' });
 
 	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
 	// loop
