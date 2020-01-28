@@ -44,7 +44,7 @@ async function ofertaPesquisaSim(context) {
 async function recrutamento(context) {
 	if (context.state.user.is_target_audience) {
 		await context.sendText('Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉');
-		await context.setState({ categoryQuestion: 'recrutamento', dialog: '', toggleQuiz: false });
+		await context.setState({ categoryQuestion: 'recrutamento', dialog: '' });
 		await answerQuiz(context);
 	} else {
 		await sendMain(context);

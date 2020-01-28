@@ -107,16 +107,6 @@ module.exports = {
 		menuOptions: ['Quiz', 'Conversar'],
 		menuPostback: ['querBrincadeira', 'offerConversar'],
 	},
-	quizMistoStart: {
-		text1: 'Amei saber tudu!! Sabia q o projeto q trabalho tem tudu a ver com vc, bb?',
-		menuOptions: ['Me conta esse babado', 'Me conta depois'],
-		menuPostback: ['pesquisaSim', 'offerMisto'],
-	},
-	offerMisto: {
-		text1: 'Okrr! Bora conversar ou q tal fazer um QUIZ pra saber q DIVA É VC NA SARRAÇÃO?',
-		menuOptions: ['Conversar', 'Me conta depois'],
-		menuPostback: ['offerMistoConversa', 'mistoEnd'],
-	},
 	quiz: {
 		beginQuiz: 'Adoron!!',
 		form_error: 'Eita, acho que me perdi. Topa responder de novo?',

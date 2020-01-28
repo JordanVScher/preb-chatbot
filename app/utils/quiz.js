@@ -10,24 +10,15 @@ async function answerQuiz(context) {
 	// await context.typingOn();
 	// if the user never started the quiz the category is 'quiz'
 	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') {
-		await context.setState({ categoryQuestion: 'publico_interesse', toggleQuiz: false });
-	}
-
-	if (context.state.toggleQuiz === true) { // on mixedQuiz, toggle between types of quiz
-		if (context.state.categoryQuestion === 'recrutamento' && !context.state.quizBrincadeiraEnd) { // quiz_brincadeira ends before recrutamento
-			await context.setState({ categoryQuestion: 'quiz_brincadeira' });
-		} else if (context.state.categoryQuestion === 'quiz_brincadeira') {
-			await context.setState({ categoryQuestion: 'recrutamento' });
-		}
+		await context.setState({ categoryQuestion: 'publico_interesse' });
 	}
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	// console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
-	// console.log('categoryQuestion', context.state.categoryQuestion);
-
+	console.log(`A nova pergunta do ${context.state.categoryQuestion}`, context.state.currentQuestion, '\n');
 
 	// show question code for dev purposes
-	const quizText = process.env.ENV !== 'local' ? context.state.currentQuestion.text : `${context.state.currentQuestion.code}. ${context.state.currentQuestion.text}`;
+	const quizText = `${context.state.currentQuestion.code}. ${context.state.currentQuestion.text}`;
+	// const quizText = process.env.ENV !== 'local' ? context.state.currentQuestion.text : `${context.state.currentQuestion.code}. ${context.state.currentQuestion.text}`;
 	if (context.state.currentQuestion.type === 'multiple_choice') {
 		await context.setState({ onButtonQuiz: true });
 		await context.setState({ buttonsFull: await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz') });
@@ -65,21 +56,9 @@ async function handleQuizResposta(context, quizOpt) {
 		await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
 	}
 
+	await aux.sendFollowUp(context);
 
 	// from here on out, the flow of the quiz actually changes, so remember to return something to stop the rest from executing
-
-	if (context.state.toggleQuiz) { // on mixedQuiz
-		if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.sentAnswer.finished_quiz === 1) {
-			// save followUp msgs for later and keep going to the quiz
-			await context.setState({ followUpMsgs: context.state.sentAnswer.followup_messages });
-			await context.setState({ dialog: 'startQuiz', quizBrincadeiraEnd: true });
-			return false;
-		} if (context.state.categoryQuestion === 'recrutamento' && context.state.sentAnswer.finished_quiz === 1) {
-			await context.setState({ dialog: 'preTCLE', recrutamentoEnd: true });
-		}
-	}
-
-
 	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz && !context.state.sentAnswer.is_target_audience) {
 		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
 		return false;
@@ -92,7 +71,6 @@ async function handleQuizResposta(context, quizOpt) {
 	}
 
 	if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.sentAnswer.finished_quiz === 1) {
-		await aux.sendFollowUp(context);// if not on mixedQuiz, send the brincadeira results and keep going
 		await context.setState({ dialog: 'preTCLE', quizBrincadeiraEnd: true });
 		return false;
 	}
@@ -115,7 +93,7 @@ async function handleAnswer(context, quizOpt) {
 	// quizOpt -> the quiz option the user clicked/wrote
 	await context.setState({ onTextQuiz: false, onButtonQuiz: false });
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
-	// console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
+	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
 	if (process.env.ENV === 'local') { await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2)); }
 
 	quizOpt = quizOpt.toString() || '';

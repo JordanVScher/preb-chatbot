@@ -9,7 +9,7 @@ const triagem = require('./triagem');
 
 async function sendQuiz(context) {
 	await context.setState({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // load quiz counter
-	await context.setState({ categoryQuestion: 'publico_interesse', toggleQuiz: false });
+	await context.setState({ categoryQuestion: 'publico_interesse' });
 	if (context.state.goBackToQuiz === true) { // check if user is on a quiz/ triagem so that we can send them back there right away instead of asking
 		await context.setState({ dialog: 'backToQuiz', goBackToQuiz: false });
 		await context.sendText(`${flow.desafio.text3}`);
