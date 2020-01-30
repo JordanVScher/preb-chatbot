@@ -142,7 +142,7 @@ async function checkSP(context) {
 		await context.setState({ cidade: context.state.user.city });
 		if (!context.state.cidade) { // if user has no cidade send him back to the menu
 			await sendMain(context);
-		} else if (context.state.cidade.toString() === '30') { // ask location for SP
+		} else if (context.state.cidade.toString() === '3') { // ask location for SP
 			const spLocations = calendars.filter(x => x.state === 'SP');
 			const options = [];
 			spLocations.forEach((e) => {
