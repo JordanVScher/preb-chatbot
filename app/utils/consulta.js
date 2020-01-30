@@ -112,6 +112,8 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		),
 	});
 
+	await context.setState({ calendar: '' });
+
 	if (context.state.appointmentResponse && context.state.appointmentResponse.id && !context.state.appointmentResponse.form_error) {
 		const msg = `${flow.consulta.success}\n${await help.buildConsultaFinal(context.state, context.state.chosenHour)}`;
 		await context.sendText(msg);
