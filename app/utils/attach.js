@@ -196,3 +196,22 @@ module.exports.sendShare = async (context, links) => {
 		},
 	});
 };
+
+module.exports.sendCarouselSus = async (context, items, text) => {
+	const elements = [];
+	items.forEach(async (element) => {
+		elements.push({
+			title: element.title,
+			// subtitle: element.subtitle,
+			buttons: element.buttons,
+		});
+	});
+	if (text) await context.sendText(text);
+	await context.sendAttachment({
+		type: 'template',
+		payload: {
+			template_type: 'generic',
+			elements,
+		},
+	});
+};

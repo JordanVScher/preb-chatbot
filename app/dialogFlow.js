@@ -54,17 +54,7 @@ async function getExistingRes(res) {
 
 
 async function checkPosition(context) {
-	if (['startQuiz', 'beginQuiz', 'backToQuiz'].includes(context.state.dialog)) {
-		await context.setState({ goBackToQuiz: true });
-	} else {
-		await context.setState({ goBackToQuiz: false });
-	}
-
-	if (['sendToTriagem', 'triagem', 'goBackToTriagem'].includes(context.state.dialog)) {
-		await context.setState({ goBackToTriagem: true });
-	} else {
-		await context.setState({ goBackToTriagem: false });
-	}
+	await context.setState({ goBackToQuiz: !!((context.state.onButtonQuiz || context.state.onTextQuiz)) });
 
 	await context.setState({ dialog: 'checkPositionFunc' });
 	await context.setState({ user: await getRecipientPrep(context.session.user.id) });

@@ -159,10 +159,6 @@ module.exports = async (context) => {
 				await context.sendText(flow.greetings.text3);
 				await desafio.asksDesafio(context);
 				break;
-			case 'stopHalfway':
-			// await context.setState({ stoppedHalfway: true });
-				await mainMenu.sendMain(context);
-				break;
 			case 'medicaçao':
 				await context.sendText(flow.medication.text1, await checkQR.checkMedication(context.state.user.prep_since));
 				break;

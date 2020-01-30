@@ -220,21 +220,6 @@ it('handleAnswer - regular answer - saving city', async () => {
 	await expect(addCityLabel).toBeCalledWith(context.session.user.id, quizOpt);
 });
 
-it('handleAnswer - onHalfwayPoint - second option', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.onHalfwayPoint; context.state.sentAnswer = questions.halfway;
-	const quizOpt = '2';
-	await quiz.handleAnswer(context, quizOpt);
-
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
-
-	await expect(context.state.sentAnswer.error).toBeFalsy();
-	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
-	await expect(context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2').toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'stopHalfway' });
-});
-
 it('handleAnswer - internal error', async () => {
 	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
 	context.state.currentQuestion = questions.nullQuestion;

@@ -19,7 +19,7 @@ async function createIssue(context) {
 	const cleanString = await formatString(context.state.whatWasTyped);
 	if (cleanString && cleanString.length > 0 && !blacklist.includes(cleanString)) {
 		const issueResponse = await chatbotAPI.postIssue(context.state.politicianData.user_id, context.session.user.id, context.state.whatWasTyped,
-			context.state.resultParameters ? context.state.resultParameters : {}, context.state.politicianData.issue_active);
+			{}, context.state.politicianData.issue_active);
 		if (process.env.ENV !== 'local') {
 			await Sentry.configureScope(async (scope) => { // sending to sentry
 				scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
@@ -33,12 +33,13 @@ async function createIssue(context) {
 
 		if (issueResponse && issueResponse.id) {
 			await context.sendText(issueText.success);
-			console.log('created issue? true');
+			console.log(`Created issue - Yes: ${JSON.stringify(issueResponse, null, 2)}`);
 			return true;
 		}
+		console.log(`Created issue - no: ${JSON.stringify(issueResponse, null, 2)}`);
+		await context.sendText(issueText.failure);
+		return false;
 	}
-	await context.sendText(issueText.failure);
-	console.log('created issue? false');
 	return false;
 }
 

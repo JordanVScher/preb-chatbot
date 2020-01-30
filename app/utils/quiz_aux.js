@@ -2,6 +2,7 @@ const { capQR } = require('./helper');
 
 module.exports.checkFinishQuiz = async (context) => {
 	if (!context.state.publicoInteresseEnd) return 'publico_interesse';
+	if (context.state.triagem) return 'screening';
 	if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) return 'recrutamento';
 	if (!context.state.user.is_target_audience && !context.state.quizBrincadeiraEnd) return 'brincadeira';
 
@@ -9,7 +10,7 @@ module.exports.checkFinishQuiz = async (context) => {
 };
 
 
-module.exports.sendFollowUp = async (context) => {
+module.exports.sendFollowUpMsgs = async (context) => {
 	if (context.state.sentAnswer.followup_messages) {
 		for (let i = 0; i < context.state.sentAnswer.followup_messages.length; i++) {
 			if (context.state.sentAnswer.followup_messages[i].includes('.png')) {

@@ -24,7 +24,6 @@ module.exports = {
 		text1: 'Hmm, beibe, ainda quero te fazer umas perguntinhas! Bora?',
 		text2: 'Tem certeza, mexxxmo?',
 		text3: 'Bb, aproveitando... Quero te conhecer melhor, topa responder? 💁‍♀',
-		text4: 'Tem certeza que não quer mesmo participar?',
 	},
 	desafioRecusado: {
 		text1: '😉',

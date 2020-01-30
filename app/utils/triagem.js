@@ -7,7 +7,6 @@ const opt = require('./options');
 
 async function endTriagem(context) {
 	await context.setState({ dialog: 'endTriagem' });
-	console.log('result endTriagem', context.state.sentAnswer);
 
 	if (context.state.sentAnswer && context.state.sentAnswer.suggest_wait_for_test === 1) {
 		await context.setState({ suggestWaitForTest: true });
@@ -34,7 +33,7 @@ async function endTriagem(context) {
 
 async function getTriagem(context) {
 	await context.typingOn();
-	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, 'screening') });
+	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, 'screening'), triagem: true });
 
 	if (!context.state.currentQuestion || context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
 		await endTriagem(context, context.state.sentAnswer);
@@ -45,6 +44,7 @@ async function getTriagem(context) {
 
 		if (context.state.currentQuestion.type === 'multiple_choice') { // showing question and answer options
 			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'tria'));
+			await context.setState({ onButtonQuiz: true });
 		} else if (context.state.currentQuestion.type === 'open_text') {
 			await context.setState({ onTextQuiz: true });
 			await context.sendText(context.state.currentQuestion.text);
@@ -54,6 +54,8 @@ async function getTriagem(context) {
 }
 
 async function handleAnswer(context, quizOpt) {
+	await context.setState({ onTextQuiz: false, onButtonQuiz: false, triagem: false });
+
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, 'screening', context.state.currentQuestion.code, quizOpt) });
 	console.log('sentAnswer', context.state.sentAnswer);
 
