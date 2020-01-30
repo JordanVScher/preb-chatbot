@@ -10,7 +10,7 @@ const { sendMain } = require('./mainMenu');
 const { sentryError } = require('./error');
 
 async function checkAppointment(context) {
-	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
+	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 		return true;
 	}
@@ -52,7 +52,7 @@ async function sendConsultas(context) {
 
 async function verConsulta(context) {
 	if (context.state.user.is_target_audience || process.env.ENV === 'local') {
-		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
+		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
 		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 			await sendConsultas(context);
 			await context.sendText(flow.consulta.view);
@@ -73,9 +73,7 @@ async function showDays(context) { // shows available days
 	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
 	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
 
-
-	await context.setState({ cidade: context.state.user.city }); // getting location id
-	// console.log('context.state.cidade', context.state.cidade, typeof context.state.cidade);
+	// console.log('context.state.user.city', context.state.user.city, typeof context.state.user.city);
 	await context.setState({ calendarCurrent: context.state.calendar[context.state.paginationDate], calendarNext: context.state.calendar[context.state.paginationDate + 1] });
 
 	// console.log('Calendário current', context.state.calendarCurrent);
@@ -138,11 +136,12 @@ async function finalDate(context, quota) { // where we actually schedule the con
 
 async function checkSP(context) {
 	try {
+		const cidade = context.state.user.city;
 		const { calendars } = await prepApi.getAvailableCities();
-		await context.setState({ cidade: context.state.user.city });
-		if (!context.state.cidade) { // if user has no cidade send him back to the menu
+
+		if (!cidade) { // if user has no cidade send him back to the menu
 			await sendMain(context);
-		} else if (context.state.cidade.toString() === '3') { // ask location for SP
+		} else if (cidade.toString() === '3') { // ask location for SP
 			const spLocations = calendars.filter(x => x.state === 'SP');
 			const options = [];
 			spLocations.forEach((e) => {
@@ -151,12 +150,12 @@ async function checkSP(context) {
 				});
 			});
 
-			await context.sendText(`O bate papo pode ser na ${await help.cidadeDictionary(context.state.cidade, '0')}`, { quick_replies: options });
+			await context.sendText(`O bate papo pode ser na ${await help.cidadeDictionary(cidade, '0')}`, { quick_replies: options });
 		} else { // if its not SP send location and follow up with the regular
-			const location = await help.cidadeDictionary(context.state.cidade);
-			if (!location) throw Error(`Couldn't find location for city id ${context.state.cidade}`);
+			const location = await help.cidadeDictionary(cidade);
+			if (!location) throw Error(`Couldn't find location for city id ${cidade}`);
 			await context.sendText(`O bate papo pode ser no ${location}`);
-			const calendar = await calendars.find(x => x.state === help.siglaMap[context.state.cidade]);
+			const calendar = await calendars.find(x => x.state === help.siglaMap[cidade]);
 			await context.setState({ calendarID: calendar.id });
 			await showDays(context);
 		}
@@ -181,7 +180,7 @@ async function loadCalendar(context) { // consulta starts here
 }
 
 async function checarConsulta(context) {
-	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
+	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 		await context.sendText(flow.consulta.checar1);
 		await sendConsultas(context);
@@ -200,4 +199,5 @@ module.exports = {
 	loadCalendar,
 	checkAppointment,
 	checkSP,
+	sendConsultas,
 };

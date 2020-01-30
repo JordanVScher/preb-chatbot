@@ -80,10 +80,8 @@ async function sendConsulta(context) {
 	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 		await context.sendText(flow.triagem.consulta1);
 		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
-			await context.sendText(''
-				+ `\n🏠: ${await help.cidadeDictionary(context.state.cityId)}`
-				+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`
-				+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+			const text = await help.buildConsultaFinal(context.state, iterator);
+			if (text) await context.sendText(text);
 		}
 		await context.sendText(flow.triagem.cta);
 		await mainMenu.sendMain(context); // send regular menu

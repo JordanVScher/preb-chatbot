@@ -130,17 +130,38 @@ function capQR(text) {
 	return result;
 }
 
+function buildCidadeText(consulta) {
+	let text = '';
+	if (consulta.name) text += `${consulta.name} - `;
+	if (consulta.street) text += consulta.street;
+	if (consulta.number) text += `, ${consulta.number}`;
+	if (consulta.district) text += ` ${consulta.district}`;
+	if (consulta.complement) text += ` - ${consulta.complement}`;
+	if (consulta.city) text += `. ${consulta.city}`;
+	if (consulta.state) text += `, ${consulta.state}.`;
+
+	return text;
+}
 
 function buildMail(name, phone, contato) {
 	return flow.leavePhone.sendMail.replace('<USERNAME>', name).replace('<PHONE>', phone).replace('<CONTATO>', contato);
 }
 
+function buildPhoneText(calendar, cidadeID) {
+	let text = calendar.phone;
+	console.log('cidadeID', cidadeID);
+	if (!text) text = telefoneDictionary[cidadeID];
+
+	return text;
+}
+
 async function buildConsultaFinal(state, chosenHour) {
 	let result = '';
+	const phone = buildPhoneText(chosenHour.calendar, state.user.city);
 
-	result += `🏠: ${await cidadeDictionary(state.cidade, state.calendarID)}\n`;
+	result += `🏠: ${buildCidadeText(chosenHour.calendar)}\n`;
 	result += `⏰: ${await formatDate(chosenHour.datetime_start, chosenHour.time)}\n`;
-	result += `📞: ${telefoneDictionary[state.cidade]}\n`;
+	if (phone) result += `📞: ${phone}\n`;
 	return result.trim();
 }
 
@@ -204,4 +225,5 @@ module.exports = {
 	getButtonTextList,
 	accents,
 	siglaMap,
+	buildCidadeText,
 };

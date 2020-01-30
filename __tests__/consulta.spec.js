@@ -23,7 +23,7 @@ it('verConsulta - no appointments', async () => {
 	context.state.consulta = {}; context.state.user = {};
 	await consulta.verConsulta(context);
 
-	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
+	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeFalsy();
 	await expect(context.sendText).toBeCalledWith(flow.verConsulta.zero, await checkConsulta(context, opt.marcarConsulta));
 });
@@ -33,7 +33,7 @@ it('verConsulta - no appointments', async () => {
 // 	context.state.consulta = { appointments: [{ datetime_start: '' }] }; context.state.user = { integration_token: 'foobar', city };
 // 	await consulta.verConsulta(context);
 
-// 	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id), cidade: context.state.user.city });
+// 	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
 // 	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeTruthy();
 // 	for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
 // 		await expect(context.sendText).toBeCalledWith(''
@@ -58,7 +58,6 @@ it('showDays - success', async () => {
 	context.state.user = {};
 	await consulta.showDays(context);
 
-	await expect(context.setState).toBeCalledWith({ cidade: context.state.user.city });
 	await expect(context.setState).toBeCalledWith({ calendarCurrent: context.state.calendar[context.state.paginationDate], calendarNext: context.state.calendar[context.state.paginationDate + 1] }); // eslint-disable-line
 	await expect(context.setState).toBeCalledWith({ freeDays: await aux.separateDaysQR(context.state.calendarCurrent, context.state.calendarNext, context.state.paginationDate) });
 
@@ -72,7 +71,6 @@ it('showDays - failure', async () => {
 	context.state.user = {};
 	await consulta.showDays(context);
 
-	await expect(context.setState).toBeCalledWith({ cidade: context.state.user.city });
 	await expect(context.setState).toBeCalledWith({ calendarCurrent: context.state.calendar[context.state.paginationDate], calendarNext: context.state.calendar[context.state.paginationDate + 1] }); // eslint-disable-line
 	await expect(context.setState).toBeCalledWith({ freeDays: await aux.separateDaysQR(context.state.calendarCurrent, context.state.calendarNext, context.state.paginationDate) });
 
@@ -161,9 +159,9 @@ it('loadCalendar with sendExtraMessages', async () => {
 
 // 	await expect(context.state.appointmentResponse && context.state.appointmentResponse.id && context.state.appointmentResponse.id.length > 0).toBeTruthy();
 // 	let msg = `${flow.consulta.success}`
-// 	+ `\n🏠: ${help.cidadeDictionary[context.state.cidade]}`
+// 	+ `\n🏠: ${help.cidadeDictionary[context.state.user.city]}`
 // 	+ `\n⏰: ${await help.formatDate(context.state.chosenHour.datetime_start, context.state.chosenHour.time)}`
-// 	+ `\n📞: ${help.telefoneDictionary[context.state.cidade]}`;
+// 	+ `\n📞: ${help.telefoneDictionary[context.state.user.city]}`;
 // 	await expect(context.state.user.integration_token && context.state.user.integration_token.length > 0).toBeTruthy();
 // 	msg += `\nSeu identificador: ${context.state.user.integration_token}`;
 // 	await expect(context.sendText).toBeCalledWith(msg);

@@ -186,7 +186,7 @@ module.exports = {
 		send: 'Eu vou te perguntar algumas coisas pra dps te ajudar suuuper!',
 		posto: 'O close certo mexxxmo é ir no posto de saúde mais próximo de vc, bb!',
 		consulta1: 'Eiiiiii bonita! Vc tem uma consulta marcada, mas se quiser ajuda eu te mando mais informações combinady?',
-		cta: '[informações dos atendimentos]>',
+		cta: '[informações dos atendimentos]',
 		consulta2: 'Acabei de catar q vc não tem consulta marcada.\nVc qr marcar?',
 		whatsapp: 'Telefones de emergência',
 		suggestWaitAutoTest: 'Se seu risco aconteceu há menos de 30 dias, você ainda está em janela imunológica, aquele período em que o teste ainda não tem sensibilidade para identificar um contato. É melhor esperar pelo menos 30 dias para se testar.',

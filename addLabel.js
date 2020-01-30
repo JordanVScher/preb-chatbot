@@ -18,9 +18,6 @@ async function addCityLabels() { // eslint-disable-line
 async function addVoucherLabels() { // eslint-disable-line
 	fs.readdirSync(testFolder).forEach(async (file) => {
 		const obj = JSON.parse(await fs.readFileSync(testFolder + file, 'utf8'));
-		console.log('--------------------------------------------------------------------------------------------');
-		console.log(obj._state.user);
-
 		if (obj && obj._state && obj._state.user && obj._state.user.fb_id && obj._state.user.integration_token) {
 			const res = await labels.linkUserToCustomLabel(obj._state.user.fb_id, `${obj._state.user.integration_token}`);
 			console.log(`Added ${obj.user.first_name} to label integration_token ${obj._state.user.integration_token} ->`, res);

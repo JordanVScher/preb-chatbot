@@ -109,9 +109,9 @@ module.exports = async (context) => {
 				await context.setState({ ignore: true });
 			}
 		} else if (context.event.isText) {
-			// console.log('--------------------------');
-			// console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
-			// console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
+			console.log('--------------------------');
+			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
+			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
 			if (context.state.dialog === 'leavePhoneTwo' || context.state.dialog === 'phoneInvalid') {
 				await research.checkPhone(context);
@@ -396,34 +396,33 @@ module.exports = async (context) => {
 				await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
 				break;
 			case 'autoTeste':
-				await context.setState({ cidade: context.state.user.city }); // getting location id
-				await context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.cidade));
+				await context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.user.city));
 				break;
 			case 'auto':
-				if (flow.autoTeste.auto3[context.state.cidade]) {
+				if (flow.autoTeste.auto3[context.state.user.city]) {
 					await context.sendText(flow.autoTeste.auto1);
 					await context.sendText(flow.autoTeste.auto2);
-					await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto3[context.state.cidade],
-						await checkQR.autoTesteOption(opt.autotesteEnd, context.state.cidade));
+					await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto3[context.state.user.city],
+						await checkQR.autoTesteOption(opt.autotesteEnd, context.state.user.city));
 				} else {
 					await context.sendText(flow.autoTeste.auto1);
 					await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto2,
-						await checkQR.autoTesteOption(opt.autotesteEnd, context.state.cidade));
+						await checkQR.autoTesteOption(opt.autotesteEnd, context.state.user.city));
 				}
 				break;
 			case 'ong':
 				await context.sendText(flow.autoTeste.ong1);
-				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.ong2[context.state.cidade],
-					await checkQR.autoTesteOption(opt.ong, context.state.cidade));
+				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.ong2[context.state.user.city],
+					await checkQR.autoTesteOption(opt.ong, context.state.user.city));
 				break;
 			case 'rua':
 				await context.sendText(flow.autoTeste.rua1);
-				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.rua2[context.state.cidade],
-					await checkQR.autoTesteOption(opt.rua, context.state.cidade));
+				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.rua2[context.state.user.city],
+					await checkQR.autoTesteOption(opt.rua, context.state.user.city));
 				break;
 			case 'servico':
 				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.servico1,
-					await checkQR.autoTesteOption(opt.servico, context.state.cidade));
+					await checkQR.autoTesteOption(opt.servico, context.state.user.city));
 				break;
 			case 'sendToTriagem':
 			case 'triagem': // this is the triagem-type of questionario
