@@ -1,5 +1,4 @@
 const { sendMain } = require('./mainMenu');
-const desafio = require('./desafio');
 
 // timeOut timers
 // 24 hours -> send follow-up -> 1000 * 60 * 60 * 24
@@ -20,12 +19,6 @@ async function createBaterPapoTimer(userID, context) {
 
 const intentAnswerTimer = {};
 
-async function createAnswerTimer(userID, context) {
-	await context.typing(1000 * 30);
-	await context.typing(1000 * 27);
-	await desafio.followUpIntent(context);
-}
-
 async function deleteTimers(userID) {
 	if (FollowUps[userID]) { clearTimeout(FollowUps[userID]); delete FollowUps[userID]; }
 	if (intentAnswerTimer[userID]) { clearTimeout(intentAnswerTimer[userID]); delete intentAnswerTimer[userID]; }
@@ -33,5 +26,5 @@ async function deleteTimers(userID) {
 
 
 module.exports = {
-	deleteTimers, createAnswerTimer, createBaterPapoTimer,
+	deleteTimers, createBaterPapoTimer,
 };

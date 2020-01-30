@@ -8,30 +8,6 @@ jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
 jest.mock('../app/utils/mainMenu');
 
-it('sendTermos - is_eligible_for_research', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.user = { is_eligible_for_research: 1 };
-	await aux.sendTermos(context);
-
-	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' });
-	await expect(context.state.user.is_eligible_for_research === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
-});
-
-it('sendTermos - not eligible_for_research', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.user = { is_eligible_for_research: 0 };
-	await aux.sendTermos(context);
-
-	await expect(context.setState).toBeCalledWith({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' });
-	await expect(context.state.user.is_eligible_for_research === 1).toBeFalsy();
-
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.text2);
-	await expect(context.sendText).toBeCalledWith(flow.quizYes.text15);
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.onTheResearch.buildTermos, opt.TCLE);
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.saidYes, opt.termos2);
-});
-
 it('buildMultipleChoice - quiz with no extra option', async () => {
 	const complement = 'quiz';
 	const question = questions.regularMultipleChoice;

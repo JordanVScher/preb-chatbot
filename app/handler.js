@@ -390,7 +390,6 @@ module.exports = async (context) => {
 				await context.sendText(flow.prevention.text2);
 				await context.sendText(flow.prevention.text3);
 				await mainMenu.sendMain(context);
-				// await desafio.followUp(context);
 				break;
 			case 'retryTriagem':
 				await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
@@ -433,12 +432,10 @@ module.exports = async (context) => {
 				await context.sendText(flow.aboutAmanda.msgOne);
 				await context.sendText(flow.aboutAmanda.msgTwo);
 				await mainMenu.sendMain(context);
-				// await desafio.followUp(context);
 				break;
 			case 'baterPapo':
 				await context.sendText(flow.baterPapo.text1);
 				await timer.createBaterPapoTimer(context.session.user.id, context);
-				// await desafio.followUp(context);
 				break;
 			case 'notificationOn':
 				await MaAPI.updateBlacklistMA(context.session.user.id, 1);

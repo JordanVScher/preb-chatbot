@@ -30,7 +30,6 @@ it('checkPosition - question with answer', async () => {
 	await context.setState({ knowledge: await MaAPI.getknowledgeBase(context.state.politicianData.user_id, context.state.apiaiResp) });
 	await expect(context.state.knowledge && context.state.knowledge.knowledge_base && context.state.knowledge.knowledge_base.length >= 1).toBeTruthy();
 	await expect(sendAnswer).toBeCalledWith(context);
-	await expect(timer.createAnswerTimer).toBeCalledWith(context.session.user.id, context);
 });
 
 it('checkPosition - question with no answer', async () => {

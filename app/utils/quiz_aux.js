@@ -1,6 +1,13 @@
 const { capQR } = require('./helper');
-const opt = require('./options');
-const flow = require('./flow');
+
+module.exports.checkFinishQuiz = async (context) => {
+	if (!context.state.publicoInteresseEnd) return 'publico_interesse';
+	if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) return 'recrutamento';
+	if (!context.state.user.is_target_audience && !context.state.quizBrincadeiraEnd) return 'brincadeira';
+
+	return null;
+};
+
 
 module.exports.sendFollowUp = async (context) => {
 	if (context.state.sentAnswer.followup_messages) {
@@ -17,19 +24,6 @@ module.exports.sendFollowUp = async (context) => {
 				}
 			}
 		}
-	}
-};
-
-module.exports.sendTermos = async (context) => {
-	await context.setState({ dialog: 'seeTermos', stoppedHalfway: false, categoryQuestion: '' }); // clean up the category, so that next time the user can answer the quiz properly
-	if (context.state.user.is_eligible_for_research === 1) {
-		console.log('This shouldnt ever happen!');
-		await context.setState({ dialog: 'mainMenu' });
-	} else {
-		await context.sendText(flow.onTheResearch.text2);
-		await context.sendText(flow.quizYes.text15);
-		await context.sendButtonTemplate(flow.onTheResearch.buildTermos, opt.TCLE);
-		await context.sendText(flow.onTheResearch.saidYes, opt.termos2);
 	}
 };
 

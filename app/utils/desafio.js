@@ -7,6 +7,11 @@ const { sendCarouselSus } = require('./carousel');
 const { answerQuiz } = require('./quiz');
 const triagem = require('./triagem');
 
+// async function followUp (context) {
+
+// }
+
+
 async function sendQuiz(context) {
 	await context.setState({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // load quiz counter
 	await context.setState({ categoryQuestion: 'publico_interesse' });
@@ -132,10 +137,8 @@ async function followUpIntent(context) {
 			}
 		}
 	} else { // not part of target audience
-		// if (context.state.intentType === 'problema') { // eslint-disable-line
-		// 	await sendCarouselSus(context, opt.sus);
-		// } else {
 		// check if theres a category, if there isnt, the user probably finished the quiz and currentQuestion will receive a form_error
+		console.log('context.state.categoryQuestion', context.state.categoryQuestion);
 		if (context.state.categoryQuestion) { // eslint-disable-line no-lonely-if
 			await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 			if (!context.state.currentQuestion || context.state.currentQuestion.code === null || context.state.currentQuestion.form_error) {

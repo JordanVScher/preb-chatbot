@@ -76,7 +76,6 @@ it('answerQuiz - null question', async () => {
 
 	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	await expect((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)).toBeTruthy();
-	await expect(aux.sendTermos).toBeCalledWith(context);
 });
 
 it('AnswerExtraQuestion', async () => {
@@ -142,7 +141,6 @@ it('handleAnswer - regular answer - finished and target audience', async () => {
 	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeFalsy();
 	await expect((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
 		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)).toBeFalsy();
-	await expect(aux.sendTermos).toBeCalledWith(context);
 });
 
 it('handleAnswer - regular answer - is not target audience', async () => {

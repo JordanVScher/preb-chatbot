@@ -132,4 +132,5 @@ module.exports = {
 	handleAnswer,
 	AnswerExtraQuestion,
 	handleText,
+	checkFinishQuiz: aux.checkFinishQuiz,
 };
