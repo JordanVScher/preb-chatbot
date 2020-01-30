@@ -1,6 +1,7 @@
 const req = require('requisition');
-
 const { MessengerClient } = require('messaging-api-messenger');
+const prepAPI = require('./prep_api');
+
 const config = require('../bottender.config').messenger;
 
 const client = MessengerClient.connect({
@@ -153,7 +154,7 @@ async function linkIntegrationTokenLabel(context) {
 	}
 }
 
-async function addNewUser(context, prepAPI) {
+async function addNewUser(context) {
 	if (context.state.onButtonQuiz || context.state.onTextQuiz) return false;
 	await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 	await linkIntegrationTokenLabel(context);

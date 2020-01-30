@@ -15,7 +15,7 @@ const checkQR = require('./utils/checkQR');
 const { sendMail } = require('./utils/mailer');
 const { getQR } = require('./utils/attach');
 const { addNewUser } = require('./utils/labels');
-const { sentryError } = require('./utils/mailer');
+const { sentryError } = require('./utils/error');
 const { buildNormalErrorMsg } = require('./utils/error');
 
 async function contactFollowUp(context) {
@@ -30,7 +30,7 @@ async function contactFollowUp(context) {
 
 module.exports = async (context) => {
 	try {
-		await addNewUser(context, prepAPI);
+		await addNewUser(context);
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 		// console.log(context.state.politicianData);
 		// we update context data at every interaction (post ony on the first time)
@@ -53,11 +53,11 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'showDays' });
+				await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'leavePhone' });
 				// await context.setState({ dialog: 'naoAceitaTermos' });
 				// await context.setState({ dialog: 'aceitaTermos' });
-				// await context.setState({ dialog: 'ofertaPesquisaEnd' });
+				// await context.setState({ dialog: 'calendarTest' });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -92,7 +92,7 @@ module.exports = async (context) => {
 				} else if (context.state.lastQRpayload.slice(0, 12) === 'previousHour') {
 					await context.setState({ dialog: 'previousHour' });
 				} else if (context.state.lastQRpayload.slice(0, 9) === 'askTypeSP') {
-					await context.setState({ cityType: await context.state.lastQRpayload.replace('askTypeSP', '') });
+					await context.setState({ calendarID: await context.state.lastQRpayload.replace('askTypeSP', '') });
 					await context.setState({ dialog: 'showDate' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
 					await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
@@ -457,9 +457,7 @@ module.exports = async (context) => {
 		}
 	} catch (error) {
 		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
-		console.log('error', error);
 		await sentryError(await buildNormalErrorMsg(`${context.session.user.first_name} ${context.session.user.last_name}`, error.stack, context.state));
-
 		if (process.env.ENV !== 'local') {
 			await help.Sentry.configureScope(async (scope) => { // sending to sentry
 				scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });

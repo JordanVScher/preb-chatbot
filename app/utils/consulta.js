@@ -66,6 +66,14 @@ async function verConsulta(context) {
 }
 
 async function showDays(context) { // shows available days
+	/* load and prepare calendar */
+	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
+	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.calendarID, context.state.paginationDate) }); // getting calendar
+	await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
+	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
+	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
+
+
 	await context.setState({ cidade: context.state.user.city }); // getting location id
 	// console.log('context.state.cidade', context.state.cidade, typeof context.state.cidade);
 	await context.setState({ calendarCurrent: context.state.calendar[context.state.paginationDate], calendarNext: context.state.calendar[context.state.paginationDate + 1] });
@@ -128,15 +136,38 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	}
 }
 
+async function checkSP(context) {
+	try {
+		const { calendars } = await prepApi.getAvailableCities();
+		await context.setState({ cidade: context.state.user.city });
+		if (!context.state.cidade) { // if user has no cidade send him back to the menu
+			await sendMain(context);
+		} else if (context.state.cidade.toString() === '30') { // ask location for SP
+			const spLocations = calendars.filter(x => x.state === 'SP');
+			const options = [];
+			spLocations.forEach((e) => {
+				options.push({
+					content_type: 'text', title: e.name, payload: `askTypeSP${e.id}`,
+				});
+			});
+
+			await context.sendText(`O bate papo pode ser na ${await help.cidadeDictionary(context.state.cidade, '0')}`, { quick_replies: options });
+		} else { // if its not SP send location and follow up with the regular
+			const location = await help.cidadeDictionary(context.state.cidade);
+			if (!location) throw Error(`Couldn't find location for city id ${context.state.cidade}`);
+			await context.sendText(`O bate papo pode ser no ${location}`);
+			const calendar = await calendars.find(x => x.state === help.siglaMap[context.state.cidade]);
+			await context.setState({ calendarID: calendar.id });
+			await showDays(context);
+		}
+	} catch (error) {
+		await sentryError(error, context.state);
+		await sendMain(context);
+	}
+}
+
 async function loadCalendar(context) { // consulta starts here
 	if (context.state.user.is_target_audience || context.state.is_target_audience || process.env.ENV === 'local') {
-	/* load and prepare calendar */
-		await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
-		await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar
-		await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
-		await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
-		await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
-
 		if (context.state.sendExtraMessages === true) {
 			// because of "outras datas" we cant show the extraMessages again, but we still have to show the next ones
 			await context.setState({ sendExtraMessages2: true, sendExtraMessages: false });
@@ -145,17 +176,7 @@ async function loadCalendar(context) { // consulta starts here
 			await context.setState({ sendExtraMessages: false });
 		}
 
-		await context.setState({ cidade: context.state.user.city });
-		if (!context.state.cidade) {
-			await sendMain(context);
-		} else if (context.state.cidade.toString() === '3') { // ask location for SP
-			await context.sendText(`O bate papo pode ser na ${await help.cidadeDictionary(context.state.cidade, '0')}`, opt.askTypeSP);
-		} else {
-			await context.sendText(`O bate papo pode ser no ${await help.cidadeDictionary(context.state.cidade)}`);
-			await showDays(context);
-		}
-	} else {
-		await sendMain(context);
+		await checkSP(context);
 	}
 }
 
@@ -178,4 +199,5 @@ module.exports = {
 	checarConsulta,
 	loadCalendar,
 	checkAppointment,
+	checkSP,
 };

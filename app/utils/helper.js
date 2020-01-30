@@ -52,6 +52,8 @@ const weekDayNameLong = {
 	0: 'Domingo', 1: 'Segunda-Feira', 2: 'Terça-Feira', 3: 'Quarta-Feira', 4: 'Quinta-Feira', 5: 'Sexta-Feira', 6: 'Sábado', 7: 'Domingo',
 };
 
+const siglaMap = { 1: 'MG', 2: 'BA', 3: 'SP' };
+
 async function cidadeDictionary(cityID, cityType) {
 	if (cityID.toString() === '1') return 'Centro de Referência da Juventude – CRJ\nRua Guaicurus, 50, Centro(Praça da Estação, Belo Horizonte - MG)';
 	if (cityID.toString() === '2') return 'Casarão da Diversidade, Pelourinho\nR. do Tijolo, 8 - Centro, Salvador - BA, 40020-290';
@@ -136,7 +138,7 @@ function buildMail(name, phone, contato) {
 async function buildConsultaFinal(state, chosenHour) {
 	let result = '';
 
-	result += `🏠: ${await cidadeDictionary(state.cidade, state.cityType)}\n`;
+	result += `🏠: ${await cidadeDictionary(state.cidade, state.calendarID)}\n`;
 	result += `⏰: ${await formatDate(chosenHour.datetime_start, chosenHour.time)}\n`;
 	result += `📞: ${telefoneDictionary[state.cidade]}\n`;
 	return result.trim();
@@ -201,4 +203,5 @@ module.exports = {
 	buildLabels,
 	getButtonTextList,
 	accents,
+	siglaMap,
 };

@@ -8,6 +8,7 @@ const { getPhoneValid } = require('./helper');
 const { loadCalendar } = require('./consulta');
 const { checkAppointment } = require('./consulta');
 const { answerQuiz } = require('./quiz');
+const { addNewUser } = require('./labels');
 
 async function handleToken(context, answer) {
 	if (answer === true) {
@@ -64,6 +65,7 @@ async function TCLE(context) {
 
 // temConsulta = await checkAppointment(context)
 async function preTCLE(context, temConsulta) {
+	await addNewUser(context);
 	if (context.state.user.is_eligible_for_research) { // é elegível pra pesquisa
 		await context.sendText(flow.preTCLE.eligible);
 	} else { // não é elegivel pra pesquisa
