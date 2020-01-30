@@ -4,6 +4,7 @@ const prepApi = require('./prep_api');
 const mainMenu = require('./mainMenu');
 const help = require('./helper');
 const { sendCarouselSus } = require('./attach');
+const { ofertaPesquisaStart } = require('./research');
 const quiz = require('./quiz');
 const triagem = require('./triagem');
 
@@ -31,11 +32,11 @@ async function sendQuiz(context, categoryQuestion) {
 
 async function sendResearch(context) {
 	await context.setState({ researchCounter: await prepApi.getCountResearch(context.session.user.id) }); // load quiz counter
-	if (context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3) { // check quiz counter
+	if (context.state.researchCounter && context.state.researchCounter.count_invited_research >= 30) { // check quiz counter
 		await mainMenu.sendMain(context); // send regular menu
 	} else {
 		await prepApi.postCountResearch(context.session.user.id); // update quiz counter
-		await context.sendText(flow.desafio.text4, opt.answer.sendResearch); // send research
+		await ofertaPesquisaStart(context, flow.ofertaPesquisaStart.offer);
 	}
 }
 

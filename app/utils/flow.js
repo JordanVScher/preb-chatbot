@@ -87,6 +87,7 @@ module.exports = {
 	},
 	ofertaPesquisaStart: {
 		text1: 'Amei conhecer vc!! Sabia q o projeto q trabalho tem tudu a ver contigo, bb?',
+		offer: 'Sabia q o projeto q trabalho tem tudu a ver contigo, bb?',
 		menuOptions: ['Me conta esse babado', 'Me conta depois'],
 		menuPostback: ['pesquisaSim', 'meContaDepois'],
 	},

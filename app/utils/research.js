@@ -32,8 +32,8 @@ async function checkPhone(context) {
 	}
 }
 
-async function ofertaPesquisaStart(context) {
-	await context.sendText(flow.ofertaPesquisaStart.text1, await getQR(flow.ofertaPesquisaStart));
+async function ofertaPesquisaStart(context, text) {
+	await context.sendText(text || flow.ofertaPesquisaStart.text1, await getQR(flow.ofertaPesquisaStart));
 }
 
 async function ofertaPesquisaSim(context) {
@@ -68,7 +68,7 @@ async function preTCLE(context, temConsulta) {
 	await addNewUser(context);
 	if (context.state.user.is_eligible_for_research) { // é elegível pra pesquisa
 		await context.sendText(flow.preTCLE.eligible);
-	} else { // não é elegivel pra pesquisa
+	} else if (context.state.user.is_eligible_for_research === 0) { // não é elegivel pra pesquisa
 		await context.sendText(flow.preTCLE.not_eligible);
 	}
 
