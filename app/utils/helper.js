@@ -148,7 +148,7 @@ function buildMail(name, phone, contato) {
 }
 
 function buildPhoneText(calendar, cidadeID) {
-	let text = calendar.phone;
+	let text = calendar ? calendar.phone : '';
 	if (!text) text = telefoneDictionary[cidadeID];
 
 	return text;

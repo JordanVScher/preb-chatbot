@@ -59,7 +59,7 @@ async function removeUserFromBlackList(UserID) {
 
 async function checkUserOnLabel(UserID, labelID) { // checks if user is on the label
 	const userLabels = await client.getAssociatedLabels(UserID);
-	const theOneLabel = await userLabels.data.find(x => x.id === `${labelID}`); // find the one label with the name same
+	const theOneLabel = await userLabels.data.find((x) => x.id === `${labelID}`); // find the one label with the name same
 
 	if (theOneLabel) { // if we found the label on the user
 		return true;
@@ -99,7 +99,7 @@ async function associatesLabelToUser(userID, labelID) {
 async function getLabelID(labelName) {
 	const labelList = await client.getLabelList();
 
-	const theOneLabel = await labelList.data.find(x => x.name === `${labelName}`);
+	const theOneLabel = await labelList.data.find((x) => x.name === `${labelName}`);
 	if (theOneLabel && theOneLabel.id) { // check if label exists
 		return theOneLabel.id;
 	}
@@ -115,7 +115,7 @@ async function getLabelID(labelName) {
 // All of the are going to be created and associated
 async function linkUserToCustomLabel(UserID, labelName) {
 	const ourLabels = await listAllLabels(); // get all labels we have
-	const theOneLabel = await ourLabels.data.find(x => x.name === labelName); // find the one label with the name same (we need the id)
+	const theOneLabel = await ourLabels.data.find((x) => x.name === labelName); // find the one label with the name same (we need the id)
 
 	if (theOneLabel) { // if we already have that label, all we have to do is associate the user to the id
 		return associatesLabelToUser(UserID, theOneLabel.id);
