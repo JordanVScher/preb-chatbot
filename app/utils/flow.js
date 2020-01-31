@@ -68,7 +68,6 @@ module.exports = {
 		buildTermos: 'Os meus criadores são pesquisadores da UFMG, USP e UFBA e querem sua autorização para usarem as infos do nosso papo pra pesquisar o comportamento '
 		+ 'sexual e prevenção do HIV em jovens. Se tu não tiver afim de participar dessa pesquisa, pode continuar falando comigo de boas, mas se quiser, pode desistir '
 		+ 'qualquer hora e pedir pra apagar suas infos! Qualquer denúncia pode ser comunicadas ao Comitê de Ética em Pesquisa. Info da pesquisa e o contato do comitê estão no link. ',
-		naoAceitaTermos: 'Tudo bem, bb!',
 	},
 	verConsulta: {
 		zero: 'Amooooreeee, você não tem nenhuma consulta marcada!',

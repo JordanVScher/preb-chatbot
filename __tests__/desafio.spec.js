@@ -4,11 +4,9 @@ const cont = require('./context');
 const desafio = require('../app/utils/desafio');
 const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
-// const { checkAnsweredQuiz } = require('../app/utils/checkQR');
 const prepApi = require('../app/utils/prep_api');
 const mainMenu = require('../app/utils/mainMenu');
 const help = require('../app/utils/helper');
-const { sendCarouselSus } = require('../app/utils/carousel');
 const triagem = require('../app/utils/triagem');
 
 jest.mock('../app/utils/flow');

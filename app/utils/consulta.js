@@ -51,14 +51,14 @@ async function sendConsultas(context) {
 }
 
 async function verConsulta(context) {
-	if (context.state.user.is_target_audience || process.env.ENV === 'local') {
+	if (context.state.user.is_target_audience) {
 		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
 		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
 			await sendConsultas(context);
 			await context.sendText(flow.consulta.view);
 			await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
 		} else {
-			await context.sendText(flow.verConsulta.zero, await checkQR.checkConsulta(context, opt.marcarConsulta));
+			await context.sendText(flow.verConsulta.zero);
 		}
 	} else {
 		await sendMain(context);
@@ -171,7 +171,8 @@ async function checkSP(context) {
 }
 
 async function loadCalendar(context) { // consulta starts here
-	if (context.state.user.is_target_audience || context.state.is_target_audience || process.env.ENV === 'local') {
+	// user must be part of target__audience and have never had an appointment nor have left his contact info
+	if (context.state.user.is_target_audience && ((await checkAppointment(context) === false) && !context.state.leftContact)) {
 		if (context.state.sendExtraMessages === true) {
 			// because of "outras datas" we cant show the extraMessages again, but we still have to show the next ones
 			await context.setState({ sendExtraMessages2: true, sendExtraMessages: false });
@@ -181,6 +182,8 @@ async function loadCalendar(context) { // consulta starts here
 		}
 
 		await checkSP(context);
+	} else {
+		await sendMain(context);
 	}
 }
 

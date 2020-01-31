@@ -85,7 +85,8 @@ async function checkPosition(context) {
 	case 'Default Fallback Intent':
 	case 'Fallback': // didn't understand what was typed
 		await createIssue(context);
-		await desafio.followUpIntent(context);
+		await desafio.followUp(context);
+		// await desafio.followUpIntent(context);
 		break;
 	default: // default acts for every intent - position on MA
 		await context.setState(
@@ -96,10 +97,13 @@ async function checkPosition(context) {
 		if (context.state.knowledge && context.state.knowledge.knowledge_base && context.state.knowledge.knowledge_base.length >= 1) {
 			await sendAnswer(context);
 			if (process.env.ENV !== 'local') await context.typing(1000 * 30);
-			await desafio.followUpIntent(context);
+			await desafio.followUp(context);
+			await desafio.followUp(context);
+			// await desafio.followUpIntent(context);
 		} else { // no answers in knowledge_base (We know the entity but admin doesn't have a position)
 			await createIssue(context);
-			await desafio.followUpIntent(context);
+			await desafio.followUp(context);
+			// await desafio.followUpIntent(context);
 		}
 		break;
 	}

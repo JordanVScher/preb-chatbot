@@ -5,7 +5,7 @@ const opt = require('../app/utils/options');
 const flow = require('../app/utils/flow');
 const prepApi = require('../app/utils/prep_api');
 const help = require('../app/utils/helper');
-const { checkConsulta } = require('../app/utils/checkQR');
+
 const { buildButton } = require('../app/utils/checkQR');
 const { checkMainMenu } = require('../app/utils/checkQR');
 // const { sendMain } = require('../app/utils/mainMenu');
@@ -25,7 +25,7 @@ it('verConsulta - no appointments', async () => {
 
 	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
 	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.verConsulta.zero, await checkConsulta(context, opt.marcarConsulta));
+	await expect(context.sendText).toBeCalledWith(flow.verConsulta.zero);
 });
 
 // it('verConsulta - one appointmen with integration token and on salvador', async () => {
@@ -84,7 +84,7 @@ it('showHours - success', async () => {
 	const ymd = 'foobar';
 	await consulta.showHours(context, '');
 
-	await expect(context.setState).toBeCalledWith({ chosenDay: context.state.calendarCurrent.find(date => date.ymd === ymd) });
+	await expect(context.setState).toBeCalledWith({ chosenDay: context.state.calendarCurrent.find((date) => date.ymd === ymd) });
 	await expect(context.setState).toBeCalledWith({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
 
 	await expect(context.state.freeHours && context.state.freeHours.length > 0).toBeTruthy();
@@ -97,7 +97,7 @@ it('showHours - error', async () => {
 	const ymd = 'foobar';
 	await consulta.showHours(context, ymd);
 
-	await expect(context.setState).toBeCalledWith({ chosenDay: context.state.calendarCurrent.find(date => date.ymd === ymd) });
+	await expect(context.setState).toBeCalledWith({ chosenDay: context.state.calendarCurrent.find((date) => date.ymd === ymd) });
 	await expect(context.setState).toBeCalledWith({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
 
 	await expect(context.state.freeHours && context.state.freeHours.length > 0).toBeFalsy();

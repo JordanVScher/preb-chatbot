@@ -52,55 +52,6 @@ it('quiz - multiple choice extra answer', async () => {
 	await expect(quiz.AnswerExtraQuestion).toBeCalledWith(context);
 });
 
-it('termos - aceitaTermos - has registrationForm', async () => {
-	const context = cont.quickReplyContext('aceitaTermos', 'aceitaTermos');
-	context.state.registrationForm = 'foobar.com';
-	await handler(context);
-
-	await expect(context.setState).toBeCalledWith({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) });
-	await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-	await expect(context.state.registrationForm).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryConsulta: 'recrutamento' });
-	await expect(context.setState).toBeCalledWith({ sendExtraMessages: true });
-	await expect(consulta.checarConsulta).toBeCalledWith(context);
-});
-
-it('termos - aceitaTermos2 - not registrationForm', async () => {
-	const context = cont.quickReplyContext('aceitaTermos2', 'aceitaTermos2');
-
-	await handler(context);
-
-	await expect(context.setState).toBeCalledWith({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) });
-	await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-	await expect(context.state.registrationForm).toBeFalsy();
-	await expect(mainMenu.sendMain).toBeCalledWith(context);
-});
-
-it('termos - naoAceitaTermos - is_eligible_for_research', async () => {
-	const context = cont.quickReplyContext('naoAceitaTermos', 'naoAceitaTermos');
-	context.state.registrationForm = 'foobar.com';
-	await handler(context);
-
-	await expect(context.setState).toBeCalledWith({ preCadastro: await prepAPI.postSignature(context.session.user.id, 1) });
-	await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-	await expect(context.state.registrationForm).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryConsulta: 'recrutamento' });
-	await expect(context.setState).toBeCalledWith({ sendExtraMessages: true });
-	await expect(consulta.checarConsulta).toBeCalledWith(context);
-});
-
-it('termos - naoAceitaTermos - not eligible_for_research', async () => {
-	const context = cont.quickReplyContext('naoAceitaTermos', 'naoAceitaTermos');
-	context.state.user = { is_eligible_for_research: 0 };
-	await handler(context);
-
-	await expect(context.setState).toBeCalledWith({ preCadastro: await prepAPI.postSignature(context.session.user.id, 0) });
-	await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
-	await expect(context.sendText).toBeCalledWith(flow.onTheResearch.naoAceitaTermos);
-	await expect(context.state.user.is_eligible_for_research === 1).toBeFalsy();
-	await expect(mainMenu.sendMain).toBeCalledWith(context);
-});
-
 it('joinResearchAfter', async () => {
 	const context = cont.quickReplyContext('joinResearchAfter', 'joinResearchAfter');
 	context.state.user = { is_eligible_for_research: 0 };

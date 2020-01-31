@@ -1,58 +1,4 @@
-const prepApi = require('./prep_api');
 const { moment } = require('./helper');
-
-// check if user has already answered the quiz to remove the quick_reply option from the menu UNUSED
-async function checkAnsweredQuiz(context, options) {
-	let newOptions = options.quick_replies; // getting array out of the QR object
-	// console.log('antes', newOptions);
-
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	if (newOptions.find(x => x.payload === 'beginQuiz') && context.state.user.finished_quiz === 1) { // no more questions to answer
-		newOptions = await newOptions.filter(obj => obj.payload !== 'beginQuiz'); // remove quiz option
-	}
-
-	// if Options has the consulta options we have to check if the user is able to scheduled appointments
-	if (newOptions.find(x => x.payload === 'showDays') || newOptions.find(x => x.payload === 'verConsulta')) { // checks if we have the options
-		if (context.state.user.is_eligible_for_research === 1) { // if user is eligible he can schedule appointments
-			await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
-			if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
-				newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option to schedule appointment because he scheduled one already
-			} else { // if he has one we can show it to him
-				newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option to see consulta for there isn't any consulta available
-			}
-		} else { // user shouldn't be able to see these options if he is not eligible
-			newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option
-			newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option
-		}
-	}
-
-	// console.log('depois', newOptions);
-	return { quick_replies: newOptions }; // putting the filtered array on a QR object
-}
-
-async function checkConsulta(context, options) {
-	let newOptions = options.quick_replies; // getting array out of the QR object
-
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-
-	if (context.state.user.is_eligible_for_research === 1) {
-		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
-		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
-			newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-showDays'); // remove option to schedule appointment because he scheduled one already
-			newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option to schedule appointment because he scheduled one already
-		} else { // if he has one we can show it to him
-			newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta'); // remove option to see consulta for there isn't any consulta available
-			newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option to see consulta for there isn't any consulta available
-		}
-	} else { // user shouldn't be able to see these options if he is not eligible
-		newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta'); // remove option
-		newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option
-		newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-showDays'); // remove option
-		newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option
-	}
-
-	return { quick_replies: newOptions };
-}
 
 async function checkMainMenu(context) {
 	let opt = [];
@@ -72,16 +18,16 @@ async function checkMainMenu(context) {
 	opt.push(sobreAmanda);
 
 	if (context.state.publicoInteresseEnd) {
-		const index = opt.findIndex(x => x.title === 'Quiz');
+		const index = opt.findIndex((x) => x.title === 'Quiz');
 		if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) { if (index) opt[index] = quizRecrutamento; }
 		if (!context.state.user.is_target_audience && !context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; }
 	}
 
-	if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || context.state.recrutamentoEnd)) { opt = await opt.filter(x => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
+	if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || context.state.recrutamentoEnd)) { opt = await opt.filter((x) => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
 
 
 	if (context.state.user.integration_token) { // replace token options if user has one
-		const index = opt.findIndex(x => x.title === 'Já Faço Parte'); if (index) opt[index] = seeToken;
+		const index = opt.findIndex((x) => x.title === 'Já Faço Parte'); if (index) opt[index] = seeToken;
 	}
 
 	return { quick_replies: opt };
@@ -111,11 +57,11 @@ async function autoTesteOption(options, cityId) {
 	let newOptions = options.quick_replies;
 	// no need to filter out cityId = 3
 	if (cityId && cityId.toString() === '1') { // belo horizonte
-		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
-		newOptions = await newOptions.filter(obj => obj.payload !== 'ong');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'rua');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'ong');
 	} else if (cityId && cityId.toString() === '2') { // salvador
-		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
-		newOptions = await newOptions.filter(obj => obj.payload !== 'auto');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'rua');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'auto');
 	}
 	return { quick_replies: newOptions };
 }
@@ -208,9 +154,7 @@ async function sendShare(context, links, results, imagem) {
 }
 
 module.exports = {
-	checkAnsweredQuiz,
 	checkMainMenu,
-	checkConsulta,
 	checkMedication,
 	autoTesteOption,
 	getErrorQR,

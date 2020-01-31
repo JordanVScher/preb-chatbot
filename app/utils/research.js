@@ -43,7 +43,7 @@ async function ofertaPesquisaSim(context) {
 }
 
 async function recrutamento(context) {
-	if (context.state.user.is_target_audience) {
+	if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) {
 		await context.sendText('Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉');
 		await context.setState({ categoryQuestion: 'recrutamento', dialog: '' });
 		await answerQuiz(context);
@@ -52,15 +52,20 @@ async function recrutamento(context) {
 	}
 }
 async function TCLE(context) {
-	await context.setState({ dialog: '' });
-	if (context.state.meContaDepois) { // se usuário escolheu "me conta depois"
-		await context.sendText('..... (introdução)');
-		await context.sendText(flow.ofertaPesquisaSim.text1);
+	if (!context.state.preCadastroSignature) {
+		await context.setState({ dialog: '' });
+		if (context.state.meContaDepois) { // se usuário escolheu "me conta depois"
+			// await context.sendText('..... (introdução)');
+			await context.sendText(flow.ofertaPesquisaSim.text1);
+			await context.setState({ meContaDepois: true });
+		} else {
+			await context.sendText(flow.TCLE.text1);
+		}
+		await context.sendButtonTemplate(flow.TCLE.text2, opt.Research_TCLE); // send info button
+		await context.sendText(flow.TCLE.text3, opt.Research_Termos); // ask for termos acceptance
 	} else {
-		await context.sendText(flow.TCLE.text1);
+		await sendMain(context);
 	}
-	await context.sendButtonTemplate(flow.TCLE.text2, opt.Research_TCLE); // send info button
-	await context.sendText(flow.TCLE.text3, opt.Research_Termos); // ask for termos acceptance
 }
 
 // temConsulta = await checkAppointment(context)
@@ -68,18 +73,19 @@ async function preTCLE(context, temConsulta) {
 	await addNewUser(context);
 	if (context.state.user.is_eligible_for_research) { // é elegível pra pesquisa
 		await context.sendText(flow.preTCLE.eligible);
-	} else if (context.state.user.is_eligible_for_research === 0) { // não é elegivel pra pesquisa
+	} else if (!context.state.user.is_eligible_for_research) { // não é elegivel pra pesquisa
 		await context.sendText(flow.preTCLE.not_eligible);
 	}
 
-	if (!context.state.user.is_target_audience) { // não é público de interesse
-		await TCLE(context);
-	} else if (context.state.leftContact || temConsulta) { // é público de interesse, já fez agendamento ou deixou contato
-		await TCLE(context);
-	} else { // é público de interesse, não fez agendamento nem deixou contato
-		await context.setState({ nextDialog: 'TCLE', dialog: '' });
-		await loadCalendar(context);
-	}
+	await TCLE(context);
+	// if (!context.state.user.is_target_audience) { // não é público de interesse
+	// 	await TCLE(context);
+	// } else if (context.state.leftContact || temConsulta) { // é público de interesse, já fez agendamento ou deixou contato
+	// 	await TCLE(context);
+	// } else { // é público de interesse, não fez agendamento nem deixou contato
+	// 	await context.setState({ nextDialog: 'TCLE', dialog: '' });
+	// 	await loadCalendar(context);
+	// }
 }
 
 

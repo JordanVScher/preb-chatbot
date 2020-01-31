@@ -1,10 +1,11 @@
 const flow = require('./flow');
 const opt = require('./options');
 const prepApi = require('./prep_api');
-const mainMenu = require('./mainMenu');
 const help = require('./helper');
+const { sendMain } = require('./mainMenu');
 const { sendCarouselSus } = require('./attach');
-const { ofertaPesquisaStart } = require('./research');
+const { checkAppointment } = require('./consulta');
+const research = require('./research');
 const quiz = require('./quiz');
 const triagem = require('./triagem');
 
@@ -19,7 +20,7 @@ async function sendQuiz(context, categoryQuestion) {
 			await context.setState({ dialog: 'backToQuiz', goBackToQuiz: false }); await quiz.answerQuiz(context);
 		}
 	} else if (context.state.quizCounter && context.state.quizCounter.count_quiz >= 3) { // check quiz counter
-		await mainMenu.sendMain(context); // send regular menu
+		await sendMain(context); // send regular menu
 	} else {
 		await prepApi.postCountQuiz(context.session.user.id); // update quiz counter
 		if (context.state.startedQuiz === true) { // check if user started quiz
@@ -32,11 +33,33 @@ async function sendQuiz(context, categoryQuestion) {
 
 async function sendResearch(context) {
 	await context.setState({ researchCounter: await prepApi.getCountResearch(context.session.user.id) }); // load quiz counter
-	if (context.state.researchCounter && context.state.researchCounter.count_invited_research >= 30) { // check quiz counter
-		await mainMenu.sendMain(context); // send regular menu
+	if (context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3) { // check quiz counter
+		await sendMain(context); // send regular menu
 	} else {
 		await prepApi.postCountResearch(context.session.user.id); // update quiz counter
-		await ofertaPesquisaStart(context, flow.ofertaPesquisaStart.offer);
+		// nunca deixou contato nem fez agendamento
+		if (context.state.user.is_target_audience && (await checkAppointment(context) === false) && !context.state.leftContact) { // eslint-disable-line no-lonely-if
+			await research.ofertaPesquisaStart(context, flow.ofertaPesquisaStart.offer);
+		} else if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) { // não acabou recrutamento
+			await research.recrutamento(context);
+		} else if (!context.state.preCadastroSignature) { // não assinou os termos
+			await research.TCLE(context);
+		} else {
+			sendMain(context);
+		}
+	}
+}
+
+async function followUp(context) {
+	if (context.state.user.is_target_audience) { // user on target_audience, offer research flows
+		await sendResearch(context);
+	} else if (!context.user.quizBrincadeiraEnd) { // user not on target_audience and didnt finish brincadeira, send back to quiz
+		await context.setState({ categoryQuestion: 'quiz_brincadeira' });
+		await sendQuiz(context);
+	} else if (!context.state.preCadastroSignature) { // não assinou os termos
+		await research.TCLE(context);
+	} else {
+		sendMain(context);
 	}
 }
 
@@ -49,7 +72,7 @@ async function sendConsulta(context) {
 			if (text) await context.sendText(text);
 		}
 		await context.sendText(flow.triagem.cta);
-		await mainMenu.sendMain(context); // send regular menu
+		await sendMain(context); // send regular menu
 	} else {
 		await context.sendText(flow.triagem.consulta2, opt.answer.sendConsulta);
 	}
@@ -60,7 +83,7 @@ async function checkAconselhamento(context) {
 	await prepApi.resetTriagem(context.session.user.id); // clear old triagem
 	if (context.state.intentType === 'duvida') {
 		if (context.state.user.is_prep === 1) { // user is prep
-			await mainMenu.sendMain(context); // send regular menu
+			await sendMain(context); // send regular menu
 		} else { // user isn't prep, send to triagem
 			await context.sendText(flow.triagem.invite, opt.answer.isPrep);
 		}
@@ -92,7 +115,7 @@ async function followUpIntent(context) {
 			} else {
 				await sendCarouselSus(context, opt.sus, flow.sus.text1);
 				await context.typing(1000 * 5);
-				await mainMenu.sendMain(context);
+				await sendMain(context);
 			}
 		}
 	} else { // not part of target audience
@@ -100,14 +123,14 @@ async function followUpIntent(context) {
 		if (quizTodo) { // there's one quiz to do
 			await sendQuiz(context, quizTodo);
 		} else {
-			await mainMenu.sendMain(context); // send regular menu
+			await sendMain(context); // send regular menu
 		}
 	}
 }
 
 async function asksDesafio(context) {
 	if (context.state.startedQuiz === true || await quiz.checkFinishQuiz(context) === false) { // user has answered the quiz already, he goes to the mainMenu
-		await mainMenu.sendMain(context);
+		await sendMain(context);
 	} else {
 		await context.sendText(flow.asksDesafio.intro, opt.asksDesafio);
 	}
@@ -115,7 +138,7 @@ async function asksDesafio(context) {
 
 async function desafioRecusado(context) {
 	await context.sendText(flow.desafioRecusado.text1);
-	await mainMenu.sendMain(context);
+	await sendMain(context);
 }
 
 async function desafioAceito(context) {
@@ -127,6 +150,7 @@ module.exports = {
 	desafioRecusado,
 	desafioAceito,
 	followUpIntent,
+	followUp,
 	sendQuiz,
 	sendResearch,
 	sendConsulta,

@@ -84,30 +84,11 @@ module.exports = {
 			{ content_type: 'text', title: 'Não deixar telefone', payload: 'mainMenu' },
 		],
 	},
-	termos: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Li e aceito!', payload: 'aceitaTermos' },
-			{ content_type: 'text', title: 'Não aceito!', payload: 'naoAceitaTermos' },
-		],
-	},
-	termos2: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Li e aceito!', payload: 'aceitaTermos2' },
-			{ content_type: 'text', title: 'Não aceito!', payload: 'naoAceitaTermos' },
-		],
-	},
 	saberMais: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Sim', payload: 'firstJoinResearch' },
 			{ content_type: 'text', title: 'Não', payload: 'firstNoResearch' },
 		],
-	},
-	saidYes: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-showDays' },
-			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-verConsulta' },
-			{ content_type: 'text', title: 'Não aceito', payload: 'showDays' },
-			{ content_type: 'text', title: 'Não aceito', payload: 'verConsulta' }],
 	},
 	outrasDatas: {
 		quick_replies: [
