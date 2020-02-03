@@ -66,7 +66,7 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 		for (const element of dates) { // eslint-disable-line
 			await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
 		}
-		result.push({ content_type: 'text', title: 'Outros Horários', payload: 'outrosHorarios' });
+		result.push({ content_type: 'text', title: 'Nenhum desses', payload: 'outrosHorarios' });
 		return result; // return object with the result array
 	} // pagination
 
@@ -97,7 +97,7 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 	}
 
 	if (result[result.length - 1].title !== 'Próximo') { // no more dates, show extra option
-		result.push({ content_type: 'text', title: 'Outros Horários', payload: 'outrosHorarios' });
+		result.push({ content_type: 'text', title: 'Nenhum desses', payload: 'outrosHorarios' });
 	}
 
 	return result;
