@@ -185,6 +185,7 @@ module.exports = async (context) => {
 			case 'beginQuiz':
 				await context.setState({ startedQuiz: true });
 				await context.sendText(flow.quiz.beginQuiz);
+				await context.typing(1000 * 3);
 				// falls throught
 			case 'startQuiz': // this is the quiz-type of questionario
 				await quiz.answerQuiz(context);
