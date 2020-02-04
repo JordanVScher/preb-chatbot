@@ -106,6 +106,11 @@ module.exports = {
 		menuOptions: ['Quiz', 'Conversar'],
 		menuPostback: ['querBrincadeira', 'offerConversar'],
 	},
+	recrutamento: {
+		text1: 'Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉',
+		menuOptions: ['Vamos lá!'],
+		menuPostback: ['recrutamentoQuiz'],
+	},
 	quiz: {
 		beginQuiz: 'Adoron!!',
 		form_error: 'Eita, acho que me perdi. Topa responder de novo?',

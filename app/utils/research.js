@@ -7,7 +7,6 @@ const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
 // const { startConsulta } = require('./consulta');
 const { checkAppointment } = require('./consulta');
-const { answerQuiz } = require('./quiz');
 const { addNewUser } = require('./labels');
 
 async function handleToken(context, answer) {
@@ -44,9 +43,7 @@ async function ofertaPesquisaSim(context) {
 
 async function recrutamento(context) {
 	if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) {
-		await context.sendText('Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉');
-		await context.setState({ categoryQuestion: 'recrutamento', dialog: '' });
-		await answerQuiz(context);
+		await context.sendText(flow.recrutamento.text1, await getQR(flow.recrutamento));
 	} else {
 		await sendMain(context);
 	}
@@ -55,7 +52,7 @@ async function TCLE(context) {
 	if (!context.state.preCadastroSignature) {
 		await context.setState({ dialog: '' });
 		if (context.state.meContaDepois) { // se usuário escolheu "me conta depois"
-			// await context.sendText('..... (introdução)');
+			await context.sendText('..... (introdução)');
 			await context.sendText(flow.ofertaPesquisaSim.text1);
 			await context.setState({ meContaDepois: true });
 		} else {

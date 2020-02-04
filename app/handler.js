@@ -53,6 +53,7 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'recrutamento' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -211,10 +212,12 @@ module.exports = async (context) => {
 				break;
 			case 'termosAccept':
 				await context.setState({ preCadastroSignature: await prepAPI.postSignature(context.session.user.id, 1), userAnsweredTermos: true }); // stores user accepting termos
+				await context.sendText('.... (msg vazia dp li e aceito)');
 				await mainMenu.sendMain(context);
 				break;
 			case 'termosDontAccept':
 				await context.setState({ preCadastroSignature: await prepAPI.postSignature(context.session.user.id, 0), userAnsweredTermos: true }); // stores user accepting termos
+				await context.sendText('.... (msg vazia do não aceito)');
 				await mainMenu.sendMain(context);
 				break;
 			case 'ofertaPesquisaStart':
@@ -277,6 +280,10 @@ module.exports = async (context) => {
 			case 'offerConversar':
 			case 'recrutamento':
 				await research.recrutamento(context);
+				break;
+			case 'recrutamentoQuiz':
+				await context.setState({ categoryQuestion: 'recrutamento' });
+				await quiz.answerQuiz(context);
 				break;
 			case 'offerBrincadeira':
 				await context.sendText(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
