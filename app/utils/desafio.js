@@ -8,59 +8,64 @@ const { checkAppointment } = require('./consulta');
 const research = require('./research');
 const quiz = require('./quiz');
 const triagem = require('./triagem');
+const { sentryError } = require('./error');
 
-async function sendQuiz(context, categoryQuestion) {
-	await context.setState({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // load quiz counter
-	await context.setState({ categoryQuestion }); // set the current categoryQuestion
-	if (context.state.goBackToQuiz === true) { // check if user is on a quiz/triagem so that we can send them back there right away instead of asking
-		await context.sendText(flow.desafio.text3);
-		if (context.state.triagem || context.state.categoryQuestion === 'screening') { // triagem
-			await context.setState({ dialog: 'goBackToTriagem', goBackToTriagem: false }); await triagem.getTriagem(context);
-		} else {
-			await context.setState({ dialog: 'backToQuiz', goBackToQuiz: false }); await quiz.answerQuiz(context);
-		}
-	} else if (context.state.quizCounter && context.state.quizCounter.count_quiz >= 3) { // check quiz counter
-		await sendMain(context); // send regular menu
+async function offerQuiz(context, categoryQuestion) {
+	if (categoryQuestion) await context.setState({ categoryQuestion });
+	if (context.state.startedQuiz === true) { // check if user started quiz
+		await context.sendText(flow.desafio.started, opt.answer.sendQuiz); // send quiz when user has started the quiz already
 	} else {
-		await prepApi.postCountQuiz(context.session.user.id); // update quiz counter
-		if (context.state.startedQuiz === true) { // check if user started quiz
-			await context.sendText(flow.desafio.text1, opt.answer.sendQuiz); // send quiz when user has started the quiz already
-		} else {
-			await context.sendText(flow.desafio.text3, opt.answer.sendQuiz); // send quiz when user hasn't even started the quiz
-		}
+		await context.sendText(flow.desafio.willStart, opt.answer.sendQuiz); // send quiz when user hasn't even started the quiz
 	}
 }
 
-async function sendResearch(context) {
-	await context.setState({ researchCounter: await prepApi.getCountResearch(context.session.user.id) }); // load quiz counter
-	if (context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3) { // check quiz counter
+async function sendFollowUp(context, type, categoryQuestion) {
+	await context.setState({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type }); // load counter
+	if (process.env.ENV === 'local') await context.sendText(`Type: ${type} - ${JSON.stringify(context.state.currentCounter)}`);
+	if (context.state.currentCounter && context.state.currentCounter.count_quiz >= 3) { // check counter
 		await sendMain(context); // send regular menu
 	} else {
-		await prepApi.postCountResearch(context.session.user.id); // update quiz counter
-		// nunca deixou contato nem fez agendamento
-		if (context.state.user.is_target_audience && (await checkAppointment(context) === false) && !context.state.leftContact) { // eslint-disable-line no-lonely-if
-			await research.ofertaPesquisaStart(context, flow.ofertaPesquisaStart.offer);
-		} else if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) { // não acabou recrutamento
-			await research.recrutamento(context);
-		} else if (!context.state.preCadastroSignature) { // não assinou os termos
+		await prepApi.postCount(context.session.user.id, type); // update counter
+
+		// type: each type of counter we have, each has a followup
+		switch (type) {
+		case 'publico-interesse':
+		case 'quiz-brincadeira':
+		case 'recrutamento':
+			await offerQuiz(context, categoryQuestion);
+			break;
+		case 'share':
 			await research.TCLE(context);
-		} else {
-			sendMain(context);
+			break;
+		case 'research-invite':
+			await research.ofertaPesquisaStart(context, flow.ofertaPesquisaStart.offer);
+			break;
+		default:
+			await sentryError('Tipo de contador/followup desconhecido!', { type, categoryQuestion, currentCounter: context.state.currentCounter });
+			await sendMain(context);
+			break;
 		}
 	}
 }
 
 async function followUp(context) {
-	if (context.state.user.is_target_audience) { // user on target_audience, offer research flows
-		await sendResearch(context);
-	} else if (!context.state.user.quizBrincadeiraEnd) { // user not on target_audience and didnt finish brincadeira, send back to quiz
-		await context.setState({ categoryQuestion: 'quiz_brincadeira' });
-		await sendQuiz(context);
-	} else if (!context.state.preCadastroSignature) { // não assinou os termos
-		await research.TCLE(context);
-	} else {
-		sendMain(context);
+	if (context.state.goBackToQuiz === true) { await offerQuiz(context); return false; } // if user was on quiz, ask user to go back, categoryQuestion should already be known by then
+
+	if (context.state.user.is_target_audience === null) { await sendFollowUp(context, 'publico-interesse', 'publico_interesse'); return false; } // if we dont have is_target_audience, ask to send user to publico_interesse
+
+	if (context.state.user.is_target_audience === 0) {
+		if (!context.state.quizBrincadeiraEnd) { await sendFollowUp(context, 'quiz-brincadeira', 'quiz_brincadeira'); return false; } // if user didnt finish brincadeira, ask to send user to publico_interesse
+		if (!context.state.preCadastroSignature) { await sendFollowUp(context, 'share'); return false; } 	// if user didnt finish signed terms, ask to send user to sign them
 	}
+
+	if (context.state.user.is_target_audience === 1) {
+		await context.setState({ temConsulta: await checkAppointment(context) });
+		if (!context.state.temConsulta && !context.state.leftContact) { await sendFollowUp(context, 'research-invite'); return false; }
+		if (!context.state.recrutamentoEnd) { await sendFollowUp(context, 'recrutamento', 'recrutamento'); return false; }
+		if (!context.state.preCadastroSignature) { await sendFollowUp(context, 'share'); return false; } 	// if user didnt finish signed terms, ask to send user to sign them
+	}
+
+	return sendMain(context);
 }
 
 async function sendConsulta(context) {
@@ -108,10 +113,10 @@ async function followUpIntent(context) {
 			if (context.state.intentType === 'serviço') { await context.sendText(flow.triagem.posto); }
 			const quizTodo = await quiz.checkFinishQuiz(context);
 			if (quizTodo) { // there's one quiz to do
-				await sendQuiz(context, quizTodo);
+				await sendFollowUp(context, quizTodo);
 			} else if (context.state.user.is_eligible_for_research === 1) {
 				if (context.state.intentType === 'problema') { await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.triagem.whatsapp, help.emergenciaDictionary)); }
-				await sendResearch(context);
+				// await sendResearch(context);
 			} else {
 				await sendCarouselSus(context, opt.sus, flow.sus.text1);
 				await context.typing(1000 * 5);
@@ -121,7 +126,7 @@ async function followUpIntent(context) {
 	} else { // not part of target audience
 		const quizTodo = await quiz.checkFinishQuiz(context);
 		if (quizTodo) { // there's one quiz to do
-			await sendQuiz(context, quizTodo);
+			await sendFollowUp(context, quizTodo);
 		} else {
 			await sendMain(context); // send regular menu
 		}
@@ -129,9 +134,10 @@ async function followUpIntent(context) {
 }
 
 async function asksDesafio(context) {
-	if (context.state.startedQuiz === true || await quiz.checkFinishQuiz(context) === false) { // user has answered the quiz already, he goes to the mainMenu
+	if (context.state.askDesafio === true) {
 		await sendMain(context);
 	} else {
+		await context.setState({ askDesafio: true }); // dont show this message again
 		await context.sendText(flow.asksDesafio.intro, opt.asksDesafio);
 	}
 }
@@ -151,8 +157,8 @@ module.exports = {
 	desafioAceito,
 	followUpIntent,
 	followUp,
-	sendQuiz,
-	sendResearch,
+	sendFollowUp,
 	sendConsulta,
+	offerQuiz,
 	checkAconselhamento,
 };

@@ -7,7 +7,8 @@ const { sentryError } = require('./error');
 
 // loads next question and shows it to the user
 async function answerQuiz(context) {
-	// await context.typingOn();
+	await context.typingOn();
+	if (!context.state.startedQuiz) await context.setState({ startedQuiz: true }); // if we passed here we started a new quiz
 	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') { // if the user never started the quiz the category is 'publico_interesse'
 		await context.setState({ categoryQuestion: 'publico_interesse' });
 	}
@@ -27,7 +28,7 @@ async function answerQuiz(context) {
 		await context.setState({ onTextQuiz: true });
 		await context.sendText(quizText);
 	}
-	// await context.typingOff();
+	await context.typingOff();
 }
 
 async function handleQuizResposta(context, quizOpt) {
@@ -56,9 +57,10 @@ async function handleQuizResposta(context, quizOpt) {
 	}
 
 	await aux.sendFollowUpMsgs(context);
+	if (context.state.sentAnswer.finished_quiz) await context.setState({ startedQuiz: false });	// clean started quiz when each quiz is finished
 
 	// from here on out, the flow of the quiz actually changes, so remember to return something to stop the rest from executing
-	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz && !context.state.sentAnswer.is_target_audience) {
+	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0) {
 		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true, categoryQuestion: '' });
 		return false;
 	}

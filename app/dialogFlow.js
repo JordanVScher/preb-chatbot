@@ -3,9 +3,7 @@ const MaAPI = require('./chatbot_api.js');
 const { createIssue } = require('./send_issue');
 const { sendAnswer } = require('./utils/sendAnswer');
 const desafio = require('./utils/desafio');
-const timer = require('./utils/timer');
 const { getRecipientPrep } = require('./utils/prep_api');
-const { sendMain } = require('./utils/mainMenu');
 const flow = require('./utils/flow');
 const help = require('./utils/helper');
 
@@ -52,7 +50,6 @@ async function getExistingRes(res) {
 	return result;
 }
 
-
 async function checkPosition(context) {
 	await context.setState({ goBackToQuiz: !!((context.state.onButtonQuiz || context.state.onTextQuiz)) });
 
@@ -86,24 +83,16 @@ async function checkPosition(context) {
 	case 'Fallback': // didn't understand what was typed
 		await createIssue(context);
 		await desafio.followUp(context);
-		// await desafio.followUpIntent(context);
 		break;
 	default: // default acts for every intent - position on MA
-		await context.setState(
-			{ knowledge: await MaAPI.getknowledgeBase(context.state.politicianData.user_id, await getExistingRes(context.state.apiaiResp), context.session.user.id) },
-		);
-		// console.log('knowledge', context.state.knowledge);
-		// check if there's at least one answer in knowledge_base
+		await context.setState({ knowledge: await MaAPI.getknowledgeBase(context.state.politicianData.user_id, await getExistingRes(context.state.apiaiResp), context.session.user.id) }); // eslint-disable-line
 		if (context.state.knowledge && context.state.knowledge.knowledge_base && context.state.knowledge.knowledge_base.length >= 1) {
 			await sendAnswer(context);
 			if (process.env.ENV !== 'local') await context.typing(1000 * 30);
 			await desafio.followUp(context);
-			await desafio.followUp(context);
-			// await desafio.followUpIntent(context);
 		} else { // no answers in knowledge_base (We know the entity but admin doesn't have a position)
 			await createIssue(context);
 			await desafio.followUp(context);
-			// await desafio.followUpIntent(context);
 		}
 		break;
 	}

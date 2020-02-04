@@ -81,12 +81,12 @@ module.exports = {
 		return false;
 	},
 
-	async getCountQuiz(fb_id) {
-		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient/count-quiz?security_token=${security_token}`).query({ fb_id }));
+	async getCount(fb_id, type) {
+		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient/count-${type}?security_token=${security_token}`).query({ fb_id }));
 	},
 
-	async postCountQuiz(fb_id) {
-		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/count-quiz?security_token=${security_token}`).query({ fb_id }));
+	async postCount(fb_id, type) {
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/count-${type}?security_token=${security_token}`).query({ fb_id }));
 	},
 
 	async getCountResearch(fb_id) {

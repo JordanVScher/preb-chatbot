@@ -21,9 +21,11 @@ module.exports = {
 		intro: 'Posso começar na linha entrevistadora?',
 	},
 	desafio: {
-		text1: 'Hmm, beibe, ainda quero te fazer umas perguntinhas! Bora?',
+		willStart: 'Agora posso fazer a linha entrevistadora e te fazer umas perguntinhas?',
+		started: 'Posso continuar a linha entrevistadora? Faltam só as últimas perguntinhas!',
 		text2: 'Tem certeza, mexxxmo?',
-		text3: 'Bb, aproveitando... Quero te conhecer melhor, topa responder? 💁‍♀',
+		menuOptions: ['Bora', 'Agora Não'],
+		menuPostback: ['startQuiz', 'mainMenu'],
 	},
 	desafioRecusado: {
 		text1: '😉',

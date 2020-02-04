@@ -365,7 +365,7 @@ module.exports = async (context) => {
 				await context.sendText(flow.prevention.text1);
 				await context.sendText(flow.prevention.text2);
 				await context.sendText(flow.prevention.text3);
-				await mainMenu.sendMain(context);
+				await desafio.followUp(context);
 				break;
 			case 'retryTriagem':
 				await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
