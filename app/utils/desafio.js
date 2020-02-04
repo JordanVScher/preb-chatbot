@@ -53,7 +53,7 @@ async function sendResearch(context) {
 async function followUp(context) {
 	if (context.state.user.is_target_audience) { // user on target_audience, offer research flows
 		await sendResearch(context);
-	} else if (!context.user.quizBrincadeiraEnd) { // user not on target_audience and didnt finish brincadeira, send back to quiz
+	} else if (!context.state.user.quizBrincadeiraEnd) { // user not on target_audience and didnt finish brincadeira, send back to quiz
 		await context.setState({ categoryQuestion: 'quiz_brincadeira' });
 		await sendQuiz(context);
 	} else if (!context.state.preCadastroSignature) { // não assinou os termos

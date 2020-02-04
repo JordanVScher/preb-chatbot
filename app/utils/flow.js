@@ -210,7 +210,7 @@ module.exports = {
 		insta: 'Deixe seu instagram que entraremos em contato',
 		success: 'Valeu! Logo vamos entrar em contato.',
 		failure: 'Esse telefone não é válido! Tente de novo',
-		sendMail: '<USERNAME> quer que entre em contato pelo <CONTATO> "<PHONE>" depois de receber a notificação.',
+		sendMail: '<USERNAME> quer que entre em contato pelo <CONTATO> "<PHONE>".',
 		menuOptions: ['Instagram', 'WhatsApp', 'Não deixar contato'],
 		menuPostback: ['leaveInsta', 'leavePhoneTwo', 'dontLeaveContact'],
 	},
