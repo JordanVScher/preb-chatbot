@@ -17,11 +17,9 @@ module.exports.sendFollowUpMsgs = async (context) => {
 				await context.setState({ resultImageUrl: context.state.sentAnswer.followup_messages[i] });
 			} else {
 				await context.sendText(context.state.sentAnswer.followup_messages[i]);
-				if (i === 1 && context.state.currentQuestion.code === 'AC7') {
-					if (context.state.resultImageUrl && context.state.resultImageUrl.length > 0) {
-						await context.sendImage(context.state.resultImageUrl); // send fun_questions result
-						await context.setState({ resultImageUrl: '' });
-					}
+				if (context.state.resultImageUrl && context.state.resultImageUrl.length > 0) {
+					await context.sendImage(context.state.resultImageUrl); // send fun_questions result
+					await context.setState({ resultImageUrl: '' });
 				}
 			}
 		}
