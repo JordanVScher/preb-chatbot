@@ -22,7 +22,7 @@ async function contactFollowUp(context) {
 	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
 		await research.ofertaPesquisaEnd(context);
 	} else if (context.state.nextDialog === 'calendario') {
-		await consulta.loadCalendar(context);
+		await consulta.startConsulta(context);
 	} else {
 		await mainMenu.sendMain(context);
 	}
@@ -44,7 +44,7 @@ module.exports = async (context) => {
 			// session: JSON.stringify(context.state),
 		});
 
-		console.log('context.state.user', context.state.user);
+		// console.log('context.state.user', context.state.user);
 		// console.log('context.state.user.system_labels', await help.buildLabels(context.state.user.system_labels));
 		await timer.deleteTimers(context.session.user.id);
 
@@ -64,7 +64,8 @@ module.exports = async (context) => {
 				context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
 			// console.log(context.session.user.first_name, 'clicks lastQRpayload => new payload:', `${context.state.lastQRpayload} => ${context.event.quickReply.payload}`);
-			if (!context.state.lastQRpayload || context.state.lastQRpayload !== context.event.quickReply.payload) { // check if last clicked button is the same as the new one
+
+			if (context.state.lastQRpayload || context.state.lastQRpayload !== context.event.quickReply.payload) { // check if last clicked button is the same as the new one
 				await context.setState({ lastQRpayload: context.event.quickReply.payload }); // update last quick reply chosen
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
 					context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
@@ -87,11 +88,16 @@ module.exports = async (context) => {
 					await context.setState({ finalDate: context.state.lastQRpayload.replace('hora', '').replace(':', '-') });
 					await consulta.finalDate(context, context.state.finalDate);
 				} else if (context.state.lastQRpayload.slice(0, 8) === 'nextHour') {
-					await context.setState({ dialog: 'nextHour' });
+					await context.setState({ dialog: 'nextHour', lastQRpayload: '' });
 				} else if (context.state.lastQRpayload.slice(0, 12) === 'previousHour') {
 					await context.setState({ dialog: 'previousHour' });
+				} else if (context.state.lastQRpayload.slice(0, 7) === 'nextDay') {
+					await context.setState({ dialog: 'nextDay' });
+				} else if (context.state.lastQRpayload.slice(0, 11) === 'previousDay') {
+					await context.setState({ dialog: 'previousDay' });
 				} else if (context.state.lastQRpayload.slice(0, 9) === 'askTypeSP') {
 					await context.setState({ calendarID: await context.state.lastQRpayload.replace('askTypeSP', '') });
+					await consulta.loadCalendar(context);
 					await context.setState({ dialog: 'showDate' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
 					await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
@@ -185,7 +191,7 @@ module.exports = async (context) => {
 			case 'beginQuiz':
 				await context.setState({ startedQuiz: true });
 				await context.sendText(flow.quiz.beginQuiz);
-				await context.typing(1000 * 3);
+				if (process.env.ENV !== 'local') await context.typing(1000 * 3);
 				// falls throught
 			case 'startQuiz': // this is the quiz-type of questionario
 				await quiz.answerQuiz(context);
@@ -220,7 +226,7 @@ module.exports = async (context) => {
 				break;
 			case 'pesquisaPresencial':
 				// await context.setState({ categoryConsulta: 'BATE PAPO PRESENCIAL' });
-				await consulta.loadCalendar(context);
+				await consulta.startConsulta(context);
 				break;
 			case 'meContaDepois':
 				await context.setState({ meContaDepois: true });
@@ -287,10 +293,10 @@ module.exports = async (context) => {
 			case 'showDays':
 			case 'loadCalendar':
 				await context.setState({ categoryConsulta: 'recrutamento' }); // on end quiz
-				await consulta.loadCalendar(context);
+				await consulta.startConsulta(context);
 				break;
 			case 'showDate':
-				await consulta.showDays(context);
+				await consulta.showDays(context, true);
 				break;
 			case 'showHours':
 				await consulta.showHours(context, context.state.showHours);
@@ -299,19 +305,20 @@ module.exports = async (context) => {
 			// moved up, to send user to ofertaPesquisaEnd by changing the dialog state and avoiding cross importing
 			// 	break;
 			case 'nextDay':
-				await context.setState({ paginationDate: context.state.paginationDate + 1 });
+				console.log('context.state.paginationDate', context.state.paginationDate);
+				await context.setState({ paginationDate: context.state.paginationDate + 1, lastQRpayload: '' });
 				await consulta.showDays(context);
 				break;
 			case 'previousDay':
-				await context.setState({ paginationDate: context.state.paginationDate - 1 });
+				await context.setState({ paginationDate: context.state.paginationDate - 1, lastQRpayload: '' });
 				await consulta.showDays(context);
 				break;
 			case 'nextHour':
-				await context.setState({ paginationHour: context.state.paginationHour + 1 });
+				await context.setState({ paginationHour: context.state.paginationHour + 1, lastQRpayload: '' });
 				await consulta.showHours(context, context.state.lastQRpayload.replace('nextHour', ''));
 				break;
 			case 'previousHour':
-				await context.setState({ paginationHour: context.state.paginationHour - 1 });
+				await context.setState({ paginationHour: context.state.paginationHour - 1, lastQRpayload: '' });
 				await consulta.showHours(context, context.state.lastQRpayload.replace('previousHour', ''));
 				break;
 			case 'verConsulta':

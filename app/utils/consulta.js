@@ -66,19 +66,8 @@ async function verConsulta(context) {
 }
 
 async function showDays(context) { // shows available days
-	/* load and prepare calendar */
-	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
-	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.calendarID, context.state.paginationDate) }); // getting calendar
-	await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
-	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
-	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
 	await context.setState({ calendarCurrent: context.state.calendar[context.state.paginationDate], calendarNext: context.state.calendar[context.state.paginationDate + 1] });
-
-	// console.log('Calendário current', context.state.calendarCurrent);
-	// console.log('Calendário next', context.state.calendarNext);
-
 	await context.setState({ freeDays: await aux.separateDaysQR(context.state.calendarCurrent, context.state.calendarNext, context.state.paginationDate) });
-	// console.log('freeDays', JSON.stringify(context.state.freeDays, null, 2));
 
 	if (context.state.freeDays && context.state.freeDays.length > 0) {
 		await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays });
@@ -89,7 +78,7 @@ async function showDays(context) { // shows available days
 }
 
 async function showHours(context, ymd) {
-	await context.setState({ chosenDay: context.state.calendarCurrent.find((date) => date.ymd === ymd) }); // any day chosen from freeDays is in the calendarCurrent
+	await context.setState({ chosenDay: context.state.calendarCurrent.find(date => date.ymd === ymd) }); // any day chosen from freeDays is in the calendarCurrent
 	await context.setState({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
 	if (context.state.freeHours && context.state.freeHours.length > 0) {
 		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours });
@@ -101,9 +90,7 @@ async function showHours(context, ymd) {
 
 async function finalDate(context, quota) { // where we actually schedule the consulta
 	await context.setState({ paginationDate: 1, paginationHour: 1, dialog: '' }); // resetting pagination
-
-	console.log('chosenDay', context.state.chosenDay);
-	await context.setState({ chosenHour: context.state.chosenDay.hours.find((hour) => hour.quota === parseInt(quota, 10)) });
+	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
 
 	await context.setState({
 		appointmentResponse: await prepApi.postAppointment(
@@ -116,7 +103,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 
 	if (context.state.appointmentResponse && context.state.appointmentResponse.id && !context.state.appointmentResponse.form_error) {
 		const { appointments } = await prepApi.getAppointment(context.session.user.id);
-		const consulta = appointments.find((x) => x.id === context.state.appointmentResponse.id);
+		const consulta = appointments.find(x => x.id === context.state.appointmentResponse.id);
 
 		const msg = `${flow.consulta.success}\n${await help.buildConsultaFinal(context.state, consulta)}`;
 		await context.sendText(msg);
@@ -139,6 +126,15 @@ async function finalDate(context, quota) { // where we actually schedule the con
 	}
 }
 
+async function loadCalendar(context) {
+	/* load and prepare calendar */
+	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
+	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.calendarID, context.state.paginationDate) }); // getting calendar
+	await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
+	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
+	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
+}
+
 async function checkSP(context) {
 	try {
 		const cidade = context.state.user.city;
@@ -147,7 +143,7 @@ async function checkSP(context) {
 		if (!cidade) { // if user has no cidade send him back to the menu
 			await sendMain(context);
 		} else if (cidade.toString() === '3') { // ask location for SP
-			const spLocations = calendars.filter((x) => x.state === 'SP');
+			const spLocations = calendars.filter(x => x.state === 'SP');
 			const options = [];
 			spLocations.forEach((e) => {
 				options.push({
@@ -160,9 +156,10 @@ async function checkSP(context) {
 			const location = await help.cidadeDictionary(cidade);
 			if (!location) throw Error(`Couldn't find location for city id ${cidade}`);
 			await context.sendText(`O bate papo pode ser no ${location}`);
-			const calendar = await calendars.find((x) => x.state === help.siglaMap[cidade]);
+			const calendar = await calendars.find(x => x.state === help.siglaMap[cidade]);
 			await context.setState({ calendarID: calendar.id });
-			await showDays(context);
+			await loadCalendar(context);
+			await showDays(context, true);
 		}
 	} catch (error) {
 		await sentryError(error, context.state);
@@ -170,7 +167,8 @@ async function checkSP(context) {
 	}
 }
 
-async function loadCalendar(context) { // consulta starts here
+
+async function startConsulta(context) {
 	// user must be part of target__audience and have never had an appointment nor have left his contact info
 	if (context.state.user.is_target_audience && ((await checkAppointment(context) === false) && !context.state.leftContact)) {
 		if (context.state.sendExtraMessages === true) {
@@ -205,6 +203,7 @@ module.exports = {
 	finalDate,
 	checarConsulta,
 	loadCalendar,
+	startConsulta,
 	checkAppointment,
 	checkSP,
 	sendConsultas,

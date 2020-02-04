@@ -5,7 +5,7 @@ const { sendMain } = require('./mainMenu');
 const { getRecipientPrep } = require('./prep_api');
 const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
-const { loadCalendar } = require('./consulta');
+// const { startConsulta } = require('./consulta');
 const { checkAppointment } = require('./consulta');
 const { answerQuiz } = require('./quiz');
 const { addNewUser } = require('./labels');
@@ -69,7 +69,7 @@ async function TCLE(context) {
 }
 
 // temConsulta = await checkAppointment(context)
-async function preTCLE(context, temConsulta) {
+async function preTCLE(context, temConsulta) { // eslint-disable-line no-unused-vars
 	await addNewUser(context);
 	if (context.state.user.is_eligible_for_research) { // é elegível pra pesquisa
 		await context.sendText(flow.preTCLE.eligible);
@@ -84,7 +84,7 @@ async function preTCLE(context, temConsulta) {
 	// 	await TCLE(context);
 	// } else { // é público de interesse, não fez agendamento nem deixou contato
 	// 	await context.setState({ nextDialog: 'TCLE', dialog: '' });
-	// 	await loadCalendar(context);
+	// 	await startConsulta(context);
 	// }
 }
 
