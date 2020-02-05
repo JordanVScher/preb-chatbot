@@ -1,4 +1,5 @@
 const { moment } = require('./helper');
+const { checkAppointment } = require('./consulta');
 
 async function checkMainMenu(context) {
 	let opt = [];
@@ -10,6 +11,11 @@ async function checkMainMenu(context) {
 	const jaFacoParte = { content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' };
 	const seeToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' };
 	const sobreAmanda = { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' };
+	const termos = { content_type: 'text', title: 'Termos', payload: 'TCLE' };
+	// const pesquisa = { content_type: 'text', title: 'Pesquisa', payload: 'ofertaPesquisaStart' };
+	const marcarConsulta = { content_type: 'text', title: 'Bate papo presencial', payload: 'pesquisaPresencial' };
+	const deixarContato = { content_type: 'text', title: 'Bate papo virtual', payload: 'pesquisaVirtual' };
+	const verConsulta = { content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' };
 
 	opt.push(baterPapo);
 	opt.push(quiz);
@@ -19,12 +25,26 @@ async function checkMainMenu(context) {
 
 	if (context.state.publicoInteresseEnd) {
 		const index = opt.findIndex(x => x.title === 'Quiz');
-		if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) { if (index) opt[index] = quizRecrutamento; }
-		if (!context.state.user.is_target_audience && !context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; }
+		if (context.state.user.is_target_audience === 0) {
+			if (!context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; } else
+			if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
+		}
+
+		if (context.state.user.is_target_audience === 1) {
+			await context.setState({ temConsulta: await checkAppointment(context) });
+			if (!context.state.temConsulta && !context.state.leftContact) {
+				if (index) { opt[index] = marcarConsulta; opt.splice(index + 1, 0, deixarContato); }
+			} else if (!context.state.recrutamentoEnd) {
+				if (index) opt[index] = quizRecrutamento;
+			} else if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
+
+			if (context.state.temConsulta) {
+				opt.splice(index + 1, 0, verConsulta);
+			}
+		}
 	}
 
 	if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || context.state.recrutamentoEnd)) { opt = await opt.filter(x => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
-
 
 	if (context.state.user.integration_token) { // replace token options if user has one
 		const index = opt.findIndex(x => x.title === 'Já Faço Parte'); if (index) opt[index] = seeToken;
