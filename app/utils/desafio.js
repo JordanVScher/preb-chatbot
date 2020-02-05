@@ -61,7 +61,7 @@ async function followUp(context) {
 	if (context.state.user.is_target_audience === 1) {
 		await context.setState({ temConsulta: await checkAppointment(context) });
 		if (!context.state.temConsulta && !context.state.leftContact) { await sendFollowUp(context, 'research-invite'); return false; }
-		if (!context.state.recrutamentoEnd) { await sendFollowUp(context, 'recrutamento', 'recrutamento'); return false; }
+		if (!context.state.recrutamentoEnd && context.state.user.risk_group) { await sendFollowUp(context, 'recrutamento', 'recrutamento'); return false; }
 		if (!context.state.preCadastroSignature) { await sendFollowUp(context, 'share'); return false; } 	// if user didnt finish signed terms, ask to send user to sign them
 	}
 
