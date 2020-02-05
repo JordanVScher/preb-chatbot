@@ -34,7 +34,7 @@ async function checkMainMenu(context) {
 			await context.setState({ temConsulta: await checkAppointment(context) });
 			if (!context.state.temConsulta && !context.state.leftContact) {
 				if (index) { opt[index] = marcarConsulta; opt.splice(index + 1, 0, deixarContato); }
-			} else if (!context.state.recrutamentoEnd) {
+			} else if (!context.state.recrutamentoEnd && context.state.user.risk_group) {
 				if (index) opt[index] = quizRecrutamento;
 			} else if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
 
@@ -44,7 +44,9 @@ async function checkMainMenu(context) {
 		}
 	}
 
-	if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || context.state.recrutamentoEnd)) { opt = await opt.filter(x => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
+	// dont show quiz option if either of brincadeira and recrutamento are answered, also dont show quiz if user is taget_audiece but is not in the risk group
+	if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || (context.state.recrutamentoEnd
+		|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter(x => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
 
 	if (context.state.user.integration_token) { // replace token options if user has one
 		const index = opt.findIndex(x => x.title === 'Já Faço Parte'); if (index) opt[index] = seeToken;

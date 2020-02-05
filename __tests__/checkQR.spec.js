@@ -96,9 +96,9 @@ it('checkMainMenu - é publico_interesse, não marcou consulta nem deixou contat
 	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 });
 
-it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato e não acabou recrutamento -> vê Quiz e Ver Consulta', async () => {
+it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato e não acabou recrutamento, é grupo de risco -> vê Quiz e Ver Consulta', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1 };
+	context.state.user = { is_target_audience: 1, risk_group: 1 };
 	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = false;
 	context.state.temConsulta = true; context.state.leftContact = false;
 	const result = await checkQR.checkMainMenu(context);
@@ -114,9 +114,43 @@ it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato e
 	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 });
 
-it('checkMainMenu - é publico_interesse, não marcou consulta, deixou contato e não acabou recrutamento -> vê Quiz', async () => {
+it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato, não é grupo de risco, não assinou os termos -> Não vê Quiz mas vê Termos e Ver Consulta', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1 };
+	context.state.user = { is_target_audience: 1, risk_group: 0 };
+	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = false;
+	context.state.temConsulta = true; context.state.leftContact = false; context.state.preCadastroSignature = false;
+	const result = await checkQR.checkMainMenu(context);
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+
+	await expect(result.quick_replies.length === 6).toBeTruthy();
+	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
+	await expect(result.quick_replies[1].title === 'Termos').toBeTruthy();
+	await expect(result.quick_replies[2].title === 'Ver Consulta').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
+});
+
+it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato, não é grupo de risco, assinou os termos -> Não vê Quiz mas vê Ver Consulta', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { is_target_audience: 1, risk_group: 0 };
+	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = false;
+	context.state.temConsulta = true; context.state.leftContact = false; context.state.preCadastroSignature = true;
+	const result = await checkQR.checkMainMenu(context);
+
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+
+	await expect(result.quick_replies.length === 5).toBeTruthy();
+	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
+	await expect(result.quick_replies[1].title === 'Ver Consulta').toBeTruthy();
+	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
+});
+
+it('checkMainMenu - é publico_interesse, não marcou consulta, deixou contato e não acabou recrutamento, é grupo de risco -> vê Quiz', async () => {
+	const context = cont.quickReplyContext('greetings', 'greetings');
+	context.state.user = { is_target_audience: 1, risk_group: 1 };
 	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = false;
 	context.state.temConsulta = false; context.state.leftContact = true;
 	const result = await checkQR.checkMainMenu(context);
@@ -133,7 +167,7 @@ it('checkMainMenu - é publico_interesse, não marcou consulta, deixou contato e
 
 it('checkMainMenu - é publico_interesse, marcou consulta, acabou recrutamento mas não assinou termos -> vê Termos e Ver Consulta', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1 };
+	context.state.user = { is_target_audience: 1, risk_group: 1 };
 	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = true;
 	context.state.temConsulta = true; context.state.preCadastroSignature = false;
 
@@ -150,7 +184,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, acabou recrutamento m
 
 it('checkMainMenu - é publico_interesse, deixou contato e acabou recrutamento mas não assinou termos -> vê Termos', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1 };
+	context.state.user = { is_target_audience: 1, risk_group: 1 };
 	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = true;
 	context.state.temConsulta = false; context.state.leftContact = true; context.state.preCadastroSignature = false;
 
@@ -166,7 +200,7 @@ it('checkMainMenu - é publico_interesse, deixou contato e acabou recrutamento m
 
 it('checkMainMenu - é publico_interesse, marcou consulta, acabou recrutamento e assinou termos -> vê Menu Normal e Ver Consulta', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1 };
+	context.state.user = { is_target_audience: 1, risk_group: 1 };
 	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = true;
 	context.state.temConsulta = true; context.state.preCadastroSignature = true;
 
@@ -182,7 +216,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, acabou recrutamento e
 
 it('checkMainMenu - é publico_interesse, deixou contato, acabou recrutamento e assinou termos -> vê Menu Normal', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.user = { is_target_audience: 1 };
+	context.state.user = { is_target_audience: 1, risk_group: 1 };
 	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = true;
 	context.state.temConsulta = false; context.state.leftContact = true; context.state.preCadastroSignature = true;
 
