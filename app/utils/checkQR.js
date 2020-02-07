@@ -24,7 +24,7 @@ async function checkMainMenu(context) {
 	opt.push(sobreAmanda);
 
 	if (context.state.publicoInteresseEnd) {
-		const index = opt.findIndex(x => x.title === 'Quiz');
+		const index = opt.findIndex((x) => x.title === 'Quiz');
 		if (context.state.user.is_target_audience === 0) {
 			if (!context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; } else
 			if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
@@ -46,10 +46,10 @@ async function checkMainMenu(context) {
 
 	// dont show quiz option if either of brincadeira and recrutamento are answered, also dont show quiz if user is taget_audiece but is not in the risk group
 	if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || (context.state.recrutamentoEnd
-		|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter(x => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
+		|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter((x) => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
 
 	if (context.state.user.integration_token) { // replace token options if user has one
-		const index = opt.findIndex(x => x.title === 'Já Faço Parte'); if (index) opt[index] = seeToken;
+		const index = opt.findIndex((x) => x.title === 'Já Faço Parte'); if (index) opt[index] = seeToken;
 	}
 
 	return { quick_replies: opt };
@@ -79,11 +79,11 @@ async function autoTesteOption(options, cityId) {
 	let newOptions = options.quick_replies;
 	// no need to filter out cityId = 3
 	if (cityId && cityId.toString() === '1') { // belo horizonte
-		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
-		newOptions = await newOptions.filter(obj => obj.payload !== 'ong');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'rua');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'ong');
 	} else if (cityId && cityId.toString() === '2') { // salvador
-		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
-		newOptions = await newOptions.filter(obj => obj.payload !== 'auto');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'rua');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'auto');
 	}
 	return { quick_replies: newOptions };
 }

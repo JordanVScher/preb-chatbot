@@ -26,6 +26,7 @@
     "fs-extra": "^7.0.1",
     "get-audio-duration": "0.0.1",
     "grpc": "^1.24.1",
+    "jsonfile": "^5.0.0",
     "messaging-api-messenger": "^0.7.16",
     "moment": "^2.24.0",
     "node-google-calendar": "^1.1.1",

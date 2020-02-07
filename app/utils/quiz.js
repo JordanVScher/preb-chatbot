@@ -67,6 +67,7 @@ async function handleQuizResposta(context, quizOpt) {
 
 	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz && context.state.sentAnswer.is_target_audience) {
 		await context.setState({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true, categoryQuestion: '' });
+		await context.setState({ whenBecameTargetAudience: new Date() });
 		return false;
 	}
 
