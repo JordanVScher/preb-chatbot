@@ -25,7 +25,7 @@ module.exports = {
 		started: 'Posso continuar a linha entrevistadora? Faltam só as últimas perguntinhas!',
 		text2: 'Tem certeza, mexxxmo?',
 		menuOptions: ['Bora', 'Agora Não'],
-		menuPostback: ['startQuiz', 'agoraNao'],
+		menuPostback: ['startQuiz', 'mainMenu'],
 	},
 	desafioRecusado: {
 		text1: '😉',

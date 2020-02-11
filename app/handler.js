@@ -184,7 +184,6 @@ module.exports = async (context) => {
 			case 'desafio':
 				await context.sendText(flow.desafio.text1, opt.desafio);
 				break;
-			case 'agoraNao':
 			case 'mainMenu':
 				await mainMenu.sendMain(context);
 				break;
