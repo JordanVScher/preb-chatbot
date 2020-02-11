@@ -14,7 +14,7 @@ const sessionsFolder = './.sessions/';
 async function checkTimeDifference(date) {
 	const dateM = moment(date);
 	const diff = Math.abs(dateM.diff(Date.now(), 'minutes'));
-	console.log('diff', diff);
+
 	if (diff > 5) return true;
 	return false;
 }
@@ -29,7 +29,7 @@ async function sendNotificacao() {
 
 		if (file._state.whenBecameTargetAudience) { // check if user has a date from when he became part of target audience
 			const timeTest = await checkTimeDifference(new Date(file._state.whenBecameTargetAudience)); // check if enough time has passed since then to send the message
-			console.log('timeTest', timeTest);
+
 			if (timeTest) {
 				file._state.user = await getRecipientPrep(file.user.id); // update user recipient status from the api
 
@@ -51,3 +51,5 @@ async function sendNotificacao() {
 		}
 	}
 }
+
+module.exports = { sendNotificacao };

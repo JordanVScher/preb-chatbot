@@ -42,7 +42,7 @@ async function ofertaPesquisaSim(context) {
 }
 
 async function recrutamento(context) {
-	if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) {
+	if (context.state.user.is_target_audience && context.state.user.risk_group && !context.state.recrutamentoEnd) {
 		await context.sendText(flow.recrutamento.text1, await getQR(flow.recrutamento));
 	} else {
 		await sendMain(context);

@@ -30,8 +30,8 @@ async function contactFollowUp(context) {
 
 module.exports = async (context) => {
 	try {
-		await addNewUser(context);
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
+		await addNewUser(context);
 		// console.log(context.state.politicianData);
 		// we update context data at every interaction (post ony on the first time)
 		await MaAPI.postRecipientMA(context.state.politicianData.user_id, {
@@ -184,6 +184,7 @@ module.exports = async (context) => {
 			case 'desafio':
 				await context.sendText(flow.desafio.text1, opt.desafio);
 				break;
+			case 'agoraNao':
 			case 'mainMenu':
 				await mainMenu.sendMain(context);
 				break;
