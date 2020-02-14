@@ -28,10 +28,16 @@ async function contactFollowUp(context) {
 	}
 }
 
+async function startInteration(fbID) {
+	const status = await prepAPI.getRecipientInteraction(fbID);
+	if (!status || !status[0] || status[0].closed_at !== null) await prepAPI.postRecipientInteraction(fbID);
+}
+
 module.exports = async (context) => {
 	try {
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 		await addNewUser(context);
+		await startInteration(context.session.user.id);
 		// console.log(context.state.politicianData);
 		// we update context data at every interaction (post ony on the first time)
 		await MaAPI.postRecipientMA(context.state.politicianData.user_id, {
@@ -62,15 +68,16 @@ module.exports = async (context) => {
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
-			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
-				context.event.postback.payload, context.event.postback.title);
+			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id, context.event.postback.payload, context.event.postback.title);
+			await prepAPI.logFlowChange(context.session.user.id, context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
 			// console.log(context.session.user.first_name, 'clicks lastQRpayload => new payload:', `${context.state.lastQRpayload} => ${context.event.quickReply.payload}`);
 
 			if (context.state.lastQRpayload || context.state.lastQRpayload !== context.event.quickReply.payload) { // check if last clicked button is the same as the new one
 				await context.setState({ lastQRpayload: context.event.quickReply.payload }); // update last quick reply chosen
-				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id,
-					context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
+				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id, context.event.message.quick_reply.payload, context.event.message.quick_reply.payload); // eslint-disable-line max-len
+				await prepAPI.logFlowChange(context.session.user.id, context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
+
 				if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
 					await context.setState({ selectedDate: context.state.lastQRpayload.slice(9, -1) });
 					await context.setState({ dialog: 'setEventHour' });

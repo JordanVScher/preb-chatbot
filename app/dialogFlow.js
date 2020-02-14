@@ -50,7 +50,16 @@ async function getExistingRes(res) {
 	return result;
 }
 
+async function saveIntentLog(pageID, politicianID, userID, intentName) {
+	let intent = null;
+	const iName = intentName ? intentName.toLowerCase() : intentName;
+	const pageIntents = await MaAPI.getAllAvailableIntents(pageID);
+	if (pageIntents && pageIntents.intents) intent = pageIntents.intents.find((x) => x.name === iName || x.human_name === iName);
+	if (intent && intent.id) await MaAPI.setIntentStatus(politicianID, userID, intent.id, 1);
+}
+
 async function checkPosition(context) {
+	await saveIntentLog(context.event.rawEvent.recipient.id, context.state.politicianData.user_id, context.session.user.id, context.state.intentName);
 	await context.setState({ goBackToQuiz: !!((context.state.onButtonQuiz || context.state.onTextQuiz)) });
 
 	await context.setState({ dialog: 'checkPositionFunc' });

@@ -11,9 +11,7 @@ module.exports.sendAnswer = async (context) => { // send answer from posicioname
 	// console.log('currentTheme', currentTheme);
 	if (context.state.currentTheme && ((context.state.currentTheme.answer && context.state.currentTheme.answer.length > 0)
 		|| (context.state.currentTheme.saved_attachment_type !== null && context.state.currentTheme.saved_attachment_id !== null))) {
-		await MaAPI.setIntentStatus(context.state.politicianData.user_id, context.session.user.id, context.state.currentIntent, 1);
 		await MaAPI.logAskedEntity(context.session.user.id, context.state.politicianData.user_id, context.state.currentTheme.entities[0].id);
-
 		if (context.state.currentTheme.answer) { // if there's a text asnwer we send it
 			await context.setState({ resultTexts: await separateString(context.state.currentTheme.answer) });
 			if (context.state.resultTexts && context.state.resultTexts.firstString) {

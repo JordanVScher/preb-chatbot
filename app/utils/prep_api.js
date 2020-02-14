@@ -104,4 +104,26 @@ module.exports = {
 	async resetTriagem(fb_id) {
 		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/reset-screening?security_token=${security_token}`).query({ fb_id }));
 	},
+
+	async postRecipientInteraction(fb_id) {
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/interaction?security_token=${security_token}`).query({ fb_id }));
+	},
+
+	async getRecipientInteraction(fb_id) {
+		return handleRequestAnswer(await request(`${apiUri}/api/chatbot/recipient/interaction?security_token=${security_token}`).query({ fb_id }));
+	},
+
+	async postRecipientInteractionClose(fb_id, interaction_id) {
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/interaction/close?security_token=${security_token}`).query({ fb_id, interaction_id }));
+	},
+
+	async logFlowChange(recipient_fb_id, payload, button_text) {
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/quick-reply-log?security_token=${security_token}&`).query(
+			{
+				fb_id: recipient_fb_id,
+				payload,
+				button_text,
+			},
+		));
+	},
 };
