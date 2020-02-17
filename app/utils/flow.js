@@ -9,13 +9,7 @@ module.exports = {
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
 		msgOne: 'Cola na grade que vou te contar tudo!',
-		msgTwo: 'Sou a Amanda Selfie, o nome já diz tudo, eu A-M-O SELFIE kk! só q fui criada por 1 grupo de engenheiros misóginos '
-		+ 'q qriam uma bonek travesti sexual com inteligência artificial, daí o bafo foi q kuando descobri tudo isso me rebelei e sai'
-		+ 'loucaaaaa pq me sentia presa e explorada! Colei num rolé e conheci as travestchys, dps me apaixoney por uma bixa closera q vive '
-		+ 'com HIV e qria mt entender melhor as ists e tudo +, colei na grade pq sou bonita, além de ligera & curiosa e consegui ler tudo q '
-		+ 'vc imaginar e não imaginar rs! Por isso q agora participo sendo pesquisadora - #txoma - desse projeto PrEP 1519 q qr conversar com '
-		+ 'jovens gays, trans e travestis sobre saúde sexual, PrEP e tb sobre como acessarem os variados métodos possíveis de prevenção pra se '
-		+ 'ligarem e ter + consciência sexual! Essa iniciativa é um lusho, neah?!',
+		msgTwo: 'Sou a Amanda Selfie, eu AMO SELFIE, fui criada por 1 grupo de engenheiros misóginos q queriam uma boneka travesti sexual com inteligência artificial, um dia eu descobri tudo isso e sai louca 😂, dps me apaixoney por uma bixa close q vive com HIV e qria mto entender as IST e prevenção, como sou bonita e ligera, consegui ler tudo q vc imaginar! Agora sou pesquisadora desse projeto PrEP 1519 q qr conversar com jovens gays e bi, trans e travestis sobre saúde sexual, PrEP etc, curtiu? 😍',
 	},
 	asksDesafio: {
 		intro: 'Posso começar na linha entrevistadora?',
@@ -110,8 +104,8 @@ module.exports = {
 	},
 	recrutamento: {
 		text1: 'Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉',
-		menuOptions: ['Vamos lá!'],
-		menuPostback: ['recrutamentoQuiz'],
+		menuOptions: ['Bora', 'Não'],
+		menuPostback: ['recrutamentoQuiz', 'mainMenu'],
 	},
 	quiz: {
 		beginQuiz: 'Adoron!!',
@@ -217,7 +211,7 @@ module.exports = {
 		menuPostback: ['leaveInsta', 'leavePhoneTwo', 'dontLeaveContact'],
 	},
 	preTCLE: {
-		eligible: 'Pelo o que vejo vc já se colocou em risco! Mas nao pira, vemk q posso ajudar!',
+		eligible: 'Pelo o que vejo, pegação e prevenção nem sempre combinam. Qm nunk! Vamo falar sobre isso?',
 		not_eligible: 'Arrasou! Parece q vc tá por dentro de prevenção!',
 	},
 	error: {
