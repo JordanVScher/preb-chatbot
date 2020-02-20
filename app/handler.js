@@ -59,7 +59,6 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'phoneValid' });
 				// await context.setState({ dialog: 'recrutamento' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
@@ -257,12 +256,14 @@ module.exports = async (context) => {
 				await context.sendText(flow.leavePhone.insta);
 				break;
 			case 'leaveInstaValid':
+				await prepAPI.putRecipientPrep(context.session.user.id, { instagram: context.state.insta });
 				await context.setState({ leftContact: true });
 				await context.sendText(flow.leavePhone.success);
 				await sendMail('AMANDA - Novo instagram de contato', await help.buildMail(context, 'Instagram', context.state.insta), context.state.user.city);
 				await contactFollowUp(context);
 				break;
 			case 'phoneValid':
+				await prepAPI.putRecipientPrep(context.session.user.id, { whatsapp: context.state.phone });
 				await context.setState({ leftContact: true });
 				await context.sendText(flow.leavePhone.success);
 				await sendMail('AMANDA - Novo telefone de contato', await help.buildMail(context, 'Whatsapp', context.state.phone), context.state.user.city);

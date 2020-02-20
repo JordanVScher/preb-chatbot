@@ -10,12 +10,12 @@ const security_token2 = process.env.SECURITY_TOKEN_PREP2;
 
 
 module.exports = {
-	async postRecipientPrep(fb_id, page_id, name) {
-		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, page_id, name }));
+	async postRecipientPrep(fb_id, page_id) {
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, page_id }));
 	},
 
-	async putRecipientPrep(fb_id, name) {
-		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, name }));
+	async putRecipientPrep(fb_id, recipient) {
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, ...recipient }));
 	},
 
 	async putUpdatePartOfResearch(fb_id, is_part_of_research) {
