@@ -22,7 +22,7 @@ async function offerQuiz(context, categoryQuestion) {
 async function sendFollowUp(context, type, categoryQuestion) {
 	await context.setState({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type }); // load counter
 	if (process.env.ENV === 'local') await context.sendText(`Type: ${type} - ${JSON.stringify(context.state.currentCounter)}`);
-	if (context.state.currentCounter && context.state.currentCounter.count_quiz >= 3) { // check counter
+	if (context.state.currentCounter >= 3) { // check counter
 		await sendMain(context); // send regular menu
 	} else {
 		await prepApi.postCount(context.session.user.id, type); // update counter

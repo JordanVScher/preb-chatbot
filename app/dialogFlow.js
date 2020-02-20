@@ -54,8 +54,8 @@ async function saveIntentLog(pageID, politicianID, userID, intentName) {
 	let intent = null;
 	const iName = intentName ? intentName.toLowerCase() : intentName;
 	const pageIntents = await MaAPI.getAllAvailableIntents(pageID);
-	if (pageIntents && pageIntents.intents) intent = pageIntents.intents.find((x) => x.name === iName || x.human_name === iName);
-	if (intent && intent.id) await MaAPI.setIntentStatus(politicianID, userID, intent.id, 1);
+	if (pageIntents && pageIntents.length > 0) intent = pageIntents.find((x) => x.name === iName || x.human_name === iName);
+	if (intent && intent.id) console.log(await MaAPI.setIntentStatus(politicianID, userID, intent.id, 1));
 }
 
 async function checkPosition(context) {

@@ -84,7 +84,7 @@ it('Follow up - user estava no quiz recrutamento, perguntamos se quer voltar ao 
 it('Follow up - user não acabou publico_interesse, perguntamos se quer terminar publico_interesse (menos de 3 vezes)', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'publico_interesse'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: null }; context.state.currentCounter = { count_quiz: 0 };
+	context.state.user = { is_target_audience: null }; context.state.currentCounter = 0;
 	const type = 'publico-interesse'; const categoryQuestion = 'publico_interesse';
 	await desafio.followUp(context, type, categoryQuestion);
 
@@ -92,7 +92,7 @@ it('Follow up - user não acabou publico_interesse, perguntamos se quer terminar
 	await expect(context.state.user.is_target_audience === null).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeFalsy();
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
 	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
 
 	await expect(context.setState).toBeCalledWith({ categoryQuestion });
@@ -102,7 +102,7 @@ it('Follow up - user não acabou publico_interesse, perguntamos se quer terminar
 it('Follow up - user não acabou publico_interesse, perguntamos mais de 3 vezes, vai pro menu', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'publico_interesse'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: null }; context.state.currentCounter = { count_quiz: 3 };
+	context.state.user = { is_target_audience: null }; context.state.currentCounter = 3;
 	const type = 'publico-interesse'; const categoryQuestion = 'publico_interesse';
 	await desafio.followUp(context, type, categoryQuestion);
 
@@ -110,14 +110,14 @@ it('Follow up - user não acabou publico_interesse, perguntamos mais de 3 vezes,
 	await expect(context.state.user.is_target_audience === null).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeTruthy();
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
 	await expect(sendMain).toBeCalledWith(context);
 });
 
 it('Follow up - user não é publico_interesse e não acabou brincadeira, perguntamos se quer terminar brincadeira (menos de 3 vezes)', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = { count_quiz: 0 }; context.state.quizBrincadeiraEnd = false;
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 0; context.state.quizBrincadeiraEnd = false;
 	const type = 'quiz-brincadeira'; const categoryQuestion = 'quiz_brincadeira';
 	await desafio.followUp(context, type, categoryQuestion);
 
@@ -126,7 +126,7 @@ it('Follow up - user não é publico_interesse e não acabou brincadeira, pergun
 	await expect(!context.state.quizBrincadeiraEnd).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeFalsy();
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
 	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
 
 	await expect(context.setState).toBeCalledWith({ categoryQuestion });
@@ -136,7 +136,7 @@ it('Follow up - user não é publico_interesse e não acabou brincadeira, pergun
 it('Follow up - user não é publico_interesse e não acabou brincadeira, perguntamos mais de 3 vezes, vai pro menu', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = { count_quiz: 4 }; context.state.quizBrincadeiraEnd = false;
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 4; context.state.quizBrincadeiraEnd = false;
 	const type = 'quiz-brincadeira'; const categoryQuestion = 'quiz_brincadeira';
 	await desafio.followUp(context, type, categoryQuestion);
 
@@ -145,14 +145,14 @@ it('Follow up - user não é publico_interesse e não acabou brincadeira, pergun
 	await expect(!context.state.quizBrincadeiraEnd).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeTruthy();
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
 	await expect(sendMain).toBeCalledWith(context);
 });
 
 it('Follow up - user não é publico_interesse e acabou brincadeira mas não assinou termos, perguntamos se quer assinar (menos de 3 vezes)', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = { count_quiz: 0 };
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 0;
 	context.state.quizBrincadeiraEnd = true; context.state.preCadastroSignature = false;
 	const type = 'share';
 	await desafio.followUp(context, type);
@@ -162,7 +162,7 @@ it('Follow up - user não é publico_interesse e acabou brincadeira mas não ass
 	await expect(!context.state.preCadastroSignature).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeFalsy();
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
 	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
 
 	await expect(research.TCLE).toBeCalledWith(context);
@@ -171,7 +171,7 @@ it('Follow up - user não é publico_interesse e acabou brincadeira mas não ass
 it('Follow up - user não é publico_interesse e acabou brincadeira mas não assinou termos, perguntamos mais de 3 vezes, vai pro menu', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = { count_quiz: 4 };
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 4;
 	context.state.quizBrincadeiraEnd = true; context.state.preCadastroSignature = false;
 	const type = 'share';
 	await desafio.followUp(context, type);
@@ -181,14 +181,14 @@ it('Follow up - user não é publico_interesse e acabou brincadeira mas não ass
 	await expect(!context.state.preCadastroSignature).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeTruthy();
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
 	await expect(sendMain).toBeCalledWith(context);
 });
 
 it('Follow up - user não é publico_interesse acabou brincadeira e assinou termos, vai pro menu', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = { count_quiz: 4 };
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 4;
 	context.state.quizBrincadeiraEnd = true; context.state.preCadastroSignature = true;
 	await desafio.followUp(context);
 
@@ -202,7 +202,7 @@ it('Follow up - user não é publico_interesse acabou brincadeira e assinou term
 it('Follow up - user é publico_interesse, não marcou consulta nem deixou contato, oferecemos pesquisa (menos de 3)', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = { count_quiz: 0 };
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 0;
 	context.state.temConsulta = null; const type = 'research-invite';
 	await desafio.followUp(context, type);
 
@@ -211,14 +211,14 @@ it('Follow up - user é publico_interesse, não marcou consulta nem deixou conta
 	await expect(!context.state.temConsulta && !context.state.leftContact).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeFalsy();
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
 	await expect(research.ofertaPesquisaStart).toBeCalledWith(context, flow.ofertaPesquisaStart.offer);
 });
 
 it('Follow up - user é publico_interesse, não marcou consulta nem deixou contato, oferecemos pesquisa mais de 3 vezes, vai pro menu', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = { count_quiz: 3 };
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 3;
 	context.state.temConsulta = false; const type = 'research-invite';
 	await desafio.followUp(context, type);
 
@@ -227,14 +227,14 @@ it('Follow up - user é publico_interesse, não marcou consulta nem deixou conta
 	await expect(!context.state.temConsulta && !context.state.leftContact).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeTruthy();
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
 	await expect(sendMain).toBeCalledWith(context);
 });
 
 it('Follow up - user é publico_interesse e de risco, já marcou consulta mas não acabou recrutamento, perguntamos se quer terminar recrutamento (menos de 3)', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 1, risk_group: 1 }; context.state.currentCounter = { count_quiz: 0 };
+	context.state.user = { is_target_audience: 1, risk_group: 1 }; context.state.currentCounter = 0;
 	context.state.temConsulta = true; context.state.recrutamentoEnd = false;
 	const type = 'recrutamento'; const categoryQuestion = 'recrutamento';
 	await desafio.followUp(context, type, categoryQuestion);
@@ -245,7 +245,7 @@ it('Follow up - user é publico_interesse e de risco, já marcou consulta mas n�
 	await expect(!context.state.recrutamentoEnd && context.state.user.risk_group).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeFalsy();
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
 	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
 
 	await expect(context.setState).toBeCalledWith({ categoryQuestion });
@@ -255,7 +255,7 @@ it('Follow up - user é publico_interesse e de risco, já marcou consulta mas n�
 it('Follow up - user é publico_interesse e de risco, deixou contato mas não acabou recrutamento, perguntamos mais de 3 vezes, vai pro menu', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 1, risk_group: 1 }; context.state.currentCounter = { count_quiz: 3 };
+	context.state.user = { is_target_audience: 1, risk_group: 1 }; context.state.currentCounter = 3;
 	context.state.temConsulta = false; context.state.leftContact = true; context.state.recrutamentoEnd = false;
 	const type = 'recrutamento'; const categoryQuestion = 'recrutamento';
 	await desafio.followUp(context, type, categoryQuestion);
@@ -266,14 +266,14 @@ it('Follow up - user é publico_interesse e de risco, deixou contato mas não ac
 	await expect(!context.state.recrutamentoEnd && context.state.user.risk_group).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeTruthy();
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
 	await expect(sendMain).toBeCalledWith(context);
 });
 
 it('Follow up - user é publico_interesse mas não é de risco, deixou contato e assinou termos, não recebe recrutamento, vai pro menu', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 1, risk_group: 0 }; context.state.currentCounter = { count_quiz: 3 };
+	context.state.user = { is_target_audience: 1, risk_group: 0 }; context.state.currentCounter = 3;
 	context.state.temConsulta = false; context.state.leftContact = true; context.state.recrutamentoEnd = false;
 	const type = 'recrutamento'; const categoryQuestion = 'recrutamento'; context.state.preCadastroSignature = true;
 	await desafio.followUp(context, type, categoryQuestion);
@@ -289,7 +289,7 @@ it('Follow up - user é publico_interesse mas não é de risco, deixou contato e
 it('Follow up - user é publico_interesse, marcou agendamento e terminou recrutamento, mas não assinou termos, perguntamos se quer assinar (menos de 3)', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = { count_quiz: 2 };
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 2;
 	context.state.temConsulta = true; context.state.recrutamentoEnd = true; context.state.preCadastroSignature = false;
 	const type = 'share';
 	await desafio.followUp(context, type);
@@ -300,7 +300,7 @@ it('Follow up - user é publico_interesse, marcou agendamento e terminou recruta
 	await expect(!context.state.preCadastroSignature).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeFalsy();
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
 	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
 
 	await expect(research.TCLE).toBeCalledWith(context);
@@ -309,7 +309,7 @@ it('Follow up - user é publico_interesse, marcou agendamento e terminou recruta
 it('Follow up - user é publico_interesse, marcou agendamento e terminou recrutamento, mas não assinou termos, perguntamos mais de 3 vezes, vai pro menu', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = { count_quiz: 5 };
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 5;
 	context.state.temConsulta = true; context.state.recrutamentoEnd = true; context.state.preCadastroSignature = false;
 	const type = 'share';
 	await desafio.followUp(context, type);
@@ -320,14 +320,14 @@ it('Follow up - user é publico_interesse, marcou agendamento e terminou recruta
 	await expect(!context.state.preCadastroSignature).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeTruthy();
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
 	await expect(sendMain).toBeCalledWith(context);
 });
 
 it('Follow up - user é publico_interesse, marcou agendamento, terminou recrutamento e assinou termos, vai pro menu', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
-	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = { count_quiz: 5 };
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 5;
 	context.state.temConsulta = true; context.state.recrutamentoEnd = true; context.state.preCadastroSignature = true;
 	const type = 'share';
 	await desafio.followUp(context, type);
@@ -345,7 +345,7 @@ it('Send Follow up - tipo de contator/followup desconhecido, avisa o erro intern
 	await desafio.sendFollowUp(context, type);
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
-	await expect(context.state.currentCounter && context.state.currentCounter.count_quiz >= 3).toBeFalsy();
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
 
 	await expect(sentryError).toBeCalled();
 	await expect(sendMain).toBeCalledWith(context);

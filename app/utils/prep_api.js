@@ -2,6 +2,7 @@
 /* eslint no-param-reassign: 0 */ // --> OFF
 const request = require('requisition');
 const { handleRequestAnswer } = require('./error');
+const { sentryError } = require('./error');
 
 const apiUri = process.env.PREP_API_URL;
 const security_token = process.env.SECURITY_TOKEN_PREP;
@@ -82,7 +83,13 @@ module.exports = {
 	},
 
 	async getCount(fb_id, type) {
-		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient/count-${type}?security_token=${security_token}`).query({ fb_id }));
+		try {
+			const result = await handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient/count-${type}?security_token=${security_token}`).query({ fb_id }));
+			const keys = Object.keys(result);
+			return result[keys[0]];
+		} catch (error) {
+			return sentryError('Erro ao pegar o contador', { error, fb_id, type });
+		}
 	},
 
 	async postCount(fb_id, type) {
