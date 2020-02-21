@@ -263,7 +263,7 @@ module.exports = async (context) => {
 				await contactFollowUp(context);
 				break;
 			case 'phoneValid':
-				await prepAPI.putRecipientPrep(context.session.user.id, { whatsapp: context.state.phone });
+				await prepAPI.putRecipientPrep(context.session.user.id, { phone: context.state.phone });
 				await context.setState({ leftContact: true });
 				await context.sendText(flow.leavePhone.success);
 				await sendMail('AMANDA - Novo telefone de contato', await help.buildMail(context, 'Whatsapp', context.state.phone), context.state.user.city);
