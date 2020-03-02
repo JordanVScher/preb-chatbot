@@ -28,7 +28,7 @@ module.exports = {
 		text1: 'To mt curiosa e vou te fazer perguntinhas, coisa rápida, se joga pfv!!!! Kkk',
 	},
 	mainMenu: {
-		text1: 'Hmm, qr me perguntar algo bb ou escolher algumas das opções abaixo?',
+		text1: 'Qr me perguntar alguma coisa ou escolher alguma das opções abaixo?',
 	},
 	baterPapo: {
 		text1: 'Escreve aí que eu vou tentar tirar as suas dúvidas',
