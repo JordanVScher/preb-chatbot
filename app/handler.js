@@ -219,12 +219,12 @@ module.exports = async (context) => {
 				break;
 			case 'termosAccept':
 				await context.setState({ preCadastroSignature: await prepAPI.postSignature(context.session.user.id, 1), userAnsweredTermos: true }); // stores user accepting termos
-				await context.sendText('.... (msg vazia dp li e aceito)');
+				await context.sendText(flow.onTheResearch.termosAfter);
 				await mainMenu.sendMain(context);
 				break;
 			case 'termosDontAccept':
 				await context.setState({ preCadastroSignature: await prepAPI.postSignature(context.session.user.id, 0), userAnsweredTermos: true }); // stores user accepting termos
-				await context.sendText('.... (msg vazia do não aceito)');
+				await context.sendText(flow.onTheResearch.termosAfter);
 				await mainMenu.sendMain(context);
 				break;
 			case 'ofertaPesquisaStart':
@@ -323,7 +323,6 @@ module.exports = async (context) => {
 			// moved up, to send user to ofertaPesquisaEnd by changing the dialog state and avoiding cross importing
 			// 	break;
 			case 'nextDay':
-				console.log('context.state.paginationDate', context.state.paginationDate);
 				await context.setState({ paginationDate: context.state.paginationDate + 1, lastQRpayload: '' });
 				await consulta.showDays(context);
 				break;

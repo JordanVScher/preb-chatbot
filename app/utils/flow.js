@@ -64,6 +64,7 @@ module.exports = {
 		buildTermos: 'Os meus criadores são pesquisadores da UFMG, USP e UFBA e querem sua autorização para usarem as infos do nosso papo pra pesquisar o comportamento '
 		+ 'sexual e prevenção do HIV em jovens. Se tu não tiver afim de participar dessa pesquisa, pode continuar falando comigo de boas, mas se quiser, pode desistir '
 		+ 'qualquer hora e pedir pra apagar suas infos! Qualquer denúncia pode ser comunicadas ao Comitê de Ética em Pesquisa. Info da pesquisa e o contato do comitê estão no link. ',
+		termosAfter: 'Ok, agora que somos migles e vc ja sabe do projeto',
 	},
 	verConsulta: {
 		zero: 'Amooooreeee, você não tem nenhuma consulta marcada!',
@@ -99,7 +100,7 @@ module.exports = {
 		text3: 'Tá afim? clica em Li e Aceito',
 	},
 	offerBrincadeira: {
-		text1: 'FIM! Adorei te conhecer! Tá afim de fazer um QUIZ pra saber Q DIVA VC É NA SARRAÇÃO? Ou qr conversar?',
+		text1: 'Adorei te conhecer! Tá afim de fazer um QUIZ pra saber Q DIVA VC É NA SARRAÇÃO? Ou qr conversar?',
 		menuOptions: ['Quiz', 'Conversar'],
 		menuPostback: ['querBrincadeira', 'offerConversar'],
 	},
