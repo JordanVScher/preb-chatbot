@@ -52,7 +52,7 @@ async function TCLE(context) {
 	if (!context.state.preCadastroSignature) {
 		await context.setState({ dialog: '' });
 		if (context.state.meContaDepois) { // se usuário escolheu "me conta depois"
-			await context.sendText('..... (introdução)');
+			await context.sendText(flow.ofertaPesquisaSim.text0);
 			await context.sendText(flow.ofertaPesquisaSim.text1);
 			await context.setState({ meContaDepois: true });
 		} else {

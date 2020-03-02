@@ -87,6 +87,7 @@ module.exports = {
 		menuPostback: ['pesquisaSim', 'meContaDepois'],
 	},
 	ofertaPesquisaSim: {
+		text0: 'Então, agora vou te contar sobre o projeto que eu trabalho',
 		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa sem pegar HIV ✌ Como? Tem eu, Amandinha pra falar de PrEP, sexo, prevenção, inseguranças, autoteste pra HIV, gel e xuca 👏👏 Qm toca o projeto é a USP, UFMG e UFBA, chic né? Seguro e 0800 💙 Ñ é obrigatório ta com adulto responsável e se o $ tiver curto, a gnt te ajuda com a passagem! ',
 		text2: 'Tá afim de conversar com meus amigles humanes?',
 		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],
