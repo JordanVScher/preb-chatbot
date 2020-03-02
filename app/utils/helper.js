@@ -174,17 +174,23 @@ async function buildConsultaFinal(state, chosenHour) {
 }
 
 async function getPhoneValid(phone) {
-	let result = phone.replace(/[^0-9]+/ig, '');
-	if (!result || !parseInt(result, 10)) {
-		return false;
-	}
-	result = parseInt(result, 10);
+	const res = phone.replace(/[^0-9]+/ig, '');
+	if (!res || !parseInt(res, 10)) return false;
+	if (res.toString().length < 8 || res.toString().length > 13) return false;
+	return res;
+}
 
-	if (result.toString().length < 8 || result.toString().length > 18) {
-		return false;
-	}
+// add +55 and DDD to phone
+async function formatPhone(phone, cityID) {
+	const DDDs = { 1: '31', 2: '71', 3: '11' };
+	let res = phone;
+	if (res.slice(0, 2) !== '55' && res.slice(0, 3) !== '+55') res = `+55${res}`;
+	if (res.slice(0, 2) === '55') res = `+${res}`;
 
-	return result;
+	const DDD = DDDs[cityID] || '';
+	if (res.slice(3, 5) !== DDD) res = res.slice(0, 3) + DDD + res.slice(3);
+
+	return res;
 }
 
 async function buildLabels(labels) {
@@ -233,5 +239,6 @@ module.exports = {
 	getButtonTextList,
 	accents,
 	siglaMap,
+	formatPhone,
 	buildCidadeText,
 };

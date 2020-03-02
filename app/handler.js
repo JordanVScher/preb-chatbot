@@ -262,13 +262,15 @@ module.exports = async (context) => {
 				await sendMail('AMANDA - Novo instagram de contato', await help.buildMail(context, 'Instagram', context.state.insta), context.state.user.city);
 				await contactFollowUp(context);
 				break;
-			case 'phoneValid':
-				await prepAPI.putRecipientPrep(context.session.user.id, { phone: context.state.phone });
+			case 'phoneValid': {
+				const res = await prepAPI.putRecipientPrep(context.session.user.id, { phone: context.state.phone });
+				if (!res || !res.id || !res.error) { sentryError('Erro ao salvar telefone do recipient no prep', { res, phone: context.state.phone, user: context.state.user }); }
 				await context.setState({ leftContact: true });
 				await context.sendText(flow.leavePhone.success);
 				await sendMail('AMANDA - Novo telefone de contato', await help.buildMail(context, 'Whatsapp', context.state.phone), context.state.user.city);
 				await contactFollowUp(context);
 				break;
+			}
 			case 'phoneInvalid':
 				await context.sendText(flow.leavePhone.failure);
 				// await context.sendText(flow.leavePhone.failure, opt.leavePhone2);

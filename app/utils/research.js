@@ -5,6 +5,7 @@ const { sendMain } = require('./mainMenu');
 const { getRecipientPrep } = require('./prep_api');
 const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
+const { formatPhone } = require('./helper');
 // const { startConsulta } = require('./consulta');
 const { checkAppointment } = require('./consulta');
 const { addNewUser } = require('./labels');
@@ -25,7 +26,7 @@ async function handleToken(context, answer) {
 async function checkPhone(context) {
 	const phone = await getPhoneValid(context.state.whatWasTyped);
 	if (phone) {
-		await context.setState({ dialog: 'phoneValid', phone });
+		await context.setState({ dialog: 'phoneValid', phone: await formatPhone(phone, context.state.user.city) });
 	} else {
 		await context.setState({ dialog: 'phoneInvalid', phone: '' });
 	}
