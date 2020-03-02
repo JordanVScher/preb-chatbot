@@ -55,6 +55,7 @@ async function TCLE(context) {
 		if (context.state.meContaDepois) { // se usuário escolheu "me conta depois"
 			await context.sendText(flow.ofertaPesquisaSim.text0);
 			await context.sendText(flow.ofertaPesquisaSim.text1);
+			await context.typing(1000 * 20);
 			await context.setState({ meContaDepois: true });
 		} else {
 			await context.sendText(flow.TCLE.text1);

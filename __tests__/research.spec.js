@@ -128,6 +128,7 @@ it('TCLE - escolheu meContaDepois -> recebe mensagem da pesquisa', async () => {
 	await expect(context.state.meContaDepois).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text0);
 	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text1);
+	await expect(context.typing).toBeCalledWith(1000 * 20);
 
 	await expect(context.sendButtonTemplate).toBeCalledWith(flow.TCLE.text2, opt.Research_TCLE);
 	await expect(context.sendText).toBeCalledWith(flow.TCLE.text3, opt.Research_Termos);
