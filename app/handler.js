@@ -57,7 +57,11 @@ module.exports = async (context) => {
 		if (context.state.recrutamentoTimer === true) {
 			await context.setState({ recipientAPI: await MaAPI.getRecipient(context.state.politicianData.user_id, context.session.user.id) });
 			const { session } = context.state.recipientAPI;
-			if (session && session.recrutamentoTimer === false) await context.setState({ recrutamentoTimer: false }); // already sent and key was updated on the timer
+			if (session && session.recrutamentoTimer === false) {
+				await context.setState({ recrutamentoTimer: false }); // already sent and api key was updated on the timer
+			} else if (!context.state.preCadastroSignature) {
+				await timer.createRecrutamentoTimer(context.session.user.id, context); // create recrutamento timer if it wasn't created already (and if TCLE was never sent)
+			}
 		}
 
 		if (context.event.isPostback) {
@@ -452,6 +456,7 @@ module.exports = async (context) => {
 				if (!context.state.preCadastroSignature) { // garantee we won't send TCLE more than once
 					await context.setState({ recrutamentoTimer: true }); // store this key in both local state and api
 					await MaAPI.postRecipientMA(context.state.politicianData.user_id, { fb_id: context.session.user.id, session: { recrutamentoTimer: context.state.recrutamentoTimer } });
+					await timer.createRecrutamentoTimer(context.session.user.id, context); // create recrutamento timer if it wasn't created already (and if TCLE was never sent)
 				}
 				await mainMenu.sendMain(context);
 				break;
