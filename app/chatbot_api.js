@@ -19,8 +19,13 @@ async function getPollData(pageId) {
 async function postRecipientMA(user_id, recipient) {
 	if (!recipient.extra_fields) delete recipient.extra_fields;
 	if (recipient.extra_fields) recipient.extra_fields = JSON.stringify(recipient.extra_fields);
+
+	if (!recipient.session) delete recipient.session;
+	if (recipient.session) recipient.session = JSON.stringify(recipient.session);
+
 	const recipientData_qs = queryString.stringify(recipient);
-	return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient?${recipientData_qs}&security_token=${security_token}&`).query({ politician_id: user_id }));
+
+	return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient?${recipientData_qs}&security_token=${security_token}&`).query({ politician_id: user_id, session: recipient.session }));
 }
 
 async function postPollAnswer(fb_id, poll_question_option_id, origin) {
@@ -32,7 +37,7 @@ async function getPollAnswer(fb_id, poll_id) {
 }
 
 async function getRecipient(politician_id, fb_id) {
-	return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient?fb_id=${fb_id}&security_token=${security_token}&`).query({ politician_id }));
+	return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient?&security_token=${security_token}&`).query({ politician_id, fb_id }));
 }
 
 async function postRecipientLabel(politician_id, fb_id, label) {

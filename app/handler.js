@@ -47,23 +47,29 @@ module.exports = async (context) => {
 			origin_dialog: 'greetings',
 			picture: context.session.user.profile_pic,
 			extra_fields: await help.buildLabels(context.state.user.system_labels),
-			// session: JSON.stringify(context.state),
 		});
 
 		// console.log('context.state.user', context.state.user);
 		// console.log('context.state.user.system_labels', await help.buildLabels(context.state.user.system_labels));
 		await timer.deleteTimers(context.session.user.id);
 
+		// we need to check the key on the api to know if the timer was sent already
+		if (context.state.recrutamentoTimer === true) {
+			await context.setState({ recipientAPI: await MaAPI.getRecipient(context.state.politicianData.user_id, context.session.user.id) });
+			const { session } = context.state.recipientAPI;
+			if (session && session.recrutamentoTimer === false) await context.setState({ recrutamentoTimer: false }); // already sent and key was updated on the timer
+		}
+
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload, lastQRpayload: '' });
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'recrutamento' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
 				// await context.setState({ dialog: 'calendarTest' });
+				// await context.setState({ dialog: 'addRecrutamentoTimer' });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
@@ -218,12 +224,16 @@ module.exports = async (context) => {
 				await research.preTCLE(context, await consulta.checkAppointment(context));
 				break;
 			case 'termosAccept':
-				await context.setState({ preCadastroSignature: await prepAPI.postSignature(context.session.user.id, 1), userAnsweredTermos: true }); // stores user accepting termos
+				await timer.deleteRecrutamento(context.session.user.id);
+				await MaAPI.postRecipientMA(context.state.politicianData.user_id, { fb_id: context.session.user.id, session: { recrutamentoTimer: false } }); // update key on the api
+				await context.setState({ preCadastroSignature: await prepAPI.postSignature(context.session.user.id, 1), userAnsweredTermos: true, recrutamentoTimer: false });
 				await context.sendText(flow.onTheResearch.termosAfter);
 				await mainMenu.sendMain(context);
 				break;
 			case 'termosDontAccept':
-				await context.setState({ preCadastroSignature: await prepAPI.postSignature(context.session.user.id, 0), userAnsweredTermos: true }); // stores user accepting termos
+				await timer.deleteRecrutamento(context.session.user.id);
+				await MaAPI.postRecipientMA(context.state.politicianData.user_id, { fb_id: context.session.user.id, session: { recrutamentoTimer: false } }); // update key on the api
+				await context.setState({ preCadastroSignature: await prepAPI.postSignature(context.session.user.id, 0), userAnsweredTermos: true, recrutamentoTimer: false });
 				await context.sendText(flow.onTheResearch.termosAfter);
 				await mainMenu.sendMain(context);
 				break;
@@ -437,6 +447,13 @@ module.exports = async (context) => {
 				await prepAPI.putRecipientNotification(context.session.user.id, 0);
 				await MaAPI.logNotification(context.session.user.id, context.state.politicianData.user_id, 4);
 				await context.sendText(flow.notifications.off);
+				break;
+			case 'addRecrutamentoTimer': // user clicked "no" on recrutamento, we might have to create a timer
+				if (!context.state.preCadastroSignature) { // garantee we won't send TCLE more than once
+					await context.setState({ recrutamentoTimer: true }); // store this key in both local state and api
+					await MaAPI.postRecipientMA(context.state.politicianData.user_id, { fb_id: context.session.user.id, session: { recrutamentoTimer: context.state.recrutamentoTimer } });
+				}
+				await mainMenu.sendMain(context);
 				break;
 			} // end switch case
 		}

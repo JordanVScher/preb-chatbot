@@ -5,6 +5,8 @@ const MaAPI = require('../app/chatbot_api');
 const quiz = require('../app/utils/quiz');
 const prepAPI = require('../app/utils/prep_api');
 const consulta = require('../app/utils/consulta');
+const checkQR = require('../app/utils/checkQR');
+const timer = require('../app/utils/timer');
 const mainMenu = require('../app/utils/mainMenu');
 
 jest.mock('../app/utils/helper');
@@ -13,7 +15,9 @@ jest.mock('../app/utils/flow');
 jest.mock('../app/utils/consulta');
 jest.mock('../app/utils/quiz');
 jest.mock('../app/utils/research');
-jest.mock('../app/utils/mainMenu');
+jest.mock('../app/utils/checkQR');
+jest.mock('../app/utils/timer');
+// jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/prep_api'); // mock prep_api tp avoid making the postRecipientPrep request
 
 it('quiz - begin', async () => {
@@ -60,4 +64,66 @@ it('joinResearchAfter', async () => {
 	await expect(prepAPI.putUpdatePartOfResearch).toBeCalledWith(context.session.user.id, 1);
 	await expect(context.setState).toBeCalledWith({ categoryConsulta: 'recrutamento', sendExtraMessages: true });
 	await expect(consulta.checarConsulta).toBeCalledWith(context);
+});
+
+describe('recrutamentoTimer', async () => {
+	it('addRecrutamentoTimer - first time - creates', async () => {
+		const context = cont.quickReplyContext('addRecrutamentoTimer', 'addRecrutamentoTimer');
+		context.state.preCadastroSignature = false;
+		context.state.recrutamentoTimer = false;
+		await handler(context);
+
+		await expect(!context.state.preCadastroSignature).toBeTruthy();
+		await expect(context.setState).toBeCalledWith({ recrutamentoTimer: true });
+		await expect(MaAPI.postRecipientMA).toBeCalledWith(context.state.politicianData.user_id,
+			{ fb_id: context.session.user.id, session: { recrutamentoTimer: context.state.recrutamentoTimer } });
+
+		context.state.recrutamentoTimer = true;
+		await mainMenu.sendMain(context);
+
+		await expect(context.setState).toBeCalledWith({ nextDialog: '', originalDialog: '', onButtonQuiz: false });
+		await expect(context.setState).toBeCalledWith({ calendar: '', calendarCurrent: '', freeHours: '' });
+		await expect(context.sendText).toBeCalledWith(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
+		await expect(context.state.recrutamentoTimer === true && !context.state.preCadastroSignature).toBeTruthy();
+		await expect(timer.createRecrutamentoTimer).toBeCalledWith(context.session.user.id, context);
+	});
+
+	it('addRecrutamentoTimer - was sent already (preCadastroSignature is true) - dont create', async () => {
+		const context = cont.quickReplyContext('addRecrutamentoTimer', 'addRecrutamentoTimer');
+		context.state.preCadastroSignature = true;
+		context.state.recrutamentoTimer = false;
+		await handler(context);
+
+		await expect(!context.state.preCadastroSignature).toBeFalsy();
+		await expect(context.setState).not.toBeCalledWith({ recrutamentoTimer: true });
+
+		await mainMenu.sendMain(context);
+
+		await expect(context.setState).toBeCalledWith({ nextDialog: '', originalDialog: '', onButtonQuiz: false });
+		await expect(context.setState).toBeCalledWith({ calendar: '', calendarCurrent: '', freeHours: '' });
+		await expect(context.sendText).toBeCalledWith(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
+		await expect(context.state.recrutamentoTimer === true && !context.state.preCadastroSignature).toBeFalsy();
+		await expect(timer.createRecrutamentoTimer).not.toBeCalledWith(context.session.user.id, context);
+	});
+
+	it('recrutamentoTimer - delete timer and create new on mainMenu', async () => {
+		const context = cont.quickReplyContext('mainMenu', 'mainMenu');
+		context.state.preCadastroSignature = false;
+		context.state.recrutamentoTimer = true;
+		context.state.recipientAPI = { session: { recrutamentoTimer: true } };
+		await handler(context);
+
+		await expect(timer.deleteTimers).toBeCalledWith(context.session.user.id);
+		await expect(timer.createRecrutamentoTimer).toBeCalledWith(context.session.user.id, context);
+	});
+
+	it('recrutamentoTimer - delete timer and dont create new', async () => {
+		const context = cont.quickReplyContext('phoneInvalid', 'phoneInvalid');
+		context.state.preCadastroSignature = false;
+		context.state.recrutamentoTimer = true;
+		context.state.recipientAPI = { session: { recrutamentoTimer: true } };
+		await handler(context);
+
+		await expect(timer.createRecrutamentoTimer).not.toBeCalledWith(context.session.user.id, context);
+	});
 });

@@ -107,7 +107,7 @@ module.exports = {
 	recrutamento: {
 		text1: 'Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉',
 		menuOptions: ['Bora', 'Não'],
-		menuPostback: ['recrutamentoQuiz', 'mainMenu'],
+		menuPostback: ['recrutamentoQuiz', 'addRecrutamentoTimer'],
 	},
 	quiz: {
 		beginQuiz: 'Adoron!!',
