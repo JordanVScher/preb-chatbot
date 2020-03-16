@@ -37,6 +37,27 @@ it('handleToken - failure', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'joinTokenErro' });
 });
 
+it('ofertaPesquisaSim - clica meContaDepois - não vê explicação do projeto', async () => {
+	const context = cont.textContext('foobar', 'joinToken');
+	context.state.meContaDepois = true;
+	await research.ofertaPesquisaSim(context);
+
+	await expect(context.setState).toBeCalledWith({ nextDialog: 'ofertaPesquisaEnd' });
+	await expect(context.state.meContaDepois !== true).toBeFalsy();
+	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
+});
+
+it('ofertaPesquisaSim - não clica em meContaDepois - vê explicação do projeto', async () => {
+	const context = cont.textContext('foobar', 'joinToken');
+	context.state.meContaDepois = false;
+	await research.ofertaPesquisaSim(context);
+
+	await expect(context.setState).toBeCalledWith({ nextDialog: 'ofertaPesquisaEnd' });
+	await expect(context.state.meContaDepois !== true).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text1);
+	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
+});
+
 it('ofertaPesquisaEnd - não is_target_audience -> vai pro menu', async () => {
 	const context = cont.quickReplyContext('ofertaPesquisaEnd', 'ofertaPesquisaEnd');
 	context.state.user = { is_target_audience: 0 };

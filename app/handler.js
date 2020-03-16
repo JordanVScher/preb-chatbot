@@ -232,15 +232,17 @@ module.exports = async (context) => {
 				break;
 			case 'pesquisaSim':
 			case 'ofertaPesquisaSim':
+				await context.setState({ meContaDepois: false });
+				await research.ofertaPesquisaSim(context);
+				break;
+			case 'meContaDepois':
+				await context.setState({ meContaDepois: true });
 				await research.ofertaPesquisaSim(context);
 				break;
 			case 'pesquisaPresencial':
 				// await context.setState({ categoryConsulta: 'BATE PAPO PRESENCIAL' });
 				await consulta.startConsulta(context);
 				break;
-			case 'meContaDepois':
-				await context.setState({ meContaDepois: true });
-				// falls through
 			case 'pesquisaNao':
 			case 'ofertaPesquisaEnd':
 				await research.ofertaPesquisaEnd(context);

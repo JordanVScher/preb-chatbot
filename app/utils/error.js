@@ -18,6 +18,7 @@ async function handleErrorApi(options, res, err) {
 	msg += `\nPath: ${options.path}`;
 	msg += `\nQuery: ${JSON.stringify(options.query, null, 2)}`;
 	msg += `\nMethod: ${options.method}`;
+	msg += `\nMoment: ${new Date()}`;
 	if (res) msg += `\nResposta: ${JSON.stringify(res, null, 2)}`;
 	if (err) msg += `\nErro: ${err.stack}`;
 

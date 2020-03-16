@@ -38,7 +38,7 @@ async function ofertaPesquisaStart(context, text) {
 
 async function ofertaPesquisaSim(context) {
 	await context.setState({ nextDialog: 'ofertaPesquisaEnd' });
-	await context.sendText(flow.ofertaPesquisaSim.text1);
+	if (context.state.meContaDepois !== true) await context.sendText(flow.ofertaPesquisaSim.text1);
 	await context.sendText(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
 }
 
@@ -56,7 +56,7 @@ async function TCLE(context) {
 			await context.sendText(flow.ofertaPesquisaSim.text0);
 			await context.sendText(flow.ofertaPesquisaSim.text1);
 			await context.typing(1000 * 20);
-			await context.setState({ meContaDepois: true });
+			await context.setState({ meContaDepois: false });
 		} else {
 			await context.sendText(flow.TCLE.text1);
 		}
