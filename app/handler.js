@@ -121,6 +121,8 @@ module.exports = async (context) => {
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'city') {
 					await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
 					await context.setState({ dialog: 'showDays' });
+				} else if (context.state.lastQRpayload === 'joinNaoToma') {
+					await context.setState({ dialog: 'greetings', askDesafio: false });
 				} else { // regular quick_replies
 					await context.setState({ dialog: context.state.lastQRpayload });
 				}

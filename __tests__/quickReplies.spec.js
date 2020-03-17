@@ -1,5 +1,6 @@
 const cont = require('./context');
 const flow = require('../app/utils/flow');
+const opt = require('../app/utils/options');
 const handler = require('../app/handler');
 const MaAPI = require('../app/chatbot_api');
 const quiz = require('../app/utils/quiz');
@@ -12,6 +13,7 @@ const { getQR } = require('../app/utils/attach');
 jest.mock('../app/utils/helper');
 jest.mock('../app/chatbot_api');
 jest.mock('../app/utils/flow');
+jest.mock('../app/utils/options');
 jest.mock('../app/utils/consulta');
 jest.mock('../app/utils/quiz');
 jest.mock('../app/utils/research');
@@ -118,15 +120,15 @@ describe('recrutamentoTimer', async () => {
 });
 
 
-describe('join', async () => {
-	it('intro', async () => {
+describe('join - já tomo prep', async () => {
+	it('intro - texto e botões', async () => {
 		const context = cont.quickReplyContext('join', 'join');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.join.intro.text1, await getQR(flow.join.intro));
 	});
 
-	it('joinPrep', async () => {
+	it('joinPrep - explicação e espera token', async () => {
 		const context = cont.quickReplyContext('joinPrep', 'joinPrep');
 		await handler(context);
 
@@ -134,7 +136,7 @@ describe('join', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.askPrep.text1, await getQR(flow.join.askPrep));
 	});
 
-	it('joinCombina', async () => {
+	it('joinCombina - explicação e confirmação', async () => {
 		const context = cont.quickReplyContext('joinCombina', 'joinCombina');
 		await handler(context);
 
@@ -142,7 +144,7 @@ describe('join', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.text2, await getQR(flow.join.joinCombina));
 	});
 
-	it('joinCombinaSim', async () => {
+	it('joinCombinaSim - aceitou', async () => {
 		const context = cont.quickReplyContext('joinCombinaSim', 'joinCombinaSim');
 		await handler(context);
 
@@ -150,7 +152,7 @@ describe('join', async () => {
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 
-	it('joinSUS', async () => {
+	it('joinSUS - explicação e confirmação', async () => {
 		const context = cont.quickReplyContext('joinSUS', 'joinSUS');
 		await handler(context);
 
@@ -158,7 +160,7 @@ describe('join', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.joinSUS.text2, await getQR(flow.join.joinSUS));
 	});
 
-	it('joinSUSSim', async () => {
+	it('joinSUSSim - aceitou', async () => {
 		const context = cont.quickReplyContext('joinSUSSim', 'joinSUSSim');
 		await handler(context);
 
@@ -166,7 +168,7 @@ describe('join', async () => {
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 
-	it('joinNaoSabe', async () => {
+	it('joinNaoSabe - explicações e volta pro join', async () => {
 		const context = cont.quickReplyContext('joinNaoSabe', 'joinNaoSabe');
 		await handler(context);
 
@@ -175,5 +177,18 @@ describe('join', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.joinNaoSabe.combina);
 		await expect(context.sendText).toBeCalledWith(flow.join.joinNaoSabe.sus);
 		await expect(context.sendText).toBeCalledWith(flow.join.intro.text1, await getQR(flow.join.intro));
+	});
+
+	it('joinNaoToma - vai pro greetings e manda o desafio', async () => {
+		const context = cont.quickReplyContext('joinNaoToma', 'greetings');
+		await handler(context);
+
+		await expect(context.setState).toBeCalledWith({ dialog: 'greetings', askDesafio: false });
+		await expect(context.sendText).toBeCalledWith(flow.greetings.text1);
+		await expect(context.sendText).toBeCalledWith(flow.greetings.text2);
+		await expect(context.sendText).toBeCalledWith(flow.greetings.text3);
+
+		await expect(context.setState).toBeCalledWith({ askDesafio: true });
+		await expect(context.sendText).toBeCalledWith(flow.asksDesafio.intro, opt.asksDesafio);
 	});
 });
