@@ -220,7 +220,7 @@ module.exports = {
 		joinPrep: {
 			text1: 'PrEP 15-19 é um projeto interessado em reduzir a incidência de HIV entre jovens gays ou bissexuais cisgêneros, travestis e mulheres trans e outro bafo é conhecer as percepções dessa galera lgbt, suas intenções e se rola aceitamento de usar a PrEP e outros métodos de prevenção pras ISTs também! É um close!',
 			menuOptions: ['Não tenho Voucher'],
-			menuPostback: ['jaTomoPrep'],
+			menuPostback: ['join'],
 		},
 		askPrep: {
 			text1: 'Inhaiii! Pra vc q adquiriu lindamente seu voucher no serviço, digita ele aqui pra mim amore!',
@@ -229,14 +229,14 @@ module.exports = {
 			fail2: 'Ou se não lembrar pode clicar no botão abaixo.',
 			view: 'Bb, pega seu voucher: ',
 			menuOptions: ['Não tenho Voucher'],
-			menuPostback: ['jaTomoPrep'],
+			menuPostback: ['join'],
 		},
 		joinCombina: {
 			text1: 'O Projeto Combina faz parte de uma pesquisa que tem a finalidade de avaliar o uso dos métodos de prevenção ao HIV disponíveis nos serviços públicos de saúde pelas pessoas. Quais motivações pra usar os métodos preventivos, em que situações e quais práticas eles são usados etc. Esse projeto é tudo de bom!',
 			text2: 'Você realmente faz parte do programa Combina?',
 			fim: '6. [Texto de fechamento do fluxo combina...]',
 			menuOptions: ['Sim', 'Não'],
-			menuPostback: ['joinCombinaSim', 'jaTomoPrep'],
+			menuPostback: ['joinCombinaSim', 'join'],
 		},
 
 

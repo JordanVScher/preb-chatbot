@@ -120,7 +120,7 @@ describe('recrutamentoTimer', async () => {
 
 describe('join', async () => {
 	it('intro', async () => {
-		const context = cont.quickReplyContext('jaTomoPrep', 'jaTomoPrep');
+		const context = cont.quickReplyContext('join', 'join');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.join.intro.text1, await getQR(flow.join.intro));

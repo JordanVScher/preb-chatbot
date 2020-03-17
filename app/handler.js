@@ -215,7 +215,7 @@ module.exports = async (context) => {
 			case 'startQuiz': // this is the quiz-type of questionario
 				await quiz.answerQuiz(context);
 				break;
-			case 'jaTomoPrep':
+			case 'join':
 				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
 				break;
 			case 'joinPrep':

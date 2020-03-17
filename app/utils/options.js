@@ -21,16 +21,14 @@ module.exports = {
 		quick_replies: [
 			{ content_type: 'text', title: 'Sim', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
-			{ content_type: 'text', title: 'Já Tomo PrEP', payload: 'jaTomoPrep' },
-			// { content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
+			{ content_type: 'text', title: 'Já Tomo PrEP', payload: 'join' },
 		],
 	},
 	asksDesafio: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Sim', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
-			{ content_type: 'text', title: 'Já Tomo PrEP', payload: 'jaTomoPrep' },
-			// { content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
+			{ content_type: 'text', title: 'Já Tomo PrEP', payload: 'join' },
 		],
 	},
 	desafioAceito: {
