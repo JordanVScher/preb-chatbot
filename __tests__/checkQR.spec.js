@@ -6,7 +6,7 @@ const { checkAppointment } = require('../app/utils/consulta');
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/consulta');
 
-it('checkMainMenu - não acabou publico_interesse, não tem Token de integração -> Vê botões Quiz e Já faço parte', async () => {
+it('checkMainMenu - não acabou publico_interesse, não tem Token de integração -> Vê botões Quiz e Já Tomo PrEP', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
 	context.state.user = { is_target_audience: 0 }; context.state.currentQuestion = { code: 'a5' };
 	context.state.publicoInteresseEnd = false;
@@ -17,7 +17,7 @@ it('checkMainMenu - não acabou publico_interesse, não tem Token de integraçã
 	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
 	await expect(result.quick_replies[1].payload === 'beginQuiz').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -48,7 +48,7 @@ it('checkMainMenu - não é publico_interesse, não acabou brincadeira -> Vê Qu
 	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
 	await expect(result.quick_replies[1].payload === 'querBrincadeira').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -62,7 +62,7 @@ it('checkMainMenu - não é publico_interesse, já acabou brincadeira mas não a
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Termos').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -75,7 +75,7 @@ it('checkMainMenu - não é publico_interesse, já acabou brincadeira e assinou 
 	await expect(result.quick_replies.length === 4).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[2].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[3].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -92,7 +92,7 @@ it('checkMainMenu - é publico_interesse, não marcou consulta nem deixou contat
 	await expect(result.quick_replies[1].title === 'Bate papo presencial').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Bate papo virtual').toBeTruthy();
 	await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -110,7 +110,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato e
 	await expect(result.quick_replies[1].payload === 'recrutamento').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Ver Consulta').toBeTruthy();
 	await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -127,7 +127,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato, 
 	await expect(result.quick_replies[1].title === 'Termos').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Ver Consulta').toBeTruthy();
 	await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -144,7 +144,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato, 
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Ver Consulta').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -161,7 +161,7 @@ it('checkMainMenu - é publico_interesse, não marcou consulta, deixou contato e
 	await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
 	await expect(result.quick_replies[1].payload === 'recrutamento').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -178,7 +178,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, acabou recrutamento m
 	await expect(result.quick_replies[1].title === 'Termos').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Ver Consulta').toBeTruthy();
 	await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[4].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[4].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -194,7 +194,7 @@ it('checkMainMenu - é publico_interesse, deixou contato e acabou recrutamento m
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Termos').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -210,7 +210,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, acabou recrutamento e
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Ver Consulta').toBeTruthy();
 	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[3].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
 });
 
@@ -225,7 +225,7 @@ it('checkMainMenu - é publico_interesse, deixou contato, acabou recrutamento e 
 	await expect(result.quick_replies.length === 4).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Prevenções').toBeTruthy();
-	await expect(result.quick_replies[2].title === 'Já Faço Parte').toBeTruthy();
+	await expect(result.quick_replies[2].title === 'Já Tomo PrEP').toBeTruthy();
 	await expect(result.quick_replies[3].title === 'Sobre a Amanda').toBeTruthy();
 });
 

@@ -158,7 +158,6 @@ module.exports = {
 	autoTeste:
 	{
 		start: 'Temos algumas possibilidades para você realizar seus testes, vou te explicar um pouquinho sobre cada uma delas para você ver qual você prefere:',
-		cidade: 'De qual cidade você quer saber?',
 		auto1: 'Você faz sozinho, mas só tem para HIV. O teste é feito por fluído oral e demora 20 minutinhos para ficar pronto. ',
 		auto2: 'Você pode receber na sua casa ou retirar em um dos nossos endereços. Mas se você quer fazer outros exames ou está com dúvida sobre outras IST, talvez esta não seja a melhor opção.',
 		auto3: {

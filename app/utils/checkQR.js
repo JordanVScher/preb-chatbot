@@ -8,7 +8,7 @@ async function checkMainMenu(context) {
 	const quizRecrutamento = { content_type: 'text', title: 'Quiz', payload: 'recrutamento' };
 	const quizBrincadeira = { content_type: 'text', title: 'Quiz', payload: 'querBrincadeira' };
 	const prevencoes = { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' };
-	const jaFacoParte = { content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' };
+	const jaTomoPrep = { content_type: 'text', title: 'Já Tomo PrEP', payload: 'jaTomoPrep' };
 	const seeToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' };
 	const sobreAmanda = { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' };
 	const termos = { content_type: 'text', title: 'Termos', payload: 'TCLE' };
@@ -20,7 +20,7 @@ async function checkMainMenu(context) {
 	opt.push(baterPapo);
 	opt.push(quiz);
 	opt.push(prevencoes);
-	opt.push(jaFacoParte);
+	opt.push(jaTomoPrep);
 	opt.push(sobreAmanda);
 
 	if (context.state.publicoInteresseEnd) {
@@ -49,7 +49,7 @@ async function checkMainMenu(context) {
 		|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter((x) => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
 
 	if (context.state.user.integration_token) { // replace token options if user has one
-		const index = opt.findIndex((x) => x.title === 'Já Faço Parte'); if (index) opt[index] = seeToken;
+		const index = opt.findIndex((x) => x.payload === 'jaTomoPrep'); if (index) opt[index] = seeToken;
 	}
 
 	return { quick_replies: opt };
