@@ -204,9 +204,6 @@ module.exports = async (context) => {
 			case 'mainMenu':
 				await mainMenu.sendMain(context);
 				break;
-			case 'jaTomoPrep':
-				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
-				break;
 			case 'desafioRecusado':
 				await desafio.desafioRecusado(context);
 				break;
@@ -218,12 +215,24 @@ module.exports = async (context) => {
 			case 'startQuiz': // this is the quiz-type of questionario
 				await quiz.answerQuiz(context);
 				break;
+			case 'jaTomoPrep':
+				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
+				break;
 			case 'joinPrep':
-				await context.sendText(flow.join.joinPrep.text0);
+				await context.sendText(flow.join.joinPrep.text1);
 				await context.sendText(flow.join.askPrep.text1, await getQR(flow.join.askPrep));
 				break;
 			case 'seePrepToken':
 				await context.sendText(`${flow.join.askPrep.view} ${context.state.user.integration_token}`);
+				await mainMenu.sendMain(context);
+				break;
+			case 'joinCombina':
+				await context.sendText(flow.join.joinCombina.text1);
+				await context.sendText(flow.join.joinCombina.text2, await getQR(flow.join.joinCombina));
+				break;
+			case 'joinCombinaSim':
+				// TODO request put
+				await context.sendText(flow.join.joinCombina.fim);
 				await mainMenu.sendMain(context);
 				break;
 			case 'TCLE':

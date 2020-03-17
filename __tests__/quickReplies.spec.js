@@ -130,7 +130,23 @@ describe('join', async () => {
 		const context = cont.quickReplyContext('joinPrep', 'joinPrep');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.join.joinPrep.text0);
+		await expect(context.sendText).toBeCalledWith(flow.join.joinPrep.text1);
 		await expect(context.sendText).toBeCalledWith(flow.join.askPrep.text1, await getQR(flow.join.askPrep));
+	});
+
+	it('joinCombina', async () => {
+		const context = cont.quickReplyContext('joinCombina', 'joinCombina');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.text1);
+		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.text2, await getQR(flow.join.joinCombina));
+	});
+
+	it('joinCombinaSim', async () => {
+		const context = cont.quickReplyContext('joinCombinaSim', 'joinCombinaSim');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.fim);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 });
