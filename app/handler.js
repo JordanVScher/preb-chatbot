@@ -12,6 +12,7 @@ const research = require('./utils/research');
 const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
+const join = require('./utils/join');
 const { sendMail } = require('./utils/mailer');
 const { getQR } = require('./utils/attach');
 const { addNewUser } = require('./utils/labels');
@@ -151,7 +152,7 @@ module.exports = async (context) => {
 					await quiz.handleAnswer(context, quizOpt);
 				}
 			} else if (context.state.dialog === 'joinToken' || context.state.dialog === 'joinTokenErro') {
-				await research.handleToken(context, await prepAPI.postIntegrationToken(context.session.user.id, context.state.whatWasTyped));
+				await join.handlePrepToken(context, await prepAPI.postIntegrationToken(context.session.user.id, context.state.whatWasTyped));
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.resetState();
@@ -202,6 +203,9 @@ module.exports = async (context) => {
 				break;
 			case 'mainMenu':
 				await mainMenu.sendMain(context);
+				break;
+			case 'jaTomoPrep':
+				await join.intro(context);
 				break;
 			case 'desafioRecusado':
 				await desafio.desafioRecusado(context);

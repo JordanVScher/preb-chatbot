@@ -2,26 +2,11 @@ const flow = require('./flow');
 const opt = require('./options');
 const { getQR } = require('./attach');
 const { sendMain } = require('./mainMenu');
-const { getRecipientPrep } = require('./prep_api');
-const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
 const { formatPhone } = require('./helper');
 // const { startConsulta } = require('./consulta');
 const { checkAppointment } = require('./consulta');
 const { addNewUser } = require('./labels');
-
-async function handleToken(context, answer) {
-	if (answer === true) {
-		await context.sendText(flow.joinToken.success);
-		await context.setState({ user: await getRecipientPrep(context.session.user.id) }); // integration_token is added to user
-		await linkIntegrationTokenLabel(context);
-		await context.setState({ dialog: 'mainMenu' });
-	} else { // error or invalid number
-		await context.sendText(flow.joinToken.fail);
-		await context.sendText(flow.joinToken.fail2, opt.joinToken);
-		await context.setState({ dialog: 'joinTokenErro' });
-	}
-}
 
 async function checkPhone(context) {
 	const phone = await getPhoneValid(context.state.whatWasTyped);
@@ -103,5 +88,5 @@ async function ofertaPesquisaEnd(context) {
 }
 
 module.exports = {
-	handleToken, checkPhone, ofertaPesquisaStart, ofertaPesquisaSim, ofertaPesquisaEnd, TCLE, preTCLE, recrutamento,
+	checkPhone, ofertaPesquisaStart, ofertaPesquisaSim, ofertaPesquisaEnd, TCLE, preTCLE, recrutamento,
 };
