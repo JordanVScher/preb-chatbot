@@ -165,4 +165,15 @@ describe('join', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.joinSUS.fim);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
+
+	it('joinNaoSabe', async () => {
+		const context = cont.quickReplyContext('joinNaoSabe', 'joinNaoSabe');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.join.joinNaoSabe.text1);
+		await expect(context.sendText).toBeCalledWith(flow.join.joinNaoSabe.prep);
+		await expect(context.sendText).toBeCalledWith(flow.join.joinNaoSabe.combina);
+		await expect(context.sendText).toBeCalledWith(flow.join.joinNaoSabe.sus);
+		await expect(context.sendText).toBeCalledWith(flow.join.intro.text1, await getQR(flow.join.intro));
+	});
 });

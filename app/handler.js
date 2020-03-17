@@ -244,6 +244,13 @@ module.exports = async (context) => {
 				await context.sendText(flow.join.joinSUS.fim);
 				await mainMenu.sendMain(context);
 				break;
+			case 'joinNaoSabe':
+				await context.sendText(flow.join.joinNaoSabe.text1);
+				await context.sendText(flow.join.joinNaoSabe.prep);
+				await context.sendText(flow.join.joinNaoSabe.combina);
+				await context.sendText(flow.join.joinNaoSabe.sus);
+				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
+				break;
 			case 'TCLE':
 				await research.TCLE(context);
 				break;

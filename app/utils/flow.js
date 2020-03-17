@@ -245,6 +245,12 @@ module.exports = {
 			menuOptions: ['Sim', 'Não'],
 			menuPostback: ['joinSUSSim', 'join'],
 		},
+		joinNaoSabe: {
+			text1: '5. [Texto para opção não sei...]',
+			prep: '1519: PrEP 15-19 é um projeto focado em reduzir a incidência de HIV entre jovens gays ou bissexuais cis gêneros, travestis e mulheres trans e outro bafo é conhecer as percepções dessa galera LGBT, suas intenções e se rola aceitamento de usar a PrEP e outros métodos de prevenção pras IST também! É um close!',
+			combina: 'Combina: O Projeto Combina faz parte de uma pesquisa que tem a finalidade de avaliar o uso dos métodos de prevenção ao HIV disponíveis nos serviços públicos de saúde. Quais motivações para usar os métodos preventivos, em que situações e quais práticas eles são usados etc. Esse projeto é mara! 😉',
+			sus: 'SUS: SUS é o Sistema Único de Saúde e por ele rola de graça desde o simples atendimento para avaliação de pressão arterial, por exemplo, até transplante de órgãos, com acesso integral, universal e gratuito para toda a população do Brasil. Mto chic né?!',
+		},
 
 
 	},
