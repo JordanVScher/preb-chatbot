@@ -9,15 +9,6 @@ const aux = require('./consulta-aux');
 const { sendMain } = require('./mainMenu');
 const { sentryError } = require('./error');
 
-async function checkAppointment(context) {
-	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
-		return true;
-	}
-
-	return false;
-}
-
 async function sendSalvador(context) {
 	if (context.state.user && context.state.user.city && context.state.user.city.toString() === '2') { await context.sendText(flow.consulta.salvadorMsg); }
 }
@@ -78,7 +69,7 @@ async function showDays(context) { // shows available days
 }
 
 async function showHours(context, ymd) {
-	await context.setState({ chosenDay: context.state.calendarCurrent.find(date => date.ymd === ymd) }); // any day chosen from freeDays is in the calendarCurrent
+	await context.setState({ chosenDay: context.state.calendarCurrent.find((date) => date.ymd === ymd) }); // any day chosen from freeDays is in the calendarCurrent
 	await context.setState({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
 	if (context.state.freeHours && context.state.freeHours.length > 0) {
 		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours });
@@ -90,7 +81,7 @@ async function showHours(context, ymd) {
 
 async function finalDate(context, quota) { // where we actually schedule the consulta
 	await context.setState({ paginationDate: 1, paginationHour: 1, dialog: '' }); // resetting pagination
-	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
+	await context.setState({ chosenHour: context.state.chosenDay.hours.find((hour) => hour.quota === parseInt(quota, 10)) });
 
 	await context.setState({
 		appointmentResponse: await prepApi.postAppointment(
@@ -103,7 +94,7 @@ async function finalDate(context, quota) { // where we actually schedule the con
 
 	if (context.state.appointmentResponse && context.state.appointmentResponse.id && !context.state.appointmentResponse.form_error) {
 		const { appointments } = await prepApi.getAppointment(context.session.user.id);
-		const consulta = appointments.find(x => x.id === context.state.appointmentResponse.id);
+		const consulta = appointments.find((x) => x.id === context.state.appointmentResponse.id);
 
 		const msg = `${flow.consulta.success}\n${await help.buildConsultaFinal(context.state, consulta)}`;
 		await context.sendText(msg);
@@ -143,7 +134,7 @@ async function checkSP(context) {
 		if (!cidade) { // if user has no cidade send him back to the menu
 			await sendMain(context);
 		} else if (cidade.toString() === '3') { // ask location for SP
-			const spLocations = calendars.filter(x => x.state === 'SP');
+			const spLocations = calendars.filter((x) => x.state === 'SP');
 			const options = [];
 			spLocations.forEach((e) => {
 				options.push({
@@ -156,7 +147,7 @@ async function checkSP(context) {
 			const location = await help.cidadeDictionary(cidade);
 			if (!location) throw Error(`Couldn't find location for city id ${cidade}`);
 			await context.sendText(`O bate papo pode ser no ${location}`);
-			const calendar = await calendars.find(x => x.state === help.siglaMap[cidade]);
+			const calendar = await calendars.find((x) => x.state === help.siglaMap[cidade]);
 			await context.setState({ calendarID: calendar.id });
 			await loadCalendar(context);
 			await showDays(context, true);
@@ -170,7 +161,7 @@ async function checkSP(context) {
 
 async function startConsulta(context) {
 	// user must be part of target__audience and have never had an appointment nor have left his contact info
-	if (context.state.user.is_target_audience && ((await checkAppointment(context) === false) && !context.state.leftContact)) {
+	if (context.state.user.is_target_audience && ((await aux.checkAppointment(context.session.user.id) === false) && !context.state.leftContact)) {
 		if (context.state.sendExtraMessages === true) {
 			// because of "outras datas" we cant show the extraMessages again, but we still have to show the next ones
 			await context.setState({ sendExtraMessages2: true, sendExtraMessages: false });
@@ -204,7 +195,6 @@ module.exports = {
 	checarConsulta,
 	loadCalendar,
 	startConsulta,
-	checkAppointment,
 	checkSP,
 	sendConsultas,
 };

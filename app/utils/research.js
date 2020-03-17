@@ -5,7 +5,7 @@ const { sendMain } = require('./mainMenu');
 const { getPhoneValid } = require('./helper');
 const { formatPhone } = require('./helper');
 // const { startConsulta } = require('./consulta');
-const { checkAppointment } = require('./consulta');
+const { checkAppointment } = require('./consulta-aux');
 const { addNewUser } = require('./labels');
 
 async function checkPhone(context) {
@@ -18,6 +18,7 @@ async function checkPhone(context) {
 }
 
 async function ofertaPesquisaStart(context, text) {
+	await context.setState({ nextDialog: 'ofertaPesquisaEnd' });
 	await context.sendText(text || flow.ofertaPesquisaStart.text1, await getQR(flow.ofertaPesquisaStart));
 }
 
@@ -52,7 +53,7 @@ async function TCLE(context) {
 	}
 }
 
-// temConsulta = await checkAppointment(context)
+// temConsulta = await checkAppointment(context.session.user.id)
 async function preTCLE(context, temConsulta) { // eslint-disable-line no-unused-vars
 	await addNewUser(context);
 	if (context.state.user.is_eligible_for_research) { // é elegível pra pesquisa
@@ -80,7 +81,7 @@ async function ofertaPesquisaEnd(context) {
 			await context.setState({ nextDialog: 'preTCLE' });
 			await recrutamento(context);
 		} else { // é público de interesse sem risco
-			await preTCLE(context, await checkAppointment(context));
+			await preTCLE(context, await checkAppointment(context.session.user.id));
 		}
 	} else { // não é público de interesse
 		await sendMain(context);

@@ -1,10 +1,11 @@
 const cont = require('./context');
 const checkQR = require('../app/utils/checkQR');
 const opt = require('../app/utils/options');
-const { checkAppointment } = require('../app/utils/consulta');
+const { checkAppointment } = require('../app/utils/consulta-aux');
 
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/consulta');
+jest.mock('../app/utils/consulta-aux');
 
 it('checkMainMenu - não acabou publico_interesse, não tem Token de integração -> Vê botões Quiz e Já Tomo PrEP', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
@@ -85,7 +86,7 @@ it('checkMainMenu - é publico_interesse, não marcou consulta nem deixou contat
 	context.state.publicoInteresseEnd = true;
 	context.state.temConsulta = false; context.state.leftContact = false;
 	const result = await checkQR.checkMainMenu(context);
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 
 	await expect(result.quick_replies.length === 6).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
@@ -102,7 +103,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato e
 	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = false;
 	context.state.temConsulta = true; context.state.leftContact = false;
 	const result = await checkQR.checkMainMenu(context);
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 
 	await expect(result.quick_replies.length === 6).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
@@ -120,7 +121,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato, 
 	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = false;
 	context.state.temConsulta = true; context.state.leftContact = false; context.state.preCadastroSignature = false;
 	const result = await checkQR.checkMainMenu(context);
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 
 	await expect(result.quick_replies.length === 6).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
@@ -138,7 +139,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, não deixou contato, 
 	context.state.temConsulta = true; context.state.leftContact = false; context.state.preCadastroSignature = true;
 	const result = await checkQR.checkMainMenu(context);
 
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 
 	await expect(result.quick_replies.length === 5).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
@@ -154,7 +155,7 @@ it('checkMainMenu - é publico_interesse, não marcou consulta, deixou contato e
 	context.state.publicoInteresseEnd = true; context.state.recrutamentoEnd = false;
 	context.state.temConsulta = false; context.state.leftContact = true;
 	const result = await checkQR.checkMainMenu(context);
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 
 	await expect(result.quick_replies.length === 5).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
@@ -172,7 +173,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, acabou recrutamento m
 	context.state.temConsulta = true; context.state.preCadastroSignature = false;
 
 	const result = await checkQR.checkMainMenu(context);
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 	await expect(result.quick_replies.length === 6).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Termos').toBeTruthy();
@@ -189,7 +190,7 @@ it('checkMainMenu - é publico_interesse, deixou contato e acabou recrutamento m
 	context.state.temConsulta = false; context.state.leftContact = true; context.state.preCadastroSignature = false;
 
 	const result = await checkQR.checkMainMenu(context);
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 	await expect(result.quick_replies.length === 5).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Termos').toBeTruthy();
@@ -205,7 +206,7 @@ it('checkMainMenu - é publico_interesse, marcou consulta, acabou recrutamento e
 	context.state.temConsulta = true; context.state.preCadastroSignature = true;
 
 	const result = await checkQR.checkMainMenu(context);
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 	await expect(result.quick_replies.length === 5).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Ver Consulta').toBeTruthy();
@@ -221,7 +222,7 @@ it('checkMainMenu - é publico_interesse, deixou contato, acabou recrutamento e 
 	context.state.temConsulta = false; context.state.leftContact = true; context.state.preCadastroSignature = true;
 
 	const result = await checkQR.checkMainMenu(context);
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 	await expect(result.quick_replies.length === 4).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Prevenções').toBeTruthy();

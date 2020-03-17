@@ -251,8 +251,24 @@ module.exports = {
 			combina: 'Combina: O Projeto Combina faz parte de uma pesquisa que tem a finalidade de avaliar o uso dos métodos de prevenção ao HIV disponíveis nos serviços públicos de saúde. Quais motivações para usar os métodos preventivos, em que situações e quais práticas eles são usados etc. Esse projeto é mara! 😉',
 			sus: 'SUS: SUS é o Sistema Único de Saúde e por ele rola de graça desde o simples atendimento para avaliação de pressão arterial, por exemplo, até transplante de órgãos, com acesso integral, universal e gratuito para toda a população do Brasil. Mto chic né?!',
 		},
-
-
 	},
-
+	duvidasPrep: {
+		text1: 'Partiu acabar agora com essas dúvidas sobre PrEP? Escolhe aí e eu te explico tudinhu!',
+		dpEfeitos: '2. Texto para opção "efeitos colaterais"',
+		dpDrogas: 'Beber álcool e usar outras drogas ñ influencia no efeito da PrEP. É um luxo!',
+		dpHormonios: 'Se vc tá se hormonizando, é close vc avaliar seu caso de acordo com suas doses, mas usar hormônios ñ influencia no efeito da PrEP!',
+		dpEsqueci: 'Se ontem vc esqueceu de tomar e hj trepou sem camisinha, mas lembrou hj e recomeçou hj mesmo, tá tudo bafo! Um dia só ñ corta o efeito, mas, se vc ficar mais de 2 dias sem tomar e não usar camisinha em alguma relação, aí ñ funciona e talvez vc precise tomar PEP. Vc escolhe seu horário de tomar, mas tente ñ tomar em horários tão diferentes!',
+		dpInfo1: 'Aqui você pode encontrar links e arquivos que podem te interessar sobre o uso de PrEP',
+		dpInfo2: '(amanda enviará links e arquivo)',
+		notSUS: 'Quer nossa ajuda pra mais alguma coisa? Topa um bate papo com a gente?',
+		prefixSUS: 'Tá precisando de mais informação Gatinhe?\n',
+		textosSUS: {
+			1: 'CTR DIP Orestes Diniz na Alameda Álvaro Celso, 241, Santa Efigênia. TEL: 31 3277-4341 ou Hospital Eduardo de Menezes na Rua Dr Cristiano Rezende, 2213, Bonsucesso. TEL: 31 3328-5000.',
+			2: 'Cedap - Rua Comendador José Alves Ferreira, 240, Garcia - 08h às 17h. TEL: 71 3116-8888',
+			3: 'Procure serviços de saúde nas capitais: SP: https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=248175 .',
+		},
+		demaisLocalidades: 'http://www.aids.gov.br/pt-br/acesso_a_informacao/servicos-de-saude',
+		menuOptions: ['Efeitos Colaterais', 'Drogas e PrEP', 'Hormônios e PrEP', 'Esqueci de Tomar', '+ informações'],
+		menuPostback: ['dpEfeitos', 'dpDrogas', 'dpHormonios', 'dpEsqueci', 'dpInfo'],
+	},
 };

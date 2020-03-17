@@ -4,7 +4,7 @@ const prepApi = require('./prep_api');
 const help = require('./helper');
 const { sendMain } = require('./mainMenu');
 const { sendCarouselSus } = require('./attach');
-const { checkAppointment } = require('./consulta');
+const { checkAppointment } = require('./consulta-aux');
 const research = require('./research');
 const quiz = require('./quiz');
 const triagem = require('./triagem');
@@ -59,7 +59,7 @@ async function followUp(context) {
 	}
 
 	if (context.state.user.is_target_audience === 1) {
-		await context.setState({ temConsulta: await checkAppointment(context) });
+		await context.setState({ temConsulta: await checkAppointment(context.session.user.id) });
 		if (!context.state.temConsulta && !context.state.leftContact) { await sendFollowUp(context, 'research-invite'); return false; }
 		if (!context.state.recrutamentoEnd && context.state.user.risk_group) { await sendFollowUp(context, 'recrutamento', 'recrutamento'); return false; }
 		if (!context.state.preCadastroSignature) { await sendFollowUp(context, 'share'); return false; } 	// if user didnt finish signed terms, ask to send user to sign them

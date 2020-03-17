@@ -6,7 +6,7 @@ const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
 const prepApi = require('../app/utils/prep_api');
 const { sendMain } = require('../app/utils/mainMenu');
-const { checkAppointment } = require('../app/utils/consulta');
+const { checkAppointment } = require('../app/utils/consulta-aux');
 const research = require('../app/utils/research');
 const { sentryError } = require('../app/utils/error');
 
@@ -207,7 +207,7 @@ it('Follow up - user é publico_interesse, não marcou consulta nem deixou conta
 	await desafio.followUp(context, type);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 	await expect(!context.state.temConsulta && !context.state.leftContact).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
@@ -223,7 +223,7 @@ it('Follow up - user é publico_interesse, não marcou consulta nem deixou conta
 	await desafio.followUp(context, type);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 	await expect(!context.state.temConsulta && !context.state.leftContact).toBeTruthy();
 
 	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
@@ -240,7 +240,7 @@ it('Follow up - user é publico_interesse e de risco, já marcou consulta mas n�
 	await desafio.followUp(context, type, categoryQuestion);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 	await expect(!context.state.temConsulta && !context.state.leftContact).toBeFalsy();
 	await expect(!context.state.recrutamentoEnd && context.state.user.risk_group).toBeTruthy();
 
@@ -261,7 +261,7 @@ it('Follow up - user é publico_interesse e de risco, deixou contato mas não ac
 	await desafio.followUp(context, type, categoryQuestion);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 	await expect(!context.state.temConsulta && !context.state.leftContact).toBeFalsy();
 	await expect(!context.state.recrutamentoEnd && context.state.user.risk_group).toBeTruthy();
 
@@ -279,7 +279,7 @@ it('Follow up - user é publico_interesse mas não é de risco, deixou contato e
 	await desafio.followUp(context, type, categoryQuestion);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context) });
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
 	await expect(!context.state.temConsulta && !context.state.leftContact).toBeFalsy();
 	await expect(!context.state.recrutamentoEnd && context.state.user.risk_group).toBeFalsy();
 

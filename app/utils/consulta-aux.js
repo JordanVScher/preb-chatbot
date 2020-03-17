@@ -1,4 +1,11 @@
 const help = require('./helper');
+const { getAppointment } = require('./prep_api');
+
+async function checkAppointment(fbID) {
+	const res = await getAppointment(fbID);
+	if (res.consulta && res.consulta.appointments && res.consulta.appointments.length > 0) return true;
+	return false;
+}
 
 function formatDate(date) {
 	let day = date.getDate();
@@ -151,4 +158,5 @@ module.exports = {
 	cleanDates,
 	orderByDate,
 	separateDaysIntoPages,
+	checkAppointment,
 };

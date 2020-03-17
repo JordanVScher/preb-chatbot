@@ -1,5 +1,5 @@
 const { moment } = require('./helper');
-const { checkAppointment } = require('./consulta');
+const { checkAppointment } = require('./consulta-aux');
 
 async function checkMainMenu(context) {
 	let opt = [];
@@ -16,6 +16,8 @@ async function checkMainMenu(context) {
 	const marcarConsulta = { content_type: 'text', title: 'Bate papo presencial', payload: 'pesquisaPresencial' };
 	const deixarContato = { content_type: 'text', title: 'Bate papo virtual', payload: 'pesquisaVirtual' };
 	const verConsulta = { content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' };
+	const duvidaPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasPrep' };
+	const duvidasNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
 
 	opt.push(baterPapo);
 	opt.push(quiz);
@@ -31,7 +33,7 @@ async function checkMainMenu(context) {
 		}
 
 		if (context.state.user.is_target_audience === 1) {
-			await context.setState({ temConsulta: await checkAppointment(context) });
+			await context.setState({ temConsulta: await checkAppointment(context.session.user.id) });
 			if (!context.state.temConsulta && !context.state.leftContact) {
 				if (index) { opt[index] = marcarConsulta; opt.splice(index + 1, 0, deixarContato); }
 			} else if (!context.state.recrutamentoEnd && context.state.user.risk_group) {
@@ -50,6 +52,12 @@ async function checkMainMenu(context) {
 
 	if (context.state.user.integration_token) { // replace token options if user has one
 		const index = opt.findIndex((x) => x.payload === 'join'); if (index) opt[index] = seePrepToken;
+	}
+
+	if (context.state.user.is_prep === 1) {
+		opt.splice(1, 0, duvidaPrep);
+	} else if (context.state.user.is_prep === 0) {
+		opt.splice(1, 0, duvidasNaoPrep);
 	}
 
 	return { quick_replies: opt };

@@ -13,11 +13,21 @@ const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
 const joinToken = require('./utils/joinToken');
+const duvidas = require('./utils/duvidas');
 const { sendMail } = require('./utils/mailer');
 const { getQR } = require('./utils/attach');
 const { addNewUser } = require('./utils/labels');
 const { sentryError } = require('./utils/error');
 const { buildNormalErrorMsg } = require('./utils/error');
+
+async function meContaDepoisFollowUp(context) {
+	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+		await context.setState({ meContaDepois: true });
+		await research.ofertaPesquisaSim(context);
+	} else {
+		await mainMenu.sendMain(context);
+	}
+}
 
 async function contactFollowUp(context) {
 	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
@@ -253,11 +263,35 @@ module.exports = async (context) => {
 				await context.sendText(flow.join.joinNaoSabe.sus);
 				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
 				break;
+			case 'duvidasPrep':
+				await context.sendText(flow.duvidasPrep.text1, await getQR(flow.duvidasPrep));
+				break;
+			case 'dpEfeitos':
+				await context.sendText(flow.duvidasPrep.dpEfeitos);
+				await duvidas.prepFollowUp(context);
+				break;
+			case 'dpDrogas':
+				await context.sendText(flow.duvidasPrep.dpDrogas);
+				await duvidas.prepFollowUp(context);
+				break;
+			case 'dpHormonios':
+				await context.sendText(flow.duvidasPrep.dpHormonios);
+				await duvidas.prepFollowUp(context);
+				break;
+			case 'dpEsqueci':
+				await context.sendText(flow.duvidasPrep.dpEsqueci);
+				await duvidas.prepFollowUp(context);
+				break;
+			case 'dpInfo':
+				await context.sendText(flow.duvidasPrep.dpInfo1);
+				await context.sendText(flow.duvidasPrep.dpInfo2);
+				await duvidas.prepFollowUp(context);
+				break;
 			case 'TCLE':
 				await research.TCLE(context);
 				break;
 			case 'preTCLE':
-				await research.preTCLE(context, await consulta.checkAppointment(context));
+				await research.preTCLE(context, await consulta.checkAppointment(context.session.user.id));
 				break;
 			case 'termosAccept':
 				await timer.deleteRecrutamento(context.session.user.id);
@@ -282,8 +316,7 @@ module.exports = async (context) => {
 				await research.ofertaPesquisaSim(context);
 				break;
 			case 'meContaDepois':
-				await context.setState({ meContaDepois: true });
-				await research.ofertaPesquisaSim(context);
+				await meContaDepoisFollowUp(context);
 				break;
 			case 'pesquisaPresencial':
 				// await context.setState({ categoryConsulta: 'BATE PAPO PRESENCIAL' });

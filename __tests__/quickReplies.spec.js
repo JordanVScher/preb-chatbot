@@ -7,6 +7,7 @@ const quiz = require('../app/utils/quiz');
 const prepAPI = require('../app/utils/prep_api');
 const consulta = require('../app/utils/consulta');
 const timer = require('../app/utils/timer');
+const duvidas = require('../app/utils/duvidas');
 const mainMenu = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
 
@@ -18,6 +19,7 @@ jest.mock('../app/utils/consulta');
 jest.mock('../app/utils/quiz');
 jest.mock('../app/utils/research');
 jest.mock('../app/utils/timer');
+jest.mock('../app/utils/duvidas');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
 jest.mock('../app/utils/prep_api'); // mock prep_api tp avoid making the postRecipientPrep request
@@ -192,5 +194,56 @@ describe('join - já tomo prep', async () => {
 
 		await expect(context.setState).toBeCalledWith({ askDesafio: true });
 		await expect(context.sendText).toBeCalledWith(flow.asksDesafio.intro, opt.asksDesafio);
+	});
+});
+
+
+describe('duvidasPrep - Dúvidas de usuário prep', async () => {
+	it('intro - texto e botões', async () => {
+		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.text1, await getQR(flow.duvidasPrep));
+	});
+
+	it('dpEfeitos - explicação e followUp', async () => {
+		const context = cont.quickReplyContext('dpEfeitos', 'dpEfeitos');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.dpEfeitos);
+		await expect(duvidas.prepFollowUp).toBeCalledWith(context);
+	});
+
+	it('dpDrogas - explicação e followUp', async () => {
+		const context = cont.quickReplyContext('dpDrogas', 'dpDrogas');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.dpDrogas);
+		await expect(duvidas.prepFollowUp).toBeCalledWith(context);
+	});
+
+	it('dpHormonios - explicação e followUp', async () => {
+		const context = cont.quickReplyContext('dpHormonios', 'dpHormonios');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.dpHormonios);
+		await expect(duvidas.prepFollowUp).toBeCalledWith(context);
+	});
+
+	it('dpEsqueci - explicação e followUp', async () => {
+		const context = cont.quickReplyContext('dpEsqueci', 'dpEsqueci');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.dpEsqueci);
+		await expect(duvidas.prepFollowUp).toBeCalledWith(context);
+	});
+
+	it('dpInfo - explicação, link e followUp', async () => {
+		const context = cont.quickReplyContext('dpInfo', 'dpInfo');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.dpInfo1);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.dpInfo2);
+		await expect(duvidas.prepFollowUp).toBeCalledWith(context);
 	});
 });
