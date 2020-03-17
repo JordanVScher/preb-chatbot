@@ -3,6 +3,7 @@ const joinToken = require('../app/utils/joinToken');
 const { join } = require('../app/utils/flow');
 const { getQR } = require('../app/utils/attach');
 const { getRecipientPrep } = require('../app/utils/prep_api');
+const { putUpdateVoucherFlag } = require('../app/utils/prep_api');
 const { linkIntegrationTokenLabel } = require('../app/utils/labels');
 
 jest.mock('../app/utils/flow');
@@ -16,9 +17,10 @@ it('handlePrepToken - success', async () => {
 	await joinToken.handlePrepToken(context, true);
 
 	await expect(context.sendText).toBeCalledWith(join.askPrep.success);
+	await expect(putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'sisprep');
 	await expect(context.setState).toBeCalledWith({ user: await getRecipientPrep(context.session.user.id) });
 	await expect(linkIntegrationTokenLabel).toBeCalledWith(context);
-	await expect(context.setState).toBeCalledWith({ dialog: 'tokenConfirma' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
 });
 
 it('handlePrepToken - failure', async () => {

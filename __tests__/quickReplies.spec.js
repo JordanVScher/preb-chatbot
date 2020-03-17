@@ -144,10 +144,11 @@ describe('join - já tomo prep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.text2, await getQR(flow.join.joinCombina));
 	});
 
-	it('joinCombinaSim - aceitou', async () => {
+	it('joinCombinaSim - aceitou, atualiza voucher', async () => {
 		const context = cont.quickReplyContext('joinCombinaSim', 'joinCombinaSim');
 		await handler(context);
 
+		await expect(prepAPI.putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'combina');
 		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.fim);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
@@ -160,10 +161,11 @@ describe('join - já tomo prep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.joinSUS.text2, await getQR(flow.join.joinSUS));
 	});
 
-	it('joinSUSSim - aceitou', async () => {
+	it('joinSUSSim - aceitou, atualiza voucher', async () => {
 		const context = cont.quickReplyContext('joinSUSSim', 'joinSUSSim');
 		await handler(context);
 
+		await expect(prepAPI.putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'sus');
 		await expect(context.sendText).toBeCalledWith(flow.join.joinSUS.fim);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});

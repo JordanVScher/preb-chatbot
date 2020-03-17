@@ -22,6 +22,10 @@ module.exports = {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, is_part_of_research }));
 	},
 
+	async putUpdateVoucherFlag(fb_id, voucher_type) { // voucher_type may be: sus, sisprep or combina
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, voucher_type }));
+	},
+
 	async postParticipar(fb_id, is_part_of_research) {
 		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/research-participation?security_token=${security_token}`).query({ fb_id, is_part_of_research }));
 	},
