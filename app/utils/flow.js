@@ -238,6 +238,13 @@ module.exports = {
 			menuOptions: ['Sim', 'Não'],
 			menuPostback: ['joinCombinaSim', 'join'],
 		},
+		joinSUS: {
+			text1: 'SUS é o Sistema Único de Saúde pública, rola de grátis desde o simples atendimento pra avaliação de pressão arterial, por exemplo, até transplante de órgãos, com acesso integral, universal e gratuito para toda a população do Brasil. Mto chic né?!',
+			text2: 'Você realmente faz parte do programa de atendimento PrEP do SUS?',
+			fim: '7. [Texto de fechamento do fluxo sus...]',
+			menuOptions: ['Sim', 'Não'],
+			menuPostback: ['joinSUSSim', 'join'],
+		},
 
 
 	},

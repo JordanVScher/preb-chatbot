@@ -149,4 +149,20 @@ describe('join', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.fim);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
+
+	it('joinSUS', async () => {
+		const context = cont.quickReplyContext('joinSUS', 'joinSUS');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.join.joinSUS.text1);
+		await expect(context.sendText).toBeCalledWith(flow.join.joinSUS.text2, await getQR(flow.join.joinSUS));
+	});
+
+	it('joinSUSSim', async () => {
+		const context = cont.quickReplyContext('joinSUSSim', 'joinSUSSim');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.join.joinSUS.fim);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
+	});
 });
