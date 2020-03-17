@@ -16,48 +16,60 @@ async function checkMainMenu(context) {
 	const marcarConsulta = { content_type: 'text', title: 'Bate papo presencial', payload: 'pesquisaPresencial' };
 	const deixarContato = { content_type: 'text', title: 'Bate papo virtual', payload: 'pesquisaVirtual' };
 	const verConsulta = { content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' };
+
+	// for preps
 	const duvidaPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasPrep' };
-	const duvidasNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
+	const deuRuimPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimPrep' };
+	const voltarTomarPrep = { content_type: 'text', title: 'Voltar a tomar PrEP', payload: 'voltarTomarPrep' };
+	const alarmePrep = { content_type: 'text', title: 'Alarme', payload: 'AlarmePrep' };
+	// for not preps
+	const duvidaNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
+	const deuRuimNaoPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimNaoPrep' };
+	const voltarTomarNaoPrep = { content_type: 'text', title: 'Voltar a tomar PrEP', payload: 'voltarTomarNaoPrep' };
+	const alarmeNaoPrep = { content_type: 'text', title: 'Alarme', payload: 'AlarmeNaoPrep' };
 
-	opt.push(baterPapo);
-	opt.push(quiz);
-	opt.push(prevencoes);
-	opt.push(join);
-	opt.push(sobreAmanda);
 
-	if (context.state.publicoInteresseEnd) {
-		const index = opt.findIndex((x) => x.title === 'Quiz');
-		if (context.state.user.is_target_audience === 0) {
-			if (!context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; } else
-			if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
-		}
+	if (context.state.user.is_prep === null || context.state.user.is_prep === undefined) {
+		opt.push(baterPapo);
+		opt.push(quiz);
+		opt.push(prevencoes);
+		opt.push(join);
+		opt.push(sobreAmanda);
 
-		if (context.state.user.is_target_audience === 1) {
-			await context.setState({ temConsulta: await checkAppointment(context.session.user.id) });
-			if (!context.state.temConsulta && !context.state.leftContact) {
-				if (index) { opt[index] = marcarConsulta; opt.splice(index + 1, 0, deixarContato); }
-			} else if (!context.state.recrutamentoEnd && context.state.user.risk_group) {
-				if (index) opt[index] = quizRecrutamento;
-			} else if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
+		if (context.state.publicoInteresseEnd) {
+			const index = opt.findIndex((x) => x.title === 'Quiz');
+			if (context.state.user.is_target_audience === 0) {
+				if (!context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; } else
+				if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
+			}
 
-			if (context.state.temConsulta) {
-				opt.splice(index + 1, 0, verConsulta);
+			if (context.state.user.is_target_audience === 1) {
+				await context.setState({ temConsulta: await checkAppointment(context.session.user.id) });
+				if (!context.state.temConsulta && !context.state.leftContact) {
+					if (index) { opt[index] = marcarConsulta; opt.splice(index + 1, 0, deixarContato); }
+				} else if (!context.state.recrutamentoEnd && context.state.user.risk_group) {
+					if (index) opt[index] = quizRecrutamento;
+				} else if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
+
+				if (context.state.temConsulta) {
+					opt.splice(index + 1, 0, verConsulta);
+				}
 			}
 		}
-	}
 
-	// dont show quiz option if either of brincadeira and recrutamento are answered, also dont show quiz if user is taget_audiece but is not in the risk group
-	if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || (context.state.recrutamentoEnd
+		// dont show quiz option if either of brincadeira and recrutamento are answered, also dont show quiz if user is taget_audiece but is not in the risk group
+		if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || (context.state.recrutamentoEnd
 		|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter((x) => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
 
-	if (context.state.user.integration_token) { // replace token options if user has one
-		const index = opt.findIndex((x) => x.payload === 'join'); if (index) opt[index] = seePrepToken;
-	}
+		if (context.state.user.integration_token) { // replace token options if user has one
+			const index = opt.findIndex((x) => x.payload === 'join'); if (index) opt[index] = seePrepToken;
+		}
+	} else if (context.state.user.is_prep === 1) {
+		console.log('context.state.user.is_prep', context.state.user.is_prep);
 
-	if (context.state.user.is_prep === 1) {
-		opt.splice(1, 0, duvidaPrep);
+		opt = [baterPapo, duvidaPrep, deuRuimPrep, voltarTomarPrep, alarmePrep];
 	} else if (context.state.user.is_prep === 0) {
-		opt.splice(1, 0, duvidasNaoPrep);
+		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep, voltarTomarNaoPrep, alarmeNaoPrep];
 	}
 
 	return { quick_replies: opt };
