@@ -45,11 +45,6 @@ module.exports = {
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
 	},
-	joinToken: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Não tenho Voucher', payload: 'mainMenu' },
-		],
-	},
 	artigoLink: [{
 		type: 'web_url',
 		url: 'https://www.google.com',

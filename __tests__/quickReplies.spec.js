@@ -7,6 +7,7 @@ const prepAPI = require('../app/utils/prep_api');
 const consulta = require('../app/utils/consulta');
 const timer = require('../app/utils/timer');
 const mainMenu = require('../app/utils/mainMenu');
+const { getQR } = require('../app/utils/attach');
 
 jest.mock('../app/utils/helper');
 jest.mock('../app/chatbot_api');
@@ -16,6 +17,7 @@ jest.mock('../app/utils/quiz');
 jest.mock('../app/utils/research');
 jest.mock('../app/utils/timer');
 jest.mock('../app/utils/mainMenu');
+jest.mock('../app/utils/attach');
 jest.mock('../app/utils/prep_api'); // mock prep_api tp avoid making the postRecipientPrep request
 
 it('quiz - begin', async () => {
@@ -112,5 +114,23 @@ describe('recrutamentoTimer', async () => {
 
 		await expect(timer.deleteTimers).toBeCalledWith(context.session.user.id);
 		await expect(timer.createRecrutamentoTimer).not.toBeCalledWith(context.session.user.id, context);
+	});
+});
+
+
+describe('join', async () => {
+	it('intro', async () => {
+		const context = cont.quickReplyContext('jaTomoPrep', 'jaTomoPrep');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.join.intro.text1, await getQR(flow.join.intro));
+	});
+
+	it('joinPrep', async () => {
+		const context = cont.quickReplyContext('joinPrep', 'joinPrep');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.join.joinPrep.text0);
+		await expect(context.sendText).toBeCalledWith(flow.join.askPrep.text1, await getQR(flow.join.askPrep));
 	});
 });

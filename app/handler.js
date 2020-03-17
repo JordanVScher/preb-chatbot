@@ -12,7 +12,7 @@ const research = require('./utils/research');
 const timer = require('./utils/timer');
 const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
-const join = require('./utils/join');
+const joinToken = require('./utils/joinToken');
 const { sendMail } = require('./utils/mailer');
 const { getQR } = require('./utils/attach');
 const { addNewUser } = require('./utils/labels');
@@ -151,8 +151,8 @@ module.exports = async (context) => {
 				} else {
 					await quiz.handleAnswer(context, quizOpt);
 				}
-			} else if (context.state.dialog === 'joinToken' || context.state.dialog === 'joinTokenErro') {
-				await join.handlePrepToken(context, await prepAPI.postIntegrationToken(context.session.user.id, context.state.whatWasTyped));
+			} else if (context.state.dialog === 'joinPrep' || context.state.dialog === 'joinPrepErro') {
+				await joinToken.handlePrepToken(context, await prepAPI.postIntegrationToken(context.session.user.id, context.state.whatWasTyped));
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.resetState();
@@ -205,7 +205,7 @@ module.exports = async (context) => {
 				await mainMenu.sendMain(context);
 				break;
 			case 'jaTomoPrep':
-				await join.intro(context);
+				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
 				break;
 			case 'desafioRecusado':
 				await desafio.desafioRecusado(context);
@@ -218,11 +218,12 @@ module.exports = async (context) => {
 			case 'startQuiz': // this is the quiz-type of questionario
 				await quiz.answerQuiz(context);
 				break;
-			case 'joinToken':
-				await context.sendText(flow.joinToken.text1, opt.joinToken);
+			case 'joinPrep':
+				await context.sendText(flow.join.joinPrep.text0);
+				await context.sendText(flow.join.askPrep.text1, await getQR(flow.join.askPrep));
 				break;
 			case 'seeToken':
-				await context.sendText(`${flow.joinToken.view} ${context.state.user.integration_token}`);
+				await context.sendText(`${flow.join.askPrep.view} ${context.state.user.integration_token}`);
 				await mainMenu.sendMain(context);
 				break;
 			case 'TCLE':

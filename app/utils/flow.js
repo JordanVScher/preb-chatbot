@@ -33,13 +33,6 @@ module.exports = {
 	baterPapo: {
 		text1: 'Escreve aí que eu vou tentar tirar as suas dúvidas',
 	},
-	joinToken: {
-		text1: 'Inhaiii! Pra vc q adquiriu lindamente seu voucher no serviço, digita ele aqui pra mim amore!',
-		success: 'Eitaaa, te encontrei no systema, q tudo!!',
-		fail: 'Vish, kd tu nesse systema? Vamo denovo? Digita aí o número do voucher.',
-		fail2: 'Ou se não lembrar pode clicar no botão abaixo.',
-		view: 'Bb, pega seu voucher: ',
-	},
 	issueText: {
 		success: 'M.O.R.T.A kerida 😀 sorry rsrs 👾 as vzs é babado pq minha inteligência artificial funciona assim: qnto + a gnt conversa, mais yo apriendo 😍 se ñ entendirr é pq oq vc falou ñ tá na minha base de dados 😅, mas sou ligeira viu & logo tô te respondendo ❣ PS: se tu tivé usando facebook lite, infelizment esse app ñ liberou meus botoezinios, ou seja, me chama por outro app ou pelo computador okRR? 👅',
 		failure: 'Hmm..não entendi. Topa escrever novamente?',
@@ -217,6 +210,28 @@ module.exports = {
 	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',
+	},
+	join: {
+		intro: {
+			text1: '1. [texto de introdução....]',
+			menuOptions: ['PrEP 15-19', 'Combina', 'SUS', 'Não sei', 'Eu não tomo PrEP'],
+			menuPostback: ['joinPrep', 'joinCombina', 'joinSUS', 'joinNaoSabe', 'joinNaoToma'],
+		},
+		joinPrep: {
+			text0: 'PrEP 15-19 é um projeto interessado em reduzir a incidência de HIV entre jovens gays ou bissexuais cisgêneros, travestis e mulheres trans e outro bafo é conhecer as percepções dessa galera lgbt, suas intenções e se rola aceitamento de usar a PrEP e outros métodos de prevenção pras ISTs também! É um close!',
+
+			menuOptions: ['Não tenho Voucher'],
+			menuPostback: ['jaTomoPrep'],
+		},
+		askPrep: {
+			text1: 'Inhaiii! Pra vc q adquiriu lindamente seu voucher no serviço, digita ele aqui pra mim amore!',
+			success: 'Eitaaa, te encontrei no systema, q tudo!!',
+			fail1: 'Vish, kd tu nesse systema? Vamo denovo? Digita aí o número do voucher.',
+			fail2: 'Ou se não lembrar pode clicar no botão abaixo.',
+			view: 'Bb, pega seu voucher: ',
+			menuOptions: ['Não tenho Voucher'],
+			menuPostback: ['jaTomoPrep'],
+		},
 	},
 
 };
