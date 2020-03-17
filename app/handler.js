@@ -222,7 +222,7 @@ module.exports = async (context) => {
 				await context.sendText(flow.join.joinPrep.text0);
 				await context.sendText(flow.join.askPrep.text1, await getQR(flow.join.askPrep));
 				break;
-			case 'seeToken':
+			case 'seePrepToken':
 				await context.sendText(`${flow.join.askPrep.view} ${context.state.user.integration_token}`);
 				await mainMenu.sendMain(context);
 				break;

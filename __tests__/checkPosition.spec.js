@@ -104,7 +104,7 @@ it('checkPosition - Inserir Token - with token', async () => {
 	context.state.intentName = 'Inserir Token';
 	await checkPosition(context);
 	await expect(context.state.user.integration_token && context.state.user.is_part_of_research === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'seeToken' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'seePrepToken' });
 });
 
 // it('checkPosition - Marcar Consulta case - not part_of_research', async () => {

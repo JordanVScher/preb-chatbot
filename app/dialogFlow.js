@@ -83,7 +83,7 @@ async function checkPosition(context) {
 		break;
 	case 'Inserir Token':
 		if (context.state.user.integration_token && context.state.user.is_part_of_research === 1) {
-			await context.setState({ dialog: 'seeToken' });
+			await context.setState({ dialog: 'seePrepToken' });
 		} else {
 			await context.setState({ dialog: 'joinToken' });
 		}

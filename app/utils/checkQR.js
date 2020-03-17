@@ -9,7 +9,7 @@ async function checkMainMenu(context) {
 	const quizBrincadeira = { content_type: 'text', title: 'Quiz', payload: 'querBrincadeira' };
 	const prevencoes = { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' };
 	const jaTomoPrep = { content_type: 'text', title: 'Já Tomo PrEP', payload: 'jaTomoPrep' };
-	const seeToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' };
+	const seePrepToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seePrepToken' };
 	const sobreAmanda = { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' };
 	const termos = { content_type: 'text', title: 'Termos', payload: 'TCLE' };
 	// const pesquisa = { content_type: 'text', title: 'Pesquisa', payload: 'ofertaPesquisaStart' };
@@ -49,7 +49,7 @@ async function checkMainMenu(context) {
 		|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter((x) => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
 
 	if (context.state.user.integration_token) { // replace token options if user has one
-		const index = opt.findIndex((x) => x.payload === 'jaTomoPrep'); if (index) opt[index] = seeToken;
+		const index = opt.findIndex((x) => x.payload === 'jaTomoPrep'); if (index) opt[index] = seePrepToken;
 	}
 
 	return { quick_replies: opt };

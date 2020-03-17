@@ -8,7 +8,7 @@ async function handlePrepToken(context, answer) {
 		await context.sendText(join.askPrep.success);
 		await context.setState({ user: await getRecipientPrep(context.session.user.id) }); // integration_token is added to user
 		await linkIntegrationTokenLabel(context);
-		await context.setState({ dialog: 'tokenConfirma' });
+		await context.setState({ dialog: 'mainMenu' });
 	} else { // error or invalid number
 		await context.sendText(join.askPrep.fail1);
 		await context.sendText(join.askPrep.fail2, await getQR(join.askPrep));
