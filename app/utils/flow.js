@@ -280,7 +280,11 @@ module.exports = {
 		menuOptions: ['Drogas e PrEP', 'Hormônios e PrEP', 'PrEP é para mim?', 'Me testar em casa'],
 		menuPostback: ['dnpDrogas', 'dnpHormonios', 'dnpParaMim', 'dnpMeTestar'],
 	},
-
+	deuRuimPrep: {
+		text1: '1. Texto introdutório "deu ruim"',
+		menuOptions: ['Família', 'Parceiros', 'Amigos', 'Efeitos Colaterais', 'ISTs', 'Não Tomei'],
+		menuPostback: ['drpFamilia', 'drpParceiros', 'drpAmigos', 'drpEfeitos', 'drpIST', 'drpNaoTomei'],
+	},
 	deuRuimNaoPrep: {
 		text1: 'Partiu! Clica aí na opção da sua dúvida e te explico tuduuuu!',
 		menuOptions: ['prep é para mim?', 'Medo de me testar?', 'Feridas no pau/cu', 'PEP não foi boa?'],

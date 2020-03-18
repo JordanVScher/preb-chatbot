@@ -8,6 +8,7 @@ const prepAPI = require('../app/utils/prep_api');
 const consulta = require('../app/utils/consulta');
 const timer = require('../app/utils/timer');
 const duvidas = require('../app/utils/duvidas');
+const checkQR = require('../app/utils/checkQR');
 const mainMenu = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
 
@@ -22,6 +23,7 @@ jest.mock('../app/utils/timer');
 jest.mock('../app/utils/duvidas');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
+jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/prep_api'); // mock prep_api tp avoid making the postRecipientPrep request
 
 it('quiz - begin', async () => {
@@ -247,6 +249,7 @@ describe('duvidasPrep - Dúvidas de usuário prep', async () => {
 		await expect(duvidas.prepFollowUp).toBeCalledWith(context);
 	});
 });
+
 describe('duvidasNaoPrep', async () => {
 	it('intro', async () => {
 		const context = cont.quickReplyContext('duvidasNaoPrep', 'duvidasNaoPrep');
@@ -285,6 +288,16 @@ describe('duvidasNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpMeTestar);
+	});
+});
+
+
+describe('deuRuimPrep', async () => {
+	it('intro', async () => {
+		const context = cont.quickReplyContext('deuRuimPrep', 'deuRuimPrep');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.text1, await checkQR.checkDeuRuimPrep(context, await getQR(flow.deuRuimPrep)));
 	});
 });
 

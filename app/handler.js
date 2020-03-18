@@ -329,6 +329,9 @@ module.exports = async (context) => {
 				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);
 				await inicioAutoTeste(context);
 				break;
+			case 'deuRuimPrep':
+				await context.sendText(flow.deuRuimPrep.text1, await checkQR.checkDeuRuimPrep(context, await getQR(flow.deuRuimPrep)));
+				break;
 			case 'deuRuimNaoPrep':
 				await context.sendText(flow.deuRuimNaoPrep.text1, await getQR(flow.deuRuimNaoPrep));
 				break;

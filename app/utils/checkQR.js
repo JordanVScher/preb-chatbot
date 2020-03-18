@@ -108,6 +108,14 @@ async function autoTesteOption(options, cityId) {
 	return { quick_replies: newOptions };
 }
 
+// only users that are on sisprep and combina can see the drpNaoTomei option
+async function checkDeuRuimPrep(context, opt) {
+	if (['sisprep', 'combina'].includes(context.state.user.voucher_type) === false) {
+		opt.quick_replies = opt.quick_replies.filter((x) => x.payload !== 'drpNaoTomei');
+	}
+	return opt;
+}
+
 async function getErrorQR(lastPostback) { // eslint-disable-line
 	const elements = [];
 	// const firstArray = opt.menuOptions;
@@ -202,4 +210,5 @@ module.exports = {
 	getErrorQR,
 	buildButton,
 	sendShare,
+	checkDeuRuimPrep,
 };

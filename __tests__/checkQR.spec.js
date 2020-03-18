@@ -1,5 +1,7 @@
 const cont = require('./context');
 const checkQR = require('../app/utils/checkQR');
+const { getQR } = require('../app/utils/attach'); // dont mock
+const { deuRuimPrep } = require('../app/utils/flow'); // dont mock
 const opt = require('../app/utils/options');
 const { checkAppointment } = require('../app/utils/consulta-aux');
 
@@ -325,4 +327,48 @@ it('autoTesteOption - city 3 - nothing changes', async () => {
 	const result = await checkQR.autoTesteOption(opt.autoteste, context.state.autoTesteOption);
 
 	await expect(result.quick_replies === opt.autoteste.quick_replies).toBeTruthy();
+});
+
+
+describe('checkDeuRuimPrep', async () => {
+	const options = deuRuimPrep;
+
+	it('on sisprep - see Não Tomei option', async () => {
+		const context = cont.quickReplyContext('deuRuimPrep', 'deuRuimPrep');
+		context.state.user.voucher_type = 'sisprep';
+
+		let result = await checkQR.checkDeuRuimPrep(context, await getQR(options));
+		result = result.quick_replies;
+
+		await expect(result).toBeTruthy();
+		await expect(result.length === 6).toBeTruthy();
+		const found = result.find((x) => x.payload === 'drpNaoTomei');
+		await expect(found && found.title).toBeTruthy();
+	});
+
+	it('on combina - see Não Tomei option', async () => {
+		const context = cont.quickReplyContext('deuRuimPrep', 'deuRuimPrep');
+		context.state.user.voucher_type = 'combina';
+
+		let result = await checkQR.checkDeuRuimPrep(context, await getQR(options));
+		result = result.quick_replies;
+
+		await expect(result).toBeTruthy();
+		await expect(result.length === 6).toBeTruthy();
+		const found = result.find((x) => x.payload === 'drpNaoTomei');
+		await expect(found && found.title).toBeTruthy();
+	});
+
+	it('on sus - dont see Não Tomei option', async () => {
+		const context = cont.quickReplyContext('deuRuimPrep', 'deuRuimPrep');
+		context.state.user.voucher_type = 'sus';
+
+		let result = await checkQR.checkDeuRuimPrep(context, await getQR(options));
+		result = result.quick_replies;
+
+		await expect(result).toBeTruthy();
+		await expect(result.length === 5).toBeTruthy();
+		const found = result.find((x) => x.payload === 'drpNaoTomei');
+		await expect(found && found.title).toBeFalsy();
+	});
 });
