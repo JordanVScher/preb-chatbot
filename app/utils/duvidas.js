@@ -65,6 +65,16 @@ async function alarmeMinuto(hora) {
 	return { quick_replies: opts };
 }
 
+async function buildChoiceTimeStamp(hour, minutes) {
+	const ts = new Date();
+	ts.setHours(hour || 0);
+	ts.setMinutes(minutes || 0);
+	ts.setSeconds(0);
+	ts.setMilliseconds(0);
+
+	return ts;
+}
+
 async function deuRuimQuiz(context) {
 	await context.setState({ categoryQuestion: 'deu_ruim_nao_tomei' });
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
@@ -88,4 +98,5 @@ module.exports = {
 	alarmeOK,
 	alarmeHorario,
 	alarmeMinuto,
+	buildChoiceTimeStamp,
 };

@@ -160,7 +160,7 @@ module.exports = async (context) => {
 				} else if (context.state.lastQRpayload.slice(0, 10) === 'horaAlarme') {
 					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('horaAlarme', ''), dialog: 'alarmeMinuto' });
 				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeFinal') {
-					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
+					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
 				} else { // regular quick_replies
 					await context.setState({ dialog: context.state.lastQRpayload });
 				}
@@ -461,6 +461,7 @@ module.exports = async (context) => {
 				await context.sendText(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora));
 				break;
 			case 'alarmeFinal':
+				await prepAPI.putUpdateReminderBefore(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
 				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await mainMenu.sendMain(context);
 				break;

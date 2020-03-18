@@ -572,7 +572,7 @@ describe('alarmePrep', async () => {
 			const context = cont.quickReplyContext('horaAlarme1', 'alarmeMinuto');
 			await handler(context);
 
-			await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('horaAlarme', ''), dialog: 'alarmeMinuto' });
+			await expect(context.setState).toBeCalledWith({ alarmeHora: await context.state.lastQRpayload.replace('horaAlarme', ''), dialog: 'alarmeMinuto' });
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora));
 		});
 
@@ -580,6 +580,9 @@ describe('alarmePrep', async () => {
 			const context = cont.quickReplyContext('alarmeFinal1', 'alarmeFinal');
 			await handler(context);
 
+			await expect(context.setState).toBeCalledWith({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
+			await expect(prepAPI.putUpdateReminderBefore)
+				.toBeCalledWith(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});

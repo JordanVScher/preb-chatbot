@@ -314,3 +314,21 @@ describe('alarmeMinuto', async () => {
 		await expect(result[5].payload === 'alarmeFinal50').toBeTruthy();
 	});
 });
+
+describe('buildChoiceTimeStamp', async () => {
+	it('replace hour and minute', async () => {
+		const hour = 8;
+		const minute = 15;
+		const now = new Date();
+
+		const result = await duvidas.buildChoiceTimeStamp(hour, minute);
+		await expect(result).toBeTruthy();
+		await expect(now.getDay() === result.getDay()).toBeTruthy();
+		await expect(now.getHours() !== result.getHours()).toBeTruthy();
+		await expect(now.getMinutes() !== result.getMinutes()).toBeTruthy();
+		await expect(result.getHours() === hour).toBeTruthy();
+		await expect(result.getMinutes() === minute).toBeTruthy();
+		await expect(result.getSeconds() === 0).toBeTruthy();
+		await expect(result.getMilliseconds() === 0).toBeTruthy();
+	});
+});
