@@ -247,3 +247,43 @@ describe('duvidasPrep - Dúvidas de usuário prep', async () => {
 		await expect(duvidas.prepFollowUp).toBeCalledWith(context);
 	});
 });
+describe('duvidasNaoPrep', async () => {
+	it('intro', async () => {
+		const context = cont.quickReplyContext('duvidasNaoPrep', 'duvidasNaoPrep');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
+	});
+
+	it('dnpDrogas - explicação e volta para intro', async () => {
+		const context = cont.quickReplyContext('dnpDrogas', 'dnpDrogas');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpDrogas);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
+	});
+
+	it('dnpHormonios - explicação e volta para intro', async () => {
+		const context = cont.quickReplyContext('dnpHormonios', 'dnpHormonios');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpHormonios);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
+	});
+
+	it('dnpPraMim - explicação e agendamento', async () => {
+		const context = cont.quickReplyContext('dnpPraMim', 'dnpPraMim');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpPraMim);
+		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
+		await expect(consulta.startConsulta).toBeCalledWith(context);
+	});
+
+	it('dnpMeTestar - explicação e autoteste', async () => {
+		const context = cont.quickReplyContext('dnpMeTestar', 'dnpMeTestar');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpMeTestar);
+	});
+});

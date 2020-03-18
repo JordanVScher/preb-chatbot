@@ -39,6 +39,10 @@ async function contactFollowUp(context) {
 	}
 }
 
+const inicioAutoTeste = async (context) => context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.user.city));
+const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
+const inicioJoin = async (context) => context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
+
 async function startInteration(fbID) {
 	const status = await prepAPI.getRecipientInteraction(fbID);
 	if (!status || !status[0] || status[0].closed_at !== null) await prepAPI.postRecipientInteraction(fbID);
@@ -228,7 +232,7 @@ module.exports = async (context) => {
 				await quiz.answerQuiz(context);
 				break;
 			case 'join':
-				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
+				await inicioJoin(context);
 				break;
 			case 'joinPrep':
 				await context.sendText(flow.join.joinPrep.text1);
@@ -261,7 +265,7 @@ module.exports = async (context) => {
 				await context.sendText(flow.join.joinNaoSabe.prep);
 				await context.sendText(flow.join.joinNaoSabe.combina);
 				await context.sendText(flow.join.joinNaoSabe.sus);
-				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
+				await inicioJoin(context);
 				break;
 			case 'duvidasPrep':
 				await context.sendText(flow.duvidasPrep.text1, await getQR(flow.duvidasPrep));
@@ -286,6 +290,26 @@ module.exports = async (context) => {
 				await context.sendText(flow.duvidasPrep.dpInfo1);
 				await context.sendText(flow.duvidasPrep.dpInfo2);
 				await duvidas.prepFollowUp(context);
+				break;
+			case 'duvidasNaoPrep':
+				await inicioDuvidasNaoPrep(context);
+				break;
+			case 'dnpDrogas':
+				await context.sendText(flow.duvidasNaoPrep.dnpDrogas);
+				await inicioDuvidasNaoPrep(context);
+				break;
+			case 'dnpHormonios':
+				await context.sendText(flow.duvidasNaoPrep.dnpHormonios);
+				await inicioDuvidasNaoPrep(context);
+				break;
+			case 'dnpPraMim':
+				await context.sendText(flow.duvidasNaoPrep.dnpPraMim);
+				await context.setState({ nextDialog: '' });
+				await consulta.startConsulta(context);
+				break;
+			case 'dnpMeTestar':
+				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);
+				await inicioAutoTeste(context);
 				break;
 			case 'TCLE':
 				await research.TCLE(context);
@@ -462,7 +486,7 @@ module.exports = async (context) => {
 				await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
 				break;
 			case 'autoTeste':
-				await context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.user.city));
+				await inicioAutoTeste(context);
 				break;
 			case 'auto':
 				if (flow.autoTeste.auto3[context.state.user.city]) {

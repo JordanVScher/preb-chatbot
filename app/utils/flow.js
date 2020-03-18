@@ -271,4 +271,13 @@ module.exports = {
 		menuOptions: ['Efeitos Colaterais', 'Drogas e PrEP', 'Hormônios e PrEP', 'Esqueci de Tomar', '+ informações'],
 		menuPostback: ['dpEfeitos', 'dpDrogas', 'dpHormonios', 'dpEsqueci', 'dpInfo'],
 	},
+	duvidasNaoPrep: {
+		text1: 'Bora acabar agora com essas dúvidas sobre PrEP? Escolhe aí e eu te explico tudinhu!',
+		dnpDrogas: 'Beber álcool e usar outras drogas ñ influencia no efeito da PrEP. É um luxo!',
+		dnpHormonios: 'Se vc tá se hormonizando, é close vc avaliar seu caso de acordo com suas doses, mas usar hormônios ñ influencia no efeito da PrEP!',
+		dnpPraMim: 'Se nos últimos 6 meses, vc acha q teve relações de risco OU teve alguma IST OU  usou PEP e busca uma alternativa de prevenção diferente da camisinha, talvez seja interessante pra vc tomar PrEP. Vou te oferecer formas de falar com meus amigles humanes que podem te ajudar pensar na PrEP.',
+		dnpMeTestar: 'Pode! O projeto disponibiliza autoteste q é um teste q vc pode fazer sozinhe e/ou em casa pra saber se tem HIV. Vc pode receber em casa ou buscar nos nossos serviços.',
+		menuOptions: ['Drogas e PrEP', 'Hormônios e PrEP', 'PrEP é para mim?', 'Me testar em casa'],
+		menuPostback: ['dnpDrogas', 'dnpHormonios', 'dnpPraMim', 'dnpMeTestar'],
+	},
 };
