@@ -282,6 +282,11 @@ module.exports = {
 	},
 	deuRuimPrep: {
 		text1: '1. Texto introdutório "deu ruim"',
+		drpFamilia: ' É uó falar com as pessoas da nossa família e ñ podermos nos abrir... Também não é fácil conversar sobre sexualidade com nossos pais. Aí vc pensa: como contar de uma forma que eles vão entender e me apoiar? Principalmente quando falamos de prevenção! Se vc já sabe que usar PrEP, fazer testagens etc são importantes, minha dica é: Procure conversar primeiro com alguém da família q vc tem proximidade e depois, se sentir confortável, fale com as outras pessoas envolvidas.Agora se alguém descobriu e deu ruim, fale com a gente, podemos te ajudar!',
+		drpParceiros: 'Nem todo mundo descobriu a importância de cuidar da saúde assim como vc.Precisamos quebrar o estereótipo "monstruoso" q criaram pras IST e o HIV! Se testar e usar PrEP é a sua escolha para se prevenir e a pessoa com quem vc se relaciona pode não entender. Q tal trocar uma ideia com seu parceire sobre essa sua escolha? #ficadica',
+		drpAmigos: 'Será q suas amizades sabem o benefício de dar atenção pra saúde sexual? Rola trocar ideia sem constrangimento, falar da tua descoberta e qm sabe recomendar pra essas pessoas o uso da PrEP e de outros métodos de prevenir HIV e IST? Afinal, é maravilhoso ter segurança e se cuidar fazendo esse acompanhamento babado, né? Nossas amizades merecem!Agora se o constragimento rolou na roda de amigles, podemos te ajudar.',
+		notSUS: '19.Texto para oferecer agendamento',
+		followUpSUS: '20. Texto para incentivar contato',
 		menuOptions: ['Família', 'Parceiros', 'Amigos', 'Efeitos Colaterais', 'ISTs', 'Não Tomei'],
 		menuPostback: ['drpFamilia', 'drpParceiros', 'drpAmigos', 'drpEfeitos', 'drpIST', 'drpNaoTomei'],
 	},

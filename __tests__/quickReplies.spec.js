@@ -299,6 +299,30 @@ describe('deuRuimPrep', async () => {
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.text1, await checkQR.checkDeuRuimPrep(context, await getQR(flow.deuRuimPrep)));
 	});
+
+	it('drpFamilia - explicação e deuRuimPrepFollowUp', async () => {
+		const context = cont.quickReplyContext('drpFamilia', 'drpFamilia');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpFamilia);
+		await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+	});
+
+	it('drpParceiros - explicação e deuRuimPrepFollowUp', async () => {
+		const context = cont.quickReplyContext('drpParceiros', 'drpParceiros');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpParceiros);
+		await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+	});
+
+	it('drpAmigos - explicação e deuRuimPrepFollowUp', async () => {
+		const context = cont.quickReplyContext('drpAmigos', 'drpAmigos');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpAmigos);
+		await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+	});
 });
 
 describe('deuRuimNaoPrep', async () => {
