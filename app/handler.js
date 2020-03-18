@@ -323,7 +323,7 @@ module.exports = async (context) => {
 			case 'dnpParaMim':
 				await context.sendText(flow.duvidasNaoPrep.dnpParaMim);
 				await context.setState({ nextDialog: '' });
-				await consulta.startConsulta(context);
+				await context.sendText(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
 				break;
 			case 'dnpMeTestar':
 				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);

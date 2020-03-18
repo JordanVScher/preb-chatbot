@@ -271,13 +271,13 @@ describe('duvidasNaoPrep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
 	});
 
-	it('dnpParaMim - explicação e agendamento', async () => {
+	it('dnpParaMim - explicação e falar com humano', async () => {
 		const context = cont.quickReplyContext('dnpParaMim', 'dnpParaMim');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpParaMim);
 		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(consulta.startConsulta).toBeCalledWith(context);
+		await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
 	});
 
 	it('dnpMeTestar - explicação e autoteste', async () => {
