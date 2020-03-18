@@ -300,6 +300,15 @@ module.exports = {
 			menuOptions: ['ENJOÔ', 'Gases', 'DIARREIA', 'Dor de Cabeça', 'Moleza no Corpo'],
 			menuPostback: ['drpEnjoo', 'drpGases', 'drpDiarreia', 'drpDorCabeca', 'drpMoleza'],
 		},
+		drpIST: {
+			text1: '6. Texto para opção "ISITs"',
+			drpBolhas: 'Podem ser herpes, se forem feridas q formigam e coçam tbm. Podem aparecer na bok, genital, edí ou outras partes do corpo. É legal ñ tocar, lavar bem as mãos e se for na bok, evitar compartilhar talheres, batons, copos.. bjo e oral só dps de cicatrizar!',
+			drpFeridas: 'Podem ser sífilis, cancro mole, herpes, donovanose ou trauma.\nÉ importante passar por avaliação por para investigar o que é e tratar de maneira correta.',
+			drpVerrugas: 'São causadas pelo vírus HPV, que alcança a camada mais profunda da pele e pode se manifestar em até 8 meses. Se você tem verrugas no pênis, escroto, ânus, vagina ou boca., o melhor mesmo é trata-la o quanto antes!',
+			drpCorrimento: 'Geralmente é causado por 2 bactérias: Gonorreia ou Clamídia e muitas vezes eles vêm juntos. Pode ocorrer de 3 a 20 dias após a relação sexual desprotegida (oral também conta!).',
+			menuOptions: ['Bolhas', 'Feridas', 'Verrugas', 'Corrimento (Pus)'],
+			menuPostback: ['drpBolhas', 'drpFeridas', 'drpVerrugas', 'drpCorrimento'],
+		},
 	},
 	deuRuimNaoPrep: {
 		text1: 'Partiu! Clica aí na opção da sua dúvida e te explico tuduuuu!',

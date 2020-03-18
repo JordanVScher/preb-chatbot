@@ -367,6 +367,25 @@ module.exports = async (context) => {
 				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpMoleza);
 				await duvidas.deuRuimPrepFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
 				break;
+			case 'drpIST':
+				await context.sendText(flow.deuRuimPrep.drpIST.text1, await getQR(flow.deuRuimPrep.drpIST));
+				break;
+			case 'drpBolhas':
+				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas);
+				await duvidas.deuRuimPrepFollowUp(context);
+				break;
+			case 'drpFeridas':
+				await context.sendText(flow.deuRuimPrep.drpIST.drpFeridas);
+				await duvidas.deuRuimPrepFollowUp(context);
+				break;
+			case 'drpVerrugas':
+				await context.sendText(flow.deuRuimPrep.drpIST.drpVerrugas);
+				await duvidas.deuRuimPrepFollowUp(context);
+				break;
+			case 'drpCorrimento':
+				await context.sendText(flow.deuRuimPrep.drpIST.drpCorrimento);
+				await duvidas.deuRuimPrepFollowUp(context);
+				break;
 			case 'deuRuimNaoPrep':
 				await context.sendText(flow.deuRuimNaoPrep.text1, await getQR(flow.deuRuimNaoPrep));
 				break;

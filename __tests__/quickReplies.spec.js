@@ -372,6 +372,47 @@ describe('deuRuimPrep', async () => {
 			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
 		});
 	});
+
+	describe('drpIST', async () => {
+		it('intro', async () => {
+			const context = cont.quickReplyContext('drpIST', 'drpIST');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.text1, await getQR(flow.deuRuimPrep.drpIST));
+		});
+
+		it('drpBolhas - explicação e followUp', async () => {
+			const context = cont.quickReplyContext('drpBolhas', 'drpBolhas');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpBolhas);
+			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+		});
+
+		it('drpFeridas - explicação e followUp', async () => {
+			const context = cont.quickReplyContext('drpFeridas', 'drpFeridas');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpFeridas);
+			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+		});
+
+		it('drpVerrugas - explicação e followUp', async () => {
+			const context = cont.quickReplyContext('drpVerrugas', 'drpVerrugas');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpVerrugas);
+			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+		});
+
+		it('drpCorrimento - explicação e followUp', async () => {
+			const context = cont.quickReplyContext('drpCorrimento', 'drpCorrimento');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpCorrimento);
+			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+		});
+	});
 });
 
 describe('deuRuimNaoPrep', async () => {
