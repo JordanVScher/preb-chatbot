@@ -386,6 +386,10 @@ module.exports = async (context) => {
 				await context.sendText(flow.deuRuimPrep.drpIST.drpCorrimento);
 				await duvidas.deuRuimPrepFollowUp(context);
 				break;
+			case 'drpNaoTomei':
+				await context.sendText('TODO');
+				// await duvidas.deuRuimQuiz(context);
+				break;
 			case 'deuRuimNaoPrep':
 				await context.sendText(flow.deuRuimNaoPrep.text1, await getQR(flow.deuRuimNaoPrep));
 				break;
