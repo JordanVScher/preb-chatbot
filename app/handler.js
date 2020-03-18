@@ -20,6 +20,14 @@ const { addNewUser } = require('./utils/labels');
 const { sentryError } = require('./utils/error');
 const { buildNormalErrorMsg } = require('./utils/error');
 
+async function vouPensarMelhorFollowUp(context) {
+	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+		await research.ofertaPesquisaEnd(context);
+	} else {
+		await mainMenu.sendMain(context);
+	}
+}
+
 async function meContaDepoisFollowUp(context) {
 	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
 		await context.setState({ meContaDepois: true });
@@ -40,8 +48,18 @@ async function contactFollowUp(context) {
 }
 
 const inicioAutoTeste = async (context) => context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.user.city));
-const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
 const inicioJoin = async (context) => context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
+const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
+
+const drnpFollowUpTriagem = async (context) => {
+	await context.setState({ nextDialog: '' });
+	context.sendText(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
+};
+const drnpFollowUpAgendamento = async (context) => {
+	await context.setState({ nextDialog: '' });
+	context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+};
+
 
 async function startInteration(fbID) {
 	const status = await prepAPI.getRecipientInteraction(fbID);
@@ -302,14 +320,52 @@ module.exports = async (context) => {
 				await context.sendText(flow.duvidasNaoPrep.dnpHormonios);
 				await inicioDuvidasNaoPrep(context);
 				break;
-			case 'dnpPraMim':
-				await context.sendText(flow.duvidasNaoPrep.dnpPraMim);
+			case 'dnpParaMim':
+				await context.sendText(flow.duvidasNaoPrep.dnpParaMim);
 				await context.setState({ nextDialog: '' });
 				await consulta.startConsulta(context);
 				break;
 			case 'dnpMeTestar':
 				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);
 				await inicioAutoTeste(context);
+				break;
+			case 'deuRuimNaoPrep':
+				await context.sendText(flow.deuRuimNaoPrep.text1, await getQR(flow.deuRuimNaoPrep));
+				break;
+			case 'drnpParaMim':
+				await context.sendText(flow.deuRuimNaoPrep.drnpParaMim);
+				await drnpFollowUpTriagem(context);
+				break;
+			case 'drnpMedoTestar':
+				await context.sendText(flow.deuRuimNaoPrep.drnpMedoTestar);
+				await drnpFollowUpTriagem(context);
+				break;
+			case 'drnpFeridas':
+				await context.sendText(flow.deuRuimNaoPrep.drnpFeridas);
+				await drnpFollowUpTriagem(context);
+				break;
+			case 'drnpPEPNao':
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.text1, await getQR(flow.deuRuimNaoPrep.drnpPEPNao));
+				break;
+			case 'drnpParou28':
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpParou28);
+				await drnpFollowUpAgendamento(context);
+				break;
+			case 'drnpEfeito':
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpEfeito);
+				await drnpFollowUpAgendamento(context);
+				break;
+			case 'drnpPerdeu':
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpPerdeu);
+				await drnpFollowUpAgendamento(context);
+				break;
+			case 'drnpExposicao':
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpExposicao);
+				await drnpFollowUpAgendamento(context);
+				break;
+			case 'drnpTomei28':
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpTomei28);
+				await drnpFollowUpAgendamento(context);
 				break;
 			case 'TCLE':
 				await research.TCLE(context);
@@ -348,7 +404,7 @@ module.exports = async (context) => {
 				break;
 			case 'pesquisaNao':
 			case 'ofertaPesquisaEnd':
-				await research.ofertaPesquisaEnd(context);
+				await vouPensarMelhorFollowUp(context);
 				break;
 			case 'pesquisaVirtual':
 			case 'leavePhone':
