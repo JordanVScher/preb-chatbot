@@ -26,7 +26,6 @@ async function checkMainMenu(context) {
 	const duvidaNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
 	const deuRuimNaoPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimNaoPrep' };
 	const voltarTomarNaoPrep = { content_type: 'text', title: 'Voltar a tomar PrEP', payload: 'voltarTomarNaoPrep' };
-	const alarmeNaoPrep = { content_type: 'text', title: 'Alarme', payload: 'AlarmeNaoPrep' };
 
 
 	if (context.state.user.is_prep === null || context.state.user.is_prep === undefined) {
@@ -69,7 +68,7 @@ async function checkMainMenu(context) {
 
 		opt = [baterPapo, duvidaPrep, deuRuimPrep, voltarTomarPrep, alarmePrep];
 	} else if (context.state.user.is_prep === 0) {
-		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep, voltarTomarNaoPrep, alarmeNaoPrep];
+		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep, voltarTomarNaoPrep];
 	}
 
 	return { quick_replies: opt };
