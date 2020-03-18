@@ -346,5 +346,8 @@ module.exports = {
 			menuOptions: ['Me lembrando na hora', 'Perguntando se eu já tomei'],
 			menuPostback: ['alarmeNaHora', 'alarmeJaTomei'],
 		},
+		alarmeNaHora1: 'Qual horário?',
+		alarmeNaHora2: 'E os minutos?',
+		alarmeFinal: '4. Oferecer/configurar para perguntar se já tomou',
 	},
 };

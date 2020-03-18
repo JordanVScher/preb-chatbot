@@ -135,8 +135,8 @@ module.exports = async (context) => {
 				} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
 					await context.setState({ showHours: context.state.lastQRpayload.replace('dia', '') });
 					await context.setState({ dialog: 'showHours' });
-				} else if (context.state.lastQRpayload.slice(0, 4) === 'hora') {
-					await context.setState({ finalDate: context.state.lastQRpayload.replace('hora', '').replace(':', '-') });
+				} else if (context.state.lastQRpayload.slice(0, 12) === 'horaConsulta') {
+					await context.setState({ finalDate: context.state.lastQRpayload.replace('horaConsulta', '').replace(':', '-') });
 					await consulta.finalDate(context, context.state.finalDate);
 				} else if (context.state.lastQRpayload.slice(0, 8) === 'nextHour') {
 					await context.setState({ dialog: 'nextHour', lastQRpayload: '' });
@@ -155,6 +155,12 @@ module.exports = async (context) => {
 					await context.setState({ dialog: 'showDays' });
 				} else if (context.state.lastQRpayload === 'joinNaoToma') {
 					await context.setState({ dialog: 'greetings', askDesafio: false });
+				} else if (context.state.lastQRpayload.slice(0, 11) === 'pageHorario') {
+					await context.setState({ alarmePage: await context.state.lastQRpayload.replace('pageHorario', ''), dialog: 'pageHorario' });
+				} else if (context.state.lastQRpayload.slice(0, 10) === 'horaAlarme') {
+					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('horaAlarme', ''), dialog: 'alarmeMinuto' });
+				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeFinal') {
+					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
 				} else { // regular quick_replies
 					await context.setState({ dialog: context.state.lastQRpayload });
 				}
@@ -443,6 +449,19 @@ module.exports = async (context) => {
 				break;
 			case 'alarmeCancelar':
 				await context.sendText(flow.alarmePrep.alarmeCancelar);
+				await mainMenu.sendMain(context);
+				break;
+			case 'alarmeNaHora':
+				await context.setState({ alarmePage: 1 });
+				// fallthrough
+			case 'pageHorario':
+				await context.sendText(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage));
+				break;
+			case 'alarmeMinuto':
+				await context.sendText(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora));
+				break;
+			case 'alarmeFinal':
+				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await mainMenu.sendMain(context);
 				break;
 			case 'TCLE':

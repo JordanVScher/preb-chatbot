@@ -542,4 +542,46 @@ describe('alarmePrep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeCancelar);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
+
+	describe('alarme - escolher hora', async () => {
+		it('alarmeNaHora - página 1 e lista de horários', async () => {
+			const context = cont.quickReplyContext('alarmeNaHora', 'alarmeNaHora');
+			await handler(context);
+
+			await expect(context.setState).toBeCalledWith({ alarmePage: 1 });
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage));
+		});
+
+		it('alarmeNaHora - mais cedo', async () => {
+			const context = cont.quickReplyContext('pageHorario0', 'alarmeNaHora');
+			await handler(context);
+
+			await expect(context.setState).toBeCalledWith({ alarmePage: await context.state.lastQRpayload.replace('pageHorario', ''), dialog: 'pageHorario' });
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage));
+		});
+
+		it('alarmeNaHora - mais tarde', async () => {
+			const context = cont.quickReplyContext('pageHorario2', 'alarmeNaHora');
+			await handler(context);
+
+			await expect(context.setState).toBeCalledWith({ alarmePage: await context.state.lastQRpayload.replace('pageHorario', ''), dialog: 'pageHorario' });
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage));
+		});
+
+		it('pageHorario - escolhe hora e vê minutos', async () => {
+			const context = cont.quickReplyContext('horaAlarme1', 'alarmeMinuto');
+			await handler(context);
+
+			await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('horaAlarme', ''), dialog: 'alarmeMinuto' });
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora));
+		});
+
+		it('alarmeFinal - encerra, manda request e vai pro menu', async () => {
+			const context = cont.quickReplyContext('alarmeFinal1', 'alarmeFinal');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+	});
 });

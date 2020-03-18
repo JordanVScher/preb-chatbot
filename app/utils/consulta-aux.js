@@ -71,7 +71,7 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 
 	if (dates.length < 10) { // less han 10 options, no need for pagination
 		for (const element of dates) { // eslint-disable-line
-			await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
+			await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `horaConsulta${element.quota}` });
 		}
 		result.push({ content_type: 'text', title: 'Nenhum desses', payload: 'outrosHorarios' });
 		return result; // return object with the result array
@@ -80,7 +80,7 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 	if (!pageNumber || pageNumber === 1) { // on the first page
 		for (const element of dates) { // eslint-disable-line
 			if (result.length <= 8) { // grab only the first 9 elements
-				await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
+				await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `horaConsulta${element.quota}` });
 			}
 		}
 		result.push({ content_type: 'text', title: 'Próximo', payload: `nextHour${ymd}` }); // add next button
@@ -91,7 +91,7 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 		for (const element of dates) { // eslint-disable-line
 			// get the index of only the elements after the first 9 elements (multiplied by the page number) and limit the number of elements in the array
 			if (index >= 9 * (pageNumber - 1) && result.length <= 8) {
-				result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
+				result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `horaConsulta${element.quota}` });
 				lastQuota = element.quota; // update added last quota
 			}
 			index += 1;

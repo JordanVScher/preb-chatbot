@@ -29,11 +29,40 @@ async function deuRuimPrepFollowUp(context, extraMsg) {
 }
 
 async function alarmeOK(context) {
-	if (context.state.user.voucher_type !== 'combina') {
+	if (context.state.user.voucher_type === 'combina') {
 		await context.sendText(flow.alarmePrep.comoTomando.text1, await getQR(flow.alarmePrep.comoTomando));
 	} else if (context.state.user.voucher_type === 'sisprep') {
 		await context.sendText(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
 	}
+}
+
+async function alarmeHorario(page = 1) {
+	if (page < 0) { page = 2; }
+	if (page > 2) { page = 0; }
+
+	const opts = [];
+	let pivot = page * 8;
+	opts.push({ content_type: 'text', title: 'Mais Cedo', payload: `pageHorario${page - 1}` });
+
+	for (let i = 1; i <= 8; i++) {
+		opts.push({ content_type: 'text', title: `As ${pivot}`, payload: `horaAlarme${pivot}` });
+		pivot += 1;
+	}
+	opts.push({ content_type: 'text', title: 'Mais Tarde', payload: `pageHorario${page + 1}` });
+
+	return { quick_replies: opts };
+}
+
+async function alarmeMinuto(hora) {
+	const opts = [];
+	let minutos = '00';
+
+	while (minutos < 60) {
+		opts.push({ content_type: 'text', title: `As ${hora}:${minutos}`, payload: `alarmeFinal${minutos}` });
+		minutos = parseInt(minutos, 10) + 10;
+	}
+
+	return { quick_replies: opts };
 }
 
 async function deuRuimQuiz(context) {
@@ -53,5 +82,10 @@ async function deuRuimQuiz(context) {
 }
 
 module.exports = {
-	prepFollowUp, deuRuimPrepFollowUp, deuRuimQuiz, alarmeOK,
+	prepFollowUp,
+	deuRuimPrepFollowUp,
+	deuRuimQuiz,
+	alarmeOK,
+	alarmeHorario,
+	alarmeMinuto,
 };
