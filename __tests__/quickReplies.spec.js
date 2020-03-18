@@ -323,6 +323,55 @@ describe('deuRuimPrep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpAmigos);
 		await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
 	});
+
+	describe('drpEfeitos', async () => {
+		it('intro', async () => {
+			const context = cont.quickReplyContext('drpEfeitos', 'drpEfeitos');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.text1, await getQR(flow.deuRuimPrep.drpEfeitos));
+		});
+
+		it('drpEnjoo - explicação e followUp com msg extra', async () => {
+			const context = cont.quickReplyContext('drpEnjoo', 'drpEnjoo');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpEnjoo);
+			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+		});
+
+		it('drpGases - explicação e followUp com msg extra', async () => {
+			const context = cont.quickReplyContext('drpGases', 'drpGases');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpGases);
+			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+		});
+
+		it('drpDiarreia - explicação e followUp com msg extra', async () => {
+			const context = cont.quickReplyContext('drpDiarreia', 'drpDiarreia');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpDiarreia);
+			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+		});
+
+		it('drpDorCabeca - explicação e followUp com msg extra', async () => {
+			const context = cont.quickReplyContext('drpDorCabeca', 'drpDorCabeca');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpDorCabeca);
+			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+		});
+
+		it('drpMoleza - explicação e followUp com msg extra', async () => {
+			const context = cont.quickReplyContext('drpMoleza', 'drpMoleza');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpMoleza);
+			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+		});
+	});
 });
 
 describe('deuRuimNaoPrep', async () => {

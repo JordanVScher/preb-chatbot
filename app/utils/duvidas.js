@@ -16,7 +16,8 @@ async function prepFollowUp(context) {
 	}
 }
 
-async function deuRuimPrepFollowUp(context) {
+async function deuRuimPrepFollowUp(context, extraMsg) {
+	if (extraMsg && typeof extraMsg === 'string') await context.sendText(extraMsg);
 	if (context.state.user.voucher_type === 'sus') {
 		await context.sendText(deuRuimPrep.followUpSUS);
 		await sendMain(context);

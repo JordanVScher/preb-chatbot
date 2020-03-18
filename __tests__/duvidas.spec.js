@@ -81,4 +81,52 @@ describe('deuRuimPrepFollowUp', async () => {
 		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
 		await expect(context.sendText).toBeCalledWith(deuRuimPrep.notSUS, await getQR(ofertaPesquisaSim));
 	});
+
+	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {
+		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		context.state.user.voucher_type = 'sus';
+		const msgExtra = 'foobar';
+
+		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
+
+		await expect(context.sendText).toBeCalledWith(msgExtra);
+		await expect(context.sendText).toBeCalledWith(deuRuimPrep.followUpSUS);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('Efeito - Not SUS - vê mensagem incial, fluxo falar com humano', async () => {
+		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		context.state.user.voucher_type = 'combina';
+		const msgExtra = 'foobar';
+
+		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
+
+		await expect(context.sendText).toBeCalledWith(msgExtra);
+		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
+		await expect(context.sendText).toBeCalledWith(deuRuimPrep.notSUS, await getQR(ofertaPesquisaSim));
+	});
+
+	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {
+		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		context.state.user.voucher_type = 'sus';
+		const msgExtra = 'foobar';
+
+		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
+
+		await expect(context.sendText).toBeCalledWith(msgExtra);
+		await expect(context.sendText).toBeCalledWith(deuRuimPrep.followUpSUS);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('Não manda mensagem inicial se não for string', async () => {
+		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		context.state.user.voucher_type = 'sus';
+		const msgExtra = {};
+
+		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
+
+		await expect(context.sendText).not.toBeCalledWith(msgExtra);
+		await expect(context.sendText).toBeCalledWith(deuRuimPrep.followUpSUS);
+		await expect(sendMain).toBeCalledWith(context);
+	});
 });

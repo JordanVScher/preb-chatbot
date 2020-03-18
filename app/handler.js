@@ -344,6 +344,29 @@ module.exports = async (context) => {
 				await context.sendText(flow.deuRuimPrep.drpAmigos);
 				await duvidas.deuRuimPrepFollowUp(context);
 				break;
+			case 'drpEfeitos':
+				await context.sendText(flow.deuRuimPrep.drpEfeitos.text1, await getQR(flow.deuRuimPrep.drpEfeitos));
+				break;
+			case 'drpEnjoo':
+				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpEnjoo);
+				await duvidas.deuRuimPrepFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				break;
+			case 'drpGases':
+				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpGases);
+				await duvidas.deuRuimPrepFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				break;
+			case 'drpDiarreia':
+				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpDiarreia);
+				await duvidas.deuRuimPrepFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				break;
+			case 'drpDorCabeca':
+				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpDorCabeca);
+				await duvidas.deuRuimPrepFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				break;
+			case 'drpMoleza':
+				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpMoleza);
+				await duvidas.deuRuimPrepFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				break;
 			case 'deuRuimNaoPrep':
 				await context.sendText(flow.deuRuimNaoPrep.text1, await getQR(flow.deuRuimNaoPrep));
 				break;
