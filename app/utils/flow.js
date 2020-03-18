@@ -330,4 +330,21 @@ module.exports = {
 			menuPostback: ['drnpParou28', 'drnpEfeito', 'drnpPerdeu', 'drnpExposicao', 'drnpTomei28'],
 		},
 	},
+	alarmePrep: {
+		text1: 'Vamos começar me configurando, inserir dicas para escolher o melhor horário para medicação ser lembrada e ser tomada',
+		alarmeCancelar: '3. Texto para cancelamento do alarme',
+		menuOptions: ['OK', 'Cancelar Lembrete'],
+		menuPostback: ['alarmeOK', 'alarmeCancelar'],
+		comoTomando: {
+			text1: 'Como está tomando?',
+			sobDemanda: '2. Texto para "Prep sob demanda"',
+			menuOptions: ['PrEP sob demanda', 'PrEP diária'],
+			menuPostback: ['alarmeSobDemanda', 'alarmeDiaria'],
+		},
+		comoAjudo: {
+			text1: 'Como eu ajudo você?',
+			menuOptions: ['Me lembrando na hora', 'Perguntando se eu já tomei'],
+			menuPostback: ['alarmeNaHora', 'alarmeJaTomei'],
+		},
+	},
 };

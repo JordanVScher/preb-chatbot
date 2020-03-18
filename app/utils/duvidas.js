@@ -1,6 +1,4 @@
-const { duvidasPrep } = require('./flow');
-const { ofertaPesquisaSim } = require('./flow');
-const { deuRuimPrep } = require('./flow');
+const flow = require('./flow');
 const { getQR } = require('./attach');
 const { sendMain } = require('./mainMenu');
 const prepApi = require('./prep_api');
@@ -9,24 +7,32 @@ const help = require('./helper');
 
 async function prepFollowUp(context) {
 	if (context.state.user.voucher_type === 'sus') {
-		let text = duvidasPrep.textosSUS[context.state.user.city];
-		if (!text) text = duvidasPrep.demaisLocalidades;
-		if (text) await context.sendText(duvidasPrep.prefixSUS + text);
+		let text = flow.duvidasPrep.textosSUS[context.state.user.city];
+		if (!text) text = flow.duvidasPrep.demaisLocalidades;
+		if (text) await context.sendText(flow.duvidasPrep.prefixSUS + text);
 		await sendMain(context);
 	} else {
 		await context.setState({ nextDialog: '' });
-		await context.sendText(duvidasPrep.notSUS, await getQR(ofertaPesquisaSim));
+		await context.sendText(flow.duvidasPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
 	}
 }
 
 async function deuRuimPrepFollowUp(context, extraMsg) {
 	if (extraMsg && typeof extraMsg === 'string') await context.sendText(extraMsg);
 	if (context.state.user.voucher_type === 'sus') {
-		await context.sendText(deuRuimPrep.followUpSUS);
+		await context.sendText(flow.deuRuimPrep.followUpSUS);
 		await sendMain(context);
 	} else {
 		await context.setState({ nextDialog: '' });
-		await context.sendText(deuRuimPrep.notSUS, await getQR(ofertaPesquisaSim));
+		await context.sendText(flow.deuRuimPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
+	}
+}
+
+async function alarmeOK(context) {
+	if (context.state.user.voucher_type !== 'combina') {
+		await context.sendText(flow.alarmePrep.comoTomando.text1, await getQR(flow.alarmePrep.comoTomando));
+	} else if (context.state.user.voucher_type === 'sisprep') {
+		await context.sendText(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
 	}
 }
 
@@ -45,4 +51,7 @@ async function deuRuimQuiz(context) {
 		await context.sendText(quizText);
 	}
 }
-module.exports = { prepFollowUp, deuRuimPrepFollowUp, deuRuimQuiz };
+
+module.exports = {
+	prepFollowUp, deuRuimPrepFollowUp, deuRuimQuiz, alarmeOK,
+};

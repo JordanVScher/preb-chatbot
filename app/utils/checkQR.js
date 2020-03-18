@@ -21,7 +21,7 @@ async function checkMainMenu(context) {
 	const duvidaPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasPrep' };
 	const deuRuimPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimPrep' };
 	const voltarTomarPrep = { content_type: 'text', title: 'Voltar a tomar PrEP', payload: 'voltarTomarPrep' };
-	const alarmePrep = { content_type: 'text', title: 'Alarme', payload: 'AlarmePrep' };
+	const alarmePrep = { content_type: 'text', title: 'Alarme', payload: 'alarmePrep' };
 	// for not preps
 	const duvidaNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
 	const deuRuimNaoPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimNaoPrep' };

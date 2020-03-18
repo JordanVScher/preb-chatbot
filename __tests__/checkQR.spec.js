@@ -260,7 +260,7 @@ describe('checkMainMenu', async () => {
 		await expect(result.quick_replies[1].payload === 'duvidasPrep').toBeTruthy();
 		await expect(result.quick_replies[2].payload === 'deuRuimPrep').toBeTruthy();
 		await expect(result.quick_replies[3].payload === 'voltarTomarPrep').toBeTruthy();
-		await expect(result.quick_replies[4].payload === 'AlarmePrep').toBeTruthy();
+		await expect(result.quick_replies[4].payload === 'alarmePrep').toBeTruthy();
 	});
 
 	it('não é prep -> vê Bater Papo, Dúvidas, Deu Ruim e Voltar a Tomar para Não PREPs', async () => {

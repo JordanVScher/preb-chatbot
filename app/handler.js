@@ -428,6 +428,23 @@ module.exports = async (context) => {
 				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpTomei28);
 				await drnpFollowUpAgendamento(context);
 				break;
+			case 'alarmePrep':
+				await context.sendText(flow.alarmePrep.text1, await getQR(flow.alarmePrep));
+				break;
+			case 'alarmeOK':
+				await duvidas.alarmeOK(context);
+				break;
+			case 'alarmeSobDemanda':
+				await context.sendText(flow.alarmePrep.comoTomando.sobDemanda);
+				await mainMenu.sendMain(context);
+				break;
+			case 'alarmeDiaria':
+				await context.sendText(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
+				break;
+			case 'alarmeCancelar':
+				await context.sendText(flow.alarmePrep.alarmeCancelar);
+				await mainMenu.sendMain(context);
+				break;
 			case 'TCLE':
 				await research.TCLE(context);
 				break;

@@ -504,3 +504,42 @@ describe('deuRuimNaoPrep', async () => {
 		});
 	});
 });
+
+describe('alarmePrep', async () => {
+	it('intro', async () => {
+		const context = cont.quickReplyContext('alarmePrep', 'alarmePrep');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.text1, await getQR(flow.alarmePrep));
+	});
+
+	it('alarmeOK - verificar voucher', async () => {
+		const context = cont.quickReplyContext('alarmeOK', 'alarmeOK');
+		await handler(context);
+
+		await expect(duvidas.alarmeOK).toBeCalledWith(context);
+	});
+
+	it('alarmeSobDemanda - explicação e menu', async () => {
+		const context = cont.quickReplyContext('alarmeSobDemanda', 'alarmeSobDemanda');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoTomando.sobDemanda);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
+	});
+
+	it('alarmeDiaria - opções', async () => {
+		const context = cont.quickReplyContext('alarmeDiaria', 'alarmeDiaria');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
+	});
+
+	it('alarmeCancelar - explicação e menu', async () => {
+		const context = cont.quickReplyContext('alarmeCancelar', 'alarmeCancelar');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeCancelar);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
+	});
+});

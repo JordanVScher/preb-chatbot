@@ -1,8 +1,6 @@
 const cont = require('./context');
 const duvidas = require('../app/utils/duvidas');
-const { duvidasPrep } = require('../app/utils/flow');
-const { deuRuimPrep } = require('../app/utils/flow');
-const { ofertaPesquisaSim } = require('../app/utils/flow');
+const flow = require('../app/utils/flow');
 const { sendMain } = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
 
@@ -17,7 +15,7 @@ describe('prepFollowUp - Dúvidas para PrER seguimento', async () => {
 		context.state.user.city = '1';
 		await duvidas.prepFollowUp(context);
 
-		await expect(context.sendText).toBeCalledWith(duvidasPrep.prefixSUS + duvidasPrep.textosSUS[context.state.user.city]);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.textosSUS[context.state.user.city]);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
@@ -27,7 +25,7 @@ describe('prepFollowUp - Dúvidas para PrER seguimento', async () => {
 		context.state.user.city = 2;
 		await duvidas.prepFollowUp(context);
 
-		await expect(context.sendText).toBeCalledWith(duvidasPrep.prefixSUS + duvidasPrep.textosSUS[context.state.user.city]);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.textosSUS[context.state.user.city]);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
@@ -37,7 +35,7 @@ describe('prepFollowUp - Dúvidas para PrER seguimento', async () => {
 		context.state.user.city = 2;
 		await duvidas.prepFollowUp(context);
 
-		await expect(context.sendText).toBeCalledWith(duvidasPrep.prefixSUS + duvidasPrep.textosSUS[context.state.user.city]);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.textosSUS[context.state.user.city]);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
@@ -47,7 +45,7 @@ describe('prepFollowUp - Dúvidas para PrER seguimento', async () => {
 		context.state.user.city = 10;
 		await duvidas.prepFollowUp(context);
 
-		await expect(context.sendText).toBeCalledWith(duvidasPrep.prefixSUS + duvidasPrep.demaisLocalidades);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.demaisLocalidades);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
@@ -57,7 +55,7 @@ describe('prepFollowUp - Dúvidas para PrER seguimento', async () => {
 		await duvidas.prepFollowUp(context);
 
 		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(duvidasPrep.notSUS, await getQR(ofertaPesquisaSim));
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
 	});
 });
 
@@ -68,7 +66,7 @@ describe('deuRuimPrepFollowUp', async () => {
 
 		await duvidas.deuRuimPrepFollowUp(context);
 
-		await expect(context.sendText).toBeCalledWith(deuRuimPrep.followUpSUS);
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
@@ -79,7 +77,7 @@ describe('deuRuimPrepFollowUp', async () => {
 		await duvidas.deuRuimPrepFollowUp(context);
 
 		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(deuRuimPrep.notSUS, await getQR(ofertaPesquisaSim));
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
 	});
 
 	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {
@@ -90,7 +88,7 @@ describe('deuRuimPrepFollowUp', async () => {
 		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
 
 		await expect(context.sendText).toBeCalledWith(msgExtra);
-		await expect(context.sendText).toBeCalledWith(deuRuimPrep.followUpSUS);
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
@@ -103,7 +101,7 @@ describe('deuRuimPrepFollowUp', async () => {
 
 		await expect(context.sendText).toBeCalledWith(msgExtra);
 		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(deuRuimPrep.notSUS, await getQR(ofertaPesquisaSim));
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
 	});
 
 	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {
@@ -114,7 +112,7 @@ describe('deuRuimPrepFollowUp', async () => {
 		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
 
 		await expect(context.sendText).toBeCalledWith(msgExtra);
-		await expect(context.sendText).toBeCalledWith(deuRuimPrep.followUpSUS);
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
@@ -126,7 +124,25 @@ describe('deuRuimPrepFollowUp', async () => {
 		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
 
 		await expect(context.sendText).not.toBeCalledWith(msgExtra);
-		await expect(context.sendText).toBeCalledWith(deuRuimPrep.followUpSUS);
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
 		await expect(sendMain).toBeCalledWith(context);
+	});
+});
+
+describe('alarmeOK', async () => {
+	it('combina', async () => {
+		const context = cont.quickReplyContext('alarmeOK', 'alarmeOK');
+		context.state.user.voucher_type = 'combina';
+
+		await duvidas.alarmeOK(context);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoTomando.text1, await getQR(flow.alarmePrep.comoTomando));
+	});
+
+	it('sisprep', async () => {
+		const context = cont.quickReplyContext('alarmeOK', 'alarmeOK');
+		context.state.user.voucher_type = 'sisprep';
+
+		await duvidas.alarmeOK(context);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
 	});
 });
