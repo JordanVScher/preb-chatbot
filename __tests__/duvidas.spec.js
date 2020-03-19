@@ -150,10 +150,10 @@ describe('alarmeOK', async () => {
 
 describe('alarmeHorario', async () => {
 	it('page 1 (horaAlarme) - tipo 1', async () => {
-		const context = cont.quickReplyContext('alarmeNaHora', 'alarmeNaHora');
-		context.state.alarmePage = 1;
+		const alarmePage = 1;
+		const pageKey = 'horaAlarme';
 
-		let result = await duvidas.alarmeHorario(context.state.alarmePage, 'horaAlarme');
+		let result = await duvidas.alarmeHorario(alarmePage, pageKey);
 		result = result.quick_replies;
 
 		await expect(result.length === 10).toBeTruthy();
@@ -169,25 +169,25 @@ describe('alarmeHorario', async () => {
 		await expect(result[8].title === 'As 15').toBeTruthy();
 		await expect(result[9].title === 'Mais Tarde').toBeTruthy();
 
-		await expect(result[0].payload === 'pageHorario0').toBeTruthy();
-		await expect(result[1].payload === 'horaAlarme8').toBeTruthy();
-		await expect(result[2].payload === 'horaAlarme9').toBeTruthy();
-		await expect(result[3].payload === 'horaAlarme10').toBeTruthy();
-		await expect(result[4].payload === 'horaAlarme11').toBeTruthy();
-		await expect(result[5].payload === 'horaAlarme12').toBeTruthy();
-		await expect(result[6].payload === 'horaAlarme13').toBeTruthy();
-		await expect(result[7].payload === 'horaAlarme14').toBeTruthy();
-		await expect(result[8].payload === 'horaAlarme15').toBeTruthy();
-		await expect(result[9].payload === 'pageHorario2').toBeTruthy();
+		await expect(result[0].payload === `page${pageKey}0`).toBeTruthy();
+		await expect(result[1].payload === `${pageKey}8`).toBeTruthy();
+		await expect(result[2].payload === `${pageKey}9`).toBeTruthy();
+		await expect(result[3].payload === `${pageKey}10`).toBeTruthy();
+		await expect(result[4].payload === `${pageKey}11`).toBeTruthy();
+		await expect(result[5].payload === `${pageKey}12`).toBeTruthy();
+		await expect(result[6].payload === `${pageKey}13`).toBeTruthy();
+		await expect(result[7].payload === `${pageKey}14`).toBeTruthy();
+		await expect(result[8].payload === `${pageKey}15`).toBeTruthy();
+		await expect(result[9].payload === `page${pageKey}${alarmePage + 1}`).toBeTruthy();
 	});
 
 	it('page 0 (tomeiDepois) - tipo 2', async () => {
-		const context = cont.quickReplyContext('tomeiHoraDepois', 'tomeiHoraDepois');
-		context.state.alarmePage = 0;
+		const alarmePage = 0;
+		const pageKey = 'tomeiDepois';
 
-		let result = await duvidas.alarmeHorario(context.state.alarmePage, 'tomeiDepois', 2);
+		let result = await duvidas.alarmeHorario(alarmePage, pageKey, 2);
 		result = result.quick_replies;
-		console.log('result', result);
+
 		await expect(result.length === 9).toBeTruthy();
 
 		await expect(result[0].title === 'Mais Cedo').toBeTruthy();
@@ -200,22 +200,22 @@ describe('alarmeHorario', async () => {
 		await expect(result[7].title === '7 horas antes').toBeTruthy();
 		await expect(result[8].title === 'Mais Tarde').toBeTruthy();
 
-		await expect(result[0].payload === 'pageHorario-1').toBeTruthy();
-		await expect(result[1].payload === 'tomeiDepois1').toBeTruthy();
-		await expect(result[2].payload === 'tomeiDepois2').toBeTruthy();
-		await expect(result[3].payload === 'tomeiDepois3').toBeTruthy();
-		await expect(result[4].payload === 'tomeiDepois4').toBeTruthy();
-		await expect(result[5].payload === 'tomeiDepois5').toBeTruthy();
-		await expect(result[6].payload === 'tomeiDepois6').toBeTruthy();
-		await expect(result[7].payload === 'tomeiDepois7').toBeTruthy();
-		await expect(result[8].payload === 'pageHorario1').toBeTruthy();
+		await expect(result[0].payload === `page${pageKey}${alarmePage - 1}`).toBeTruthy();
+		await expect(result[1].payload === `${pageKey}1`).toBeTruthy();
+		await expect(result[2].payload === `${pageKey}2`).toBeTruthy();
+		await expect(result[3].payload === `${pageKey}3`).toBeTruthy();
+		await expect(result[4].payload === `${pageKey}4`).toBeTruthy();
+		await expect(result[5].payload === `${pageKey}5`).toBeTruthy();
+		await expect(result[6].payload === `${pageKey}6`).toBeTruthy();
+		await expect(result[7].payload === `${pageKey}7`).toBeTruthy();
+		await expect(result[8].payload === `page${pageKey}${alarmePage + 1}`).toBeTruthy();
 	});
 
 	it('page 0 and page after 2 is equal to 0 (tomeiDepois)', async () => {
-		const context = cont.quickReplyContext('alarmeNaHora', 'alarmeNaHora');
-		context.state.alarmePage = 0;
+		let alarmePage = 0;
+		let pageKey = 'tomeiDepois';
 
-		let result1 = await duvidas.alarmeHorario(context.state.alarmePage, 'tomeiDepois', 1);
+		let result1 = await duvidas.alarmeHorario(alarmePage, pageKey, 1);
 		result1 = result1.quick_replies;
 
 		await expect(result1.length === 10).toBeTruthy();
@@ -231,19 +231,21 @@ describe('alarmeHorario', async () => {
 		await expect(result1[8].title === 'As 7').toBeTruthy();
 		await expect(result1[9].title === 'Mais Tarde').toBeTruthy();
 
-		await expect(result1[0].payload === 'pageHorario-1').toBeTruthy();
-		await expect(result1[1].payload === 'tomeiDepois0').toBeTruthy();
-		await expect(result1[2].payload === 'tomeiDepois1').toBeTruthy();
-		await expect(result1[3].payload === 'tomeiDepois2').toBeTruthy();
-		await expect(result1[4].payload === 'tomeiDepois3').toBeTruthy();
-		await expect(result1[5].payload === 'tomeiDepois4').toBeTruthy();
-		await expect(result1[6].payload === 'tomeiDepois5').toBeTruthy();
-		await expect(result1[7].payload === 'tomeiDepois6').toBeTruthy();
-		await expect(result1[8].payload === 'tomeiDepois7').toBeTruthy();
-		await expect(result1[9].payload === 'pageHorario1').toBeTruthy();
+		await expect(result1[0].payload === `page${pageKey}${alarmePage - 1}`).toBeTruthy();
+		await expect(result1[1].payload === `${pageKey}0`).toBeTruthy();
+		await expect(result1[2].payload === `${pageKey}1`).toBeTruthy();
+		await expect(result1[3].payload === `${pageKey}2`).toBeTruthy();
+		await expect(result1[4].payload === `${pageKey}3`).toBeTruthy();
+		await expect(result1[5].payload === `${pageKey}4`).toBeTruthy();
+		await expect(result1[6].payload === `${pageKey}5`).toBeTruthy();
+		await expect(result1[7].payload === `${pageKey}6`).toBeTruthy();
+		await expect(result1[8].payload === `${pageKey}7`).toBeTruthy();
+		await expect(result1[9].payload === `page${pageKey}${alarmePage + 1}`).toBeTruthy();
 
-		context.state.alarmePage = 3;
-		let result2 = await duvidas.alarmeHorario(context.state.alarmePage, 'tomeiDepois', 1);
+		alarmePage = 3;
+		pageKey = 'tomeiDepois';
+
+		let result2 = await duvidas.alarmeHorario(alarmePage, 'tomeiDepois', 1);
 		result2 = result2.quick_replies;
 
 		result1.forEach((e, i) => {
@@ -254,10 +256,10 @@ describe('alarmeHorario', async () => {
 	});
 
 	it('page 2 and page before 0 is equal to page 2 (tomeiHora)', async () => {
-		const context = cont.quickReplyContext('alarmeNaHora', 'alarmeNaHora');
-		context.state.alarmePage = 2;
+		let alarmePage = 2;
+		let pageKey = 'tomeiHora';
 
-		let result1 = await duvidas.alarmeHorario(context.state.alarmePage, 'tomeiHora');
+		let result1 = await duvidas.alarmeHorario(alarmePage, pageKey);
 		result1 = result1.quick_replies;
 
 		await expect(result1.length === 10).toBeTruthy();
@@ -273,19 +275,21 @@ describe('alarmeHorario', async () => {
 		await expect(result1[8].title === 'As 23').toBeTruthy();
 		await expect(result1[9].title === 'Mais Tarde').toBeTruthy();
 
-		await expect(result1[0].payload === 'pageHorario1').toBeTruthy();
-		await expect(result1[1].payload === 'tomeiHora16').toBeTruthy();
-		await expect(result1[2].payload === 'tomeiHora17').toBeTruthy();
-		await expect(result1[3].payload === 'tomeiHora18').toBeTruthy();
-		await expect(result1[4].payload === 'tomeiHora19').toBeTruthy();
-		await expect(result1[5].payload === 'tomeiHora20').toBeTruthy();
-		await expect(result1[6].payload === 'tomeiHora21').toBeTruthy();
-		await expect(result1[7].payload === 'tomeiHora22').toBeTruthy();
-		await expect(result1[8].payload === 'tomeiHora23').toBeTruthy();
-		await expect(result1[9].payload === 'pageHorario3').toBeTruthy();
+		await expect(result1[0].payload === `page${pageKey}${alarmePage - 1}`).toBeTruthy();
+		await expect(result1[1].payload === `${pageKey}16`).toBeTruthy();
+		await expect(result1[2].payload === `${pageKey}17`).toBeTruthy();
+		await expect(result1[3].payload === `${pageKey}18`).toBeTruthy();
+		await expect(result1[4].payload === `${pageKey}19`).toBeTruthy();
+		await expect(result1[5].payload === `${pageKey}20`).toBeTruthy();
+		await expect(result1[6].payload === `${pageKey}21`).toBeTruthy();
+		await expect(result1[7].payload === `${pageKey}22`).toBeTruthy();
+		await expect(result1[8].payload === `${pageKey}23`).toBeTruthy();
+		await expect(result1[9].payload === `page${pageKey}${alarmePage + 1}`).toBeTruthy();
 
-		context.state.alarmePage = -1;
-		let result2 = await duvidas.alarmeHorario(context.state.alarmePage, 'tomeiHora');
+		alarmePage = -1;
+		pageKey = 'tomeiHora';
+
+		let result2 = await duvidas.alarmeHorario(alarmePage, pageKey);
 		result2 = result2.quick_replies;
 
 		result1.forEach((e, i) => {
