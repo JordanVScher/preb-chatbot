@@ -330,6 +330,19 @@ module.exports = {
 			menuPostback: ['drnpParou28', 'drnpEfeito', 'drnpPerdeu', 'drnpExposicao', 'drnpTomei28'],
 		},
 	},
+	queroVoltarTomar: {
+		text1: `Se vc parou há 3 dias ou menos: volte a tomar os comprimidos normalmente. 
+
+Se parou de 3 a 7 dias e TRANSOU nas últimas 72h, procure o CTA ou serviço de saúde próximo pra tomar PEP, se ñ transou, volte a tomar os comprimidos normalmente.
+
+Se já parou há 28 dias e TRANSOU nas últimas 72h, procure o serviço pra PEP e remarcar sua consulta. Se ñ, reinicie os comprimidos normal. 
+
+E se já parou faz mais de 1 mês e transou nas últimas 72h, procure o serviço pra tomar PEP e agendar uma nova consulta pra rever seu uso de PrEP. 
+
+Se quiser fala com a gente no whats: (11) 98209-2911
+
+Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de tomar PrEP por 7 dias seguidos!!'`,
+	},
 	alarmePrep: {
 		text1: 'Vamos começar me configurando, inserir dicas para escolher o melhor horário para medicação ser lembrada e ser tomada',
 		alarmeCancelar: '3. Texto para cancelamento do alarme',

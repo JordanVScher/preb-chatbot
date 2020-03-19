@@ -607,3 +607,14 @@ describe('alarmePrep', async () => {
 		});
 	});
 });
+
+describe('Quero voltar a tomar prep', async () => {
+	it('voltarTomarPrep', async () => {
+		const context = cont.quickReplyContext('voltarTomarPrep', 'voltarTomarPrep');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.queroVoltarTomar.text1);
+		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+	});
+});

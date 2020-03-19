@@ -436,6 +436,12 @@ module.exports = async (context) => {
 				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpTomei28);
 				await drnpFollowUpAgendamento(context);
 				break;
+			case 'voltarTomarPrep':
+			case 'voltarTomarNaoPrep':
+				await context.sendText(flow.queroVoltarTomar.text1);
+				await context.setState({ nextDialog: '' });
+				context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+				break;
 			case 'alarmePrep':
 				await context.sendText(flow.alarmePrep.text1, await getQR(flow.alarmePrep));
 				break;
