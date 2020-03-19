@@ -88,6 +88,41 @@ async function buildChoiceTimeStamp(hour, minutes) {
 	return ts;
 }
 
+async function formatDate(text) {
+	const dateRegex = new RegExp(/^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|(([1][26]|[2468][048]|[3579][26])00))))$/g); // eslint-disable-line
+	const isValid = dateRegex.test(text);
+	if (!isValid) return false;
+
+	const dateObject = help.moment(text, 'DD/MM/YYYY');
+	const data = dateObject.toDate();
+	if (data instanceof Date && !isNaN(data)) return data; // eslint-disable-line no-restricted-globals
+	return false;
+}
+
+async function checkDate(date) {
+	const today = help.moment(new Date());
+	const data = help.moment(date);
+
+	const dataAfterToday = data.isAfter(today);
+	if (dataAfterToday === true) return 'A data da consulta passada não pode ser depois de hoje.';
+
+	const diff = data.diff(today, 'months');
+	if (diff < -6) return 'A data da sua consulta passada não pode ser de mais de 6 meses atrás.';
+
+	return date;
+}
+
+async function alarmeDate(context) {
+	let date = await formatDate(context.state.whatWasTyped);
+	if (date) date = await checkDate(date);
+	if (!date || typeof date === 'string') {
+		await context.sendText(`${flow.alarmePrep.alarmeAcabar.invalid} ${date || ''}`);
+		await context.setState({ dialog: 'alarmeAcabar' });
+	} else {
+		await context.setState({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: date });
+	}
+}
+
 async function deuRuimQuiz(context) {
 	await context.setState({ categoryQuestion: 'deu_ruim_nao_tomei' });
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
@@ -113,4 +148,7 @@ module.exports = {
 	alarmeMinuto,
 	buildChoiceTimeStamp,
 	receivePage,
+	formatDate,
+	checkDate,
+	alarmeDate,
 };

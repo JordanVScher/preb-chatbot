@@ -356,8 +356,8 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 		},
 		comoAjudo: {
 			text1: 'Como eu ajudo você?',
-			menuOptions: ['Me lembrando na hora', 'Perguntando se eu já tomei'],
-			menuPostback: ['alarmeNaHora', 'alarmeJaTomei'],
+			menuOptions: ['Me lembrando na hora', 'Perguntando se eu já tomei', 'Me lembrando quando o medicamento vai acabar'],
+			menuPostback: ['alarmeNaHora', 'alarmeJaTomei', 'alarmeAcabar'],
 		},
 		alarmeNaHora1: 'Qual horário?',
 		alarmeNaHora2: 'E os minutos?',
@@ -367,6 +367,14 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 			text2: '5. Oferecer/configurar para lembrar na hora',
 			menuOptions: ['10 em 10 minutos', '30 em 30 minutos', '1h em 1h', '1h30 em 1h30', '2h em 2h'],
 			menuPostback: ['alarmeTempo10', 'alarmeTempo30', 'alarmeTempo60', 'alarmeTempo90', 'alarmeTempo120'],
+		},
+		alarmeAcabar: {
+			text1: 'Coloque a data da sua última consulta no formato DD/MM/AAAA',
+			invalid: 'Data inválida!',
+			text2: 'Quantos frascos você retirou nesta data?',
+			menuOptions: ['1 Frasco', '2 Frascos', '3 Frascos'],
+			menuPostback: ['alarmeFrasco1', 'alarmeFrasco2', 'alarmeFrasco3'],
+			text3: 'Ok, pelos meus cálculos os seus comprimidos acabarão dia xx/xx/xxxx, te lembrarei 15 dias  antes.',
 		},
 	},
 	tomeiPrep: {

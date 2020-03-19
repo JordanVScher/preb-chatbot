@@ -167,6 +167,8 @@ module.exports = async (context) => {
 					await context.setState({ tomeiHora: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
 				} else if (context.state.lastQRpayload.slice(0, 9) === 'askDepois') {
 					await context.setState({ tomeiDepois: await context.state.lastQRpayload.replace('askDepois', ''), dialog: 'tomeiFinal' });
+				} else if (context.state.lastQRpayload.slice(0, 12) === 'alarmeFrasco') {
+					await context.setState({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
 				} else { // regular quick_replies
 					await context.setState({ dialog: context.state.lastQRpayload });
 				}
@@ -178,7 +180,9 @@ module.exports = async (context) => {
 			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
-			if (context.state.dialog === 'leavePhoneTwo' || context.state.dialog === 'phoneInvalid') {
+			if (context.state.dialog === 'alarmeAcabar') {
+				await duvidas.alarmeDate(context);
+			} else if (context.state.dialog === 'leavePhoneTwo' || context.state.dialog === 'phoneInvalid') {
 				await research.checkPhone(context);
 			} else if (context.state.dialog === 'leaveInsta') {
 				await context.setState({ insta: context.state.whatWasTyped, dialog: 'leaveInstaValid' });
@@ -483,6 +487,17 @@ module.exports = async (context) => {
 			case 'alarmeTempoFinal':
 				await prepAPI.putUpdateReminderAfter(context.session.user.id, 1, context.state.alarmeTempo);
 				await context.sendText(flow.alarmePrep.alarmeJaTomei.text2);
+				await mainMenu.sendMain(context);
+				break;
+			case 'alarmeAcabar':
+				await context.sendText(flow.alarmePrep.alarmeAcabar.text1);
+				break;
+			case 'alarmeAcabarFrascos':
+				await context.sendText(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
+				break;
+			case 'alarmeAcabarFinal':
+				await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco);
+				await context.sendText(flow.alarmePrep.alarmeAcabar.text3);
 				await mainMenu.sendMain(context);
 				break;
 			case 'tomeiPrep':
