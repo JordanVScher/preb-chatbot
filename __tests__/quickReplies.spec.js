@@ -606,6 +606,40 @@ describe('alarmePrep', async () => {
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 	});
+
+	describe('alarmeAcabar - avisar quando acabar os comprimidos', async () => {
+		it('intro - espera data', async () => {
+			const context = cont.quickReplyContext('alarmeAcabar', 'alarmeAcabar');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text1);
+		});
+
+		it('alarmeAcabar - entra data inválida', async () => {
+			const context = cont.textContext('foobar', 'alarmeAcabar');
+			await handler(context);
+
+			await expect(duvidas.alarmeDate).toBeCalledWith(context);
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text1);
+		});
+
+		it('alarmeAcabar - vê opções de frascos', async () => {
+			const context = cont.quickReplyContext('alarmeAcabarFrascos', 'alarmeAcabarFrascos');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
+		});
+
+		it('alarmeAcabarFinal - escolheu opção, faz request e encerra', async () => {
+			const context = cont.quickReplyContext('alarmeFrasco1', 'alarmeAcabarFinal');
+			await handler(context);
+
+			await expect(context.setState).toBeCalledWith({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
+			await expect(prepAPI.putUpdateAlarme).toBeCalledWith(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco);
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text3);
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+	});
 });
 
 describe('Quero voltar a tomar prep', async () => {
@@ -632,8 +666,8 @@ describe('Tomei - tomeiPrep', async () => {
 		const context = cont.quickReplyContext('askTomei10', 'tomeiHoraDepois');
 		await handler(context);
 
-		await context.setState({ tomeiHora: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
-		await context.setState({ alarmePage: 1, pageKey: 'askDepois' });
+		await expect(context.setState).toBeCalledWith({ tomeiHora: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
+		await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askDepois' });
 		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.text2, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
 	});
 
@@ -641,7 +675,7 @@ describe('Tomei - tomeiPrep', async () => {
 		const context = cont.quickReplyContext('askDepois12', 'tomeiFinal');
 		await handler(context);
 
-		await context.setState({ tomeiDepois: await context.state.lastQRpayload.replace('askDepois', ''), dialog: 'tomeiFinal' });
+		await expect(context.setState).toBeCalledWith({ tomeiDepois: await context.state.lastQRpayload.replace('askDepois', ''), dialog: 'tomeiFinal' });
 		await expect(prepAPI.putUpdateTomei).toBeCalledWith(context.session.user.id, context.state.tomeiHora, context.state.tomeiDepois);
 		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.text3);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);

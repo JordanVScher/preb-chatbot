@@ -1,6 +1,7 @@
 const cont = require('./context');
 const duvidas = require('../app/utils/duvidas');
 const flow = require('../app/utils/flow');
+const { moment } = require('../app/utils/helper');
 const { sendMain } = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
 
@@ -364,5 +365,100 @@ describe('buildChoiceTimeStamp', async () => {
 		await expect(result.getMinutes() === minute).toBeTruthy();
 		await expect(result.getSeconds() === 0).toBeTruthy();
 		await expect(result.getMilliseconds() === 0).toBeTruthy();
+	});
+});
+
+
+describe('formatDate', async () => {
+	it('Empty - false', async () => {
+		const res = await duvidas.formatDate();
+		await expect(res).toBeFalsy();
+	});
+
+	it('text - false', async () => {
+		const res = await duvidas.formatDate('foobar');
+		await expect(res).toBeFalsy();
+	});
+
+	it('number - false', async () => {
+		const res = await duvidas.formatDate(123456);
+		await expect(res).toBeFalsy();
+	});
+
+	it('MM/DD/YYYY - false', async () => {
+		const res = await duvidas.formatDate('12/30/2020');
+		await expect(res).toBeFalsy();
+	});
+
+	it('DD-MM-YYYY - false', async () => {
+		const res = await duvidas.formatDate('30-12-2020');
+		await expect(res).toBeFalsy();
+	});
+
+	it('DD/MM/YYYY - true', async () => {
+		const res = await duvidas.formatDate('30/12/2020');
+		await expect(res).toBeTruthy();
+	});
+});
+
+
+describe('checkDate', async () => {
+	it('data after today - false', async () => {
+		const data = new Date();
+		data.setDate(data.getDate() + 1);
+
+		const res = await duvidas.checkDate(data);
+		await expect(typeof res).toBe('string');
+	});
+
+	it('data before 6 months - false', async () => {
+		const data = new Date();
+		data.setMonth(data.getMonth() - 7);
+
+		const res = await duvidas.checkDate(data);
+		await expect(typeof res).toBe('string');
+	});
+
+	it('data within 6 months - false', async () => {
+		const data = new Date();
+		data.setMonth(data.getMonth() - 6);
+
+		const res = await duvidas.checkDate(data);
+		await expect(typeof res).toBe('object');
+	});
+});
+
+describe('alarmeDate', async () => {
+	it('formato inválido - tenta de novo', async () => {
+		const context = await cont.textContext('foobar', 'alarmeAcabar');
+		const date = await duvidas.alarmeDate(context);
+
+		await expect(date).toBeFalsy();
+		await expect(context.sendText).toBeCalledWith(`${flow.alarmePrep.alarmeAcabar.invalid} ${date || ''}`);
+		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabar' });
+	});
+
+	it('formato válido mas valor inválido - vê erro e tenta de novo', async () => {
+		const data = new Date();
+		data.setDate(data.getDate() + 1);
+		const dataString = await moment(data).format('DD/MM/YYYY');
+		const context = await cont.textContext(dataString, 'alarmeAcabar');
+
+		const date = await duvidas.alarmeDate(context);
+
+		await expect(typeof date).toBe('string');
+		await expect(context.sendText).toBeCalledWith(`${flow.alarmePrep.alarmeAcabar.invalid} ${date || ''}`);
+		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabar' });
+	});
+
+	it('formato válido e valor válido - salva data e vê opções de frascos', async () => {
+		const data = new Date();
+		const dataString = await moment(data).format('DD/MM/YYYY');
+		const context = await cont.textContext(dataString, 'alarmeAcabar');
+
+		const date = await duvidas.alarmeDate(context);
+
+		await expect(typeof date).toBe('object');
+		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: date });
 	});
 });

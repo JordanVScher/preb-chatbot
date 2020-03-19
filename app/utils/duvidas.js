@@ -121,6 +121,8 @@ async function alarmeDate(context) {
 	} else {
 		await context.setState({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: date });
 	}
+
+	return date;
 }
 
 async function deuRuimQuiz(context) {
