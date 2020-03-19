@@ -34,6 +34,10 @@ module.exports = {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, prep_reminder_after, prep_reminder_after_interval }));
 	},
 
+	async putUpdateTomei(fb_id, tomeiHora, tomeiDepois) {
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, tomeiHora, tomeiDepois }));
+	},
+
 	async postParticipar(fb_id, is_part_of_research) {
 		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/research-participation?security_token=${security_token}`).query({ fb_id, is_part_of_research }));
 	},

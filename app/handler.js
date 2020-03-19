@@ -155,14 +155,18 @@ module.exports = async (context) => {
 					await context.setState({ dialog: 'showDays' });
 				} else if (context.state.lastQRpayload === 'joinNaoToma') {
 					await context.setState({ dialog: 'greetings', askDesafio: false });
-				} else if (context.state.lastQRpayload.slice(0, 11) === 'pageHorario') {
-					await context.setState({ alarmePage: await context.state.lastQRpayload.replace('pageHorario', ''), dialog: 'pageHorario' });
-				} else if (context.state.lastQRpayload.slice(0, 10) === 'horaAlarme') {
-					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('horaAlarme', ''), dialog: 'alarmeMinuto' });
+				} else if (context.state.lastQRpayload.slice(0, 4) === 'page') {
+					await duvidas.receivePage(context);
+				} else if (context.state.lastQRpayload.slice(0, 10) === 'askHorario') {
+					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'alarmeMinuto' });
 				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeFinal') {
 					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeTempo') {
 					await context.setState({ alarmeTempo: `${await context.state.lastQRpayload.replace('alarmeTempo', '')} minutes`, dialog: 'alarmeTempoFinal' });
+				} else if (context.state.lastQRpayload.slice(0, 8) === 'askTomei') {
+					await context.setState({ tomeiHora: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
+				} else if (context.state.lastQRpayload.slice(0, 9) === 'askDepois') {
+					await context.setState({ tomeiDepois: await context.state.lastQRpayload.replace('askDepois', ''), dialog: 'tomeiFinal' });
 				} else { // regular quick_replies
 					await context.setState({ dialog: context.state.lastQRpayload });
 				}
@@ -460,10 +464,10 @@ module.exports = async (context) => {
 				await mainMenu.sendMain(context);
 				break;
 			case 'alarmeNaHora':
-				await context.setState({ alarmePage: 1 });
-				// fallthrough
-			case 'pageHorario':
-				await context.sendText(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage));
+				await context.setState({ alarmePage: 1, pageKey: 'askHorario' });
+				// fallsthrough
+			case 'askHorario':
+				await context.sendText(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
 				break;
 			case 'alarmeMinuto':
 				await context.sendText(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora));
@@ -479,6 +483,23 @@ module.exports = async (context) => {
 			case 'alarmeTempoFinal':
 				await prepAPI.putUpdateReminderAfter(context.session.user.id, 1, context.state.alarmeTempo);
 				await context.sendText(flow.alarmePrep.alarmeJaTomei.text2);
+				await mainMenu.sendMain(context);
+				break;
+			case 'tomeiPrep':
+				await context.setState({ alarmePage: 1, pageKey: 'askTomei' });
+			// fallsthrough
+			case 'askTomei':
+				await context.sendText(flow.tomeiPrep.text1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+				break;
+			case 'tomeiHoraDepois':
+				await context.setState({ alarmePage: 1, pageKey: 'askDepois' });
+				// fallsthrough
+			case 'askDepois':
+				await context.sendText(flow.tomeiPrep.text2, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+				break;
+			case 'tomeiFinal':
+				await prepAPI.putUpdateTomei(context.session.user.id, context.state.tomeiHora, context.state.tomeiDepois);
+				await context.sendText(flow.tomeiPrep.text3);
 				await mainMenu.sendMain(context);
 				break;
 			case 'TCLE':

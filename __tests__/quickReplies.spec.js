@@ -618,3 +618,28 @@ describe('Quero voltar a tomar prep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
 	});
 });
+
+describe('Tomei - tomeiPrep', async () => {
+	it('intro - mostra opções de hora', async () => {
+		const context = cont.quickReplyContext('tomeiPrep', 'tomeiPrep');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.text1, await duvidas.alarmeHorario(context.state.alarmePage, 'tomeiHora'));
+	});
+
+	it('tomeiHoraDepois - escolheu opção e vê outras opções, formatadas diferente', async () => {
+		const context = cont.quickReplyContext('tomeiHora10', 'tomeiHoraDepois');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.text2, await duvidas.alarmeHorario(context.state.alarmePage, 'tomeiDepois'));
+	});
+
+	it('tomeiFinal - escolheu opção, faz request e encerra', async () => {
+		const context = cont.quickReplyContext('tomeiDepois12', 'tomeiFinal');
+		await handler(context);
+
+		await expect(prepAPI.putUpdateTomei).toBeCalledWith(context.session.user.id, context.state.tomeiHora, context.state.tomeiDepois);
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.text3);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
+	});
+});

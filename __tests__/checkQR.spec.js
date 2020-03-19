@@ -254,13 +254,14 @@ describe('checkMainMenu', async () => {
 		context.state.user = { is_prep: 1 };
 
 		const result = await checkQR.checkMainMenu(context);
-		await expect(result.quick_replies.length === 5).toBeTruthy();
+		await expect(result.quick_replies.length === 6).toBeTruthy();
 
 		await expect(result.quick_replies[0].payload === 'baterPapo').toBeTruthy();
 		await expect(result.quick_replies[1].payload === 'duvidasPrep').toBeTruthy();
 		await expect(result.quick_replies[2].payload === 'deuRuimPrep').toBeTruthy();
 		await expect(result.quick_replies[3].payload === 'voltarTomarPrep').toBeTruthy();
 		await expect(result.quick_replies[4].payload === 'alarmePrep').toBeTruthy();
+		await expect(result.quick_replies[5].payload === 'tomeiPrep').toBeTruthy();
 	});
 
 	it('não é prep -> vê Bater Papo, Dúvidas e Deu Ruim', async () => {

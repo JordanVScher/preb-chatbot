@@ -369,4 +369,9 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 			menuPostback: ['alarmeTempo10', 'alarmeTempo30', 'alarmeTempo60', 'alarmeTempo90', 'alarmeTempo120'],
 		},
 	},
+	tomeiPrep: {
+		text1: 'Que horas?',
+		text2: 'Quanto tempo antes da próxima dose vc quer que eu te lembre?',
+		text3: '<msg de encerramento>',
+	},
 };

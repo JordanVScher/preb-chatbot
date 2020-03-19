@@ -36,19 +36,24 @@ async function alarmeOK(context) {
 	}
 }
 
-async function alarmeHorario(page = 1) {
+async function alarmeHorario(page = 1, btnParam, textType = 1) {
 	if (page < 0) { page = 2; }
 	if (page > 2) { page = 0; }
 
+
 	const opts = [];
 	let pivot = page * 8;
-	opts.push({ content_type: 'text', title: 'Mais Cedo', payload: `pageHorario${page - 1}` });
+	opts.push({ content_type: 'text', title: 'Mais Cedo', payload: `page${btnParam}${page - 1}` });
 
 	for (let i = 1; i <= 8; i++) {
-		opts.push({ content_type: 'text', title: `As ${pivot}`, payload: `horaAlarme${pivot}` });
+		let title = null;
+		if (textType === 1) title = pivot === 1 ? `A ${pivot}` : `As ${pivot}`;
+		if (textType === 2 && pivot > 0) title = pivot === 1 ? `${pivot} hora antes` : `${pivot} horas antes`;
+
+		if (title) opts.push({ content_type: 'text', title, payload: `${btnParam}${pivot}` });
 		pivot += 1;
 	}
-	opts.push({ content_type: 'text', title: 'Mais Tarde', payload: `pageHorario${page + 1}` });
+	opts.push({ content_type: 'text', title: 'Mais Tarde', payload: `page${btnParam}${page + 1}` });
 
 	return { quick_replies: opts };
 }
@@ -63,6 +68,14 @@ async function alarmeMinuto(hora) {
 	}
 
 	return { quick_replies: opts };
+}
+
+async function receivePage(context) {
+	const payload = context.state.lastQRpayload.replace('page', '');
+	const nextDialog = context.state.pageKey;
+	const newPage = payload.replace(nextDialog, '');
+
+	await context.setState({ alarmePage: newPage, dialog: nextDialog });
 }
 
 async function buildChoiceTimeStamp(hour, minutes) {
@@ -99,4 +112,5 @@ module.exports = {
 	alarmeHorario,
 	alarmeMinuto,
 	buildChoiceTimeStamp,
+	receivePage,
 };

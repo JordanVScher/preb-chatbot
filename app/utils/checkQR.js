@@ -22,6 +22,7 @@ async function checkMainMenu(context) {
 	const deuRuimPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimPrep' };
 	const voltarTomarPrep = { content_type: 'text', title: 'Voltar a tomar PrEP', payload: 'voltarTomarPrep' };
 	const alarmePrep = { content_type: 'text', title: 'Alarme', payload: 'alarmePrep' };
+	const tomeiPrep = { content_type: 'text', title: 'Tomei', payload: 'tomeiPrep' };
 	// for not preps
 	const duvidaNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
 	const deuRuimNaoPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimNaoPrep' };
@@ -62,9 +63,7 @@ async function checkMainMenu(context) {
 			const index = opt.findIndex((x) => x.payload === 'join'); if (index) opt[index] = seePrepToken;
 		}
 	} else if (context.state.user.is_prep === 1) {
-		console.log('context.state.user.is_prep', context.state.user.is_prep);
-
-		opt = [baterPapo, duvidaPrep, deuRuimPrep, voltarTomarPrep, alarmePrep];
+		opt = [baterPapo, duvidaPrep, deuRuimPrep, voltarTomarPrep, alarmePrep, tomeiPrep];
 	} else if (context.state.user.is_prep === 0) {
 		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep];
 	}
