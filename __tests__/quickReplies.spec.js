@@ -587,4 +587,23 @@ describe('alarmePrep', async () => {
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 	});
+
+	describe('alarme - escolher intervalo', async () => {
+		it('alarmeJaTomei', async () => {
+			const context = cont.quickReplyContext('alarmeJaTomei', 'alarmeJaTomei');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeJaTomei.text1, await getQR(flow.alarmePrep.alarmeJaTomei));
+		});
+
+		it('alarmeTempo10 - esolhe uma opção, salva o intervalo e manda a request', async () => {
+			const context = cont.quickReplyContext('alarmeTempo10', 'alarmeTempoFinal');
+			await handler(context);
+
+			await expect(context.setState).toBeCalledWith({ alarmeTempo: `${await context.state.lastQRpayload.replace('alarmeTempo', '')} minutes`, dialog: 'alarmeTempoFinal' });
+			await expect(prepAPI.putUpdateReminderAfter).toBeCalledWith(context.session.user.id, 1, context.state.alarmeTempo);
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeJaTomei.text2);
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+	});
 });

@@ -161,6 +161,8 @@ module.exports = async (context) => {
 					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('horaAlarme', ''), dialog: 'alarmeMinuto' });
 				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeFinal') {
 					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
+				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeTempo') {
+					await context.setState({ alarmeTempo: `${await context.state.lastQRpayload.replace('alarmeTempo', '')} minutes`, dialog: 'alarmeTempoFinal' });
 				} else { // regular quick_replies
 					await context.setState({ dialog: context.state.lastQRpayload });
 				}
@@ -463,6 +465,14 @@ module.exports = async (context) => {
 			case 'alarmeFinal':
 				await prepAPI.putUpdateReminderBefore(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
 				await context.sendText(flow.alarmePrep.alarmeFinal);
+				await mainMenu.sendMain(context);
+				break;
+			case 'alarmeJaTomei':
+				await context.sendText(flow.alarmePrep.alarmeJaTomei.text1, await getQR(flow.alarmePrep.alarmeJaTomei));
+				break;
+			case 'alarmeTempoFinal':
+				await prepAPI.putUpdateReminderAfter(context.session.user.id, 1, context.state.alarmeTempo);
+				await context.sendText(flow.alarmePrep.alarmeJaTomei.text2);
 				await mainMenu.sendMain(context);
 				break;
 			case 'TCLE':

@@ -349,5 +349,11 @@ module.exports = {
 		alarmeNaHora1: 'Qual horário?',
 		alarmeNaHora2: 'E os minutos?',
 		alarmeFinal: '4. Oferecer/configurar para perguntar se já tomou',
+		alarmeJaTomei: {
+			text1: 'De quanto em quanto tempo?',
+			text2: '5. Oferecer/configurar para lembrar na hora',
+			menuOptions: ['10 em 10 minutos', '30 em 30 minutos', '1h em 1h', '1h30 em 1h30', '2h em 2h'],
+			menuPostback: ['alarmeTempo10', 'alarmeTempo30', 'alarmeTempo60', 'alarmeTempo90', 'alarmeTempo120'],
+		},
 	},
 };
