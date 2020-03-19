@@ -25,8 +25,6 @@ async function checkMainMenu(context) {
 	// for not preps
 	const duvidaNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
 	const deuRuimNaoPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimNaoPrep' };
-	const voltarTomarNaoPrep = { content_type: 'text', title: 'Voltar a tomar PrEP', payload: 'voltarTomarNaoPrep' };
-
 
 	if (context.state.user.is_prep === null || context.state.user.is_prep === undefined) {
 		opt.push(baterPapo);
@@ -68,7 +66,7 @@ async function checkMainMenu(context) {
 
 		opt = [baterPapo, duvidaPrep, deuRuimPrep, voltarTomarPrep, alarmePrep];
 	} else if (context.state.user.is_prep === 0) {
-		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep, voltarTomarNaoPrep];
+		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep];
 	}
 
 	return { quick_replies: opt };
