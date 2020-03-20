@@ -312,12 +312,12 @@ module.exports = {
 	},
 	deuRuimNaoPrep: {
 		text1: 'Partiu! Clica aí na opção da sua dúvida e te explico tuduuuu!',
-		menuOptions: ['prep é para mim?', 'Medo de me testar?', 'Feridas no pau/cu', 'PEP não foi boa?'],
-		menuPostback: ['drnpParaMim', 'drnpMedoTestar', 'drnpFeridas', 'drnpPEPNao'],
-		drnpParaMim: 'Isso vai depender do q vc considera transar pouco. Se nos últimos 6 meses, vc acha q teve relações de risco OU teve alguma IST, usou PEP e busca uma alternativa de prevenção diferente da camisinha, talvez seja interessante pra vc tomar PrEP.',
+		drnpParaMim1: 'Isso vai depender do q vc considera transar pouco. Se nos últimos 6 meses, vc acha q teve relações de risco OU teve alguma IST, usou PEP e busca uma alternativa de prevenção diferente da camisinha, talvez seja interessante pra vc tomar PrEP.',
+		drnpParaMim2: 'Fluxo de recrutamento adaptado \n\n(Proposta pendente)',
 		drnpMedoTestar: 'O projeto disponibiliza autoteste q é um teste q vc pode fazer sozinhe e/ou em casa pra saber se tem HIV. Vc pode receber em casa ou buscar nos nossos serviços. Escolha o botão autoteste no menu XXX',
-		drnpFeridas: 'Podem ser sífilis, cancro mole, herpes, donovanose ou trauma. \nÉ importante passar por avaliação por para investigar o que é e tratar de maneira correta.',
 		followUpTriagem: 'Vamo lá! Escolhe a opção q vc tem dúvida e vou te ajudar!',
+		menuOptions: ['me arrisquei e agora?', 'prep é para mim?', 'Medo de me testar?', 'Feridas no pau/cu', 'PEP não foi boa?'],
+		menuPostback: ['drnpArrisquei', 'drnpParaMim', 'drnpMedoTestar', 'drnpIST', 'drnpPEPNao'],
 		drnpPEPNao: {
 			text1: '<texto de introdução necessário para PEP nao foi boa>',
 			drnpParou28: 'A dica é repetir o teste em 30 dias e dps 90 dias após a exposição. Bora agendar um?',
@@ -328,6 +328,11 @@ module.exports = {
 			followUpAgendamento: 'Partiu agendar essa consulta, bee! Que opções é melhor pra vc??',
 			menuOptions: ['Parou antes dos 28 d', 'Efeito colateral', 'Perdeu medicamento', 'Nova exposição', 'Tomei os 28 d e agora?'],
 			menuPostback: ['drnpParou28', 'drnpEfeito', 'drnpPerdeu', 'drnpExposicao', 'drnpTomei28'],
+		},
+		drnpIST: {
+			text1: 'Sobre qual sintoma vc quer saber?',
+			menuOptions: ['Bolhas', 'Feridas', 'Verrugas', 'Corrimento (pus)'],
+			menuPostback: ['drnpBolhas', 'drnpFeridas', 'drnpVerruga', 'drnpCorrimento'],
 		},
 	},
 	queroVoltarTomar: {

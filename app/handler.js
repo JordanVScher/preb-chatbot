@@ -328,6 +328,9 @@ module.exports = async (context) => {
 			case 'duvidasNaoPrep':
 				await inicioDuvidasNaoPrep(context);
 				break;
+			case 'drnpArrisquei':
+				await triagem.getTriagem(context);
+				break;
 			case 'dnpDrogas':
 				await context.sendText(flow.duvidasNaoPrep.dnpDrogas);
 				await inicioDuvidasNaoPrep(context);
@@ -337,9 +340,9 @@ module.exports = async (context) => {
 				await inicioDuvidasNaoPrep(context);
 				break;
 			case 'dnpParaMim':
-				await context.sendText(flow.duvidasNaoPrep.dnpParaMim);
-				await context.setState({ nextDialog: '' });
-				await context.sendText(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
+				await context.sendText(flow.duvidasNaoPrep.dnpParaMim1);
+				await context.sendText(flow.duvidasNaoPrep.dnpParaMim2);
+				await mainMenu.sendMain(context);
 				break;
 			case 'dnpMeTestar':
 				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);
@@ -387,18 +390,22 @@ module.exports = async (context) => {
 				await context.sendText(flow.deuRuimPrep.drpIST.text1, await getQR(flow.deuRuimPrep.drpIST));
 				break;
 			case 'drpBolhas':
+			case 'drnpBolhas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas);
 				await duvidas.deuRuimPrepFollowUp(context);
 				break;
 			case 'drpFeridas':
+			case 'drnpFeridas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpFeridas);
 				await duvidas.deuRuimPrepFollowUp(context);
 				break;
 			case 'drpVerrugas':
+			case 'drnpVerrugas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpVerrugas);
 				await duvidas.deuRuimPrepFollowUp(context);
 				break;
 			case 'drpCorrimento':
+			case 'drnpCorrimento':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpCorrimento);
 				await duvidas.deuRuimPrepFollowUp(context);
 				break;
@@ -415,11 +422,10 @@ module.exports = async (context) => {
 				break;
 			case 'drnpMedoTestar':
 				await context.sendText(flow.deuRuimNaoPrep.drnpMedoTestar);
-				await drnpFollowUpTriagem(context);
+				await triagem.getTriagem(context);
 				break;
-			case 'drnpFeridas':
-				await context.sendText(flow.deuRuimNaoPrep.drnpFeridas);
-				await drnpFollowUpTriagem(context);
+			case 'drnpIST':
+				await context.sendText(flow.deuRuimNaoPrep.drnpIST.text1, await getQR(flow.deuRuimNaoPrep.drnpIST));
 				break;
 			case 'drnpPEPNao':
 				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.text1, await getQR(flow.deuRuimNaoPrep.drnpPEPNao));

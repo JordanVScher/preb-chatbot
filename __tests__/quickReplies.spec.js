@@ -7,6 +7,7 @@ const quiz = require('../app/utils/quiz');
 const prepAPI = require('../app/utils/prep_api');
 const consulta = require('../app/utils/consulta');
 const timer = require('../app/utils/timer');
+const triagem = require('../app/utils/triagem');
 const duvidas = require('../app/utils/duvidas');
 const checkQR = require('../app/utils/checkQR');
 const mainMenu = require('../app/utils/mainMenu');
@@ -20,6 +21,7 @@ jest.mock('../app/utils/consulta');
 jest.mock('../app/utils/quiz');
 jest.mock('../app/utils/research');
 jest.mock('../app/utils/timer');
+jest.mock('../app/utils/triagem');
 jest.mock('../app/utils/duvidas');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
@@ -274,13 +276,13 @@ describe('duvidasNaoPrep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
 	});
 
-	it('dnpParaMim - explicação e falar com humano', async () => {
+	it('dnpParaMim - explicação e fluxo recrutamento (pendente)', async () => {
 		const context = cont.quickReplyContext('dnpParaMim', 'dnpParaMim');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpParaMim);
-		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpParaMim1);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpParaMim2);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 
 	it('dnpMeTestar - explicação e autoteste', async () => {
@@ -423,6 +425,13 @@ describe('deuRuimNaoPrep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.text1, await getQR(flow.deuRuimNaoPrep));
 	});
 
+	it('drnpArrisquei - triagem com questionário', async () => {
+		const context = cont.quickReplyContext('drnpArrisquei', 'drnpArrisquei');
+		await handler(context);
+
+		await expect(triagem.getTriagem).toBeCalledWith(context);
+	});
+
 	it('drnpParaMim - explicação e falar com humano', async () => {
 		const context = cont.quickReplyContext('drnpParaMim', 'drnpParaMim');
 		await handler(context);
@@ -437,17 +446,46 @@ describe('deuRuimNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpMedoTestar);
-		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
+		await expect(triagem.getTriagem).toBeCalledWith(context);
 	});
 
-	it('drnpFeridas - explicação e falar com humano', async () => {
+	it('drnpIST - explicação e opções', async () => {
+		const context = cont.quickReplyContext('drnpIST', 'drnpIST');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpIST.text1, await getQR(flow.deuRuimNaoPrep.drnpIST));
+	});
+
+	it('drnpBolhas - explicação e followUp', async () => {
+		const context = cont.quickReplyContext('drnpBolhas', 'drnpBolhas');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpBolhas);
+		await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+	});
+
+	it('drnpFeridas - explicação e followUp', async () => {
 		const context = cont.quickReplyContext('drnpFeridas', 'drnpFeridas');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpFeridas);
-		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpFeridas);
+		await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+	});
+
+	it('drnpVerrugas - explicação e followUp', async () => {
+		const context = cont.quickReplyContext('drnpVerrugas', 'drnpVerrugas');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpVerrugas);
+		await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
+	});
+
+	it('drnpCorrimento - explicação e followUp', async () => {
+		const context = cont.quickReplyContext('drnpCorrimento', 'drnpCorrimento');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpCorrimento);
+		await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
 	});
 
 	describe('drnpPEPNao', async () => {
