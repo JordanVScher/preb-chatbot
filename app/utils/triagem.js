@@ -8,6 +8,8 @@ const opt = require('./options');
 async function endTriagem(context) {
 	await context.setState({ dialog: 'endTriagem' });
 
+	console.log('context.state.sentAnswer', context.state.sentAnswer);
+
 	if (context.state.sentAnswer && context.state.sentAnswer.suggest_wait_for_test === 1) {
 		await context.setState({ suggestWaitForTest: true });
 	} else {

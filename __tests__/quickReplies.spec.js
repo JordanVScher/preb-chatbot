@@ -446,6 +446,7 @@ describe('deuRuimNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpMedoTestar);
+		await expect(context.sendText).toBeCalledWith(flow.triagem.intro);
 		await expect(triagem.getTriagem).toBeCalledWith(context);
 	});
 

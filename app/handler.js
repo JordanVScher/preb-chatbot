@@ -422,6 +422,7 @@ module.exports = async (context) => {
 				break;
 			case 'drnpMedoTestar':
 				await context.sendText(flow.deuRuimNaoPrep.drnpMedoTestar);
+				await context.sendText(flow.triagem.intro);
 				await triagem.getTriagem(context);
 				break;
 			case 'drnpIST':

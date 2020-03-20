@@ -68,8 +68,8 @@ async function cidadeDictionary(cityID, cityType) {
 	return null;
 }
 
-const telefoneDictionary = { 1: '(31) 99726-9307', 2: '(71) 99640-9030', 3: '(11) 98209-2911' };
-const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99640-9030', 3: '(11) 98209-2911' };
+const telefoneDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234 ou (71) 9.9640 9030', 3: '(11) 98209-2911' };
+const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234 ou (71) 9.9640 9030', 3: '(11) 98209-2911' };
 
 const locationDictionary = { 1: 'Belo Horizonte - MG', 2: 'Salvador - BA', 3: 'São Paulo - SP' };
 const extraMessageDictionary = { 1: 'Centro de referência da juventude, Centro de BH', 2: 'Casarão da Diversidade, Pelourinho', 3: 'CTA Henfil, Centro de São Paulo' };
@@ -77,16 +77,16 @@ const extraMessageDictionary = { 1: 'Centro de referência da juventude, Centro 
 async function buildPhoneMsg(cityId, introText, phones, extraMsg) {
 	const validOptions = ['1', '2', '3'];
 	let text = '';
-	if (introText && introText.length > 0) { // check i we have a msg to send together with the phone
-		text = `${introText}\n`;
-	}
+
+	if (introText && introText.length > 0) text = `${introText}\n`; // check if we have a msg to send together with the phone
+
 	if (cityId && validOptions.includes(cityId.toString())) { // check if cityID is a valid option
 		text += `\n${locationDictionary[cityId]}: ${phones[cityId]}`;
 	} else { // if it isnt send every valid phone number
 		validOptions.forEach((element) => { text += `\n${locationDictionary[element]}: ${phones[element]}`; });
 	}
 
-	text += `\n\n${extraMsg}`;
+	if (extraMsg && extraMsg.length > 0) text += `\n\n${extraMsg}`; // check if we have a extra msg to send together with the phone
 
 	return text;
 }

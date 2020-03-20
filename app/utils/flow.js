@@ -173,6 +173,7 @@ module.exports = {
 		servico1: 'Tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode tirar suas dúvidas e falar sobre prevenção combinada.',
 	},
 	triagem: {
+		intro: 'Estou entendendo q vc teve uma relação com penetração e sem proteção, então vou te fazer algumas perguntas para te ajudar',
 		retryTriagem: '[texto informativo do perigo]',
 		emergency1: 'Já ouviu falar de PEP, a Profilaxia Pós-Exposição? A PEP são alguns comprimidos que te ajudam a se prevenir do HIV no caso de exposições de risco recentes. Mas fique esperto, você tem no máximo 72 horas após a relação para começar a tomar, e quanto antes, MELHOR!  Escolhe ai sua cidade e corre lá! Tem também o contato do pessoal para tirar alguma dúvida.',
 		suggest: 'Tendi, eu axo q vc tá com alguma IST, a melhor coisa agora é agendar uma consulta com um médico ou médica pra te atender melhor\nok?',
