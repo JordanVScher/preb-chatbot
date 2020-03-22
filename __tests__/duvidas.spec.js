@@ -462,3 +462,33 @@ describe('alarmeDate', async () => {
 		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: date });
 	});
 });
+
+describe('Deu Ruim Quiz', async () => {
+	it('deuRuimResposta - didnt finish quiz, see next question', async () => {
+		const context = cont.quickReplyContext('deuRuimQuiz1', 'drpNaoTomei');
+		context.state.sentAnswer = { finished_quiz: 0 };
+		await duvidas.deuRuimResposta(context, 1);
+
+		await expect(context.setState).toBeCalledWith({ dialog: 'deuRuimQuiz' });
+	});
+
+	it('deuRuimResposta - finish quiz and is prep, see agendamento', async () => {
+		const context = cont.quickReplyContext('deuRuimQuiz3', 'deuRuimQuiz');
+		context.state.sentAnswer = { finished_quiz: 1 };
+		context.state.user = { voucher_type: 'sisprep' };
+
+		await duvidas.deuRuimResposta(context, 3);
+
+		await expect(context.setState).toBeCalledWith({ dialog: 'deuRuimPrepFim' });
+	});
+
+	it('deuRuimResposta - finish quiz and isnt prep, see número msg', async () => {
+		const context = cont.quickReplyContext('deuRuimQuiz3', 'deuRuimQuiz');
+		context.state.sentAnswer = { finished_quiz: 1 };
+		context.state.user = { voucher_type: 'combina' };
+
+		await duvidas.deuRuimResposta(context, 3);
+
+		await expect(context.setState).toBeCalledWith({ dialog: 'deuRuimNPrepFim' });
+	});
+});

@@ -130,6 +130,8 @@ module.exports = async (context) => {
 					await quiz.handleAnswer(context, context.state.lastQRpayload.charAt(4));
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'tria') {
 					await triagem.handleAnswer(context, context.state.lastQRpayload.charAt(4));
+				} else if (context.state.lastQRpayload.slice(0, 11) === 'deuRuimQuiz') {
+					await duvidas.deuRuimAnswer(context, context.state.lastQRpayload.charAt(11));
 				} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
 					await quiz.AnswerExtraQuestion(context);
 				} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
@@ -410,8 +412,18 @@ module.exports = async (context) => {
 				await duvidas.deuRuimPrepFollowUp(context);
 				break;
 			case 'drpNaoTomei':
-				await context.sendText('TODO');
-				// await duvidas.deuRuimQuiz(context);
+				await context.sendText(flow.deuRuimPrep.drpNaoTomei);
+				// fallsthrough
+			case 'deuRuimQuiz':
+				await duvidas.deuRuimQuiz(context);
+				break;
+			case 'deuRuimPrepFim':
+				await context.setState({ nextDialog: '' });
+				context.sendText(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
+				break;
+			case 'deuRuimNPrepFim':
+				await context.sendText('Número da rede');
+				await mainMenu.sendMain(context);
 				break;
 			case 'deuRuimNaoPrep':
 				await context.sendText(flow.deuRuimNaoPrep.text1, await getQR(flow.deuRuimNaoPrep));

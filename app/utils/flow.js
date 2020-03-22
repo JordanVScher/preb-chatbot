@@ -290,6 +290,7 @@ module.exports = {
 		drpAmigos: 'Será q suas amizades sabem o benefício de dar atenção pra saúde sexual? Rola trocar ideia sem constrangimento, falar da tua descoberta e qm sabe recomendar pra essas pessoas o uso da PrEP e de outros métodos de prevenir HIV e IST? Afinal, é maravilhoso ter segurança e se cuidar fazendo esse acompanhamento babado, né? Nossas amizades merecem!Agora se o constragimento rolou na roda de amigles, podemos te ajudar.',
 		notSUS: '19.Texto para oferecer agendamento',
 		followUpSUS: '20. Texto para incentivar contato',
+		drpNaoTomei: 'Vou te fazer umas perguntas pra te ajudar agora!',
 		drpEfeitos: {
 			text1: '5.Texto para opção "efeitos colaterais',
 			drpEnjoo: 'Pode acontecer na 1ª. Semana de uso da PrEP, até seu corpo se acostumar com os comprimidos. Para evitar de ter náuseas, algumas dicas:\n- Tome seu comprimido após se alimentar ou à noite, antes de dormir, após uma refeição leve.\nCaso o enjôo seja intenso, prejudique suas atividades diárias, seja seguido de vômitos ou não melhore após 3-7 dias, é melhor ser avaliado por um profissional de saúde.',

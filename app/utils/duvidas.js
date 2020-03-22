@@ -132,13 +132,59 @@ async function deuRuimQuiz(context) {
 	const quizText = process.env.ENV === 'prod' ? context.state.currentQuestion.text : `${context.state.currentQuestion.code}. ${context.state.currentQuestion.text}`;
 	if (context.state.currentQuestion.type === 'multiple_choice') {
 		await context.setState({ onButtonQuiz: true });
-		await context.setState({ buttonsFull: await quizAux.buildMultipleChoice(context.state.currentQuestion, 'deuRuim') });
+		await context.setState({ buttonsFull: await quizAux.buildMultipleChoice(context.state.currentQuestion, 'deuRuimQuiz') });
 		await context.setState({ buttonTexts: await help.getButtonTextList(context.state.buttonsFull) });
 		await context.sendText(quizText, context.state.buttonsFull);
 	} else if (context.state.currentQuestion.type === 'open_text') {
 		await context.setState({ onTextQuiz: true });
 		await context.sendText(quizText);
 	}
+}
+
+async function deuRuimResposta(context, quizOpt) {
+	// error sending message to API, send user to same question and send error to the devs
+	if (context.state.sentAnswer.error || !context.state.sentAnswer) {
+		await context.sendText(flow.quiz.form_error);
+		await context.setState({ dialog: 'deuRuimQuiz' });
+		if (process.env.ENV !== 'local') await help.sentryError('PREP - Erro ao salvar resposta do Quiz', { sentAnswer: context.state.sentAnswer, quizOpt, state: context.state });
+		return false;
+	}
+	// Invalid input format, make user try again on same question. // Date is: YYYY-MM-DD
+	if (context.state.sentAnswer.form_error || (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid')) { // input format is wrong (text)
+		await context.sendText(flow.quiz.invalid);
+		await context.setState({ dialog: 'deuRuimQuiz' }); // re-asks same question
+		return false;
+	}
+
+	await quizAux.sendFollowUpMsgs(context);
+
+	if (context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
+		await context.setState({ dialog: 'deuRuimQuiz' });
+		return false;
+	}
+
+	if (context.state.sentAnswer.finished_quiz === 1 && context.state.user.voucher_type === 'sisprep') { // check if the quiz is over
+		await context.setState({ dialog: 'deuRuimPrepFim' });
+		return false;
+	}
+
+	if (context.state.sentAnswer.finished_quiz === 1 && context.state.user.voucher_type !== 'sisprep') { // check if the quiz is over
+		await context.setState({ dialog: 'deuRuimNPrepFim' });
+		return false;
+	}
+
+	return true;
+}
+
+
+async function deuRuimAnswer(context, quizOpt) {
+	await context.setState({ onTextQuiz: false, onButtonQuiz: false });
+	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
+	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
+	if (process.env.ENV === 'local') { await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2)); }
+
+	quizOpt = quizOpt.toString() || '';
+	await deuRuimResposta(context, quizOpt);
 }
 
 module.exports = {
@@ -153,4 +199,6 @@ module.exports = {
 	formatDate,
 	checkDate,
 	alarmeDate,
+	deuRuimAnswer,
+	deuRuimResposta,
 };

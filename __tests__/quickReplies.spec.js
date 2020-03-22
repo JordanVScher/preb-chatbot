@@ -415,6 +415,38 @@ describe('deuRuimPrep', async () => {
 			await expect(duvidas.deuRuimPrepFollowUp).toBeCalledWith(context);
 		});
 	});
+
+	describe('drpNaoTomei - Não tomei', () => {
+		it('intro - msg e quiz', async () => {
+			const context = cont.quickReplyContext('drpNaoTomei', 'drpNaoTomei');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpNaoTomei);
+			await expect(duvidas.deuRuimQuiz).toBeCalledWith(context);
+		});
+
+		it('deuRuimQuiz - escolhe opção', async () => {
+			const context = cont.quickReplyContext('deuRuimQuiz1', 'drpNaoTomei');
+			await handler(context);
+			await expect(duvidas.deuRuimAnswer).toBeCalledWith(context, context.state.lastQRpayload.charAt(11));
+		});
+
+		it('deuRuimPrepFim - falar com humano', async () => {
+			const context = cont.quickReplyContext('deuRuimPrepFim', 'deuRuimPrepFim');
+			await handler(context);
+
+			await expect(context.setState).toBeCalledWith({ nextDialog: '' });
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
+		});
+
+		it('deuRuimNPrepFim - falar com humano', async () => {
+			const context = cont.quickReplyContext('deuRuimNPrepFim', 'deuRuimNPrepFim');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith('Número da rede');
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+	});
 });
 
 describe('deuRuimNaoPrep', async () => {
