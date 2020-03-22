@@ -337,6 +337,11 @@ module.exports = {
 			menuPostback: ['drnpBolhas', 'drnpFeridas', 'drnpVerruga', 'drnpCorrimento'],
 		},
 	},
+	triagemSQ: {
+		intro: 'Beleza bebê, bora se testar então? Sempre é bom para saber se está tudo certinho e ficar de boa. Cola com a gente! Tem várias opções para você escolher qual combina mais com você!',
+		menuOptions: ['SIM, Bora testar!', 'Não'],
+		menuPostback: ['autoTeste', 'mainMenu'],
+	},
 	queroVoltarTomar: {
 		text1: `Se vc parou há 3 dias ou menos: volte a tomar os comprimidos normalmente. 
 

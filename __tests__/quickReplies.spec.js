@@ -473,13 +473,12 @@ describe('deuRuimNaoPrep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
 	});
 
-	it('drnpMedoTestar - explicação e falar com humano', async () => {
+	it('drnpMedoTestar - explicação e triagem sem questionário', async () => {
 		const context = cont.quickReplyContext('drnpMedoTestar', 'drnpMedoTestar');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpMedoTestar);
-		await expect(context.sendText).toBeCalledWith(flow.triagem.intro);
-		await expect(triagem.getTriagem).toBeCalledWith(context);
+		await expect(context.sendText).toBeCalledWith(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
 	});
 
 	it('drnpIST - explicação e opções', async () => {
