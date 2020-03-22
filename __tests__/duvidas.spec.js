@@ -3,6 +3,7 @@ const duvidas = require('../app/utils/duvidas');
 const flow = require('../app/utils/flow');
 const { moment } = require('../app/utils/helper');
 const { sendMain } = require('../app/utils/mainMenu');
+const { falarComHumano } = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
 
 jest.mock('../app/utils/flow');
@@ -53,10 +54,9 @@ describe('prepFollowUp - Dúvidas para PrER seguimento', async () => {
 	it('Not SUS - No city', async () => {
 		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
 		context.state.user.voucher_type = 'combina';
-		await duvidas.prepFollowUp(context);
 
-		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
+		await duvidas.prepFollowUp(context);
+		await expect(falarComHumano).toBeCalledWith(context, null, flow.duvidasPrep.notSUS);
 	});
 });
 
@@ -64,7 +64,6 @@ describe('deuRuimPrepFollowUp', async () => {
 	it('SUS - vê mensagem e vai pro menu', async () => {
 		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
 		context.state.user.voucher_type = 'sus';
-
 		await duvidas.deuRuimPrepFollowUp(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
@@ -76,9 +75,7 @@ describe('deuRuimPrepFollowUp', async () => {
 		context.state.user.voucher_type = 'combina';
 
 		await duvidas.deuRuimPrepFollowUp(context);
-
-		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
+		await expect(falarComHumano).toBeCalledWith(context, null, flow.deuRuimPrep.notSUS);
 	});
 
 	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {
@@ -101,8 +98,7 @@ describe('deuRuimPrepFollowUp', async () => {
 		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
 
 		await expect(context.sendText).toBeCalledWith(msgExtra);
-		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
+		await expect(falarComHumano).toBeCalledWith(context, null, flow.deuRuimPrep.notSUS);
 	});
 
 	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {

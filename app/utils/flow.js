@@ -83,9 +83,6 @@ module.exports = {
 	ofertaPesquisaSim: {
 		text0: 'Então, agora vou te contar sobre o projeto que eu trabalho',
 		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa sem pegar HIV ✌ Como? Tem eu, Amandinha pra falar de PrEP, sexo, prevenção, inseguranças, autoteste pra HIV, gel e xuca 👏👏 Qm toca o projeto é a USP, UFMG e UFBA, chic né? Seguro e 0800 💙 Ñ é obrigatório ta com adulto responsável e se o $ tiver curto, a gnt te ajuda com a passagem! ',
-		text2: 'Tá afim de conversar com meus amigles humanes?',
-		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],
-		menuPostback: ['pesquisaPresencial', 'pesquisaVirtual', 'pesquisaNao'],
 	},
 	TCLE: {
 		text1: 'Calma! Cata esse textinho pq preciso pedir sua autorização!',
@@ -318,7 +315,7 @@ module.exports = {
 		drnpParaMim2: 'Fluxo de recrutamento adaptado \n\n(Proposta pendente)',
 		drnpMedoTestar: 'O projeto disponibiliza autoteste q é um teste q vc pode fazer sozinhe e/ou em casa pra saber se tem HIV. Vc pode receber em casa ou buscar nos nossos serviços. Escolha o botão autoteste no menu XXX',
 		followUpTriagem: 'Vamo lá! Escolhe a opção q vc tem dúvida e vou te ajudar!',
-		menuOptions: ['me arrisquei e agora?', 'prep é para mim?', 'Medo de me testar?', 'Feridas no pau/cu', 'PEP não foi boa?'],
+		menuOptions: ['Me arrisquei e agora?', 'prep é para mim?', 'Medo de me testar?', 'Feridas no pau/cu', 'PEP não foi boa?'],
 		menuPostback: ['drnpArrisquei', 'drnpParaMim', 'drnpMedoTestar', 'drnpIST', 'drnpPEPNao'],
 		drnpPEPNao: {
 			text1: '<texto de introdução necessário para PEP nao foi boa>',
@@ -340,7 +337,34 @@ module.exports = {
 	triagemSQ: {
 		intro: 'Beleza bebê, bora se testar então? Sempre é bom para saber se está tudo certinho e ficar de boa. Cola com a gente! Tem várias opções para você escolher qual combina mais com você!',
 		menuOptions: ['SIM, Bora testar!', 'Não'],
-		menuPostback: ['autoTeste', 'mainMenu'],
+		menuPostback: ['testagem', 'mainMenu'],
+	},
+	testagem: {
+		text1: 'Temos algumas possibilidades para você realizar seus testes, vou te explicar um pouquinho sobre cada uma delas para você ver qual você prefere',
+		text2: 'Agora que você já sabe mais, escolhe ai qual você vai querer:',
+		types: {
+			autoteste: {
+				msg: 'Autoteste: Você faz sozinho, mas só tem para HIV. O teste é feito por fluído oral e demora 20 minutinhos para ficar pronto. Você pode receber na sua casa ou retirar em um dos nossos endereços. Mas se você quer fazer outros exames ou está com dúvida sobre outras IST, talvez esta não seja a melhor opção.',
+				opt: { content_type: 'text', title: 'Autoteste', payload: 'autoTeste' },
+			},
+			serviço: {
+				msg: 'Teste no serviço: tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode tirar suas dúvidas e falar sobre prevenção combinada. Escolhe Teste no serviço  nos botões abaixo',
+				opt: { content_type: 'text', title: 'Teste no serviço', payload: 'testeServiço' },
+			},
+			ong: {
+				msg: 'Testagem em ONG:. É bom para quem não consegue ir até os serviços de saúde por causa do horário ou para quem quer um espaço diferente, mas gostaria de ser atendido por um profissional. Tem teste de HIV e Sífilis. Se você quiser este tipo de teste, escolhe Teste na ONG nos botões abaixo',
+				opt: { content_type: 'text', title: 'Testagem em ONG', payload: 'testeOng' },
+			},
+			rua: {
+				msg: 'Atividades na rua: é a entrega de autoteste na rua e eventos, com agenda, locais e horários variáveis. Acesso mais fácil e horários alternativos, pode ter um bem pertinho de você! Nossa agenda é variável, quer conhecer, LINK da página caindo direto na aba agenda',
+				// opt: { content_type: 'text', title: 'Testagem na Rua', payload: 'testeRua' },
+			},
+		},
+		rules: {
+			1: ['autoteste', 'serviço', 'ong', 'rua'],
+			2: ['autoteste', 'serviço', 'ong', 'rua'],
+			3: ['autoteste', 'serviço', 'ong', 'rua'],
+		},
 	},
 	queroVoltarTomar: {
 		text1: `Se vc parou há 3 dias ou menos: volte a tomar os comprimidos normalmente. 
@@ -393,5 +417,10 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 		text1: 'Que horas?',
 		text2: 'Quanto tempo antes da próxima dose vc quer que eu te lembre?',
 		text3: '<msg de encerramento>',
+	},
+	falarComHumano: {
+		text1: 'Tá afim de conversar com meus amigles humanes?',
+		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],
+		menuPostback: ['pesquisaPresencial', 'pesquisaVirtual', 'pesquisaNao'],
 	},
 };

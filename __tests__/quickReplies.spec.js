@@ -435,8 +435,7 @@ describe('deuRuimPrep', async () => {
 			const context = cont.quickReplyContext('deuRuimPrepFim', 'deuRuimPrepFim');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
+			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.followUpTriagem);
 		});
 
 		it('deuRuimNPrepFim - falar com humano', async () => {
@@ -469,8 +468,7 @@ describe('deuRuimNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpParaMim);
-		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.followUpTriagem);
 	});
 
 	it('drnpMedoTestar - explicação e triagem sem questionário', async () => {
@@ -533,8 +531,7 @@ describe('deuRuimNaoPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpParou28);
-			await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 
 		it('drnpEfeito - explicação e falar com humano', async () => {
@@ -542,8 +539,7 @@ describe('deuRuimNaoPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpEfeito);
-			await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 
 		it('drnpPerdeu - explicação e falar com humano', async () => {
@@ -551,8 +547,7 @@ describe('deuRuimNaoPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpPerdeu);
-			await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 
 		it('drnpExposicao - explicação e falar com humano', async () => {
@@ -560,8 +555,7 @@ describe('deuRuimNaoPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpExposicao);
-			await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 
 		it('drnpTomei28 - explicação e falar com humano', async () => {
@@ -569,8 +563,7 @@ describe('deuRuimNaoPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpTomei28);
-			await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 	});
 });
@@ -718,8 +711,7 @@ describe('Quero voltar a tomar prep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.queroVoltarTomar.text1);
-		await expect(context.setState).toBeCalledWith({ nextDialog: '' });
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 	});
 });
 

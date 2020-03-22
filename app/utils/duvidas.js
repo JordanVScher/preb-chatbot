@@ -1,9 +1,11 @@
 const flow = require('./flow');
 const { getQR } = require('./attach');
 const { sendMain } = require('./mainMenu');
+const { falarComHumano } = require('./mainMenu');
 const prepApi = require('./prep_api');
 const quizAux = require('./quiz_aux');
 const help = require('./helper');
+
 
 async function prepFollowUp(context) {
 	if (context.state.user.voucher_type === 'sus') {
@@ -12,8 +14,7 @@ async function prepFollowUp(context) {
 		if (text) await context.sendText(flow.duvidasPrep.prefixSUS + text);
 		await sendMain(context);
 	} else {
-		await context.setState({ nextDialog: '' });
-		await context.sendText(flow.duvidasPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
+		await falarComHumano(context, null, flow.duvidasPrep.notSUS);
 	}
 }
 
@@ -23,8 +24,7 @@ async function deuRuimPrepFollowUp(context, extraMsg) {
 		await context.sendText(flow.deuRuimPrep.followUpSUS);
 		await sendMain(context);
 	} else {
-		await context.setState({ nextDialog: '' });
-		await context.sendText(flow.deuRuimPrep.notSUS, await getQR(flow.ofertaPesquisaSim));
+		await falarComHumano(context, null, flow.deuRuimPrep.notSUS);
 	}
 }
 
@@ -176,6 +176,21 @@ async function deuRuimResposta(context, quizOpt) {
 	return true;
 }
 
+async function buildTestagem(cityID) {
+	const { types } = flow.testagem;
+	const rules = flow.testagem.rules[cityID];
+	let msg = '';
+	const opt = [];
+
+	Object.keys(types).forEach((e) => {
+		if (rules && rules.includes(e) && types[e]) {
+			if (types[e].msg) msg += `${types[e].msg}\n`;
+			if (types[e].opt) opt.push(types[e].opt);
+		}
+	});
+
+	return { msg, opt: { quick_replies: opt } };
+}
 
 async function deuRuimAnswer(context, quizOpt) {
 	await context.setState({ onTextQuiz: false, onButtonQuiz: false });
@@ -201,4 +216,5 @@ module.exports = {
 	alarmeDate,
 	deuRuimAnswer,
 	deuRuimResposta,
+	buildTestagem,
 };

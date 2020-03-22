@@ -3,7 +3,7 @@ const { getAppointment } = require('./prep_api');
 
 async function checkAppointment(fbID) {
 	const res = await getAppointment(fbID);
-	if (res.consulta && res.consulta.appointments && res.consulta.appointments.length > 0) return true;
+	if (res && res.consulta && res.consulta.appointments && res.consulta.appointments.length > 0) return true;
 	return false;
 }
 

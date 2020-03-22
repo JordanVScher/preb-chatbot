@@ -4,29 +4,30 @@ const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
 const { getQR } = require('../app/utils/attach');
 const { sendMain } = require('../app/utils/mainMenu');
-const { checkAppointment } = require('../app/utils/consulta');
+const { falarComHumano } = require('../app/utils/mainMenu');
+const { addNewUser } = require('../app/utils/labels');
 
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
 jest.mock('../app/utils/desafio');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/mainMenu');
-jest.mock('../app/utils/consulta');
+jest.mock('../app/utils/consulta-aux');
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/labels');
 jest.mock('../app/utils/attach');
 
-it('ofertaPesquisaSim - clica meContaDepois - não vê explicação do projeto', async () => {
+it('ofertaPesquisaSim - clica meContaDepois - não vê explicação do projeto,  falar com humano', async () => {
 	const context = cont.textContext('foobar', 'joinToken');
 	context.state.meContaDepois = true;
 	await research.ofertaPesquisaSim(context);
 
 	await expect(context.setState).toBeCalledWith({ nextDialog: 'ofertaPesquisaEnd' });
 	await expect(context.state.meContaDepois !== true).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
+	await expect(falarComHumano).toBeCalledWith(context);
 });
 
-it('ofertaPesquisaSim - não clica em meContaDepois - vê explicação do projeto', async () => {
+it('ofertaPesquisaSim - não clica em meContaDepois - vê explicação do projeto, falar com humano', async () => {
 	const context = cont.textContext('foobar', 'joinToken');
 	context.state.meContaDepois = false;
 	await research.ofertaPesquisaSim(context);
@@ -34,7 +35,7 @@ it('ofertaPesquisaSim - não clica em meContaDepois - vê explicação do projet
 	await expect(context.setState).toBeCalledWith({ nextDialog: 'ofertaPesquisaEnd' });
 	await expect(context.state.meContaDepois !== true).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text1);
-	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
+	await expect(falarComHumano).toBeCalledWith(context);
 });
 
 it('ofertaPesquisaEnd - não is_target_audience -> vai pro menu', async () => {
@@ -67,7 +68,7 @@ it('ofertaPesquisaEnd - is_target_audience e não risk_group -> vai pro pré-TCL
 	await expect(context.setState).toBeCalledWith({ nextDialog: '', dialog: '' });
 	await expect(context.state.user.is_target_audience).toBeTruthy();
 	await expect(context.state.user.risk_group).toBeFalsy();
-	await expect(checkAppointment).toBeCalledWith(context); // from preTCLE
+	await expect(addNewUser).toBeCalledWith(context); // from preTCLE
 });
 
 it('ofertaPesquisaEnd - is_target_audience e risk_group -> vai pro recrutamento', async () => {

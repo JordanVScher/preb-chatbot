@@ -50,15 +50,8 @@ async function contactFollowUp(context) {
 const inicioAutoTeste = async (context) => context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.user.city));
 const inicioJoin = async (context) => context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
 const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
-
-const drnpFollowUpTriagem = async (context) => {
-	await context.setState({ nextDialog: '' });
-	context.sendText(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
-};
-const drnpFollowUpAgendamento = async (context) => {
-	await context.setState({ nextDialog: '' });
-	context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
-};
+const drnpFollowUpTriagem = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
+const drnpFollowUpAgendamento = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 
 
 async function startInteration(fbID) {
@@ -418,8 +411,7 @@ module.exports = async (context) => {
 				await duvidas.deuRuimQuiz(context);
 				break;
 			case 'deuRuimPrepFim':
-				await context.setState({ nextDialog: '' });
-				context.sendText(flow.deuRuimNaoPrep.followUpTriagem, await getQR(flow.ofertaPesquisaSim));
+				await mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
 				break;
 			case 'deuRuimNPrepFim':
 				await context.sendText('Número da rede');
@@ -465,8 +457,20 @@ module.exports = async (context) => {
 			case 'voltarTomarPrep':
 			case 'voltarTomarNaoPrep':
 				await context.sendText(flow.queroVoltarTomar.text1);
-				await context.setState({ nextDialog: '' });
-				context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento, await getQR(flow.ofertaPesquisaSim));
+				await drnpFollowUpAgendamento(context);
+				break;
+			case 'testagem':
+				await context.setState({ testagem: await duvidas.buildTestagem(context.state.user.city) });
+				if (context.state.testagem && context.state.testagem.msg && context.state.testagem.opt) {
+					await context.sendText(flow.testagem.text1);
+					await context.sendText(context.state.testagem.msg);
+					await context.sendText(flow.testagem.text1, context.state.testagem.opt);
+				}
+				break;
+			case 'testeServiço':
+			case 'testeOng':
+			case 'testeRua':
+				await mainMenu.falarComHumano(context);
 				break;
 			case 'alarmePrep':
 				await context.sendText(flow.alarmePrep.text1, await getQR(flow.alarmePrep));

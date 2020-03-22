@@ -2,10 +2,11 @@ const flow = require('./flow');
 const opt = require('./options');
 const { getQR } = require('./attach');
 const { sendMain } = require('./mainMenu');
+const { falarComHumano } = require('./mainMenu');
 const { getPhoneValid } = require('./helper');
 const { formatPhone } = require('./helper');
 // const { startConsulta } = require('./consulta');
-const { checkAppointment } = require('./consulta-aux');
+// const { checkAppointment } = require('./consulta-aux');
 const { addNewUser } = require('./labels');
 
 async function checkPhone(context) {
@@ -25,7 +26,7 @@ async function ofertaPesquisaStart(context, text) {
 async function ofertaPesquisaSim(context) {
 	await context.setState({ nextDialog: 'ofertaPesquisaEnd' });
 	if (context.state.meContaDepois !== true) await context.sendText(flow.ofertaPesquisaSim.text1);
-	await context.sendText(flow.ofertaPesquisaSim.text2, await getQR(flow.ofertaPesquisaSim));
+	await falarComHumano(context);
 }
 
 async function recrutamento(context) {
@@ -81,7 +82,7 @@ async function ofertaPesquisaEnd(context) {
 			await context.setState({ nextDialog: 'preTCLE' });
 			await recrutamento(context);
 		} else { // é público de interesse sem risco
-			await preTCLE(context, await checkAppointment(context.session.user.id));
+			await preTCLE(context);
 		}
 	} else { // não é público de interesse
 		await sendMain(context);
