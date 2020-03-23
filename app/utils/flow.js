@@ -335,6 +335,9 @@ module.exports = {
 			menuPostback: ['drnpBolhas', 'drnpFeridas', 'drnpVerruga', 'drnpCorrimento'],
 		},
 	},
+	triagemCQ: {
+		entrarEmContato: 'Já tá ligade sobre a PEP: Profilaxia Pós-Exposição?\nSão comprimidos q ajudam a prevenir o HIV no caso de exposições de risco recentes. Vc tem no máximo 72 horas após a relação para começar a tomar então faz a ligeira e pega o contato da minha equipe babadeira pra tu tirar dúvidas: SP: (11) 98209-2911, BH: (31) 99726-9307 e SSA: (71) 99102-2234 ou (71) 9.9640 9030',
+	},
 	triagemSQ: {
 		intro: 'Beleza bebê, bora se testar então? Sempre é bom para saber se está tudo certinho e ficar de boa. Cola com a gente! Tem várias opções para você escolher qual combina mais com você!',
 		menuOptions: ['SIM, Bora testar!', 'Não'],

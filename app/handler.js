@@ -94,7 +94,6 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'drnpArrisquei' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -221,6 +220,9 @@ module.exports = async (context) => {
 				break;
 			case 'medicaçao':
 				await context.sendText(flow.medication.text1, await checkQR.checkMedication(context.state.user.prep_since));
+				break;
+			case 'falarComHumano':
+				await mainMenu.falarComHumano(context);
 				break;
 			case 'sintomas':
 			// await context.sendText('<começa o quiz>');
@@ -735,6 +737,10 @@ module.exports = async (context) => {
 			case 'servico':
 				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.servico1,
 					await checkQR.autoTesteOption(opt.servico, context.state.user.city));
+				break;
+			case 'triagemCQ_entrar':
+				await context.sendText(flow.triagemCQ.entrarEmContato);
+				await mainMenu.sendMain(context);
 				break;
 			case 'triagem': // this is the triagem-type of questionario
 				await quiz.answerQuiz(context, 'triagem');

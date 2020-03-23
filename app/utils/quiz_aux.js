@@ -3,7 +3,7 @@ const { accents } = require('./helper');
 
 async function checkFinishQuiz(context) {
 	if (!context.state.publicoInteresseEnd) return 'publico_interesse';
-	if (context.state.triagem) return 'screening';
+	if (context.state.triagem) return 'triagem';
 	if (context.state.user.is_target_audience && !context.state.recrutamentoEnd) return 'recrutamento';
 	if (!context.state.user.is_target_audience && !context.state.quizBrincadeiraEnd) return 'brincadeira';
 

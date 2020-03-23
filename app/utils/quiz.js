@@ -4,8 +4,6 @@ const flow = require('./flow');
 const { addCityLabel } = require('./labels');
 const help = require('./helper');
 const { sentryError } = require('./error');
-const { triagem1 } = require('./options');
-
 
 // loads next question and shows it to the user
 async function answerQuiz(context, newCategory) {
@@ -20,71 +18,73 @@ async function answerQuiz(context, newCategory) {
 }
 
 async function handleQuizResposta(context) {
+	const { categoryQuestion } = context.state;
+	const { sentAnswer } = context.state;
+
 	// saving city labels
 	if (context.state.currentQuestion.code === 'A1') await addCityLabel(context.session.user.id, context.state.quizOpt);
 
 	// add registration form link to send later
-	if (context.state.sentAnswer.offline_pre_registration_form) await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
+	if (sentAnswer.offline_pre_registration_form) await context.setState({ registrationForm: sentAnswer.offline_pre_registration_form });
 
 
 	await aux.sendFollowUpMsgs(context);
-	if (context.state.sentAnswer.finished_quiz) await context.setState({ startedQuiz: false });	// clean started quiz when each quiz is finished
+	if (sentAnswer.finished_quiz === 1) await context.setState({ startedQuiz: false, categoryQuestion: '' });
 
 	// from here on out, the flow of the quiz actually changes, so remember to return something to stop the rest from executing
-	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0) {
-		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true, categoryQuestion: '' });
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.is_target_audience === 0) {
+		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
 		return false;
 	}
 
-	if (context.state.categoryQuestion === 'publico_interesse' && context.state.sentAnswer.finished_quiz && context.state.sentAnswer.is_target_audience) {
-		await context.setState({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true, categoryQuestion: '' });
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz && sentAnswer.is_target_audience) {
+		await context.setState({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true });
 		await context.setState({ whenBecameTargetAudience: new Date() });
 		return false;
 	}
 
-	if (context.state.categoryQuestion === 'quiz_brincadeira' && context.state.sentAnswer.finished_quiz === 1) {
-		await context.setState({ dialog: 'preTCLE', quizBrincadeiraEnd: true, categoryQuestion: '' });
+	if (categoryQuestion === 'quiz_brincadeira' && sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'preTCLE', quizBrincadeiraEnd: true });
 		return false;
 	}
 
-	if (context.state.categoryQuestion === 'recrutamento' && context.state.sentAnswer.finished_quiz === 1) {
-		await context.setState({ dialog: 'preTCLE', recrutamentoEnd: true, categoryQuestion: '' });
+	if (categoryQuestion === 'recrutamento' && sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'preTCLE', recrutamentoEnd: true });
 		return false;
 	}
 
-	if (context.state.categoryQuestion === 'deu_ruim_nao_tomei' && context.state.sentAnswer.finished_quiz === 1 && context.state.user.voucher_type === 'sisprep') { // check if the quiz is over
-		await context.setState({ dialog: 'deuRuimPrepFim', categoryQuestion: '' });
+	if (categoryQuestion === 'deu_ruim_nao_tomei' && sentAnswer.finished_quiz === 1 && context.state.user.voucher_type === 'sisprep') { // check if the quiz is over
+		await context.setState({ dialog: 'deuRuimPrepFim' });
 		return false;
 	}
 
-	if (context.state.categoryQuestion === 'deu_ruim_nao_tomei' && context.state.sentAnswer.finished_quiz === 1 && context.state.user.voucher_type !== 'sisprep') { // check if the quiz is over
-		await context.setState({ dialog: 'deuRuimNPrepFim', categoryQuestion: '' });
+	if (categoryQuestion === 'deu_ruim_nao_tomei' && sentAnswer.finished_quiz === 1 && context.state.user.voucher_type !== 'sisprep') { // check if the quiz is over
+		await context.setState({ dialog: 'deuRuimNPrepFim' });
 		return false;
 	}
 
-	if (context.state.categoryQuestion === 'screening' && context.state.sentAnswer.finished_quiz === 1) {
-		if (context.state.sentAnswer.suggest_wait_for_test === 1) {
-			await context.setState({ suggestWaitForTest: true });
-		} else {
-			await context.setState({ suggestWaitForTest: false });
+	if (categoryQuestion === 'triagem' && sentAnswer.finished_quiz === 1) {
+		if (context.state.sentAnswer.entrar_em_contato === 1) {
+			await context.setState({ dialog: 'triagemCQ_entrar' });
+			return false;
 		}
 
-		if (context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
-			await context.sendText(flow.triagem.emergency1);
-			await context.sendText(await help.buildPhoneMsg(context.state.user.city, 'Telefones pra contato:', help.telefoneDictionary));
+		if (context.state.sentAnswer.ir_para_agendamento === 1) {
+			await context.setState({ dialog: 'falarComHumano' });
+			return false;
+		}
+
+		if (context.state.sentAnswer.ir_para_menu === 1) {
 			await context.setState({ dialog: 'mainMenu' });
-		} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_test === 1) { // "A mais de 6 meses" + todos não
-			await context.setState({ dialog: 'autoTeste' });
-		} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_appointment === 1) { // quando responder sim para a SC6 -> talvez a prep seja uma boa pra vc. bora marcar?
-			await context.setState({ dialog: 'checarConsulta' });
-		} else if (context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1) { // qualquer sim
-			await context.sendText(flow.triagem.suggest, triagem1);
-		} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_test === 0) { // quando responder não para a SC6
-			await context.setState({ dialog: 'mainMenu' });
-		} else {
-			await context.setState({ dialog: 'mainMenu' });
+			return false;
+		}
+
+		if (context.state.sentAnswer.ir_para_menu === 0) {
+			await context.setState({ dialog: 'testagem' });
+			return false;
 		}
 	}
+
 	if (context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 		await context.setState({ dialog: 'startQuiz' });
 		return false;

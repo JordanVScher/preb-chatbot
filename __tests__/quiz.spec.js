@@ -129,8 +129,8 @@ describe('handleQuizResposta and sentAnswer', async () => {
 
 		await quiz.handleQuizResposta(context);
 		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
-		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
-		await expect(context.setState).toBeCalledWith({ dialog: 'offerBrincadeira', publicoInteresseEnd: true, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
 	});
 
 	it('Finished publico_interesse, is_target_audience - go to oferta de pesquisa', async () => {
@@ -139,8 +139,8 @@ describe('handleQuizResposta and sentAnswer', async () => {
 
 		await quiz.handleQuizResposta(context);
 		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
-		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
-		await expect(context.setState).toBeCalledWith({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true });
 	});
 
 	it('Finished quiz_brincadeira - go to preTCLE', async () => {
@@ -149,8 +149,8 @@ describe('handleQuizResposta and sentAnswer', async () => {
 
 		await quiz.handleQuizResposta(context);
 		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
-		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
-		await expect(context.setState).toBeCalledWith({ dialog: 'preTCLE', quizBrincadeiraEnd: true, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'preTCLE', quizBrincadeiraEnd: true });
 	});
 
 	it('Finished quiz_brincadeira - go to preTCLE', async () => {
@@ -159,8 +159,8 @@ describe('handleQuizResposta and sentAnswer', async () => {
 
 		await quiz.handleQuizResposta(context);
 		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
-		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
-		await expect(context.setState).toBeCalledWith({ dialog: 'preTCLE', recrutamentoEnd: true, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'preTCLE', recrutamentoEnd: true });
 	});
 
 	it('Finished deu_ruim_nao_tomei, voucher_type is sisprep - go to deuRuimPrepFim', async () => {
@@ -170,8 +170,8 @@ describe('handleQuizResposta and sentAnswer', async () => {
 
 		await quiz.handleQuizResposta(context);
 		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
-		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
-		await expect(context.setState).toBeCalledWith({ dialog: 'deuRuimPrepFim', categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'deuRuimPrepFim' });
 	});
 
 	it('Finished deu_ruim_nao_tomei, voucher_type is not sisprep - go to deuRuimPrepFim', async () => {
@@ -181,7 +181,47 @@ describe('handleQuizResposta and sentAnswer', async () => {
 
 		await quiz.handleQuizResposta(context);
 		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
-		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
-		await expect(context.setState).toBeCalledWith({ dialog: 'deuRuimNPrepFim', categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'deuRuimNPrepFim' });
+	});
+
+	it('Finished triagem, entrar_em_contato - go to triagemCQ_entrar', async () => {
+		context.state.categoryQuestion = 'triagem';
+		context.state.sentAnswer = { finished_quiz: 1, entrar_em_contato: 1 };
+
+		await quiz.handleQuizResposta(context);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'triagemCQ_entrar' });
+	});
+
+	it('Finished triagem, ir_para_agendamento - go to falarComHumano', async () => {
+		context.state.categoryQuestion = 'triagem';
+		context.state.sentAnswer = { finished_quiz: 1, ir_para_agendamento: 1 };
+
+		await quiz.handleQuizResposta(context);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'falarComHumano' });
+	});
+
+	it('Finished triagem, ir_para_menu - go to ir_para_menu', async () => {
+		context.state.categoryQuestion = 'triagem';
+		context.state.sentAnswer = { finished_quiz: 1, ir_para_menu: 1 };
+
+		await quiz.handleQuizResposta(context);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
+	});
+
+	it('Finished triagem, ir_para_menu false - go to testagem', async () => {
+		context.state.categoryQuestion = 'triagem';
+		context.state.sentAnswer = { finished_quiz: 1, ir_para_menu: 0 };
+
+		await quiz.handleQuizResposta(context);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'testagem' });
 	});
 });

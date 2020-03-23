@@ -736,3 +736,11 @@ describe('Tomei - tomeiPrep', async () => {
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 });
+
+it('triagemCQ_entrar - manda msg e vai pro menu', async () => {
+	const context = cont.quickReplyContext('triagemCQ_entrar', 'triagemCQ_entrar');
+	await handler(context);
+
+	await expect(context.sendText).toBeCalledWith(flow.triagemCQ.entrarEmContato);
+	await expect(mainMenu.sendMain).toBeCalledWith(context);
+});
