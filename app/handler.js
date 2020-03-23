@@ -123,8 +123,6 @@ module.exports = async (context) => {
 					await quiz.handleAnswer(context, context.state.lastQRpayload.charAt(4));
 				} else if (context.state.lastQRpayload.slice(0, 11) === 'triagemQuiz') {
 					await triagem.handleAnswer(context, context.state.lastQRpayload.replace('triagemQuiz', ''));
-				} else if (context.state.lastQRpayload.slice(0, 11) === 'deuRuimQuiz') {
-					await duvidas.deuRuimAnswer(context, context.state.lastQRpayload.charAt(11));
 				} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
 					await quiz.AnswerExtraQuestion(context);
 				} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
@@ -256,7 +254,8 @@ module.exports = async (context) => {
 				await context.setState({ startedQuiz: true });
 				await context.sendText(flow.quiz.beginQuiz);
 				if (process.env.ENV !== 'local') await context.typing(1000 * 3);
-				// falls throught
+				await quiz.answerQuiz(context, 'publico_interesse');
+				break;
 			case 'startQuiz': // this is the quiz-type of questionario
 				await quiz.answerQuiz(context);
 				break;
@@ -407,9 +406,7 @@ module.exports = async (context) => {
 				break;
 			case 'drpNaoTomei':
 				await context.sendText(flow.deuRuimPrep.drpNaoTomei);
-				// fallsthrough
-			case 'deuRuimQuiz':
-				await duvidas.deuRuimQuiz(context);
+				await quiz.answerQuiz(context, 'deu_ruim_nao_tomei');
 				break;
 			case 'deuRuimPrepFim':
 				await mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
@@ -627,15 +624,13 @@ module.exports = async (context) => {
 				await research.recrutamento(context);
 				break;
 			case 'recrutamentoQuiz':
-				await context.setState({ categoryQuestion: 'recrutamento' });
-				await quiz.answerQuiz(context);
+				await quiz.answerQuiz(context, 'recrutamento');
 				break;
 			case 'offerBrincadeira':
 				await context.sendText(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
 				break;
 			case 'querBrincadeira':
-				await context.setState({ categoryQuestion: 'quiz_brincadeira' });
-				await quiz.answerQuiz(context);
+				await quiz.answerQuiz(context, 'quiz_brincadeira');
 				break;
 			case 'checarConsulta':
 				await context.setState({ categoryConsulta: 'emergencial' });

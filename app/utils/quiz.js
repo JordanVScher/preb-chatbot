@@ -6,33 +6,20 @@ const help = require('./helper');
 const { sentryError } = require('./error');
 
 // loads next question and shows it to the user
-async function answerQuiz(context) {
+async function answerQuiz(context, newCategory) {
+	if (newCategory) await context.setState({ categoryQuestion: newCategory });
+
 	if (!context.state.startedQuiz) await context.setState({ startedQuiz: true }); // if we passed here we started a new quiz
-	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') { // if the user never started the quiz the category is 'publico_interesse'
-		await context.setState({ categoryQuestion: 'publico_interesse' });
-	}
+	// if the user never started the quiz the category is 'publico_interesse'
+	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') await context.setState({ categoryQuestion: 'publico_interesse' });
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	await aux.sendQuizQuestion(context, 'quiz');
 }
 
-async function handleQuizResposta(context, quizOpt) {
-	// error sending message to API, send user to same question and send error to the devs
-	if (!context.state.sentAnswer || context.state.sentAnswer.error) {
-		await context.sendText(flow.quiz.form_error);
-		await context.setState({ dialog: 'startQuiz' });
-		if (process.env.ENV !== 'local') await sentryError('PREP - Erro ao salvar resposta do Quiz', { sentAnswer: context.state.sentAnswer, quizOpt, state: context.state });
-		return false;
-	}
-	// Invalid input format, make user try again on same question. // Date is: YYYY-MM-DD
-	if (context.state.sentAnswer.form_error || (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid')) { // input format is wrong (text)
-		await context.sendText(flow.quiz.invalid);
-		await context.setState({ dialog: 'startQuiz' }); // re-asks same question
-		return false;
-	}
-
+async function handleQuizResposta(context) {
 	// saving city labels
-	if (context.state.currentQuestion.code === 'A1') await addCityLabel(context.session.user.id, quizOpt);
+	if (context.state.currentQuestion.code === 'A1') await addCityLabel(context.session.user.id, context.state.quizOpt);
 
 	// add registration form link to send later
 	if (context.state.sentAnswer.offline_pre_registration_form) await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
@@ -63,7 +50,17 @@ async function handleQuizResposta(context, quizOpt) {
 		return false;
 	}
 
-	if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
+	if (context.state.categoryQuestion === 'deu_ruim_nao_tomei' && context.state.sentAnswer.finished_quiz === 1 && context.state.user.voucher_type === 'sisprep') { // check if the quiz is over
+		await context.setState({ dialog: 'deuRuimPrepFim', categoryQuestion: '' });
+		return false;
+	}
+
+	if (context.state.categoryQuestion === 'deu_ruim_nao_tomei' && context.state.sentAnswer.finished_quiz === 1 && context.state.user.voucher_type !== 'sisprep') { // check if the quiz is over
+		await context.setState({ dialog: 'deuRuimNPrepFim', categoryQuestion: '' });
+		return false;
+	}
+
+	if (context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 		await context.setState({ dialog: 'startQuiz' });
 		return false;
 	}
@@ -72,15 +69,25 @@ async function handleQuizResposta(context, quizOpt) {
 }
 
 async function handleAnswer(context, quizOpt) {
-	// context.state.currentQuestion.code -> the code for the current question
-	// quizOpt -> the quiz option the user clicked/wrote
-	await context.setState({ onTextQuiz: false, onButtonQuiz: false });
-	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
-	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
-	if (process.env.ENV === 'local') { await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2)); }
+	await context.setState({ onTextQuiz: false, onButtonQuiz: false, quizOpt });
+	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, context.state.quizOpt) });
+	if (process.env.ENV === 'local') await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2));
 
-	quizOpt = quizOpt.toString() || '';
-	await handleQuizResposta(context, quizOpt);
+	// error sending message to API, send user to same question and send error to the devs
+	if (!context.state.sentAnswer || context.state.sentAnswer.error) {
+		await context.sendText(flow.quiz.form_error);
+		await context.setState({ dialog: 'startQuiz' });
+		if (process.env.ENV !== 'local') await sentryError('PREP - Erro ao salvar resposta do Quiz', { sentAnswer: context.state.sentAnswer, quizOpt: context.state.quizOpt, state: context.state });
+		return false;
+	}
+	// Invalid input format, make user try again on same question. // Date is: YYYY-MM-DD
+	if (context.state.sentAnswer.form_error || (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid')) { // input format is wrong (text)
+		await context.sendText(flow.quiz.invalid);
+		await context.setState({ dialog: 'startQuiz' }); // re-asks same question
+		return false;
+	}
+
+	return handleQuizResposta(context);
 }
 
 
