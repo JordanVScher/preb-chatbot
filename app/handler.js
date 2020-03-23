@@ -10,7 +10,6 @@ const consulta = require('./utils/consulta');
 const mainMenu = require('./utils/mainMenu');
 const research = require('./utils/research');
 const timer = require('./utils/timer');
-const triagem = require('./utils/triagem');
 const checkQR = require('./utils/checkQR');
 const joinToken = require('./utils/joinToken');
 const duvidas = require('./utils/duvidas');
@@ -92,9 +91,10 @@ module.exports = async (context) => {
 
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload, lastQRpayload: '' });
-			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false}); // eslint-disable-line
+			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'drnpArrisquei' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -121,8 +121,6 @@ module.exports = async (context) => {
 					await context.setState({ dialog: 'setEvent' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
 					await quiz.handleAnswer(context, context.state.lastQRpayload.charAt(4));
-				} else if (context.state.lastQRpayload.slice(0, 11) === 'triagemQuiz') {
-					await triagem.handleAnswer(context, context.state.lastQRpayload.replace('triagemQuiz', ''));
 				} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
 					await quiz.AnswerExtraQuestion(context);
 				} else if (context.state.lastQRpayload.slice(0, 3) === 'dia') {
@@ -324,7 +322,7 @@ module.exports = async (context) => {
 				break;
 			case 'drnpArrisquei':
 				await context.sendText(flow.deuRuimNaoPrep.drnpArrisquei);
-				await triagem.getTriagem(context);
+				await quiz.answerQuiz(context, 'triagem');
 				break;
 			case 'dnpDrogas':
 				await context.sendText(flow.duvidasNaoPrep.dnpDrogas);
@@ -739,7 +737,7 @@ module.exports = async (context) => {
 					await checkQR.autoTesteOption(opt.servico, context.state.user.city));
 				break;
 			case 'triagem': // this is the triagem-type of questionario
-				await triagem.getTriagem(context);
+				await quiz.answerQuiz(context, 'triagem');
 				break;
 			case 'aboutAmanda':
 				await context.sendImage(flow.aboutAmanda.gif);

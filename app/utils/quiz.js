@@ -4,6 +4,8 @@ const flow = require('./flow');
 const { addCityLabel } = require('./labels');
 const help = require('./helper');
 const { sentryError } = require('./error');
+const { triagem1 } = require('./options');
+
 
 // loads next question and shows it to the user
 async function answerQuiz(context, newCategory) {
@@ -60,6 +62,29 @@ async function handleQuizResposta(context) {
 		return false;
 	}
 
+	if (context.state.categoryQuestion === 'screening' && context.state.sentAnswer.finished_quiz === 1) {
+		if (context.state.sentAnswer.suggest_wait_for_test === 1) {
+			await context.setState({ suggestWaitForTest: true });
+		} else {
+			await context.setState({ suggestWaitForTest: false });
+		}
+
+		if (context.state.sentAnswer && context.state.sentAnswer.emergency_rerouting === 1) { // quando responder Há menos de 72H para a primeira pergunta da triagem
+			await context.sendText(flow.triagem.emergency1);
+			await context.sendText(await help.buildPhoneMsg(context.state.user.city, 'Telefones pra contato:', help.telefoneDictionary));
+			await context.setState({ dialog: 'mainMenu' });
+		} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_test === 1) { // "A mais de 6 meses" + todos não
+			await context.setState({ dialog: 'autoTeste' });
+		} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_appointment === 1) { // quando responder sim para a SC6 -> talvez a prep seja uma boa pra vc. bora marcar?
+			await context.setState({ dialog: 'checarConsulta' });
+		} else if (context.state.sentAnswer && context.state.sentAnswer.suggest_appointment === 1) { // qualquer sim
+			await context.sendText(flow.triagem.suggest, triagem1);
+		} else if (context.state.sentAnswer && context.state.sentAnswer.go_to_test === 0) { // quando responder não para a SC6
+			await context.setState({ dialog: 'mainMenu' });
+		} else {
+			await context.setState({ dialog: 'mainMenu' });
+		}
+	}
 	if (context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 		await context.setState({ dialog: 'startQuiz' });
 		return false;

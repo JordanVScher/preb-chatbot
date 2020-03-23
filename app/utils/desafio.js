@@ -3,11 +3,9 @@ const opt = require('./options');
 const prepApi = require('./prep_api');
 const help = require('./helper');
 const { sendMain } = require('./mainMenu');
-const { sendCarouselSus } = require('./attach');
 const { checkAppointment } = require('./consulta-aux');
 const research = require('./research');
 const quiz = require('./quiz');
-const triagem = require('./triagem');
 const { sentryError } = require('./error');
 
 async function offerQuiz(context, categoryQuestion) {
@@ -83,55 +81,6 @@ async function sendConsulta(context) {
 	}
 }
 
-async function checkAconselhamento(context) {
-	// await context.setState({ user: { is_prep: 0 } }); // for testing
-	await prepApi.resetTriagem(context.session.user.id); // clear old triagem
-	if (context.state.intentType === 'duvida') {
-		if (context.state.user.is_prep === 1) { // user is prep
-			await sendMain(context); // send regular menu
-		} else { // user isn't prep, send to triagem
-			await context.sendText(flow.triagem.invite, opt.answer.isPrep);
-		}
-	} else { // problema e serviço
-		if (context.state.user.is_prep === 1) { // eslint-disable-line no-lonely-if
-			await sendConsulta(context); // is prep, === 1
-		} else { // user isn't prep, goes to triagem
-			await context.sendText(flow.triagem.send);
-			await triagem.getTriagem(context);
-		}
-	}
-}
-
-async function followUpIntent(context) {
-	await context.setState({ intentType: await help.separateIntent(context.state.intentName), dialog: 'prompt' });
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) }); // get user flags
-
-	if (context.state.user.is_target_audience === 1 || context.state.user.is_target_audience === null) { // check if user is part of target audience or we dont know yet
-		if (context.state.user.is_part_of_research === 1) { // parte da pesquisa === 1, isso é configurado fora do bot
-			await checkAconselhamento(context);
-		} else { // não faz parte da pesquisa, verifica se temos o resultado (é elegível) ou se não acabou o quiz
-			if (context.state.intentType === 'serviço') { await context.sendText(flow.triagem.posto); }
-			const quizTodo = await quiz.checkFinishQuiz(context);
-			if (quizTodo) { // there's one quiz to do
-				await sendFollowUp(context, quizTodo);
-			} else if (context.state.user.is_eligible_for_research === 1) {
-				if (context.state.intentType === 'problema') { await context.sendText(await help.buildPhoneMsg(context.state.user.city, flow.triagem.whatsapp, help.emergenciaDictionary)); }
-				// await sendResearch(context);
-			} else {
-				await sendCarouselSus(context, opt.sus, flow.sus.text1);
-				await context.typing(1000 * 5);
-				await sendMain(context);
-			}
-		}
-	} else { // not part of target audience
-		const quizTodo = await quiz.checkFinishQuiz(context);
-		if (quizTodo) { // there's one quiz to do
-			await sendFollowUp(context, quizTodo);
-		} else {
-			await sendMain(context); // send regular menu
-		}
-	}
-}
 
 async function asksDesafio(context) {
 	if (context.state.askDesafio === true) {
@@ -155,10 +104,8 @@ module.exports = {
 	asksDesafio,
 	desafioRecusado,
 	desafioAceito,
-	followUpIntent,
 	followUp,
 	sendFollowUp,
 	sendConsulta,
 	offerQuiz,
-	checkAconselhamento,
 };

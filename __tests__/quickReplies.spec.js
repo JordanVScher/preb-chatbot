@@ -7,7 +7,6 @@ const quiz = require('../app/utils/quiz');
 const prepAPI = require('../app/utils/prep_api');
 const consulta = require('../app/utils/consulta');
 const timer = require('../app/utils/timer');
-const triagem = require('../app/utils/triagem');
 const duvidas = require('../app/utils/duvidas');
 const checkQR = require('../app/utils/checkQR');
 const mainMenu = require('../app/utils/mainMenu');
@@ -21,7 +20,6 @@ jest.mock('../app/utils/consulta');
 jest.mock('../app/utils/quiz');
 jest.mock('../app/utils/research');
 jest.mock('../app/utils/timer');
-jest.mock('../app/utils/triagem');
 jest.mock('../app/utils/duvidas');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
@@ -36,7 +34,7 @@ it('quiz - begin', async () => {
 
 	await expect(context.setState).toBeCalledWith({ startedQuiz: true });
 	await expect(context.sendText).toBeCalledWith(flow.quiz.beginQuiz);
-	await expect(quiz.answerQuiz).toBeCalledWith(context);
+	await expect(quiz.answerQuiz).toBeCalledWith(context, 'publico_interesse');
 });
 
 it('quiz - multiple choice answer', async () => {
@@ -422,13 +420,7 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpNaoTomei);
-			await expect(duvidas.deuRuimQuiz).toBeCalledWith(context);
-		});
-
-		it('deuRuimQuiz - escolhe opção', async () => {
-			const context = cont.quickReplyContext('deuRuimQuiz1', 'drpNaoTomei');
-			await handler(context);
-			await expect(duvidas.deuRuimAnswer).toBeCalledWith(context, context.state.lastQRpayload.charAt(11));
+			await expect(quiz.answerQuiz).toBeCalledWith(context, 'deu_ruim_nao_tomei');
 		});
 
 		it('deuRuimPrepFim - falar com humano', async () => {
@@ -460,7 +452,8 @@ describe('deuRuimNaoPrep', async () => {
 		const context = cont.quickReplyContext('drnpArrisquei', 'drnpArrisquei');
 		await handler(context);
 
-		await expect(triagem.getTriagem).toBeCalledWith(context);
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpArrisquei);
+		await expect(quiz.answerQuiz).toBeCalledWith(context, 'triagem');
 	});
 
 	it('drnpParaMim - explicação e falar com humano', async () => {

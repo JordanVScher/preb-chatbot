@@ -18,7 +18,6 @@ jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/helper');
-jest.mock('../app/utils/triagem');
 jest.mock('../app/utils/consulta');
 
 it('offerQuiz - user nunca começou quiz, oferece pela primeira vez', async () => {
