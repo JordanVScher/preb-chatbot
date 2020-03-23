@@ -201,19 +201,6 @@ async function buildLabels(labels) {
 	return { system_labels: labels };
 }
 
-async function getButtonTextList(qr) {
-	const res = [];
-	const list = qr.quick_replies || [];
-	for (let i = 0; i < list.length; i++) {
-		const e = list[i];
-		if (e.title) {
-			let aux = e.title.toLowerCase();
-			aux = await accents.remove(aux);
-			res.push(aux);
-		}
-	}
-	return res;
-}
 
 module.exports = {
 	Sentry,
@@ -236,7 +223,6 @@ module.exports = {
 	getPhoneValid,
 	buildContatoMsg,
 	buildLabels,
-	getButtonTextList,
 	accents,
 	siglaMap,
 	formatPhone,

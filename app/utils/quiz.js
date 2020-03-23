@@ -13,25 +13,12 @@ async function answerQuiz(context) {
 	}
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	console.log(`A nova pergunta do ${context.state.categoryQuestion}`, context.state.currentQuestion, '\n');
-
-	// show question code for dev purposes
-	const quizText = `${context.state.currentQuestion.code}. ${context.state.currentQuestion.text}`;
-	// const quizText = process.env.ENV !== 'local' ? context.state.currentQuestion.text : `${context.state.currentQuestion.code}. ${context.state.currentQuestion.text}`;
-	if (context.state.currentQuestion.type === 'multiple_choice') {
-		await context.setState({ onButtonQuiz: true });
-		await context.setState({ buttonsFull: await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz') });
-		await context.setState({ buttonTexts: await help.getButtonTextList(context.state.buttonsFull) });
-		await context.sendText(quizText, context.state.buttonsFull);
-	} else if (context.state.currentQuestion.type === 'open_text') {
-		await context.setState({ onTextQuiz: true });
-		await context.sendText(quizText);
-	}
+	await aux.sendQuizQuestion(context, 'quiz');
 }
 
 async function handleQuizResposta(context, quizOpt) {
 	// error sending message to API, send user to same question and send error to the devs
-	if (context.state.sentAnswer.error || !context.state.sentAnswer) {
+	if (!context.state.sentAnswer || context.state.sentAnswer.error) {
 		await context.sendText(flow.quiz.form_error);
 		await context.setState({ dialog: 'startQuiz' });
 		if (process.env.ENV !== 'local') await sentryError('PREP - Erro ao salvar resposta do Quiz', { sentAnswer: context.state.sentAnswer, quizOpt, state: context.state });
@@ -45,14 +32,11 @@ async function handleQuizResposta(context, quizOpt) {
 	}
 
 	// saving city labels
-	if (context.state.currentQuestion.code === 'A1') {
-		await addCityLabel(context.session.user.id, quizOpt);
-	}
+	if (context.state.currentQuestion.code === 'A1') await addCityLabel(context.session.user.id, quizOpt);
 
 	// add registration form link to send later
-	if (context.state.sentAnswer.offline_pre_registration_form) {
-		await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
-	}
+	if (context.state.sentAnswer.offline_pre_registration_form) await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
+
 
 	await aux.sendFollowUpMsgs(context);
 	if (context.state.sentAnswer.finished_quiz) await context.setState({ startedQuiz: false });	// clean started quiz when each quiz is finished
@@ -133,4 +117,5 @@ module.exports = {
 	AnswerExtraQuestion,
 	handleText,
 	checkFinishQuiz: aux.checkFinishQuiz,
+	handleQuizResposta,
 };

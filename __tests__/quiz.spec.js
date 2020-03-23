@@ -12,70 +12,33 @@ jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/labels');
 jest.mock('../app/utils/helper');
 
-it('answerQuiz - multiple choice - empty category', async () => {
-	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
-	context.state.currentQuestion = questions.regularMultipleChoice; context.state.categoryQuestion = '';
-	await quiz.answerQuiz(context);
+describe('answerQuiz', async () => {
+	it('no startedQuiz with empty startedQuiz - update startedQuiz and set categoryQuestion to "publico_interesse" before sending question', async () => {
+		const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
+		context.state.currentQuestion = questions.regularMultipleChoice;
+		context.state.categoryQuestion = '';
+		await quiz.answerQuiz(context);
 
-	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	await expect(context.typingOn).toBeCalled();
-	await expect(!context.state.categoryQuestion || context.state.categoryQuestion === '').toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'publico_interesse' });
-	context.state.categoryQuestion = 'quiz'; // change quiz value
-	await quiz.answerQuiz(context);
-
-	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
-
-	await expect(context.state.currentQuestion.type === 'multiple_choice').toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion));
-	await expect(context.typingOff).toBeCalled();
+		await expect(context.setState).toBeCalledWith({ startedQuiz: true });
+		await expect(context.setState).toBeCalledWith({ categoryQuestion: 'publico_interesse' });
+		await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+		await expect(aux.sendQuizQuestion).toBeCalledWith(context, 'quiz');
+	});
 });
 
-it('answerQuiz - multiple choice - fun_questions', async () => {
-	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
-	context.state.currentQuestion = questions.regularMultipleChoice; context.state.categoryQuestion = 'fun_questions';
-	await quiz.answerQuiz(context);
+describe('answerQuiz', async () => {
+	it('startedQuiz and category is already filled - load and send the question', async () => {
+		const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
+		context.state.currentQuestion = questions.regularMultipleChoice;
+		context.state.categoryQuestion = 'fun_questions';
+		context.state.startedQuiz = true;
+		await quiz.answerQuiz(context);
 
-	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	await expect(context.typingOn).toBeCalled();
-	await expect(!context.state.categoryQuestion || context.state.categoryQuestion === '').toBeFalsy();
-
-	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
-
-	await expect(context.state.currentQuestion.type === 'multiple_choice').toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion));
-	await expect(context.typingOff).toBeCalled();
-});
-
-it('answerQuiz - open text - quiz category', async () => {
-	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
-	context.state.currentQuestion = questions.regularOpenText; context.state.categoryQuestion = 'quiz';
-	await quiz.answerQuiz(context);
-
-	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	await expect(context.typingOn).toBeCalled();
-	await expect(!context.state.categoryQuestion || context.state.categoryQuestion === '').toBeFalsy();
-
-	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	await expect(context.state.currentQuestion && context.state.currentQuestion.code === null).toBeFalsy();
-
-	await expect(context.state.currentQuestion.type === 'open_text').toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: true });
-	await expect(context.sendText).toBeCalledWith(context.state.currentQuestion.text);
-	await expect(context.typingOff).toBeCalled();
-});
-
-it('answerQuiz - null question', async () => {
-	const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
-	context.state.currentQuestion = questions.nullQuestion; context.state.categoryQuestion = 'quiz';
-	context.state.sentAnswer = { id: '1' };
-
-	await quiz.answerQuiz(context);
-
-	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	await expect((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)).toBeTruthy();
+		await expect(context.setState).not.toBeCalledWith({ startedQuiz: true });
+		await expect(context.setState).not.toBeCalledWith({ categoryQuestion: 'publico_interesse' });
+		await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
+		await expect(aux.sendQuizQuestion).toBeCalledWith(context, 'quiz');
+	});
 });
 
 it('AnswerExtraQuestion', async () => {
@@ -88,164 +51,105 @@ it('AnswerExtraQuestion', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
 });
 
-it('handleAnswer - regular answer - not finished', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.nullQuestion;
-	context.state.sentAnswer = questions.notFinished;
+it('handleAnswer', async () => {
+	const context = cont.quickReplyContext('extraQuestion0', 'beginQuiz');
+	context.state.currentQuestion = questions.extraMultiple;
 	const quizOpt = '1';
 	await quiz.handleAnswer(context, quizOpt);
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
-	await expect(context.state.sentAnswer.error).toBeFalsy();
-	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
-	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
+	await expect(context.setState).toBeCalledWith({ onTextQuiz: false, onButtonQuiz: false });
+	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) }); // eslint-disable-line
+	await expect(context.sendText).toBeCalledWith(flow.quiz.form_error); // from handleQuizResposta, gets to the error because sentAnswer is null
 });
 
-it('handleAnswer - regular answer - finished but not target audience', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.finishedNotPart;
+describe('handleQuizResposta and sentAnswer', async () => {
 	const quizOpt = '1';
-	await quiz.handleAnswer(context, quizOpt);
+	const context = cont.quickReplyContext('quiz0', 'beginQuiz');
+	context.state.currentQuestion = questions.extraMultiple;
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
+	it('null - error and try again', async () => {
+		await quiz.handleQuizResposta(context, quizOpt);
 
-	await expect(context.state.sentAnswer.error).toBeFalsy();
-	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
-	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeFalsy();
-	await expect((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
-		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
-});
+		await expect(context.sendText).toBeCalledWith(flow.quiz.form_error);
+		await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
+	});
 
-it('handleAnswer - regular answer - finished and target audience', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.finished;
-	const quizOpt = '1';
-	await quiz.handleAnswer(context, quizOpt);
+	it('error - error and try again', async () => {
+		context.state.sentAnswer = questions.serverError;
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
+		await quiz.handleQuizResposta(context, quizOpt);
 
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
-	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeFalsy();
+		await expect(context.sendText).toBeCalledWith(flow.quiz.form_error);
+		await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
+	});
 
+	it('invalid format - msg and try again', async () => {
+		context.state.sentAnswer = questions.invalidValue;
 
-	await expect(context.state.sentAnswer.error).toBeFalsy();
+		await quiz.handleQuizResposta(context, quizOpt);
 
-	await expect(context.state.sentAnswer.offline_pre_registration_form).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
+		await expect(context.sendText).toBeCalledWith(flow.quiz.invalid);
+		await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
+	});
 
-	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
-	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeFalsy();
-	await expect((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
-		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)).toBeFalsy();
-});
+	it('A1 - Save city and keep going', async () => {
+		context.state.sentAnswer = questions.regularMultipleChoice;
+		context.state.currentQuestion.code = 'A1';
+		await quiz.handleQuizResposta(context, quizOpt);
 
-it('handleAnswer - regular answer - is not target audience', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.finishedIsTarget;
-	const quizOpt = '1';
-	await quiz.handleAnswer(context, quizOpt);
+		await expect(addCityLabel).toBeCalledWith(context.session.user.id, quizOpt);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
+	});
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
-	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'brincadeira' });
+	it('offline_pre_registration_form - Save registrationForm', async () => {
+		context.state.sentAnswer = questions.regularMultipleChoice;
+		context.state.sentAnswer.offline_pre_registration_form = 'foobar';
+		context.state.currentQuestion.code = 'A2';
+		await quiz.handleQuizResposta(context, quizOpt);
 
-	await expect(context.state.sentAnswer.error).toBeFalsy();
-	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
-	await expect(((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
-		|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0))).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
-});
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
+		await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
+	});
 
-it('handleAnswer - regular answer - followup_messages', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.halfway;
-	const quizOpt = '1';
-	await quiz.handleAnswer(context, quizOpt);
+	it('Finished publico_interesse, is_target_audience false - go to brincadeira', async () => {
+		context.state.categoryQuestion = 'publico_interesse';
+		context.state.sentAnswer = { finished_quiz: 1, is_target_audience: 0 };
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
-	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'brincadeira' });
+		await quiz.handleQuizResposta(context, quizOpt);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
+		await expect(context.setState).toBeCalledWith({ dialog: 'offerBrincadeira', publicoInteresseEnd: true, categoryQuestion: '' });
+	});
 
-	await expect(context.state.sentAnswer.error).toBeFalsy();
-	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
-	// loop
-	await expect(context.state.sentAnswer.followup_messages[0].includes('.png')).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ resultImageUrl: context.state.sentAnswer.followup_messages[0] });
-	await expect(context.state.currentQuestion.code === 'AC7').toBeFalsy();
+	it('Finished publico_interesse, is_target_audience - go to oferta de pesquisa', async () => {
+		context.state.categoryQuestion = 'publico_interesse';
+		context.state.sentAnswer = { finished_quiz: 1, is_target_audience: 1 };
 
-	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[1]);
-	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[2]);
-});
+		await quiz.handleQuizResposta(context, quizOpt);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
+		await expect(context.setState).toBeCalledWith({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true, categoryQuestion: '' });
+	});
 
-it('handleAnswer - regular answer - followup_messages on AC7', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.halfway;
-	context.state.currentQuestion.code = 'AC7';
-	context.state.resultImageUrl = questions.halfway.followup_messages[0]; // eslint-disable-line
-	const quizOpt = '1';
-	await quiz.handleAnswer(context, quizOpt);
+	it('Finished quiz_brincadeira - go to preTCLE', async () => {
+		context.state.categoryQuestion = 'quiz_brincadeira';
+		context.state.sentAnswer = { finished_quiz: 1 };
 
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
-	await expect(context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'brincadeira' });
+		await quiz.handleQuizResposta(context, quizOpt);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
+		await expect(context.setState).toBeCalledWith({ dialog: 'preTCLE', quizBrincadeiraEnd: true, categoryQuestion: '' });
+	});
 
-	await expect(context.state.sentAnswer.followup_messages).toBeTruthy();
-	// loop
-	await expect(context.state.sentAnswer.followup_messages[0].includes('.png')).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ resultImageUrl: context.state.sentAnswer.followup_messages[0] });
-	await expect(context.state.currentQuestion.code === 'AC7').toBeTruthy();
-	await expect(context.state.resultImageUrl && context.state.resultImageUrl.length > 0).toBeTruthy();
-	await expect(context.sendImage).toBeCalledWith(context.state.resultImageUrl);
-	await expect(context.setState).toBeCalledWith({ resultImageUrl: '' });
+	it('Finished quiz_brincadeira - go to preTCLE', async () => {
+		context.state.categoryQuestion = 'recrutamento';
+		context.state.sentAnswer = { finished_quiz: 1 };
 
-	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[1]);
-	await expect(context.sendText).toBeCalledWith(context.state.sentAnswer.followup_messages[2]);
-});
-
-it('handleAnswer - regular answer - saving city', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.nullQuestion; context.state.sentAnswer = questions.notFinished;
-	context.state.currentQuestion.code = 'A1';
-	const quizOpt = '1';
-	await quiz.handleAnswer(context, quizOpt);
-
-	await expect(context.state.currentQuestion.code === 'A1').toBeTruthy();
-	await expect(addCityLabel).toBeCalledWith(context.session.user.id, quizOpt);
-});
-
-it('handleAnswer - internal error', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.nullQuestion;
-	context.state.sentAnswer = questions.serverError;
-	const quizOpt = 'a resposta';
-	await quiz.handleAnswer(context, quizOpt);
-
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
-
-	await expect(context.state.sentAnswer.error || !context.state.sentAnswer).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.quiz.form_error);
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
-});
-
-it('handleAnswer - invalid value', async () => {
-	const context = cont.quickReplyContext('quiz1', 'answerQuiz');
-	context.state.currentQuestion = questions.nullQuestion;
-	context.state.sentAnswer = questions.invalidValue;
-	const quizOpt = '19/19/19';
-	await quiz.handleAnswer(context, quizOpt);
-
-	await expect(context.setState).toBeCalledWith({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.currentQuestion.code, quizOpt) });
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false });
-
-	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.quiz.invalid);
-	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
+		await quiz.handleQuizResposta(context, quizOpt);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false });
+		await expect(context.setState).toBeCalledWith({ dialog: 'preTCLE', recrutamentoEnd: true, categoryQuestion: '' });
+	});
 });
