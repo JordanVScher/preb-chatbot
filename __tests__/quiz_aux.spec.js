@@ -21,7 +21,7 @@ it('buildMultipleChoice - quiz with no extra option', async () => {
 });
 
 it('buildMultipleChoice - extra option', async () => {
-	const complement = 'triagem';
+	const complement = 'triagemQuiz';
 	const question = questions.extraMultiple;
 	const result = await aux.buildMultipleChoice(question, complement);
 

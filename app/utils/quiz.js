@@ -7,13 +7,12 @@ const { sentryError } = require('./error');
 
 // loads next question and shows it to the user
 async function answerQuiz(context) {
-	await context.typingOn();
 	if (!context.state.startedQuiz) await context.setState({ startedQuiz: true }); // if we passed here we started a new quiz
 	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') { // if the user never started the quiz the category is 'publico_interesse'
 		await context.setState({ categoryQuestion: 'publico_interesse' });
 	}
 
-	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion), triagem: false });
+	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
 	console.log(`A nova pergunta do ${context.state.categoryQuestion}`, context.state.currentQuestion, '\n');
 
 	// show question code for dev purposes
@@ -28,7 +27,6 @@ async function answerQuiz(context) {
 		await context.setState({ onTextQuiz: true });
 		await context.sendText(quizText);
 	}
-	await context.typingOff();
 }
 
 async function handleQuizResposta(context, quizOpt) {

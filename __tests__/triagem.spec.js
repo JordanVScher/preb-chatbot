@@ -98,7 +98,7 @@ it('handleAnswer - default case', async () => {
 	await expect(!context.state.sentAnswer || context.state.sentAnswer.error).toBeTruthy();
 
 	await expect(context.sendText).toBeCalledWith(flow.quiz.form_error);
-	await expect(context.setState).toBeCalledWith({ dialog: 'triagem' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'triagemQuiz' });
 });
 
 it('handleAnswer - invalid value', async () => {
@@ -112,7 +112,7 @@ it('handleAnswer - invalid value', async () => {
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeTruthy();
 
 	await expect(context.sendText).toBeCalledWith(flow.quiz.invalid);
-	await expect(context.setState).toBeCalledWith({ dialog: 'triagem' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'triagemQuiz' });
 });
 
 it('handleAnswer - regular answer - not finished', async () => {
@@ -126,7 +126,7 @@ it('handleAnswer - regular answer - not finished', async () => {
 	await expect(!context.state.sentAnswer || context.state.sentAnswer.error).toBeFalsy();
 	await expect(context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid').toBeFalsy();
 	await expect(context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ dialog: 'triagem' });
+	await expect(context.setState).toBeCalledWith({ dialog: 'triagemQuiz' });
 });
 
 it('handleAnswer - regular answer - finished quiz', async () => {

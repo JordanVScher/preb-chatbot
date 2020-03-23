@@ -315,6 +315,7 @@ module.exports = {
 		drnpParaMim2: 'Fluxo de recrutamento adaptado \n\n(Proposta pendente)',
 		drnpMedoTestar: 'O projeto disponibiliza autoteste q é um teste q vc pode fazer sozinhe e/ou em casa pra saber se tem HIV. Vc pode receber em casa ou buscar nos nossos serviços. Escolha o botão autoteste no menu XXX',
 		followUpTriagem: 'Vamo lá! Escolhe a opção q vc tem dúvida e vou te ajudar!',
+		drnpArrisquei: 'Estou entendendo q vc teve uma relação com penetração e sem proteção, então vou te fazer algumas perguntas para te ajudar',
 		menuOptions: ['Me arrisquei e agora?', 'prep é para mim?', 'Medo de me testar?', 'Feridas no pau/cu', 'PEP não foi boa?'],
 		menuPostback: ['drnpArrisquei', 'drnpParaMim', 'drnpMedoTestar', 'drnpIST', 'drnpPEPNao'],
 		drnpPEPNao: {

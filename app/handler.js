@@ -121,8 +121,8 @@ module.exports = async (context) => {
 					await context.setState({ dialog: 'setEvent' });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'quiz') {
 					await quiz.handleAnswer(context, context.state.lastQRpayload.charAt(4));
-				} else if (context.state.lastQRpayload.slice(0, 4) === 'tria') {
-					await triagem.handleAnswer(context, context.state.lastQRpayload.charAt(4));
+				} else if (context.state.lastQRpayload.slice(0, 11) === 'triagemQuiz') {
+					await triagem.handleAnswer(context, context.state.lastQRpayload.replace('triagemQuiz', ''));
 				} else if (context.state.lastQRpayload.slice(0, 11) === 'deuRuimQuiz') {
 					await duvidas.deuRuimAnswer(context, context.state.lastQRpayload.charAt(11));
 				} else if (context.state.lastQRpayload.slice(0, 13) === 'extraQuestion') {
@@ -324,6 +324,7 @@ module.exports = async (context) => {
 				await inicioDuvidasNaoPrep(context);
 				break;
 			case 'drnpArrisquei':
+				await context.sendText(flow.deuRuimNaoPrep.drnpArrisquei);
 				await triagem.getTriagem(context);
 				break;
 			case 'dnpDrogas':
@@ -742,7 +743,6 @@ module.exports = async (context) => {
 				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.servico1,
 					await checkQR.autoTesteOption(opt.servico, context.state.user.city));
 				break;
-			case 'sendToTriagem':
 			case 'triagem': // this is the triagem-type of questionario
 				await triagem.getTriagem(context);
 				break;
