@@ -24,7 +24,7 @@ it('ofertaPesquisaSim - clica meContaDepois - não vê explicação do projeto, 
 
 	await expect(context.setState).toBeCalledWith({ nextDialog: 'ofertaPesquisaEnd' });
 	await expect(context.state.meContaDepois !== true).toBeFalsy();
-	await expect(falarComHumano).toBeCalledWith(context);
+	await expect(falarComHumano).toBeCalledWith(context, 'ofertaPesquisaEnd');
 });
 
 it('ofertaPesquisaSim - não clica em meContaDepois - vê explicação do projeto, falar com humano', async () => {
@@ -35,7 +35,7 @@ it('ofertaPesquisaSim - não clica em meContaDepois - vê explicação do projet
 	await expect(context.setState).toBeCalledWith({ nextDialog: 'ofertaPesquisaEnd' });
 	await expect(context.state.meContaDepois !== true).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text1);
-	await expect(falarComHumano).toBeCalledWith(context);
+	await expect(falarComHumano).toBeCalledWith(context, 'ofertaPesquisaEnd');
 });
 
 it('ofertaPesquisaEnd - não is_target_audience -> vai pro menu', async () => {

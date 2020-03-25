@@ -197,4 +197,5 @@ module.exports = {
 	startConsulta,
 	checkSP,
 	sendConsultas,
+	sendSalvador,
 };

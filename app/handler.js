@@ -602,22 +602,24 @@ module.exports = async (context) => {
 			case 'leavePhoneTwo':
 				await context.sendText(flow.leavePhone.phone);
 				break;
-			case 'leaveInsta':
-				await context.sendText(flow.leavePhone.insta);
-				break;
-			case 'leaveInstaValid':
-				await prepAPI.putRecipientPrep(context.session.user.id, { instagram: context.state.insta });
-				await context.setState({ leftContact: true });
-				await context.sendText(flow.leavePhone.success);
-				await sendMail('AMANDA - Novo instagram de contato', await help.buildMail(context, 'Instagram', context.state.insta), context.state.user.city);
-				await contactFollowUp(context);
-				break;
 			case 'phoneValid': {
 				const res = await prepAPI.putRecipientPrep(context.session.user.id, { phone: context.state.phone });
-				if (!res || !res.id || !res.error) { sentryError('Erro ao salvar telefone do recipient no prep', { res, phone: context.state.phone, user: context.state.user }); }
+				if (!res || !res.id || res.error) { sentryError('Erro ao salvar telefone do recipient no prep', { res, phone: context.state.phone, user: context.state.user }); }
 				await context.setState({ leftContact: true });
 				await context.sendText(flow.leavePhone.success);
 				await sendMail('AMANDA - Novo telefone de contato', await help.buildMail(context, 'Whatsapp', context.state.phone), context.state.user.city);
+				await contactFollowUp(context);
+				break;
+			}
+			case 'leaveInsta':
+				await context.sendText(flow.leavePhone.insta);
+				break;
+			case 'leaveInstaValid': {
+				const res = await prepAPI.putRecipientPrep(context.session.user.id, { instagram: context.state.insta });
+				if (!res || !res.id || res.error) { sentryError('Erro ao salvar instagram do recipient no prep', { res, phone: context.state.phone, user: context.state.user }); }
+				await context.setState({ leftContact: true });
+				await context.sendText(flow.leavePhone.success);
+				await sendMail('AMANDA - Novo instagram de contato', await help.buildMail(context, 'Instagram', context.state.insta), context.state.user.city);
 				await contactFollowUp(context);
 				break;
 			}

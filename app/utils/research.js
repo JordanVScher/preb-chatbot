@@ -26,7 +26,7 @@ async function ofertaPesquisaStart(context, text) {
 async function ofertaPesquisaSim(context) {
 	await context.setState({ nextDialog: 'ofertaPesquisaEnd' });
 	if (context.state.meContaDepois !== true) await context.sendText(flow.ofertaPesquisaSim.text1);
-	await falarComHumano(context);
+	await falarComHumano(context, 'ofertaPesquisaEnd');
 }
 
 async function recrutamento(context) {
