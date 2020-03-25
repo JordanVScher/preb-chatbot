@@ -77,13 +77,14 @@ async function receivePage(context) {
 }
 
 async function buildChoiceTimeStamp(hour, minutes) {
-	const ts = new Date();
+	let ts = new Date();
 	ts.setHours(hour || 0);
 	ts.setMinutes(minutes || 0);
 	ts.setSeconds(0);
 	ts.setMilliseconds(0);
 
-	return help.removeTimezone(ts);
+	ts = await help.removeTimezone(ts);
+	return { date: ts, string: ts.toISOString().split('T')[1].replace('Z', '') };
 }
 
 async function formatDate(text) {
