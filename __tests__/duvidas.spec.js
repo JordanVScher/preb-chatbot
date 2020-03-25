@@ -351,13 +351,15 @@ describe('buildChoiceTimeStamp', async () => {
 		const hour = 8;
 		const minute = 15;
 		const now = new Date();
+		const offset = now.getTimezoneOffset() / 60;
 
 		const result = await duvidas.buildChoiceTimeStamp(hour, minute);
+
 		await expect(result).toBeTruthy();
 		await expect(now.getDay() === result.getDay()).toBeTruthy();
 		await expect(now.getHours() !== result.getHours()).toBeTruthy();
 		await expect(now.getMinutes() !== result.getMinutes()).toBeTruthy();
-		await expect(result.getHours() === hour).toBeTruthy();
+		await expect(result.getHours() === hour - offset).toBeTruthy();
 		await expect(result.getMinutes() === minute).toBeTruthy();
 		await expect(result.getSeconds() === 0).toBeTruthy();
 		await expect(result.getMilliseconds() === 0).toBeTruthy();

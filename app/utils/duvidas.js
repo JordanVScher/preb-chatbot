@@ -83,12 +83,7 @@ async function buildChoiceTimeStamp(hour, minutes) {
 	ts.setSeconds(0);
 	ts.setMilliseconds(0);
 
-	const offset = ts.getTimezoneOffset();
-	const hours = offset / 60;
-
-	ts.setHours(ts.getHours() - hours);
-
-	return ts;
+	return help.removeTimezone(ts);
 }
 
 async function formatDate(text) {

@@ -193,12 +193,14 @@ async function formatPhone(phone, cityID) {
 	return res;
 }
 
-async function buildLabels(labels) {
-	if (!labels) {
-		return {};
-	}
+const buildLabels = (labels) => (labels ? { system_labels: labels } : {});
 
-	return { system_labels: labels };
+async function removeTimezone(date) {
+	const offset = date.getTimezoneOffset();
+	const hours = offset / 60;
+
+	date.setHours(date.getHours() - hours);
+	return date;
 }
 
 
@@ -227,4 +229,5 @@ module.exports = {
 	siglaMap,
 	formatPhone,
 	buildCidadeText,
+	removeTimezone,
 };
