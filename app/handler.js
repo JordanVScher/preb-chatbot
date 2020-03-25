@@ -159,6 +159,8 @@ module.exports = async (context) => {
 					await context.setState({ tomeiDepois: await context.state.lastQRpayload.replace('askDepois', ''), dialog: 'tomeiFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 12) === 'alarmeFrasco') {
 					await context.setState({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
+				} else if (context.state.lastQRpayload.slice(0, 20) === 'autoServicoSisprepSP') {
+					await context.setState({ cityType: await context.state.lastQRpayload.replace('autoServicoSisprepSP', ''), dialog: 'autoServicoSP' });
 				} else { // regular quick_replies
 					await context.setState({ dialog: context.state.lastQRpayload });
 				}
@@ -176,6 +178,8 @@ module.exports = async (context) => {
 				await research.checkPhone(context);
 			} else if (context.state.dialog === 'leaveInsta') {
 				await context.setState({ insta: context.state.whatWasTyped, dialog: 'leaveInstaValid' });
+			} else if (context.state.dialog === 'autoCorreio') {
+				await context.setState({ endereco: context.state.whatWasTyped, dialog: 'autoCorreioEnd' });
 			} else if (context.state.onTextQuiz === true) {
 				await context.setState({ whatWasTyped: parseInt(context.state.whatWasTyped, 10) });
 				if (Number.isInteger(context.state.whatWasTyped, 10) === true) {
@@ -458,17 +462,32 @@ module.exports = async (context) => {
 				await drnpFollowUpAgendamento(context);
 				break;
 			case 'testagem':
-				await context.setState({ testagem: await duvidas.buildTestagem(context.state.user.city) });
-				if (context.state.testagem && context.state.testagem.msg && context.state.testagem.opt) {
-					await context.sendText(flow.testagem.text1);
-					await context.sendText(context.state.testagem.msg);
-					await context.sendText(flow.testagem.text1, context.state.testagem.opt);
-				}
+				await duvidas.sendAutotesteMsg(context);
 				break;
 			case 'testeServiço':
 			case 'testeOng':
 			case 'testeRua':
 				await mainMenu.falarComHumano(context);
+				break;
+			case 'autoteste2Intro':
+				await context.sendText(flow.autoteste2.intro);
+				// fallsthrough
+			case 'autoteste2':
+				await context.sendText(flow.autoteste2.offerType, await getQR(flow.autoteste2.offerTypeBtn));
+				break;
+			case 'autoCorreio':
+				await context.sendText(flow.autoteste2.autoCorreio);
+				break;
+			case 'autoCorreioEnd':
+				await prepAPI.putRecipientPrep(context.session.user.id, { address: context.state.endereco });
+				await context.sendText(flow.autoteste2.autoCorreioEnd);
+				await mainMenu.sendMain(context);
+				break;
+			case 'autoServico':
+				await duvidas.autotesteServico(context);
+				break;
+			case 'autoServicoSP':
+				await duvidas.sendAutoServicoMsg(context, context.state.cityType);
 				break;
 			case 'alarmePrep':
 				await context.sendText(flow.alarmePrep.text1, await getQR(flow.alarmePrep));

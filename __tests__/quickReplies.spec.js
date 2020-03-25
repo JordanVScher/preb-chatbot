@@ -744,3 +744,65 @@ it('triagemCQ_entrar - manda msg e vai pro menu', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.triagemCQ.entrarEmContato);
 	await expect(mainMenu.sendMain).toBeCalledWith(context);
 });
+
+
+describe('autoteste2', async () => {
+	it('do menu não prep - see intro msg and offer options', async () => {
+		const context = cont.quickReplyContext('autoteste2Intro', 'autoteste2Intro');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.autoteste2.intro);
+		await expect(context.sendText).toBeCalledWith(flow.autoteste2.offerType, await getQR(flow.autoteste2.offerTypeBtn));
+	});
+
+	it('da triagem - offer options without intro', async () => {
+		const context = cont.quickReplyContext('autoteste2', 'autoteste2');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.autoteste2.offerType, await getQR(flow.autoteste2.offerTypeBtn));
+	});
+
+	it('autoCorreio - ask endereço', async () => {
+		const context = cont.quickReplyContext('autoCorreio', 'autoCorreio');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoCorreio);
+	});
+
+	it('autoCorreio - receive endereço, save it and go to autoCorreioEnd', async () => {
+		const context = cont.textContext('Rua foobar', 'autoCorreio');
+		await handler(context);
+
+		await expect(context.setState).toBeCalledWith({ endereco: context.state.whatWasTyped, dialog: 'autoCorreioEnd' });
+	});
+
+	it('autoCorreioEnd - make endereço request, send msg and go to main main', async () => {
+		const context = cont.quickReplyContext('autoCorreioEnd', 'autoCorreioEnd');
+		await handler(context);
+
+		await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { address: context.state.endereco });
+		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoCorreioEnd);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
+	});
+
+	it('autoServico - see options depending on voucher type and city', async () => {
+		const context = cont.quickReplyContext('autoServico', 'autoServico');
+		await handler(context);
+
+		await expect(duvidas.autotesteServico).toBeCalledWith(context);
+	});
+
+	it('autoServicoSisprepSP - get cityType and go to autoServicoSP', async () => {
+		const context = cont.quickReplyContext('autoServicoSisprepSP1', 'autoServico');
+		await handler(context);
+
+		await expect(context.setState).toBeCalledWith({ cityType: await context.state.lastQRpayload.replace('autoServicoSisprepSP', ''), dialog: 'autoServicoSP' });
+	});
+
+	it('autoServicoSP - see info message', async () => {
+		const context = cont.quickReplyContext('autoServicoSP', 'autoServicoSP');
+		await handler(context);
+
+		await expect(duvidas.sendAutoServicoMsg).toBeCalledWith(context, context.state.cityType);
+	});
+});

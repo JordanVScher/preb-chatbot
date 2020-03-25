@@ -1,7 +1,7 @@
 const cont = require('./context');
 const duvidas = require('../app/utils/duvidas');
 const flow = require('../app/utils/flow');
-const { moment } = require('../app/utils/helper');
+const help = require('../app/utils/helper');
 const { sendMain } = require('../app/utils/mainMenu');
 const { falarComHumano } = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
@@ -437,7 +437,7 @@ describe('alarmeDate', async () => {
 	it('formato válido mas valor inválido - vê erro e tenta de novo', async () => {
 		const data = new Date();
 		data.setDate(data.getDate() + 1);
-		const dataString = await moment(data).format('DD/MM/YYYY');
+		const dataString = await help.moment(data).format('DD/MM/YYYY');
 		const context = await cont.textContext(dataString, 'alarmeAcabar');
 
 		const date = await duvidas.alarmeDate(context);
@@ -449,12 +449,46 @@ describe('alarmeDate', async () => {
 
 	it('formato válido e valor válido - salva data e vê opções de frascos', async () => {
 		const data = new Date();
-		const dataString = await moment(data).format('DD/MM/YYYY');
+		const dataString = await help.moment(data).format('DD/MM/YYYY');
 		const context = await cont.textContext(dataString, 'alarmeAcabar');
 
 		const date = await duvidas.alarmeDate(context);
 
 		await expect(typeof date).toBe('object');
 		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: date });
+	});
+});
+
+
+describe('autotesteServico', async () => {
+	it('combina - vê msg e vai para menu', async () => {
+		const context = await cont.textContext('autoServico', 'autoServico');
+		context.state.user = { voucher_type: 'combina' };
+
+		await duvidas.autotesteServico(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoServicoCombina);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('sisprep e SP - oferece duas opções de local', async () => {
+		const context = await cont.textContext('autoServico', 'autoServico');
+		context.state.user = { voucher_type: 'sisprep', city: '3' };
+
+		await duvidas.autotesteServico(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoServicoSisprepSP, await getQR(flow.autoteste2.autoServicoSisprepSPBtn));
+	});
+
+	it('sisprep e não-SP - mostra os dados, encerra e vai pro menu', async () => {
+		const context = await cont.textContext('autoServico', 'autoServico');
+		context.state.user = { voucher_type: 'sisprep', city: '1' };
+		context.state.autotesteServicoMsg = 'foobar';
+
+		await duvidas.autotesteServico(context);
+		await expect(context.setState).toBeCalledWith({ autotesteServicoMsg: await duvidas.buildServicoInfo(context.state.user.city) }); // from sendAutoServicoMsg
+		await expect(context.sendText).toBeCalledWith(context.state.autotesteServicoMsg);
+		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoServicoEnd);
+		await expect(sendMain).toBeCalledWith(context);
 	});
 });

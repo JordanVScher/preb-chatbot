@@ -144,11 +144,51 @@ async function buildTestagem(cityID) {
 	return { msg, opt: { quick_replies: opt } };
 }
 
+async function sendAutotesteMsg(context) {
+	await context.setState({ testagem: await buildTestagem(context.state.user.city) });
+	if (context.state.testagem && context.state.testagem.msg && context.state.testagem.opt) {
+		await context.sendText(flow.testagem.text1);
+		await context.sendText(context.state.testagem.msg);
+		await context.sendText(flow.testagem.text1, context.state.testagem.opt);
+	}
+}
+
+async function buildServicoInfo(cityID = '', cityType = '') {
+	let text = '';
+
+	const address = await help.cidadeDictionary(cityID.toString(), cityType.toString());
+	if (address) text += `Endereço: ${address}\n`;
+
+	const phone = help.telefoneDictionary[cityID];
+	if (phone) text += `Telefone: ${phone}`;
+
+	return text;
+}
+
+
+async function sendAutoServicoMsg(context, cityType) {
+	await context.setState({ autotesteServicoMsg: await buildServicoInfo(context.state.user.city, cityType) });
+	if (context.state.autotesteServicoMsg) await context.sendText(context.state.autotesteServicoMsg);
+	await context.sendText(flow.autoteste2.autoServicoEnd);
+	await sendMain(context);
+}
+
+async function autotesteServico(context) {
+	if (context.state.user.voucher_type === 'combina') {
+		await context.sendText(flow.autoteste2.autoServicoCombina);
+		await sendMain(context);
+	} else if (context.state.user.voucher_type === 'sisprep') {
+		if (context.state.user.city.toString() === '3') {
+			await context.sendText(flow.autoteste2.autoServicoSisprepSP, await getQR(flow.autoteste2.autoServicoSisprepSPBtn));
+		} else {
+			await sendAutoServicoMsg(context);
+		}
+	}
+}
 
 module.exports = {
 	prepFollowUp,
 	deuRuimPrepFollowUp,
-
 	alarmeOK,
 	alarmeHorario,
 	alarmeMinuto,
@@ -158,4 +198,8 @@ module.exports = {
 	checkDate,
 	alarmeDate,
 	buildTestagem,
+	sendAutotesteMsg,
+	buildServicoInfo,
+	autotesteServico,
+	sendAutoServicoMsg,
 };

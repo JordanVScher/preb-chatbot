@@ -145,6 +145,23 @@ module.exports = {
 	sus: {
 		text1: 'Amore, vc pode procurar um atendimento especializado no SUS, eu tenho aqui as informações e vou te mostrar, tá?',
 	},
+	autoteste2: {
+		intro: 'Autoteste: Vc pode fazer sozinhe, mas esse só vale pra HIV. Autoteste é feito por saliva e dps de 20 minutinhos mostra resultado! Vc pode receber seu kit em casa ou pelo nosso projeto nos serviços participantes!',
+		offerType: 'Como vc quer receber o kit?',
+		offerTypeBtn: {
+			menuOptions: ['Pelo correio', 'Pegar no serviço'],
+			menuPostback: ['autoCorreio', 'autoServico'],
+		},
+		autoCorreio: 'Coloque o endereço',
+		autoCorreioEnd: 'Close! Vamo entrar em contato com vc pra confirmar! Bjs!',
+		autoServicoCombina: 'Ahazou! Passa no serviço q vc faz acompanhamento de PrEP pra retirar!',
+		autoServicoSisprepSP: 'Qual serviço vc prefere retirar seu autoteste?',
+		autoServicoSisprepSPBtn: {
+			menuOptions: ['CTA Henfil', 'Casa 1'],
+			menuPostback: ['autoServicoSisprepSP2', 'autoServicoSisprepSP1'],
+		},
+		autoServicoEnd: 'Close! Vamo te esperar! Você pode fazer esse teste onde vc quiser, inclusive fazer no serviço numa sala sozinhe ou com ajuda de profissional! Até lá vc decide! Bjs!',
+	},
 	autoTeste:
 	{
 		start: 'Temos algumas possibilidades para você realizar seus testes, vou te explicar um pouquinho sobre cada uma delas para você ver qual você prefere:',
