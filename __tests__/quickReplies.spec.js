@@ -153,7 +153,7 @@ describe('join - já tomo prep', async () => {
 		await handler(context);
 
 		await expect(prepAPI.putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'combina');
-		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.fim);
+		await expect(context.sendText).toBeCalledWith(flow.join.end);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 
@@ -170,7 +170,7 @@ describe('join - já tomo prep', async () => {
 		await handler(context);
 
 		await expect(prepAPI.putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'sus');
-		await expect(context.sendText).toBeCalledWith(flow.join.joinSUS.fim);
+		await expect(context.sendText).toBeCalledWith(flow.join.end);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 

@@ -271,7 +271,7 @@ module.exports = async (context) => {
 			case 'join':
 				await inicioJoin(context);
 				break;
-			case 'joinPrep':
+			case 'joinPrep': // já faço parte
 				await context.sendText(flow.join.joinPrep.text1);
 				await context.sendText(flow.join.askPrep.text1, await getQR(flow.join.askPrep));
 				break;
@@ -285,7 +285,7 @@ module.exports = async (context) => {
 				break;
 			case 'joinCombinaSim':
 				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'combina');
-				await context.sendText(flow.join.joinCombina.fim);
+				await context.sendText(flow.join.end);
 				await mainMenu.sendMain(context);
 				break;
 			case 'joinSUS':
@@ -294,7 +294,7 @@ module.exports = async (context) => {
 				break;
 			case 'joinSUSSim':
 				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'sus');
-				await context.sendText(flow.join.joinSUS.fim);
+				await context.sendText(flow.join.end);
 				await mainMenu.sendMain(context);
 				break;
 			case 'joinNaoSabe':

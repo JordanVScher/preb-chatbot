@@ -12,22 +12,38 @@ jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/labels');
 jest.mock('../app/utils/attach');
 
-it('handlePrepToken - success', async () => {
-	const context = cont.textContext('123123', 'joinToken');
-	await joinToken.handlePrepToken(context, true);
+describe('handlePrepToken', async () => {
+	it('success, not prep - goes to menu', async () => {
+		const context = cont.textContext('123123', 'joinToken');
+		await joinToken.handlePrepToken(context, true);
 
-	await expect(context.sendText).toBeCalledWith(join.askPrep.success);
-	await expect(putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'sisprep');
-	await expect(context.setState).toBeCalledWith({ user: await getRecipientPrep(context.session.user.id) });
-	await expect(linkIntegrationTokenLabel).toBeCalledWith(context);
-	await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
-});
+		await expect(context.sendText).toBeCalledWith(join.askPrep.success);
+		await expect(putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'sisprep');
+		await expect(context.setState).toBeCalledWith({ user: await getRecipientPrep(context.session.user.id) });
+		await expect(linkIntegrationTokenLabel).toBeCalledWith(context);
+		await expect(context.sendText).not.toBeCalledWith(join.end);
+		await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
+	});
 
-it('handlePrepToken - failure', async () => {
-	const context = cont.textContext('foobar', 'joinToken');
-	await joinToken.handlePrepToken(context, false);
+	it('success, is prep - sees message and goes to menu', async () => {
+		const context = cont.textContext('123123', 'joinToken');
+		context.state.user = { is_prep: 1 };
+		await joinToken.handlePrepToken(context, true);
 
-	await expect(context.sendText).toBeCalledWith(join.askPrep.fail1);
-	await expect(context.sendText).toBeCalledWith(join.askPrep.fail2, await getQR(join.askPrep));
-	await expect(context.setState).toBeCalledWith({ dialog: 'joinPrepErro' });
+		await expect(context.sendText).toBeCalledWith(join.askPrep.success);
+		await expect(putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'sisprep');
+		await expect(context.setState).toBeCalledWith({ user: await getRecipientPrep(context.session.user.id) });
+		await expect(linkIntegrationTokenLabel).toBeCalledWith(context);
+		await expect(context.sendText).toBeCalledWith(join.end);
+		await expect(context.setState).toBeCalledWith({ dialog: 'mainMenu' });
+	});
+
+	it('failure - try again', async () => {
+		const context = cont.textContext('foobar', 'joinToken');
+		await joinToken.handlePrepToken(context, false);
+
+		await expect(context.sendText).toBeCalledWith(join.askPrep.fail1);
+		await expect(context.sendText).toBeCalledWith(join.askPrep.fail2, await getQR(join.askPrep));
+		await expect(context.setState).toBeCalledWith({ dialog: 'joinPrepErro' });
+	});
 });

@@ -227,8 +227,9 @@ module.exports = {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',
 	},
 	join: {
+		end: 'agora q sei onde vc ta tomando prep, vou te oferecer alguns apoios pra te ajudar nisso',
 		intro: {
-			text1: '1. [texto de introdução....]',
+			text1: 'Q bafooo! E por onde vc toma? Me conta tudo!',
 			menuOptions: ['PrEP 15-19', 'Combina', 'SUS', 'Não sei', 'Eu não tomo PrEP'],
 			menuPostback: ['joinPrep', 'joinCombina', 'joinSUS', 'joinNaoSabe', 'joinNaoToma'],
 		},
@@ -249,19 +250,17 @@ module.exports = {
 		joinCombina: {
 			text1: 'O Projeto Combina faz parte de uma pesquisa que tem a finalidade de avaliar o uso dos métodos de prevenção ao HIV disponíveis nos serviços públicos de saúde pelas pessoas. Quais motivações pra usar os métodos preventivos, em que situações e quais práticas eles são usados etc. Esse projeto é tudo de bom!',
 			text2: 'Você realmente faz parte do programa Combina?',
-			fim: '6. [Texto de fechamento do fluxo combina...]',
 			menuOptions: ['Sim', 'Não'],
 			menuPostback: ['joinCombinaSim', 'join'],
 		},
 		joinSUS: {
 			text1: 'SUS é o Sistema Único de Saúde pública, rola de grátis desde o simples atendimento pra avaliação de pressão arterial, por exemplo, até transplante de órgãos, com acesso integral, universal e gratuito para toda a população do Brasil. Mto chic né?!',
 			text2: 'Você realmente faz parte do programa de atendimento PrEP do SUS?',
-			fim: '7. [Texto de fechamento do fluxo sus...]',
 			menuOptions: ['Sim', 'Não'],
 			menuPostback: ['joinSUSSim', 'join'],
 		},
 		joinNaoSabe: {
-			text1: '5. [Texto para opção não sei...]',
+			text1: 'Existem várias formas de vc tomar prep, os outros botões, prep 1519 e combina significa q vc ta participando de um deles, se vc toma e nao participa de nenhum projeto significa q vc faz pelo sus.',
 			prep: '1519: PrEP 15-19 é um projeto focado em reduzir a incidência de HIV entre jovens gays ou bissexuais cis gêneros, travestis e mulheres trans e outro bafo é conhecer as percepções dessa galera LGBT, suas intenções e se rola aceitamento de usar a PrEP e outros métodos de prevenção pras IST também! É um close!',
 			combina: 'Combina: O Projeto Combina faz parte de uma pesquisa que tem a finalidade de avaliar o uso dos métodos de prevenção ao HIV disponíveis nos serviços públicos de saúde. Quais motivações para usar os métodos preventivos, em que situações e quais práticas eles são usados etc. Esse projeto é mara! 😉',
 			sus: 'SUS: SUS é o Sistema Único de Saúde e por ele rola de graça desde o simples atendimento para avaliação de pressão arterial, por exemplo, até transplante de órgãos, com acesso integral, universal e gratuito para toda a população do Brasil. Mto chic né?!',
