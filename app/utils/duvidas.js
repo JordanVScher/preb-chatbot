@@ -132,20 +132,20 @@ async function alarmeDate(context) {
 	return date;
 }
 
-async function buildTestagem(cityID) {
+async function buildTestagem(cityID, newRule) {
 	const { types } = flow.testagem;
-	const rules = flow.testagem.rules[cityID];
+	const rules = newRule || flow.testagem.rules[cityID];
 	let msg = '';
 	const opt = [];
 
 	Object.keys(types).forEach((e) => {
 		if (rules && rules.includes(e) && types[e]) {
-			if (types[e].msg) msg += `${types[e].msg}\n`;
+			if (types[e].msg) msg += `${types[e].msg}\n\n`;
 			if (types[e].opt) opt.push(types[e].opt);
 		}
 	});
 
-	return { msg, opt: { quick_replies: opt } };
+	return { msg: msg.trim(), opt: { quick_replies: opt } };
 }
 
 async function sendAutotesteMsg(context) {
@@ -153,7 +153,7 @@ async function sendAutotesteMsg(context) {
 	if (context.state.testagem && context.state.testagem.msg && context.state.testagem.opt) {
 		await context.sendText(flow.testagem.text1);
 		await context.sendText(context.state.testagem.msg);
-		await context.sendText(flow.testagem.text1, context.state.testagem.opt);
+		await context.sendText(flow.testagem.text2, context.state.testagem.opt);
 	}
 }
 

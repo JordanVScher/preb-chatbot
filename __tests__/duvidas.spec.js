@@ -6,7 +6,6 @@ const { sendMain } = require('../app/utils/mainMenu');
 const { falarComHumano } = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
 
-jest.mock('../app/utils/flow');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
 
@@ -464,5 +463,59 @@ describe('autotesteServico', async () => {
 		await expect(context.sendText).toBeCalledWith(context.state.autotesteServicoMsg);
 		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoServicoEnd);
 		await expect(sendMain).toBeCalledWith(context);
+	});
+});
+
+describe('sendAutotesteMsg', async () => {
+	it('envia intro, mensagem customizada e outra mensagem com botões', async () => {
+		const context = await cont.textContext('autoServico', 'autoServico');
+		context.state.user = { city: '1' };
+		context.state.testagem = { msg: 'foobar', opt: [{}] };
+
+		await duvidas.sendAutotesteMsg(context);
+		await expect(context.setState).toBeCalledWith({ testagem: await duvidas.buildTestagem(context.state.user.city) });
+		await expect(context.state.testagem && context.state.testagem.msg && context.state.testagem.opt).toBeTruthy();
+		await expect(context.sendText).toBeCalledWith(flow.testagem.text1);
+		await expect(context.sendText).toBeCalledWith(context.state.testagem.msg);
+		await expect(context.sendText).toBeCalledWith(flow.testagem.text2, context.state.testagem.opt);
+	});
+});
+
+
+describe('buildTestagem', async () => {
+	const rules = {
+		1: ['autoteste', 'serviço', 'ong'],
+		2: ['ong', 'serviço'],
+		3: ['ong'],
+	};
+
+	it('All options - all texts and 3 options', async () => {
+		const res = await duvidas.buildTestagem(1, rules[1]);
+
+		await expect(res && res.msg && res.opt && res.opt.quick_replies).toBeTruthy();
+		await expect(res.opt.quick_replies.length).toBe(3);
+		await expect(res.msg.includes(flow.testagem.types.autoteste.msg)).toBeTruthy();
+		await expect(res.msg.includes(flow.testagem.types.serviço.msg)).toBeTruthy();
+		await expect(res.msg.includes(flow.testagem.types.ong.msg)).toBeTruthy();
+	});
+
+	it('two options - 2 texts and 2 options', async () => {
+		const res = await duvidas.buildTestagem(2, rules[2]);
+
+		await expect(res && res.msg && res.opt && res.opt.quick_replies).toBeTruthy();
+		await expect(res.opt.quick_replies.length).toBe(2);
+		await expect(res.msg.includes(flow.testagem.types.autoteste.msg)).toBeFalsy();
+		await expect(res.msg.includes(flow.testagem.types.serviço.msg)).toBeTruthy();
+		await expect(res.msg.includes(flow.testagem.types.ong.msg)).toBeTruthy();
+	});
+
+	it('one option - 1 text and 1 option', async () => {
+		const res = await duvidas.buildTestagem(3, rules[3]);
+
+		await expect(res && res.msg && res.opt && res.opt.quick_replies).toBeTruthy();
+		await expect(res.opt.quick_replies.length).toBe(1);
+		await expect(res.msg.includes(flow.testagem.types.autoteste.msg)).toBeFalsy();
+		await expect(res.msg.includes(flow.testagem.types.serviço.msg)).toBeFalsy();
+		await expect(res.msg.includes(flow.testagem.types.ong.msg)).toBeTruthy();
 	});
 });

@@ -360,35 +360,31 @@ module.exports = {
 		entrarEmContato: 'Já tá ligade sobre a PEP: Profilaxia Pós-Exposição?\nSão comprimidos q ajudam a prevenir o HIV no caso de exposições de risco recentes. Vc tem no máximo 72 horas após a relação para começar a tomar então faz a ligeira e pega o contato da minha equipe babadeira pra tu tirar dúvidas: SP: (11) 98209-2911, BH: (31) 99726-9307 e SSA: (71) 99102-2234 ou (71) 9.9640 9030',
 	},
 	triagemSQ: {
-		intro: 'Beleza bebê, bora se testar então? Sempre é bom para saber se está tudo certinho e ficar de boa. Cola com a gente! Tem várias opções para você escolher qual combina mais com você!',
-		menuOptions: ['SIM, Bora testar!', 'Não'],
-		menuPostback: ['testagem', 'mainMenu'],
+		intro: 'Vamo se testar então? É sempre bom saber se tá tudo okay pra tratar ligeiro se for o caso. Se tu colar com a gente vou te dá vááárias opções de testagens! Quer conhecer?',
+		menuOptions: ['SIM, Bora conhecer!', 'Não, prefiro falar com os humanes antes'],
+		menuPostback: ['testagem', 'falarComHumano'],
 	},
 	testagem: {
-		text1: 'Temos algumas possibilidades para você realizar seus testes, vou te explicar um pouquinho sobre cada uma delas para você ver qual você prefere',
-		text2: 'Agora que você já sabe mais, escolhe ai qual você vai querer:',
+		text1: 'Existem maneiras diferentes pra se testar, vou te explicar cada uma e vc escolhe a q quiser!',
+		text2: 'Qual vc acha melhor pra vc?',
 		types: {
 			autoteste: {
-				msg: 'Autoteste: Você faz sozinho, mas só tem para HIV. O teste é feito por fluído oral e demora 20 minutinhos para ficar pronto. Você pode receber na sua casa ou retirar em um dos nossos endereços. Mas se você quer fazer outros exames ou está com dúvida sobre outras IST, talvez esta não seja a melhor opção.',
+				msg: 'Autoteste: Vc faz sozinho, mas só pra HIV. Esse teste é feito por fluído oral e dps de 20 minutinhos mostra resultado. Vc pode receber em casa ou retirar nos nossos endereços. Se vc quer fazer outros exames ou tá com dúvida sobre outras IST, essa ñ é a melhor opção pra vc!',
 				opt: { content_type: 'text', title: 'Autoteste', payload: 'autoTeste' },
 			},
 			serviço: {
-				msg: 'Teste no serviço: tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode tirar suas dúvidas e falar sobre prevenção combinada. Escolhe Teste no serviço  nos botões abaixo',
-				opt: { content_type: 'text', title: 'Teste no serviço', payload: 'testeServiço' },
+				msg: 'Testagem no serviço: tem pra HIV, Sífilis, Hepatites B e C. Depois vc pode passar por atendimento com profissional de saúde q pode tirar suas dúvidas e falar sobre prevenção combinada!',
+				opt: { content_type: 'text', title: 'Testagem no serviço', payload: 'testeServiço' },
 			},
 			ong: {
-				msg: 'Testagem em ONG:. É bom para quem não consegue ir até os serviços de saúde por causa do horário ou para quem quer um espaço diferente, mas gostaria de ser atendido por um profissional. Tem teste de HIV e Sífilis. Se você quiser este tipo de teste, escolhe Teste na ONG nos botões abaixo',
+				msg: 'Testagem em ONG: É bom pra quem ñ consegue ir até serviços de saúde por causa de horário ou gostaria de ser atendido por profissional num espaço diferente. Tem teste de HIV e Sífilis. Já escolheu??',
 				opt: { content_type: 'text', title: 'Testagem em ONG', payload: 'testeOng' },
-			},
-			rua: {
-				msg: 'Atividades na rua: é a entrega de autoteste na rua e eventos, com agenda, locais e horários variáveis. Acesso mais fácil e horários alternativos, pode ter um bem pertinho de você! Nossa agenda é variável, quer conhecer, LINK da página caindo direto na aba agenda',
-				// opt: { content_type: 'text', title: 'Testagem na Rua', payload: 'testeRua' },
 			},
 		},
 		rules: {
-			1: ['autoteste', 'serviço', 'ong', 'rua'],
-			2: ['autoteste', 'serviço', 'ong', 'rua'],
-			3: ['autoteste', 'serviço', 'ong', 'rua'],
+			1: ['autoteste', 'serviço', 'ong'],
+			2: ['autoteste', 'serviço', 'ong'],
+			3: ['autoteste', 'serviço', 'ong'],
 		},
 	},
 	queroVoltarTomar: {

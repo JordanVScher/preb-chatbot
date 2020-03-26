@@ -820,3 +820,36 @@ describe('autoteste2', async () => {
 		await expect(duvidas.sendAutoServicoMsg).toBeCalledWith(context, context.state.cityType);
 	});
 });
+
+describe('triagemSQ - triagem sem questionário', async () => {
+	it('intro - see msg and options', async () => {
+		const context = cont.quickReplyContext('triagemSQ', 'triagemSQ');
+		await handler(context);
+
+
+		await expect(context.sendText).toBeCalledWith(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
+	});
+});
+
+describe('testagem', async () => {
+	it('intro - envia mensagem de tipos por cidade', async () => {
+		const context = cont.quickReplyContext('testagem', 'testagem');
+		await handler(context);
+
+		await expect(duvidas.sendAutotesteMsg).toBeCalledWith(context);
+	});
+
+	it('testeServiço - falar com humano', async () => {
+		const context = cont.quickReplyContext('testeServiço', 'testeServiço');
+		await handler(context);
+
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context);
+	});
+
+	it('testeOng - falar com humano', async () => {
+		const context = cont.quickReplyContext('testeOng', 'testeOng');
+		await handler(context);
+
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context);
+	});
+});

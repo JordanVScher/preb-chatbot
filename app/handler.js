@@ -49,6 +49,7 @@ async function contactFollowUp(context) {
 const inicioAutoTeste = async (context) => context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.user.city));
 const inicioJoin = async (context) => context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
 const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
+const inicioTriagemSQ = async (context) => context.sendText(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
 // const drnpFollowUpTriagem = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
 const drnpFollowUpAgendamento = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 
@@ -435,7 +436,7 @@ module.exports = async (context) => {
 				break;
 			case 'drnpMedoTestar':
 				await context.sendText(flow.deuRuimNaoPrep.drnpMedoTestar);
-				await context.sendText(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
+				await inicioTriagemSQ(context);
 				break;
 			case 'drnpIST':
 				await context.sendText(flow.deuRuimNaoPrep.drnpIST.text1, await getQR(flow.deuRuimNaoPrep.drnpIST));
@@ -468,12 +469,14 @@ module.exports = async (context) => {
 				await context.sendText(flow.queroVoltarTomar.text1);
 				await drnpFollowUpAgendamento(context);
 				break;
+			case 'triagemSQ':
+				await inicioTriagemSQ(context);
+				break;
 			case 'testagem':
 				await duvidas.sendAutotesteMsg(context);
 				break;
 			case 'testeServiço':
 			case 'testeOng':
-			case 'testeRua':
 				await mainMenu.falarComHumano(context);
 				break;
 			case 'autoteste2Intro':
