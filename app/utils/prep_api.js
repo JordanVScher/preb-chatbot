@@ -43,8 +43,9 @@ module.exports = {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, tomeiHora, tomeiDepois }));
 	},
 
-	async postTestPrep(fb_id) {
-		return handleRequestAnswer(await request.post(`${apiUri}/api/internal/set-profile-prep?security_token=${security_token}`).query({ fb_id }));
+	async postTestPrep(fb_id, prep) {
+		return handleRequestAnswer(await request.post(`${apiUri}/api/internal/set-profile?security_token=${security_token}`)
+			.query({ fb_id, profile: prep ? 'prep' : 'not-prep' }));
 	},
 
 	async postParticipar(fb_id, is_part_of_research) {

@@ -208,7 +208,10 @@ module.exports = async (context) => {
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ dialog: 'mainMenu' });
 			} else if (context.state.whatWasTyped === process.env.PREP_TEST) {
-				await prepAPI.postTestPrep(context.session.user.id);
+				await prepAPI.postTestPrep(context.session.user.id, true);
+				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
+			} else if (context.state.whatWasTyped === process.env.N_PREP_TEST) {
+				await prepAPI.postTestPrep(context.session.user.id, false);
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
 			} else {
 				await DF.dialogFlow(context);
