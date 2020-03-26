@@ -333,11 +333,11 @@ module.exports = async (context) => {
 				break;
 			case 'dnpDrogas':
 				await context.sendText(flow.duvidasNaoPrep.dnpDrogas);
-				await inicioDuvidasNaoPrep(context);
+				await mainMenu.falarComHumano(context, null, flow.duvidasNaoPrep.end);
 				break;
 			case 'dnpHormonios':
 				await context.sendText(flow.duvidasNaoPrep.dnpHormonios);
-				await inicioDuvidasNaoPrep(context);
+				await mainMenu.falarComHumano(context, null, flow.duvidasNaoPrep.end);
 				break;
 			case 'dnpParaMim':
 				await context.sendText(flow.duvidasNaoPrep.dnpParaMim1);

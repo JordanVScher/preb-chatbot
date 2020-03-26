@@ -261,7 +261,7 @@ describe('duvidasNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpDrogas);
-		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.duvidasNaoPrep.end);
 	});
 
 	it('dnpHormonios - explicação e volta para intro', async () => {
@@ -269,7 +269,7 @@ describe('duvidasNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpHormonios);
-		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.duvidasNaoPrep.end);
 	});
 
 	it('dnpParaMim - explicação e fluxo recrutamento (pendente)', async () => {
