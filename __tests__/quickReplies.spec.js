@@ -478,14 +478,6 @@ describe('deuRuimNaoPrep', async () => {
 		await expect(quiz.answerQuiz).toBeCalledWith(context, 'triagem');
 	});
 
-	it('drnpParaMim - explicação e falar com humano', async () => {
-		const context = cont.quickReplyContext('drnpParaMim', 'drnpParaMim');
-		await handler(context);
-
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpParaMim);
-		await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.followUpTriagem);
-	});
-
 	it('drnpMedoTestar - explicação e triagem sem questionário', async () => {
 		const context = cont.quickReplyContext('drnpMedoTestar', 'drnpMedoTestar');
 		await handler(context);
@@ -541,27 +533,27 @@ describe('deuRuimNaoPrep', async () => {
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.text1, await getQR(flow.deuRuimNaoPrep.drnpPEPNao));
 		});
 
-		it('drnpParou28 - explicação e falar com humano', async () => {
-			const context = cont.quickReplyContext('drnpParou28', 'drnpParou28');
+		it('drnpTomeiTudo - explicação e falar com humano', async () => {
+			const context = cont.quickReplyContext('drnpTomeiTudo', 'drnpTomeiTudo');
 			await handler(context);
 
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpParou28);
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpTomeiTudo);
 			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 
-		it('drnpEfeito - explicação e falar com humano', async () => {
-			const context = cont.quickReplyContext('drnpEfeito', 'drnpEfeito');
+		it('drnpNaoSentiBem - explicação e falar com humano', async () => {
+			const context = cont.quickReplyContext('drnpNaoSentiBem', 'drnpNaoSentiBem');
 			await handler(context);
 
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpEfeito);
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpNaoSentiBem);
 			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 
-		it('drnpPerdeu - explicação e falar com humano', async () => {
-			const context = cont.quickReplyContext('drnpPerdeu', 'drnpPerdeu');
+		it('drnpPerdi - explicação e falar com humano', async () => {
+			const context = cont.quickReplyContext('drnpPerdi', 'drnpPerdi');
 			await handler(context);
 
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpPerdeu);
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpPerdi);
 			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 
@@ -573,11 +565,11 @@ describe('deuRuimNaoPrep', async () => {
 			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 
-		it('drnpTomei28 - explicação e falar com humano', async () => {
-			const context = cont.quickReplyContext('drnpTomei28', 'drnpTomei28');
+		it('drnpTomeiCerto - explicação e falar com humano', async () => {
+			const context = cont.quickReplyContext('drnpTomeiCerto', 'drnpTomeiCerto');
 			await handler(context);
 
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpTomei28);
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpPEPNao.drnpTomeiCerto);
 			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 		});
 	});
