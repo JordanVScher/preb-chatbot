@@ -206,8 +206,10 @@ module.exports = async (context) => {
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, null, 2)}`);
 				await context.setState({ dialog: 'greetings' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
-				await context.setState({ selectedDate: 11 });
-				await context.setState({ dialog: 'setEventHour' });
+				await context.setState({ dialog: 'mainMenu' });
+			} else if (context.state.whatWasTyped === process.env.PREP_TEST) {
+				await prepAPI.postTestPrep(context.session.user.id);
+				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
 			} else {
 				await DF.dialogFlow(context);
 			}
