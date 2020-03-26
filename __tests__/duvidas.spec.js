@@ -10,80 +10,116 @@ jest.mock('../app/utils/flow');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
 
-describe('prepFollowUp - Dúvidas para PrER seguimento', async () => {
-	it('SUS - MG', async () => {
-		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
-		context.state.user.voucher_type = 'sus';
-		context.state.user.city = '1';
-		await duvidas.prepFollowUp(context);
+// describe('prepDuvidaFollowUp - Dúvidas para PrER seguimento', async () => {
+// 	it('SUS - MG', async () => {
+// 		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
+// 		context.state.user.voucher_type = 'sus';
+// 		context.state.user.city = '1';
+// 		await duvidas.prepDuvidaFollowUp(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.textosSUS[context.state.user.city]);
-		await expect(sendMain).toBeCalledWith(context);
+// 		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.textosSUS[context.state.user.city]);
+// 		await expect(sendMain).toBeCalledWith(context);
+// 	});
+
+// 	it('SUS - BA', async () => {
+// 		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
+// 		context.state.user.voucher_type = 'sus';
+// 		context.state.user.city = 2;
+// 		await duvidas.prepDuvidaFollowUp(context);
+
+// 		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.textosSUS[context.state.user.city]);
+// 		await expect(sendMain).toBeCalledWith(context);
+// 	});
+
+// 	it('SUS - SP', async () => {
+// 		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
+// 		context.state.user.voucher_type = 'sus';
+// 		context.state.user.city = 2;
+// 		await duvidas.prepDuvidaFollowUp(context);
+
+// 		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.textosSUS[context.state.user.city]);
+// 		await expect(sendMain).toBeCalledWith(context);
+// 	});
+
+// 	it('SUS - No city', async () => {
+// 		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
+// 		context.state.user.voucher_type = 'sus';
+// 		context.state.user.city = 10;
+// 		await duvidas.prepDuvidaFollowUp(context);
+
+// 		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.demaisLocalidades);
+// 		await expect(sendMain).toBeCalledWith(context);
+// 	});
+
+// 	it('Not SUS - No city', async () => {
+// 		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
+// 		context.state.user.voucher_type = 'combina';
+
+// 		await duvidas.prepDuvidaFollowUp(context);
+// 		await expect(falarComHumano).toBeCalledWith(context, null, flow.duvidasPrep.notSUS);
+// 	});
+// });
+
+describe('prepDuvidaFollowUp', async () => {
+	it('sisprep - goes to falar com humanos', async () => {
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
+		context.state.user.voucher_type = 'sisprep';
+		await duvidas.prepDuvidaFollowUp(context);
+
+		await expect(falarComHumano).toBeCalledWith(context, null, flow.duvidasPrep.followUpSisPrep);
 	});
 
-	it('SUS - BA', async () => {
-		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
-		context.state.user.voucher_type = 'sus';
-		context.state.user.city = 2;
-		await duvidas.prepFollowUp(context);
-
-		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.textosSUS[context.state.user.city]);
-		await expect(sendMain).toBeCalledWith(context);
-	});
-
-	it('SUS - SP', async () => {
-		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
-		context.state.user.voucher_type = 'sus';
-		context.state.user.city = 2;
-		await duvidas.prepFollowUp(context);
-
-		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.textosSUS[context.state.user.city]);
-		await expect(sendMain).toBeCalledWith(context);
-	});
-
-	it('SUS - No city', async () => {
-		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
-		context.state.user.voucher_type = 'sus';
-		context.state.user.city = 10;
-		await duvidas.prepFollowUp(context);
-
-		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.prefixSUS + flow.duvidasPrep.demaisLocalidades);
-		await expect(sendMain).toBeCalledWith(context);
-	});
-
-	it('Not SUS - No city', async () => {
-		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
+	it('combina - sees msg and goes to menu', async () => {
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
 		context.state.user.voucher_type = 'combina';
+		await duvidas.prepDuvidaFollowUp(context);
 
-		await duvidas.prepFollowUp(context);
-		await expect(falarComHumano).toBeCalledWith(context, null, flow.duvidasPrep.notSUS);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.followUpCombina);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('sus - sees msg and goes to menu', async () => {
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
+		context.state.user.voucher_type = 'sus';
+		await duvidas.prepDuvidaFollowUp(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.followUpSUS);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('other voucher - goes to menu', async () => {
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
+		context.state.user.voucher_type = 'foobar';
+		await duvidas.prepDuvidaFollowUp(context);
+
+		await expect(sendMain).toBeCalledWith(context);
 	});
 });
 
-describe('deuRuimPrepFollowUp', async () => {
+describe('deuRuimprepDuvidaFollowUp', async () => {
 	it('SUS - vê mensagem e vai pro menu', async () => {
-		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
 		context.state.user.voucher_type = 'sus';
-		await duvidas.deuRuimPrepFollowUp(context);
+		await duvidas.deuRuimprepDuvidaFollowUp(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
 	it('Not SUS - fluxo falar com humano', async () => {
-		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
 		context.state.user.voucher_type = 'combina';
 
-		await duvidas.deuRuimPrepFollowUp(context);
+		await duvidas.deuRuimprepDuvidaFollowUp(context);
 		await expect(falarComHumano).toBeCalledWith(context, null, flow.deuRuimPrep.notSUS);
 	});
 
 	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {
-		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
 		context.state.user.voucher_type = 'sus';
 		const msgExtra = 'foobar';
 
-		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
+		await duvidas.deuRuimprepDuvidaFollowUp(context, msgExtra);
 
 		await expect(context.sendText).toBeCalledWith(msgExtra);
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
@@ -91,22 +127,22 @@ describe('deuRuimPrepFollowUp', async () => {
 	});
 
 	it('Efeito - Not SUS - vê mensagem incial, fluxo falar com humano', async () => {
-		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
 		context.state.user.voucher_type = 'combina';
 		const msgExtra = 'foobar';
 
-		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
+		await duvidas.deuRuimprepDuvidaFollowUp(context, msgExtra);
 
 		await expect(context.sendText).toBeCalledWith(msgExtra);
 		await expect(falarComHumano).toBeCalledWith(context, null, flow.deuRuimPrep.notSUS);
 	});
 
 	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {
-		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
 		context.state.user.voucher_type = 'sus';
 		const msgExtra = 'foobar';
 
-		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
+		await duvidas.deuRuimprepDuvidaFollowUp(context, msgExtra);
 
 		await expect(context.sendText).toBeCalledWith(msgExtra);
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
@@ -114,11 +150,11 @@ describe('deuRuimPrepFollowUp', async () => {
 	});
 
 	it('Não manda mensagem inicial se não for string', async () => {
-		const context = cont.quickReplyContext('deuRuimPrepFollowUp', 'deuRuimPrepFollowUp');
+		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
 		context.state.user.voucher_type = 'sus';
 		const msgExtra = {};
 
-		await duvidas.deuRuimPrepFollowUp(context, msgExtra);
+		await duvidas.deuRuimprepDuvidaFollowUp(context, msgExtra);
 
 		await expect(context.sendText).not.toBeCalledWith(msgExtra);
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);

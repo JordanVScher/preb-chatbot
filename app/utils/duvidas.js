@@ -5,18 +5,35 @@ const { falarComHumano } = require('./mainMenu');
 const help = require('./helper');
 
 
-async function prepFollowUp(context) {
-	if (context.state.user.voucher_type === 'sus') {
-		let text = flow.duvidasPrep.textosSUS[context.state.user.city];
-		if (!text) text = flow.duvidasPrep.demaisLocalidades;
-		if (text) await context.sendText(flow.duvidasPrep.prefixSUS + text);
+async function prepDuvidaFollowUp(context) {
+	switch (context.state.user.voucher_type) {
+	case 'sisprep':
+		await falarComHumano(context, null, flow.duvidasPrep.followUpSisPrep);
+		break;
+	case 'combina':
+		await context.sendText(flow.duvidasPrep.followUpCombina);
 		await sendMain(context);
-	} else {
-		await falarComHumano(context, null, flow.duvidasPrep.notSUS);
+		break;
+	case 'sus':
+		await context.sendText(flow.duvidasPrep.followUpSUS);
+		await sendMain(context);
+		break;
+	default:
+		await sendMain(context);
+		break;
 	}
+
+	// if (context.state.user.voucher_type === 'sus') {
+	// 	let text = flow.duvidasPrep.textosSUS[context.state.user.city];
+	// 	if (!text) text = flow.duvidasPrep.demaisLocalidades;
+	// 	if (text) await context.sendText(flow.duvidasPrep.prefixSUS + text);
+	// 	await sendMain(context);
+	// } else {
+	// 	await falarComHumano(context, null, flow.duvidasPrep.notSUS);
+	// }
 }
 
-async function deuRuimPrepFollowUp(context, extraMsg) {
+async function deuRuimprepDuvidaFollowUp(context, extraMsg) {
 	if (extraMsg && typeof extraMsg === 'string') await context.sendText(extraMsg);
 	if (context.state.user.voucher_type === 'sus') {
 		await context.sendText(flow.deuRuimPrep.followUpSUS);
@@ -183,8 +200,8 @@ async function autotesteServico(context) {
 }
 
 module.exports = {
-	prepFollowUp,
-	deuRuimPrepFollowUp,
+	prepDuvidaFollowUp,
+	deuRuimprepDuvidaFollowUp,
 	alarmeOK,
 	alarmeHorario,
 	alarmeMinuto,
