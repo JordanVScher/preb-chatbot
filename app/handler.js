@@ -94,7 +94,6 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				await context.setState({ dialog: 'duvidasPrep' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -353,15 +352,15 @@ module.exports = async (context) => {
 				break;
 			case 'drpFamilia':
 				await context.sendText(flow.deuRuimPrep.drpFamilia);
-				await duvidas.deuRuimprepDuvidaFollowUp(context);
+				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpParceiros':
 				await context.sendText(flow.deuRuimPrep.drpParceiros);
-				await duvidas.deuRuimprepDuvidaFollowUp(context);
+				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpAmigos':
 				await context.sendText(flow.deuRuimPrep.drpAmigos);
-				await duvidas.deuRuimprepDuvidaFollowUp(context);
+				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'dpEfeitos':
 			case 'drpEfeitos':
@@ -369,23 +368,23 @@ module.exports = async (context) => {
 				break;
 			case 'drpEnjoo':
 				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpEnjoo);
-				await duvidas.deuRuimprepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				await duvidas.prepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
 				break;
 			case 'drpGases':
 				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpGases);
-				await duvidas.deuRuimprepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				await duvidas.prepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
 				break;
 			case 'drpDiarreia':
 				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpDiarreia);
-				await duvidas.deuRuimprepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				await duvidas.prepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
 				break;
 			case 'drpDorCabeca':
 				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpDorCabeca);
-				await duvidas.deuRuimprepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				await duvidas.prepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
 				break;
 			case 'drpMoleza':
 				await context.sendText(flow.deuRuimPrep.drpEfeitos.drpMoleza);
-				await duvidas.deuRuimprepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
+				await duvidas.prepDuvidaFollowUp(context, flow.deuRuimPrep.drpEfeitos.followUp);
 				break;
 			case 'drpIST':
 				await context.sendText(flow.deuRuimPrep.drpIST.text1, await getQR(flow.deuRuimPrep.drpIST));
@@ -393,32 +392,42 @@ module.exports = async (context) => {
 			case 'drpBolhas':
 			case 'drnpBolhas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas);
-				await duvidas.deuRuimprepDuvidaFollowUp(context);
+				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpFeridas':
 			case 'drnpFeridas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpFeridas);
-				await duvidas.deuRuimprepDuvidaFollowUp(context);
+				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpVerrugas':
 			case 'drnpVerrugas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpVerrugas);
-				await duvidas.deuRuimprepDuvidaFollowUp(context);
+				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpCorrimento':
 			case 'drnpCorrimento':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpCorrimento);
-				await duvidas.deuRuimprepDuvidaFollowUp(context);
+				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpNaoTomei':
-				await context.sendText(flow.deuRuimPrep.drpNaoTomei);
+				await context.sendText(flow.deuRuimPrep.drpNaoTomei.text1);
+				if (context.state.user.voucher_type === 'combina') {
+					await context.sendText(flow.deuRuimPrep.drpNaoTomei.combina, await getQR(flow.deuRuimPrep.drpNaoTomei));
+				} else {
+					await quiz.answerQuiz(context, 'deu_ruim_nao_tomei');
+				}
+				break;
+			case 'drpQuizStart':
 				await quiz.answerQuiz(context, 'deu_ruim_nao_tomei');
+				break;
+			case 'drpQuizCombina':
+				await context.sendText(flow.deuRuimPrep.drpNaoTomei.combinaEnd);
+				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'deuRuimPrepFim':
 				await mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
 				break;
 			case 'deuRuimNPrepFim':
-				await context.sendText('Número da rede');
 				await mainMenu.sendMain(context);
 				break;
 			case 'deuRuimNaoPrep':

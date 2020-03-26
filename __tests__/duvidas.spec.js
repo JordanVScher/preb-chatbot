@@ -62,7 +62,7 @@ jest.mock('../app/utils/attach');
 
 describe('prepDuvidaFollowUp', async () => {
 	it('sisprep - goes to falar com humanos', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
+		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'sisprep';
 		await duvidas.prepDuvidaFollowUp(context);
 
@@ -70,7 +70,7 @@ describe('prepDuvidaFollowUp', async () => {
 	});
 
 	it('combina - sees msg and goes to menu', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
+		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'combina';
 		await duvidas.prepDuvidaFollowUp(context);
 
@@ -79,7 +79,7 @@ describe('prepDuvidaFollowUp', async () => {
 	});
 
 	it('sus - sees msg and goes to menu', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
+		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'sus';
 		await duvidas.prepDuvidaFollowUp(context);
 
@@ -88,76 +88,10 @@ describe('prepDuvidaFollowUp', async () => {
 	});
 
 	it('other voucher - goes to menu', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
+		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'foobar';
 		await duvidas.prepDuvidaFollowUp(context);
 
-		await expect(sendMain).toBeCalledWith(context);
-	});
-});
-
-describe('deuRuimprepDuvidaFollowUp', async () => {
-	it('SUS - vê mensagem e vai pro menu', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
-		context.state.user.voucher_type = 'sus';
-		await duvidas.deuRuimprepDuvidaFollowUp(context);
-
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
-		await expect(sendMain).toBeCalledWith(context);
-	});
-
-	it('Not SUS - fluxo falar com humano', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
-		context.state.user.voucher_type = 'combina';
-
-		await duvidas.deuRuimprepDuvidaFollowUp(context);
-		await expect(falarComHumano).toBeCalledWith(context, null, flow.deuRuimPrep.notSUS);
-	});
-
-	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
-		context.state.user.voucher_type = 'sus';
-		const msgExtra = 'foobar';
-
-		await duvidas.deuRuimprepDuvidaFollowUp(context, msgExtra);
-
-		await expect(context.sendText).toBeCalledWith(msgExtra);
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
-		await expect(sendMain).toBeCalledWith(context);
-	});
-
-	it('Efeito - Not SUS - vê mensagem incial, fluxo falar com humano', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
-		context.state.user.voucher_type = 'combina';
-		const msgExtra = 'foobar';
-
-		await duvidas.deuRuimprepDuvidaFollowUp(context, msgExtra);
-
-		await expect(context.sendText).toBeCalledWith(msgExtra);
-		await expect(falarComHumano).toBeCalledWith(context, null, flow.deuRuimPrep.notSUS);
-	});
-
-	it('Efeito - SUS - vê mensagem incial, vê mensagem e vai pro menu', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
-		context.state.user.voucher_type = 'sus';
-		const msgExtra = 'foobar';
-
-		await duvidas.deuRuimprepDuvidaFollowUp(context, msgExtra);
-
-		await expect(context.sendText).toBeCalledWith(msgExtra);
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
-		await expect(sendMain).toBeCalledWith(context);
-	});
-
-	it('Não manda mensagem inicial se não for string', async () => {
-		const context = cont.quickReplyContext('deuRuimprepDuvidaFollowUp', 'deuRuimprepDuvidaFollowUp');
-		context.state.user.voucher_type = 'sus';
-		const msgExtra = {};
-
-		await duvidas.deuRuimprepDuvidaFollowUp(context, msgExtra);
-
-		await expect(context.sendText).not.toBeCalledWith(msgExtra);
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.followUpSUS);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 });

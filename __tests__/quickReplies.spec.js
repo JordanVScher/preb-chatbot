@@ -298,28 +298,28 @@ describe('deuRuimPrep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.text1, await checkQR.checkDeuRuimPrep(context, await getQR(flow.deuRuimPrep)));
 	});
 
-	it('drpFamilia - explicação e deuRuimprepDuvidaFollowUp', async () => {
+	it('drpFamilia - explicação e prepDuvidaFollowUp', async () => {
 		const context = cont.quickReplyContext('drpFamilia', 'drpFamilia');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpFamilia);
-		await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
-	it('drpParceiros - explicação e deuRuimprepDuvidaFollowUp', async () => {
+	it('drpParceiros - explicação e prepDuvidaFollowUp', async () => {
 		const context = cont.quickReplyContext('drpParceiros', 'drpParceiros');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpParceiros);
-		await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
-	it('drpAmigos - explicação e deuRuimprepDuvidaFollowUp', async () => {
+	it('drpAmigos - explicação e prepDuvidaFollowUp', async () => {
 		const context = cont.quickReplyContext('drpAmigos', 'drpAmigos');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpAmigos);
-		await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
 	describe('drpEfeitos', async () => {
@@ -335,7 +335,7 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpEnjoo);
-			await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
 		});
 
 		it('drpGases - explicação e followUp com msg extra', async () => {
@@ -343,7 +343,7 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpGases);
-			await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
 		});
 
 		it('drpDiarreia - explicação e followUp com msg extra', async () => {
@@ -351,7 +351,7 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpDiarreia);
-			await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
 		});
 
 		it('drpDorCabeca - explicação e followUp com msg extra', async () => {
@@ -359,7 +359,7 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpDorCabeca);
-			await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
 		});
 
 		it('drpMoleza - explicação e followUp com msg extra', async () => {
@@ -367,7 +367,7 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.drpMoleza);
-			await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context, flow.deuRuimPrep.drpEfeitos.followUp);
 		});
 	});
 
@@ -384,7 +384,7 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpBolhas);
-			await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 		});
 
 		it('drpFeridas - explicação e followUp', async () => {
@@ -392,7 +392,7 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpFeridas);
-			await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 		});
 
 		it('drpVerrugas - explicação e followUp', async () => {
@@ -400,7 +400,7 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpVerrugas);
-			await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 		});
 
 		it('drpCorrimento - explicação e followUp', async () => {
@@ -408,17 +408,42 @@ describe('deuRuimPrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpCorrimento);
-			await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 		});
 	});
 
 	describe('drpNaoTomei - Não tomei', () => {
-		it('intro - msg e quiz', async () => {
+		it('intro, não combina - msg e quiz', async () => {
 			const context = cont.quickReplyContext('drpNaoTomei', 'drpNaoTomei');
 			await handler(context);
 
-			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpNaoTomei);
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpNaoTomei.text1);
 			await expect(quiz.answerQuiz).toBeCalledWith(context, 'deu_ruim_nao_tomei');
+		});
+
+		it('intro, combina - msg and question', async () => {
+			const context = cont.quickReplyContext('drpNaoTomei', 'drpNaoTomei');
+			context.state.user = { voucher_type: 'combina' };
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpNaoTomei.text1);
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpNaoTomei.combina, await getQR(flow.deuRuimPrep.drpNaoTomei));
+			await expect(quiz.answerQuiz).not.toBeCalledWith(context, 'deu_ruim_nao_tomei');
+		});
+
+		it('drpQuizStart, combina clicou na primeira opção - vai pro quiz deu_ruim_nao_tomei', async () => {
+			const context = cont.quickReplyContext('drpQuizStart', 'drpQuizStart');
+			await handler(context);
+
+			await expect(quiz.answerQuiz).toBeCalledWith(context, 'deu_ruim_nao_tomei');
+		});
+
+		it('drpQuizCombina, combina clicou na segunda opção - vê msg e vai pro followUp', async () => {
+			const context = cont.quickReplyContext('drpQuizCombina', 'drpQuizCombina');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpNaoTomei.combinaEnd);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 		});
 
 		it('deuRuimPrepFim - falar com humano', async () => {
@@ -432,7 +457,6 @@ describe('deuRuimPrep', async () => {
 			const context = cont.quickReplyContext('deuRuimNPrepFim', 'deuRuimNPrepFim');
 			await handler(context);
 
-			await expect(context.sendText).toBeCalledWith('Número da rede');
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 	});
@@ -482,7 +506,7 @@ describe('deuRuimNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpBolhas);
-		await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
 	it('drnpFeridas - explicação e followUp', async () => {
@@ -490,7 +514,7 @@ describe('deuRuimNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpFeridas);
-		await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
 	it('drnpVerrugas - explicação e followUp', async () => {
@@ -498,7 +522,7 @@ describe('deuRuimNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpVerrugas);
-		await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
 	it('drnpCorrimento - explicação e followUp', async () => {
@@ -506,7 +530,7 @@ describe('deuRuimNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpCorrimento);
-		await expect(duvidas.deuRuimprepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
 	describe('drnpPEPNao', async () => {

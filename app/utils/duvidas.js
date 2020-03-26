@@ -23,6 +23,7 @@ async function prepDuvidaFollowUp(context) {
 		break;
 	}
 
+	// antigo followUp da dúvida
 	// if (context.state.user.voucher_type === 'sus') {
 	// 	let text = flow.duvidasPrep.textosSUS[context.state.user.city];
 	// 	if (!text) text = flow.duvidasPrep.demaisLocalidades;
@@ -31,16 +32,6 @@ async function prepDuvidaFollowUp(context) {
 	// } else {
 	// 	await falarComHumano(context, null, flow.duvidasPrep.notSUS);
 	// }
-}
-
-async function deuRuimprepDuvidaFollowUp(context, extraMsg) {
-	if (extraMsg && typeof extraMsg === 'string') await context.sendText(extraMsg);
-	if (context.state.user.voucher_type === 'sus') {
-		await context.sendText(flow.deuRuimPrep.followUpSUS);
-		await sendMain(context);
-	} else {
-		await falarComHumano(context, null, flow.deuRuimPrep.notSUS);
-	}
 }
 
 async function alarmeOK(context) {
@@ -201,7 +192,6 @@ async function autotesteServico(context) {
 
 module.exports = {
 	prepDuvidaFollowUp,
-	deuRuimprepDuvidaFollowUp,
 	alarmeOK,
 	alarmeHorario,
 	alarmeMinuto,
