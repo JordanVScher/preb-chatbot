@@ -16,6 +16,10 @@ async function getPollData(pageId) {
 	return handleRequestAnswer(await request(`${apiUri}/api/chatbot/poll?fb_page_id=${pageId}&security_token=${security_token}`));
 }
 
+async function addFBKeysToAssistenteUser(organization_id, chatbot_id, page_id, access_token, api_key) {
+	return handleRequestAnswer(await request.put(`${apiUri}/api/organization/${organization_id}/chatbot/${chatbot_id}?api_key=${api_key}`)
+		.query({ page_id, access_token }));
+}
 async function postRecipientMA(user_id, recipient) {
 	if (!recipient.extra_fields) delete recipient.extra_fields;
 	if (recipient.extra_fields) recipient.extra_fields = JSON.stringify(recipient.extra_fields);
@@ -198,4 +202,5 @@ module.exports = {
 	logNotification,
 	getLogAction,
 	setIntentStatus,
+	addFBKeysToAssistenteUser,
 };
