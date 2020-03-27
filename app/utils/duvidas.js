@@ -37,7 +37,7 @@ async function prepDuvidaFollowUp(context) {
 async function alarmeOK(context) {
 	if (context.state.user.voucher_type === 'combina') {
 		await context.sendText(flow.alarmePrep.comoTomando.text1, await getQR(flow.alarmePrep.comoTomando));
-	} else if (context.state.user.voucher_type === 'sisprep') {
+	} else {
 		await context.sendText(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
 	}
 }

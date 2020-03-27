@@ -96,7 +96,7 @@ describe('prepDuvidaFollowUp', async () => {
 });
 
 describe('alarmeOK', async () => {
-	it('combina', async () => {
+	it('combina - faz pergunta como está tomando', async () => {
 		const context = cont.quickReplyContext('alarmeOK', 'alarmeOK');
 		context.state.user.voucher_type = 'combina';
 
@@ -104,9 +104,9 @@ describe('alarmeOK', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoTomando.text1, await getQR(flow.alarmePrep.comoTomando));
 	});
 
-	it('sisprep', async () => {
+	it('não é combina - faz pergunta como ajudo você', async () => {
 		const context = cont.quickReplyContext('alarmeOK', 'alarmeOK');
-		context.state.user.voucher_type = 'sisprep';
+		context.state.user.voucher_type = 'foobar';
 
 		await duvidas.alarmeOK(context);
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
