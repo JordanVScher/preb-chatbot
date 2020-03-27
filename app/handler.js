@@ -214,11 +214,19 @@ module.exports = async (context) => {
 			} else if (context.state.whatWasTyped === process.env.N_PREP_TEST) {
 				await prepAPI.postTestPrep(context.session.user.id, false);
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
+			} else if (context.state.whatWasTyped === process.env.SISPREP_TEST) {
+				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'sisprep');
+				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
+			} else if (context.state.whatWasTyped === process.env.COMBINA_TEST) {
+				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'combina');
+				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
+			} else if (context.state.whatWasTyped === process.env.SUS_TEST) {
+				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'sus');
+				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
 			} else {
 				await DF.dialogFlow(context);
 			}
 		} // -- end text
-
 
 		if (context.state.ignore === false) {
 			switch (context.state.dialog) {
