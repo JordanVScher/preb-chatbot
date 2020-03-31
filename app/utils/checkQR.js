@@ -91,7 +91,7 @@ async function checkMedication(prepSince) { // eslint-disable-line
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
-async function autoTesteOption(options, cityId) {
+async function autotesteOption(options, cityId) {
 	let newOptions = options.quick_replies;
 	// no need to filter out cityId = 3
 	if (cityId && cityId.toString() === '1') { // belo horizonte
@@ -202,7 +202,7 @@ async function sendShare(context, links, results, imagem) {
 module.exports = {
 	checkMainMenu,
 	checkMedication,
-	autoTesteOption,
+	autotesteOption,
 	getErrorQR,
 	buildButton,
 	sendShare,

@@ -145,7 +145,7 @@ module.exports = {
 	sus: {
 		text1: 'Amore, vc pode procurar um atendimento especializado no SUS, eu tenho aqui as informações e vou te mostrar, tá?',
 	},
-	autoteste2: {
+	autoteste: {
 		intro: 'Autoteste: Vc pode fazer sozinhe, mas esse só vale pra HIV. Autoteste é feito por saliva e dps de 20 minutinhos mostra resultado! Vc pode receber seu kit em casa ou pelo nosso projeto nos serviços participantes!',
 		offerType: 'Como vc quer receber o kit?',
 		offerTypeBtn: {
@@ -161,30 +161,6 @@ module.exports = {
 			menuPostback: ['autoServicoSisprepSP2', 'autoServicoSisprepSP1'],
 		},
 		autoServicoEnd: 'Close! Vamo te esperar! Você pode fazer esse teste onde vc quiser, inclusive fazer no serviço numa sala sozinhe ou com ajuda de profissional! Até lá vc decide! Bjs!',
-	},
-	autoTeste:
-	{
-		start: 'Temos algumas possibilidades para você realizar seus testes, vou te explicar um pouquinho sobre cada uma delas para você ver qual você prefere:',
-		auto1: 'Você faz sozinho, mas só tem para HIV. O teste é feito por fluído oral e demora 20 minutinhos para ficar pronto. ',
-		auto2: 'Você pode receber na sua casa ou retirar em um dos nossos endereços. Mas se você quer fazer outros exames ou está com dúvida sobre outras IST, talvez esta não seja a melhor opção.',
-		auto3: {
-			// 1: 'CTA de MG',
-			2: 'O autoteste pode ser retirado na clínica:\nCasarão da Diversidade, Rua do Tijolo, 08 - Pelourinho - Antiga Sede do IPAC\nAtendimento de seg-sex, de 09:00-16:00.',
-			3: '11 982092911',
-		},
-		ong1: 'É bom para quem não consegue ir até os serviços de saúde por causa do horário ou para quem quer um espaço diferente, mas gostaria de ser atendido por um profissional. Se você quiser este tipo de teste, posso te enviar o link com os locais e horários.',
-		ong2: {
-			// 1: 'ONG de MG',
-			2: 'Gapa Salvador\nRua Comendador Gomes Costa, 39 - Barris, Salvador - BA\nTelefone: (71) 3017-9216\nhttps://www.facebook.com/gapabahia',
-			3: 'Casa 1 que fica na Rua Adoniran Barbosa, 151 Bela Vista. Horários: 2a, 4a., 5a. e 6a. das 16h as 22h e aos sábados das 13h as 19h. ',
-		},
-		rua1: 'É realização de testagem na rua e em ambientes de sociabilidade, com agenda, locais e horários variáveis. Acesso mais fácil e horários alternativos, pode ter um bem pertinho de você! Nossa agenda é variável, se quiser podemos te enviar o link para você ver se tem algo por perto.',
-		rua2: {
-			1: 'Centro de Referência da Juventude – CRJ: Rua Guaicurus, 50, Centro - Praça da Estação.',
-			2: 'Sem Agenda no momento',
-			3: 'Centro de Testagem e Aconselhamento Henfil\nRua Libero Badaró, 144, Anhangabaú. São Paulo - SP - CEP: 01008001',
-		},
-		servico1: 'Tem para HIV, Sífilis, Hepatites B e C, e depois você pode passar por atendimento com um profissional de saúde que pode tirar suas dúvidas e falar sobre prevenção combinada.',
 	},
 	triagem: {
 		intro: 'Estou entendendo q vc teve uma relação com penetração e sem proteção, então vou te fazer algumas perguntas para te ajudar',
@@ -370,7 +346,7 @@ module.exports = {
 		types: {
 			autoteste: {
 				msg: 'Autoteste: Vc faz sozinho, mas só pra HIV. Esse teste é feito por fluído oral e dps de 20 minutinhos mostra resultado. Vc pode receber em casa ou retirar nos nossos endereços. Se vc quer fazer outros exames ou tá com dúvida sobre outras IST, essa ñ é a melhor opção pra vc!',
-				opt: { content_type: 'text', title: 'Autoteste', payload: 'autoTeste' },
+				opt: { content_type: 'text', title: 'Autoteste', payload: 'autoteste' },
 			},
 			serviço: {
 				msg: 'Testagem no serviço: tem pra HIV, Sífilis, Hepatites B e C. Depois vc pode passar por atendimento com profissional de saúde q pode tirar suas dúvidas e falar sobre prevenção combinada!',

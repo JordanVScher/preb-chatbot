@@ -286,6 +286,7 @@ describe('duvidasNaoPrep', async () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpMeTestar);
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.offerType, await getQR(flow.autoteste.offerTypeBtn));
 	});
 });
 
@@ -760,27 +761,27 @@ it('triagemCQ_entrar - manda msg e vai pro menu', async () => {
 });
 
 
-describe('autoteste2', async () => {
+describe('autoteste', async () => {
 	it('do menu não prep - see intro msg and offer options', async () => {
-		const context = cont.quickReplyContext('autoteste2Intro', 'autoteste2Intro');
+		const context = cont.quickReplyContext('autotesteIntro', 'autotesteIntro');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.autoteste2.intro);
-		await expect(context.sendText).toBeCalledWith(flow.autoteste2.offerType, await getQR(flow.autoteste2.offerTypeBtn));
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.intro);
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.offerType, await getQR(flow.autoteste.offerTypeBtn));
 	});
 
 	it('da triagem - offer options without intro', async () => {
-		const context = cont.quickReplyContext('autoteste2', 'autoteste2');
+		const context = cont.quickReplyContext('autoteste', 'autoteste');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.autoteste2.offerType, await getQR(flow.autoteste2.offerTypeBtn));
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.offerType, await getQR(flow.autoteste.offerTypeBtn));
 	});
 
 	it('autoCorreio - ask endereço', async () => {
 		const context = cont.quickReplyContext('autoCorreio', 'autoCorreio');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoCorreio);
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreio);
 	});
 
 	it('autoCorreio - receive endereço, save it and go to autoCorreioEnd', async () => {
@@ -795,7 +796,7 @@ describe('autoteste2', async () => {
 		await handler(context);
 
 		await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { address: context.state.endereco });
-		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoCorreioEnd);
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioEnd);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 

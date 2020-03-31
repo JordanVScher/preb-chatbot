@@ -440,7 +440,7 @@ describe('autotesteServico', async () => {
 
 		await duvidas.autotesteServico(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoServicoCombina);
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoServicoCombina);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
@@ -450,18 +450,18 @@ describe('autotesteServico', async () => {
 
 		await duvidas.autotesteServico(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoServicoSisprepSP, await getQR(flow.autoteste2.autoServicoSisprepSPBtn));
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoServicoSisprepSP, await getQR(flow.autoteste.autoServicoSisprepSPBtn));
 	});
 
-	it('sisprep e não-SP - mostra os dados, encerra e vai pro menu', async () => {
+	it('sus e não-SP - mostra os dados, encerra e vai pro menu', async () => {
 		const context = await cont.textContext('autoServico', 'autoServico');
-		context.state.user = { voucher_type: 'sisprep', city: '1' };
+		context.state.user = { voucher_type: 'sus', city: '1' };
 		context.state.autotesteServicoMsg = 'foobar';
 
 		await duvidas.autotesteServico(context);
 		await expect(context.setState).toBeCalledWith({ autotesteServicoMsg: await duvidas.buildServicoInfo(context.state.user.city) }); // from sendAutoServicoMsg
 		await expect(context.sendText).toBeCalledWith(context.state.autotesteServicoMsg);
-		await expect(context.sendText).toBeCalledWith(flow.autoteste2.autoServicoEnd);
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoServicoEnd);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 });

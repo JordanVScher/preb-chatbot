@@ -173,20 +173,18 @@ async function buildServicoInfo(cityID = '', cityType = '') {
 async function sendAutoServicoMsg(context, cityType) {
 	await context.setState({ autotesteServicoMsg: await buildServicoInfo(context.state.user.city, cityType) });
 	if (context.state.autotesteServicoMsg) await context.sendText(context.state.autotesteServicoMsg);
-	await context.sendText(flow.autoteste2.autoServicoEnd);
+	await context.sendText(flow.autoteste.autoServicoEnd);
 	await sendMain(context);
 }
 
 async function autotesteServico(context) {
 	if (context.state.user.voucher_type === 'combina') {
-		await context.sendText(flow.autoteste2.autoServicoCombina);
+		await context.sendText(flow.autoteste.autoServicoCombina);
 		await sendMain(context);
-	} else if (context.state.user.voucher_type === 'sisprep') {
-		if (context.state.user.city.toString() === '3') {
-			await context.sendText(flow.autoteste2.autoServicoSisprepSP, await getQR(flow.autoteste2.autoServicoSisprepSPBtn));
-		} else {
-			await sendAutoServicoMsg(context);
-		}
+	} else if (context.state.user.city.toString() === '3') {
+		await context.sendText(flow.autoteste.autoServicoSisprepSP, await getQR(flow.autoteste.autoServicoSisprepSPBtn));
+	} else {
+		await sendAutoServicoMsg(context);
 	}
 }
 

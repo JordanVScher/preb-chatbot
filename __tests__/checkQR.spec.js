@@ -300,30 +300,30 @@ it('checkMedication - more than four months', async () => {
 	await expect(result.quick_replies[3].title === 'Dúvida com o Remédio').toBeTruthy();
 });
 
-it('autoTesteOption - city 1', async () => {
+it('autotesteOption - city 1', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.autoTesteOption = '1';
-	const result = await checkQR.autoTesteOption(opt.autoteste, context.state.autoTesteOption);
+	context.state.autotesteOption = '1';
+	const result = await checkQR.autotesteOption(opt.autoteste, context.state.autotesteOption);
 
 	await expect(result.quick_replies.length === 2).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'Autoteste').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Serviço').toBeTruthy();
 });
 
-it('autoTesteOption - city 2 as number', async () => {
+it('autotesteOption - city 2 as number', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.autoTesteOption = 2;
-	const result = await checkQR.autoTesteOption(opt.autoteste, context.state.autoTesteOption);
+	context.state.autotesteOption = 2;
+	const result = await checkQR.autotesteOption(opt.autoteste, context.state.autotesteOption);
 
 	await expect(result.quick_replies.length === 2).toBeTruthy();
 	await expect(result.quick_replies[0].title === 'ONG').toBeTruthy();
 	await expect(result.quick_replies[1].title === 'Serviço').toBeTruthy();
 });
 
-it('autoTesteOption - city 3 - nothing changes', async () => {
+it('autotesteOption - city 3 - nothing changes', async () => {
 	const context = cont.quickReplyContext('greetings', 'greetings');
-	context.state.autoTesteOption = 3;
-	const result = await checkQR.autoTesteOption(opt.autoteste, context.state.autoTesteOption);
+	context.state.autotesteOption = 3;
+	const result = await checkQR.autotesteOption(opt.autoteste, context.state.autotesteOption);
 
 	await expect(result.quick_replies === opt.autoteste.quick_replies).toBeTruthy();
 });

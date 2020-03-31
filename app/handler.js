@@ -46,7 +46,7 @@ async function contactFollowUp(context) {
 	}
 }
 
-const inicioAutoTeste = async (context) => context.sendText(flow.autoTeste.start, await checkQR.autoTesteOption(opt.autoteste, context.state.user.city));
+const opcaoAutoteste = async (context) => context.sendText(flow.autoteste.offerType, await getQR(flow.autoteste.offerTypeBtn));
 const inicioJoin = async (context) => context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
 const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
 const inicioTriagemSQ = async (context) => context.sendText(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
@@ -354,7 +354,7 @@ module.exports = async (context) => {
 				break;
 			case 'dnpMeTestar':
 				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);
-				await inicioAutoTeste(context);
+				await opcaoAutoteste(context);
 				break;
 			case 'deuRuimPrep':
 				await context.sendText(flow.deuRuimPrep.text1, await checkQR.checkDeuRuimPrep(context, await getQR(flow.deuRuimPrep)));
@@ -487,18 +487,18 @@ module.exports = async (context) => {
 			case 'testeOng':
 				await mainMenu.falarComHumano(context);
 				break;
-			case 'autoteste2Intro':
-				await context.sendText(flow.autoteste2.intro);
+			case 'autotesteIntro':
+				await context.sendText(flow.autoteste.intro);
 				// fallsthrough
-			case 'autoteste2':
-				await context.sendText(flow.autoteste2.offerType, await getQR(flow.autoteste2.offerTypeBtn));
+			case 'autoteste':
+				await opcaoAutoteste(context);
 				break;
 			case 'autoCorreio':
-				await context.sendText(flow.autoteste2.autoCorreio);
+				await context.sendText(flow.autoteste.autoCorreio);
 				break;
 			case 'autoCorreioEnd':
 				await prepAPI.putRecipientPrep(context.session.user.id, { address: context.state.endereco });
-				await context.sendText(flow.autoteste2.autoCorreioEnd);
+				await context.sendText(flow.autoteste.autoCorreioEnd);
 				await mainMenu.sendMain(context);
 				break;
 			case 'autoServico':
@@ -747,35 +747,6 @@ module.exports = async (context) => {
 				break;
 			case 'retryTriagem':
 				await context.sendText(flow.triagem.retryTriagem, opt.triagem2);
-				break;
-			case 'autoTeste':
-				await inicioAutoTeste(context);
-				break;
-			case 'auto':
-				if (flow.autoTeste.auto3[context.state.user.city]) {
-					await context.sendText(flow.autoTeste.auto1);
-					await context.sendText(flow.autoTeste.auto2);
-					await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto3[context.state.user.city],
-						await checkQR.autoTesteOption(opt.autotesteEnd, context.state.user.city));
-				} else {
-					await context.sendText(flow.autoTeste.auto1);
-					await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.auto2,
-						await checkQR.autoTesteOption(opt.autotesteEnd, context.state.user.city));
-				}
-				break;
-			case 'ong':
-				await context.sendText(flow.autoTeste.ong1);
-				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.ong2[context.state.user.city],
-					await checkQR.autoTesteOption(opt.ong, context.state.user.city));
-				break;
-			case 'rua':
-				await context.sendText(flow.autoTeste.rua1);
-				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.rua2[context.state.user.city],
-					await checkQR.autoTesteOption(opt.rua, context.state.user.city));
-				break;
-			case 'servico':
-				await help.checkSuggestWaitForTest(context, flow.triagem.suggestWaitAutoTest, flow.autoTeste.servico1,
-					await checkQR.autoTesteOption(opt.servico, context.state.user.city));
 				break;
 			case 'triagemCQ_entrar':
 				await context.sendText(flow.triagemCQ.entrarEmContato);
