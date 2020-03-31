@@ -294,13 +294,26 @@ describe('duvidasNaoPrep', async () => {
 		await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.duvidasNaoPrep.end);
 	});
 
-	it('dnpParaMim - explicação e fluxo recrutamento (pendente)', async () => {
+	it('dnpParaMim - explicação e opções', async () => {
 		const context = cont.quickReplyContext('dnpParaMim', 'dnpParaMim');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpParaMim1);
-		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpParaMim2);
-		await expect(mainMenu.sendMain).toBeCalledWith(context);
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpParaMim.text1, await getQR(flow.duvidasNaoPrep.dnpParaMim));
+	});
+
+	it('querFalar - pergunta se quer falar com humano', async () => {
+		const context = cont.quickReplyContext('querFalar', 'querFalar');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.querFalar.text1, await getQR(flow.duvidasNaoPrep.querFalar));
+	});
+
+	it('duvidasQuiz - quiz pendente', async () => {
+		const context = cont.quickReplyContext('duvidasQuiz', 'duvidasQuiz');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith('Quiz dúvida em construção');
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.duvidasNaoPrep.end);
 	});
 
 	it('dnpMeTestar - explicação e autoteste', async () => {

@@ -352,9 +352,15 @@ module.exports = async (context) => {
 				await mainMenu.falarComHumano(context, null, flow.duvidasNaoPrep.end);
 				break;
 			case 'dnpParaMim':
-				await context.sendText(flow.duvidasNaoPrep.dnpParaMim1);
-				await context.sendText(flow.duvidasNaoPrep.dnpParaMim2);
-				await mainMenu.sendMain(context);
+				await context.sendText(flow.duvidasNaoPrep.dnpParaMim.text1, await getQR(flow.duvidasNaoPrep.dnpParaMim));
+				break;
+			case 'querFalar':
+				await context.sendText(flow.duvidasNaoPrep.querFalar.text1, await getQR(flow.duvidasNaoPrep.querFalar));
+				break;
+			case 'duvidasQuiz':
+				// await quiz.answerQuiz(context, 'duvidas');
+				await context.sendText('<Quiz dúvida em construção>');
+				await mainMenu.falarComHumano(context, null, flow.duvidasNaoPrep.end);
 				break;
 			case 'dnpMeTestar':
 				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);
