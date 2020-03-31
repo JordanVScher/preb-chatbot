@@ -197,7 +197,9 @@ module.exports = async (context) => {
 					await quiz.handleAnswer(context, quizOpt);
 				}
 			} else if (context.state.dialog === 'joinPrep' || context.state.dialog === 'joinPrepErro') {
-				await joinToken.handlePrepToken(context, await prepAPI.postIntegrationToken(context.session.user.id, context.state.whatWasTyped));
+				await joinToken.handlePrepToken(context, await prepAPI.postIntegrationPrepToken(context.session.user.id, context.state.whatWasTyped));
+			} else if (context.state.dialog === 'joinCombinaAsk' || context.state.dialog === 'joinCombinaAskErro') {
+				await joinToken.handleCombinaToken(context, await prepAPI.postIntegrationCombinaToken(context.session.user.id, context.state.whatWasTyped));
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.resetState();
@@ -292,8 +294,10 @@ module.exports = async (context) => {
 				await context.sendText(flow.join.joinCombina.text1);
 				await context.sendText(flow.join.joinCombina.text2, await getQR(flow.join.joinCombina));
 				break;
-			case 'joinCombinaSim':
-				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'combina');
+			case 'joinCombinaAsk':
+				await context.sendText(flow.join.joinCombinaAsk.text1, await getQR(flow.join.joinCombinaAsk));
+				break;
+			case 'joinCombinaEnd':
 				await context.sendText(flow.join.end);
 				await mainMenu.sendMain(context);
 				break;

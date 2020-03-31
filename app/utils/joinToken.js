@@ -20,7 +20,21 @@ async function handlePrepToken(context, answer) {
 	}
 }
 
+async function handleCombinaToken(context, answer) {
+	if (answer === true) {
+		await context.sendText(join.joinCombinaAsk.success);
+		await putUpdateVoucherFlag(context.session.user.id, 'combina');
+		await context.setState({ user: await getRecipientPrep(context.session.user.id) });
+		await linkIntegrationTokenLabel(context);
+		await context.setState({ dialog: 'joinCombinaEnd' });
+	} else { // error or invalid number
+		await context.sendText(join.joinCombinaAsk.fail1);
+		await context.sendText(join.joinCombinaAsk.fail2, await getQR(join.joinCombinaAsk));
+		await context.setState({ dialog: 'joinCombinaAskErro' });
+	}
+}
+
 
 module.exports = {
-	handlePrepToken,
+	handlePrepToken, handleCombinaToken,
 };

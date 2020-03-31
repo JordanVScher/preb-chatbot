@@ -227,7 +227,15 @@ module.exports = {
 			text1: 'O Projeto Combina faz parte de uma pesquisa que tem a finalidade de avaliar o uso dos métodos de prevenção ao HIV disponíveis nos serviços públicos de saúde pelas pessoas. Quais motivações pra usar os métodos preventivos, em que situações e quais práticas eles são usados etc. Esse projeto é tudo de bom!',
 			text2: 'Você realmente faz parte do programa Combina?',
 			menuOptions: ['Sim', 'Não'],
-			menuPostback: ['joinCombinaSim', 'join'],
+			menuPostback: ['joinCombinaAsk', 'join'],
+		},
+		joinCombinaAsk: {
+			text1: 'Inhaiii! Pra vc q adquiriu lindamente seu voucher no serviço, digita ele aqui pra mim amore!',
+			success: 'Eitaaa, te encontrei no systema, q tudo!!',
+			fail1: 'Vish, kd tu nesse systema? Vamo denovo? Digita aí o número do voucher.',
+			fail2: 'Ou se não lembrar pode clicar no botão abaixo.',
+			menuOptions: ['Não tenho Voucher'],
+			menuPostback: ['join'],
 		},
 		joinSUS: {
 			text1: 'SUS é o Sistema Único de Saúde pública, rola de grátis desde o simples atendimento pra avaliação de pressão arterial, por exemplo, até transplante de órgãos, com acesso integral, universal e gratuito para toda a população do Brasil. Mto chic né?!',

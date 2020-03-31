@@ -100,12 +100,14 @@ module.exports = {
 		return handleRequestAnswer(await request.get(`${apiUri}/api/chatbot/recipient/appointment?security_token=${security_token}`).query({ fb_id }));
 	},
 
-	async postIntegrationToken(fb_id, integration_token) {
+	async postIntegrationPrepToken(fb_id, integration_token) {
 		const res = await handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/integration-token?security_token=${security_token}`).query({ fb_id, integration_token }));
-		if (res.statusCode && res.statusCode.toString() === '200') { // integration token found successfully
-			return true;
-		}
-		return false;
+		return !!(res.statusCode && res.statusCode.toString() === '200');
+	},
+
+	async postIntegrationCombinaToken(fb_id, integration_token) {
+		const res = await handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/TODO?security_token=${security_token}`).query({ fb_id, integration_token }));
+		return !!((res.statusCode && res.statusCode.toString() === '200'));
 	},
 
 	async getCount(fb_id, type) {

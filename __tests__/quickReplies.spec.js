@@ -10,6 +10,7 @@ const timer = require('../app/utils/timer');
 const duvidas = require('../app/utils/duvidas');
 const checkQR = require('../app/utils/checkQR');
 const mainMenu = require('../app/utils/mainMenu');
+const joinToken = require('../app/utils/joinToken');
 const { getQR } = require('../app/utils/attach');
 
 jest.mock('../app/utils/helper');
@@ -24,6 +25,7 @@ jest.mock('../app/utils/duvidas');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
 jest.mock('../app/utils/checkQR');
+jest.mock('../app/utils/joinToken');
 jest.mock('../app/utils/prep_api'); // mock prep_api tp avoid making the postRecipientPrep request
 
 it('quiz - begin', async () => {
@@ -140,6 +142,13 @@ describe('join - já tomo prep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.askPrep.text1, await getQR(flow.join.askPrep));
 	});
 
+	it('joinPrep - Entra texto', async () => {
+		const context = cont.textContext('foobar', 'joinPrep');
+		await handler(context);
+
+		await expect(joinToken.handlePrepToken).toBeCalledWith(context, await prepAPI.postIntegrationPrepToken(context.session.user.id, context.state.whatWasTyped));
+	});
+
 	it('joinCombina - explicação e confirmação', async () => {
 		const context = cont.quickReplyContext('joinCombina', 'joinCombina');
 		await handler(context);
@@ -148,11 +157,24 @@ describe('join - já tomo prep', async () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.text2, await getQR(flow.join.joinCombina));
 	});
 
-	it('joinCombinaSim - aceitou, atualiza voucher', async () => {
-		const context = cont.quickReplyContext('joinCombinaSim', 'joinCombinaSim');
+	it('joinCombinaAsk - pede voucher', async () => {
+		const context = cont.quickReplyContext('joinCombinaAsk', 'joinCombinaAsk');
 		await handler(context);
 
-		await expect(prepAPI.putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'combina');
+		await expect(context.sendText).toBeCalledWith(flow.join.joinCombinaAsk.text1, await getQR(flow.join.joinCombinaAsk));
+	});
+
+	it('joinCombinaAsk - Entra texto', async () => {
+		const context = cont.textContext('foobar', 'joinCombinaAsk');
+		await handler(context);
+
+		await expect(joinToken.handleCombinaToken).toBeCalledWith(context, await prepAPI.postIntegrationCombinaToken(context.session.user.id, context.state.whatWasTyped));
+	});
+
+	it('joinCombinaEnd - Encerra fluxo', async () => {
+		const context = cont.quickReplyContext('joinCombinaEnd', 'joinCombinaEnd');
+		await handler(context);
+
 		await expect(context.sendText).toBeCalledWith(flow.join.end);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
