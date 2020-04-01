@@ -637,7 +637,7 @@ describe('alarmePrep', async () => {
 		const context = cont.quickReplyContext('alarmeDemandaTudoBem', 'alarmeDemandaTudoBem');
 		await handler(context);
 
-		await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { tudo_bem: true });
+		await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { prep_reminder_on_demand: true });
 		await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
@@ -694,12 +694,11 @@ describe('alarmePrep', async () => {
 			const context = cont.quickReplyContext('alarmeFinal1', 'alarmeFinal');
 			await handler(context);
 
-
 			await expect(context.setState).toBeCalledWith({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
 			await expect(prepAPI.putUpdateReminderBefore)
 				.toBeCalledWith(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
-			await expect(mainMenu.sendMain).toBeCalledWith(context);
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUp));
 		});
 	});
 
@@ -718,9 +717,10 @@ describe('alarmePrep', async () => {
 			await expect(context.setState).toBeCalledWith({ alarmeTempo: `${await context.state.lastQRpayload.replace('alarmeTempo', '')} minutes`, dialog: 'alarmeTempoFinal' });
 			await expect(prepAPI.putUpdateReminderAfter).toBeCalledWith(context.session.user.id, 1, context.state.alarmeTempo);
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeJaTomei.text2);
-			await expect(mainMenu.sendMain).toBeCalledWith(context);
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUp));
 		});
 	});
+
 
 	describe('alarmeAcabar - avisar quando acabar os comprimidos', async () => {
 		it('intro - espera data', async () => {
@@ -743,6 +743,20 @@ describe('alarmePrep', async () => {
 			await handler(context);
 
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
+		});
+
+		it('alarmeConfirmaData - vê opções', async () => {
+			const context = cont.quickReplyContext('alarmeConfirmaData', 'alarmeConfirmaData');
+			await handler(context);
+
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeConfirmaData, await getQR(flow.alarmePrep.alarmeConfirmaDataBtn));
+		});
+
+		it('alarmeSemMedicacao - chama alarmeSemMedicacao', async () => {
+			const context = cont.quickReplyContext('alarmeSemMedicacao', 'alarmeSemMedicacao');
+			await handler(context);
+
+			await expect(duvidas.alarmeSemMedicacao).toBeCalledWith(context);
 		});
 
 		it('alarmeAcabarFinal - escolheu opção, faz request e encerra', async () => {

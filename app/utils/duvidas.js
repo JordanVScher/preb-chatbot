@@ -113,8 +113,11 @@ async function checkDate(date) {
 	const dataAfterToday = data.isAfter(today);
 	if (dataAfterToday === true) return 'A data da consulta passada não pode ser depois de hoje.';
 
-	const diff = data.diff(today, 'months');
-	if (diff < -6) return 'A data da sua consulta passada não pode ser de mais de 6 meses atrás.';
+	const monthDiff = data.diff(today, 'months');
+	if (monthDiff < -6) return 'A data da sua consulta passada não pode ser de mais de 6 meses atrás.';
+
+	const daysDiff = data.diff(today, 'days');
+	if (daysDiff > -15) return true; // data só é válida se aconteceu antes de 15 dias
 
 	return date;
 }
@@ -125,11 +128,24 @@ async function alarmeDate(context) {
 	if (!date || typeof date === 'string') {
 		await context.sendText(`${flow.alarmePrep.alarmeAcabar.invalid} ${date || ''}`);
 		await context.setState({ dialog: 'alarmeAcabar' });
+	} else if (typeof date === 'boolean') {
+		await context.setState({ dialog: 'alarmeConfirmaData' });
 	} else {
 		await context.setState({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: date });
 	}
 
 	return date;
+}
+
+async function alarmeSemMedicacao(context) {
+	await context.sendText(flow.alarmePrep.alarmeSemMedicacao);
+	if (context.state.user.voucher_type === 'combina') {
+		await sendMain(context);
+	} else {
+		await context.sendText(flow.alarmePrep.alarmeSemMedicacaoExtra);
+
+		await sendMain(context);
+	}
 }
 
 async function buildTestagem(cityID, newRule) {
@@ -212,4 +228,5 @@ module.exports = {
 	autotesteServico,
 	sendAutoServicoMsg,
 	sendAlarmeIntro,
+	alarmeSemMedicacao,
 };

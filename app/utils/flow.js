@@ -407,19 +407,25 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 			menuOptions: ['Tudo bem', 'Agora não'],
 			menuPostback: ['alarmeDemandaTudoBem', 'mainMenu'],
 		},
-		comoAjudo: 'Como eu ajudo você?',
+		comoAjudo: 'Me diga como você prefere me configurar:',
 		comoAjudoBtn: {
-			menuOptions: ['Me lembrando na hora', 'Perguntando se eu já tomei', 'Me lembrando quando o medicamento vai acabar'],
-			menuPostback: ['alarmeNaHora', 'alarmeJaTomei', 'alarmeAcabar'],
+			menuOptions: ['Lembrar hora de tomar', 'Perguntar se tomei'],
+			menuPostback: ['alarmeNaHora', 'alarmeJaTomei'],
 		},
 		alarmeNaHora1: 'Qual horário?',
 		alarmeNaHora2: 'E os minutos?',
-		alarmeFinal: '4. Oferecer/configurar para perguntar se já tomou',
+		alarmeFinal: 'Prontinho. Seu alarme foi configurado! Amanhã te chamo pra perguntar se vc tomou.',
 		alarmeJaTomei: {
 			text1: 'De quanto em quanto tempo?',
-			text2: '5. Oferecer/configurar para lembrar na hora',
+			// text1: 'Q horas vc costuma tomar seu remédio?',
+			text2: 'Prontinho. Seu alarme foi configurado! Amanhã te chamo pra perguntar se vc tomou.',
 			menuOptions: ['10 em 10 minutos', '30 em 30 minutos', '1h em 1h', '1h30 em 1h30', '2h em 2h'],
 			menuPostback: ['alarmeTempo10', 'alarmeTempo30', 'alarmeTempo60', 'alarmeTempo90', 'alarmeTempo120'],
+		},
+		alarmeFollowUp: 'Quer q eu te lembre quando o medicamento vai acabar?',
+		alarmeFollowUpBtn: {
+			menuOptions: ['Sim.', 'Não quero.'],
+			menuPostback: ['alarmeAcabar', 'mainMenu'],
 		},
 		alarmeAcabar: {
 			text1: 'Coloque a data da sua última consulta no formato DD/MM/AAAA',
@@ -429,6 +435,18 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 			menuPostback: ['alarmeFrasco1', 'alarmeFrasco2', 'alarmeFrasco3'],
 			text3: 'Ok, pelos meus cálculos os seus comprimidos acabarão dia xx/xx/xxxx, te lembrarei 15 dias  antes.',
 		},
+		alarmeConfirmaData: 'Vc digitou a data correta?',
+		alarmeConfirmaDataBtn: {
+			menuOptions: ['Não', 'Sim'],
+			menuPostback: ['alarmeAcabar', 'alarmeSemMedicacao'],
+		},
+		alarmeSemMedicacao: 'Vc deve tá quase sem medicação...',
+		alarmeSemMedicacaoExtra: `Axo q vc já tá ficando sem comprimidos, chama meus migles no whats ou liga q vão te ajudar a ñ ficar sem PrEP.
+> Se de Ribeirão Preto
+> Se de São Paulo/ SP
+> Se de Fortaleza
+> Se de Porto Alegre
+> Se de Curitiba`,
 	},
 	tomeiPrep: {
 		text1: 'Que horas?',

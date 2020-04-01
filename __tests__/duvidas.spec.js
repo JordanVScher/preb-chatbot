@@ -329,7 +329,7 @@ describe('buildChoiceTimeStamp', async () => {
 		await expect(date).toBeTruthy();
 		await expect(now.getDay() === date.getDay()).toBeTruthy();
 		await expect(now.getHours() !== date.getHours()).toBeTruthy();
-		await expect(now.getMinutes() !== date.getMinutes()).toBeTruthy();
+		await expect(now.getMinutes() !== date.getMinutes() || date.getMinutes() === 15).toBeTruthy();
 		await expect(date.getHours() === hour - offset).toBeTruthy();
 		await expect(date.getMinutes() === minute).toBeTruthy();
 		await expect(date.getSeconds() === 0).toBeTruthy();
@@ -372,7 +372,7 @@ describe('formatDate', async () => {
 
 
 describe('checkDate', async () => {
-	it('data after today - false', async () => {
+	it('data after today - string', async () => {
 		const data = new Date();
 		data.setDate(data.getDate() + 1);
 
@@ -380,7 +380,7 @@ describe('checkDate', async () => {
 		await expect(typeof res).toBe('string');
 	});
 
-	it('data before 6 months - false', async () => {
+	it('data before 6 months - string', async () => {
 		const data = new Date();
 		data.setMonth(data.getMonth() - 7);
 
@@ -388,9 +388,17 @@ describe('checkDate', async () => {
 		await expect(typeof res).toBe('string');
 	});
 
-	it('data within 6 months - false', async () => {
+	it('data within 6 months, within 15 days - boolean', async () => {
 		const data = new Date();
-		data.setMonth(data.getMonth() - 6);
+		data.setDate(data.getDate() - 5);
+
+		const res = await duvidas.checkDate(data);
+		await expect(typeof res).toBe('boolean');
+	});
+
+	it('data within 6 months, before 15 days - date', async () => {
+		const data = new Date();
+		data.setDate(data.getDate() - 20);
 
 		const res = await duvidas.checkDate(data);
 		await expect(typeof res).toBe('object');
@@ -420,8 +428,20 @@ describe('alarmeDate', async () => {
 		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabar' });
 	});
 
-	it('formato válido e valor válido - salva data e vê opções de frascos', async () => {
+	it('formato válido e valor válido, mas foi a menos de 15 dias - pede para confirmar', async () => {
 		const data = new Date();
+		const dataString = await help.moment(data).format('DD/MM/YYYY');
+		const context = await cont.textContext(dataString, 'alarmeAcabar');
+
+		const date = await duvidas.alarmeDate(context);
+
+		await expect(typeof date).toBe('boolean');
+		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeConfirmaData' });
+	});
+
+	it('formato válido, valor válido e passaram mais de 15 dias - salva data e vê opções de frascos', async () => {
+		const data = new Date();
+		data.setDate(data.getDate() - 20);
 		const dataString = await help.moment(data).format('DD/MM/YYYY');
 		const context = await cont.textContext(dataString, 'alarmeAcabar');
 
@@ -536,5 +556,26 @@ describe('sendAlarmeIntro', async () => {
 
 		await duvidas.sendAlarmeIntro(context, btn);
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.noAlarm, btn);
+	});
+});
+
+describe('alarmeSemMedicacao', async () => {
+	it('É Combina - vê msg e vai pro menu', async () => {
+		const context = await cont.quickReplyContext('alarmeSemMedicacao', 'alarmeSemMedicacao');
+		context.state.user = { voucher_type: 'combina' };
+
+		await duvidas.alarmeSemMedicacao(context);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeSemMedicacao);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('Não é Combina - vê duas msgs e vai pro menu', async () => {
+		const context = await cont.quickReplyContext('alarmeSemMedicacao', 'alarmeSemMedicacao');
+		context.state.user = { voucher_type: 'sisprep' };
+
+		await duvidas.alarmeSemMedicacao(context);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeSemMedicacao);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeSemMedicacaoExtra);
+		await expect(sendMain).toBeCalledWith(context);
 	});
 });

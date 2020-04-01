@@ -52,6 +52,7 @@ const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNao
 const inicioTriagemSQ = async (context) => context.sendText(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
 // const drnpFollowUpTriagem = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
 const drnpFollowUpAgendamento = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
+const alarmeFollowUp = async (context) => context.sendText(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUpBtn));
 
 
 async function startInteration(fbID) {
@@ -95,7 +96,7 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'alarmeConfigurar' });
+				await context.setState({ dialog: 'alarmeAcabar' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -528,7 +529,7 @@ module.exports = async (context) => {
 				await context.sendText(flow.alarmePrep.sobDemanda, await getQR(flow.alarmePrep.sobDemandaBtn));
 				break;
 			case 'alarmeDemandaTudoBem':
-				await prepAPI.putRecipientPrep(context.session.user.id, { tudo_bem: true });
+				await prepAPI.putRecipientPrep(context.session.user.id, { prep_reminder_on_demand: true });
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 				await mainMenu.sendMain(context);
 				break;
@@ -551,7 +552,7 @@ module.exports = async (context) => {
 			case 'alarmeFinal':
 				await prepAPI.putUpdateReminderBefore(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
 				await context.sendText(flow.alarmePrep.alarmeFinal);
-				await mainMenu.sendMain(context);
+				await alarmeFollowUp(context);
 				break;
 			case 'alarmeJaTomei':
 				await context.sendText(flow.alarmePrep.alarmeJaTomei.text1, await getQR(flow.alarmePrep.alarmeJaTomei));
@@ -559,10 +560,16 @@ module.exports = async (context) => {
 			case 'alarmeTempoFinal':
 				await prepAPI.putUpdateReminderAfter(context.session.user.id, 1, context.state.alarmeTempo);
 				await context.sendText(flow.alarmePrep.alarmeJaTomei.text2);
-				await mainMenu.sendMain(context);
+				await alarmeFollowUp(context);
 				break;
 			case 'alarmeAcabar':
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text1);
+				break;
+			case 'alarmeConfirmaData':
+				await context.sendText(flow.alarmePrep.alarmeConfirmaData, await getQR(flow.alarmePrep.alarmeConfirmaDataBtn));
+				break;
+			case 'alarmeSemMedicacao':
+				await duvidas.alarmeSemMedicacao(context);
 				break;
 			case 'alarmeAcabarFrascos':
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
