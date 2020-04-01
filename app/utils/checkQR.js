@@ -21,7 +21,7 @@ async function checkMainMenu(context) {
 	const duvidaPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasPrep' };
 	const deuRuimPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimPrep' };
 	const voltarTomarPrep = { content_type: 'text', title: 'Voltar a tomar PrEP', payload: 'voltarTomarPrep' };
-	const despertadorPrep = { content_type: 'text', title: 'Despertador', payload: 'despertadorPrep' };
+	const alarmePrep = { content_type: 'text', title: 'Alarme', payload: 'alarmePrep' };
 	const tomeiPrep = { content_type: 'text', title: 'Tomei', payload: 'tomeiPrep' };
 	// for not preps
 	const duvidaNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
@@ -63,12 +63,21 @@ async function checkMainMenu(context) {
 			const index = opt.findIndex((x) => x.payload === 'join'); if (index) opt[index] = seePrepToken;
 		}
 	} else if (context.state.user.is_prep === 1) {
-		opt = [baterPapo, duvidaPrep, deuRuimPrep, voltarTomarPrep, despertadorPrep, tomeiPrep];
+		opt = [baterPapo, duvidaPrep, deuRuimPrep, voltarTomarPrep, alarmePrep, tomeiPrep];
 	} else if (context.state.user.is_prep === 0) {
 		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep];
 	}
 
 	return { quick_replies: opt };
+}
+
+async function buildAlarmeBtn(hasAlarm) {
+	const depois = { content_type: 'text', title: 'Depois', payload: 'mainMenu' };
+	const config = { content_type: 'text', title: 'Configurar Alarme', payload: 'alarmeConfigurar' };
+	const cancelar = { content_type: 'text', title: 'Cancelar Alarme', payload: 'alarmeCancelar' };
+
+	if (hasAlarm) return { quick_replies: [config, cancelar] };
+	return { quick_replies: [depois, config] };
 }
 
 async function checkMedication(prepSince) { // eslint-disable-line
@@ -207,4 +216,5 @@ module.exports = {
 	buildButton,
 	sendShare,
 	checkDeuRuimPrep,
+	buildAlarmeBtn,
 };

@@ -249,7 +249,7 @@ describe('checkMainMenu', async () => {
 		await expect(result.quick_replies[3].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
-	it('é prep -> vê Bater Papo, Dúvidas, Deu Ruim, Voltar a Tomar e Despertador para PREPs', async () => {
+	it('é prep -> vê Bater Papo, Dúvidas, Deu Ruim, Voltar a Tomar e Alarme para PREPs', async () => {
 		const context = cont.quickReplyContext('greetings', 'greetings');
 		context.state.user = { is_prep: 1 };
 
@@ -260,7 +260,7 @@ describe('checkMainMenu', async () => {
 		await expect(result.quick_replies[1].payload === 'duvidasPrep').toBeTruthy();
 		await expect(result.quick_replies[2].payload === 'deuRuimPrep').toBeTruthy();
 		await expect(result.quick_replies[3].payload === 'voltarTomarPrep').toBeTruthy();
-		await expect(result.quick_replies[4].payload === 'despertadorPrep').toBeTruthy();
+		await expect(result.quick_replies[4].payload === 'alarmePrep').toBeTruthy();
 		await expect(result.quick_replies[5].payload === 'tomeiPrep').toBeTruthy();
 	});
 
@@ -369,5 +369,25 @@ describe('checkDeuRuimPrep', async () => {
 		await expect(result.length === 5).toBeTruthy();
 		const found = result.find((x) => x.payload === 'drpNaoTomei');
 		await expect(found && found.title).toBeFalsy();
+	});
+});
+
+describe('buildAlarmeBtn', async () => {
+	it('Has Alarm - Sees Config and Cancel', async () => {
+		let result = await checkQR.buildAlarmeBtn(true);
+		result = result.quick_replies;
+
+		await expect(result.length).toBe(2);
+		await expect(result[0].payload).toBe('alarmeConfigurar');
+		await expect(result[1].payload).toBe('alarmeCancelar');
+	});
+
+	it('Doesnt have Alarm - Sees Depois and Config', async () => {
+		let result = await checkQR.buildAlarmeBtn(false);
+		result = result.quick_replies;
+
+		await expect(result.length).toBe(2);
+		await expect(result[0].payload).toBe('mainMenu');
+		await expect(result[1].payload).toBe('alarmeConfigurar');
 	});
 });

@@ -95,6 +95,7 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				// await context.setState({ dialog: 'alarmePrep' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -149,17 +150,17 @@ module.exports = async (context) => {
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'page') {
 					await duvidas.receivePage(context);
 				} else if (context.state.lastQRpayload.slice(0, 10) === 'askHorario') {
-					await context.setState({ despertadorHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'despertadorMinuto' });
-				} else if (context.state.lastQRpayload.slice(0, 16) === 'despertadorFinal') {
-					await context.setState({ despertadorMinuto: await context.state.lastQRpayload.replace('despertadorFinal', ''), dialog: 'despertadorFinal' });
-				} else if (context.state.lastQRpayload.slice(0, 16) === 'despertadorTempo') {
-					await context.setState({ despertadorTempo: `${await context.state.lastQRpayload.replace('despertadorTempo', '')} minutes`, dialog: 'despertadorTempoFinal' });
+					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'alarmeMinuto' });
+				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeFinal') {
+					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
+				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeTempo') {
+					await context.setState({ alarmeTempo: `${await context.state.lastQRpayload.replace('alarmeTempo', '')} minutes`, dialog: 'alarmeTempoFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 8) === 'askTomei') {
 					await context.setState({ tomeiHora: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
 				} else if (context.state.lastQRpayload.slice(0, 9) === 'askDepois') {
 					await context.setState({ tomeiDepois: await context.state.lastQRpayload.replace('askDepois', ''), dialog: 'tomeiFinal' });
-				} else if (context.state.lastQRpayload.slice(0, 17) === 'despertadorFrasco') {
-					await context.setState({ despertadorFrasco: await context.state.lastQRpayload.replace('despertadorFrasco', ''), dialog: 'despertadorAcabarFinal' });
+				} else if (context.state.lastQRpayload.slice(0, 12) === 'alarmeFrasco') {
+					await context.setState({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 20) === 'autoServicoSisprepSP') {
 					await context.setState({ cityType: await context.state.lastQRpayload.replace('autoServicoSisprepSP', ''), dialog: 'autoServicoSP' });
 				} else { // regular quick_replies
@@ -173,8 +174,8 @@ module.exports = async (context) => {
 			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
-			if (context.state.dialog === 'despertadorAcabar') {
-				await duvidas.despertadorDate(context);
+			if (context.state.dialog === 'alarmeAcabar') {
+				await duvidas.alarmeDate(context);
 			} else if (context.state.dialog === 'leavePhoneTwo' || context.state.dialog === 'phoneInvalid') {
 				await research.checkPhone(context);
 			} else if (context.state.dialog === 'leaveInsta') {
@@ -517,67 +518,67 @@ module.exports = async (context) => {
 			case 'autoServicoSP':
 				await duvidas.sendAutoServicoMsg(context, context.state.cityType);
 				break;
-			case 'despertadorPrep':
-				await context.sendText(flow.despertadorPrep.text1, await getQR(flow.despertadorPrep));
+			case 'alarmePrep':
+				await duvidas.sendAlarmeIntro(context, await checkQR.buildAlarmeBtn(context.state.user.has_alarm));
 				break;
-			case 'despertadorOK':
-				await duvidas.despertadorOK(context);
+			case 'alarmeConfigurar':
+				await duvidas.alarmeConfigurar(context);
 				break;
-			case 'despertadorSobDemanda':
-				await context.sendText(flow.despertadorPrep.comoTomando.sobDemanda);
+			case 'alarmeSobDemanda':
+				await context.sendText(flow.alarmePrep.comoTomando.sobDemanda);
 				await mainMenu.sendMain(context);
 				break;
-			case 'despertadorDiaria':
-				await context.sendText(flow.despertadorPrep.comoAjudo.text1, await getQR(flow.despertadorPrep.comoAjudo));
+			case 'alarmeDiaria':
+				await context.sendText(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
 				break;
-			case 'despertadorCancelar':
-				await context.sendText(flow.despertadorPrep.despertadorCancelar);
+			case 'alarmeCancelar':
+				await context.sendText(flow.alarmePrep.alarmeCancelar);
 				await mainMenu.sendMain(context);
 				break;
-			case 'despertadorNaHora':
-				await context.setState({ despertadorPage: 1, pageKey: 'askHorario' });
+			case 'alarmeNaHora':
+				await context.setState({ alarmePage: 1, pageKey: 'askHorario' });
 				// fallsthrough
 			case 'askHorario':
-				await context.sendText(flow.despertadorPrep.despertadorNaHora1, await duvidas.despertadorHorario(context.state.despertadorPage, context.state.pageKey, 1));
+				await context.sendText(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
 				break;
-			case 'despertadorMinuto':
-				await context.sendText(flow.despertadorPrep.despertadorNaHora2, await duvidas.despertadorMinuto(context.state.despertadorHora));
+			case 'alarmeMinuto':
+				await context.sendText(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora));
 				break;
-			case 'despertadorFinal':
-				await prepAPI.putUpdateReminderBefore(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.despertadorHora, context.state.despertadorMinuto));
-				await context.sendText(flow.despertadorPrep.despertadorFinal);
+			case 'alarmeFinal':
+				await prepAPI.putUpdateReminderBefore(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
+				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await mainMenu.sendMain(context);
 				break;
-			case 'despertadorJaTomei':
-				await context.sendText(flow.despertadorPrep.despertadorJaTomei.text1, await getQR(flow.despertadorPrep.despertadorJaTomei));
+			case 'alarmeJaTomei':
+				await context.sendText(flow.alarmePrep.alarmeJaTomei.text1, await getQR(flow.alarmePrep.alarmeJaTomei));
 				break;
-			case 'despertadorTempoFinal':
-				await prepAPI.putUpdateReminderAfter(context.session.user.id, 1, context.state.despertadorTempo);
-				await context.sendText(flow.despertadorPrep.despertadorJaTomei.text2);
+			case 'alarmeTempoFinal':
+				await prepAPI.putUpdateReminderAfter(context.session.user.id, 1, context.state.alarmeTempo);
+				await context.sendText(flow.alarmePrep.alarmeJaTomei.text2);
 				await mainMenu.sendMain(context);
 				break;
-			case 'despertadorAcabar':
-				await context.sendText(flow.despertadorPrep.despertadorAcabar.text1);
+			case 'alarmeAcabar':
+				await context.sendText(flow.alarmePrep.alarmeAcabar.text1);
 				break;
-			case 'despertadorAcabarFrascos':
-				await context.sendText(flow.despertadorPrep.despertadorAcabar.text2, await getQR(flow.despertadorPrep.despertadorAcabar));
+			case 'alarmeAcabarFrascos':
+				await context.sendText(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
 				break;
-			case 'despertadorAcabarFinal':
-				await prepAPI.putUpdateDespertador(context.session.user.id, context.state.dataUltimaConsulta, context.state.despertadorFrasco);
-				await context.sendText(flow.despertadorPrep.despertadorAcabar.text3);
+			case 'alarmeAcabarFinal':
+				await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco);
+				await context.sendText(flow.alarmePrep.alarmeAcabar.text3);
 				await mainMenu.sendMain(context);
 				break;
 			case 'tomeiPrep':
-				await context.setState({ despertadorPage: 1, pageKey: 'askTomei' });
+				await context.setState({ alarmePage: 1, pageKey: 'askTomei' });
 			// fallsthrough
 			case 'askTomei':
-				await context.sendText(flow.tomeiPrep.text1, await duvidas.despertadorHorario(context.state.despertadorPage, context.state.pageKey, 1));
+				await context.sendText(flow.tomeiPrep.text1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
 				break;
 			case 'tomeiHoraDepois':
-				await context.setState({ despertadorPage: 1, pageKey: 'askDepois' });
+				await context.setState({ alarmePage: 1, pageKey: 'askDepois' });
 				// fallsthrough
 			case 'askDepois':
-				await context.sendText(flow.tomeiPrep.text2, await duvidas.despertadorHorario(context.state.despertadorPage, context.state.pageKey, 2));
+				await context.sendText(flow.tomeiPrep.text2, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
 				break;
 			case 'tomeiFinal':
 				await prepAPI.putUpdateTomei(context.session.user.id, context.state.tomeiHora, context.state.tomeiDepois);
