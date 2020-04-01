@@ -626,11 +626,19 @@ describe('alarmePrep', async () => {
 		await expect(duvidas.alarmeConfigurar).toBeCalledWith(context);
 	});
 
-	it('alarmeSobDemanda - explicação e menu', async () => {
+	it('alarmeSobDemanda - explicação e opções', async () => {
 		const context = cont.quickReplyContext('alarmeSobDemanda', 'alarmeSobDemanda');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoTomando.sobDemanda);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.sobDemanda, await getQR(flow.alarmePrep.sobDemandaBtn));
+	});
+
+	it('alarmeDemandaTudoBem - request e menu', async () => {
+		const context = cont.quickReplyContext('alarmeDemandaTudoBem', 'alarmeDemandaTudoBem');
+		await handler(context);
+
+		await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { tudo_bem: true });
+		await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 
@@ -638,7 +646,7 @@ describe('alarmePrep', async () => {
 		const context = cont.quickReplyContext('alarmeDiaria', 'alarmeDiaria');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo, await getQR(flow.alarmePrep.comoAjudoBtn));
 	});
 
 	it('alarmeCancelar - explicação e menu', async () => {

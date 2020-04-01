@@ -95,7 +95,7 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'alarmePrep' });
+				// await context.setState({ dialog: 'alarmeConfigurar' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -525,11 +525,15 @@ module.exports = async (context) => {
 				await duvidas.alarmeConfigurar(context);
 				break;
 			case 'alarmeSobDemanda':
-				await context.sendText(flow.alarmePrep.comoTomando.sobDemanda);
+				await context.sendText(flow.alarmePrep.sobDemanda, await getQR(flow.alarmePrep.sobDemandaBtn));
+				break;
+			case 'alarmeDemandaTudoBem':
+				await prepAPI.putRecipientPrep(context.session.user.id, { tudo_bem: true });
+				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 				await mainMenu.sendMain(context);
 				break;
 			case 'alarmeDiaria':
-				await context.sendText(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
+				await context.sendText(flow.alarmePrep.comoAjudo, await getQR(flow.alarmePrep.comoAjudoBtn));
 				break;
 			case 'alarmeCancelar':
 				await context.sendText(flow.alarmePrep.alarmeCancelar);

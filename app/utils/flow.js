@@ -396,18 +396,19 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 	alarmePrep: {
 		hasAlarm: 'O que quer fazer?',
 		noAlarm: 'Eu sou muito ligeira e vou te ajudar a lembrar de tomar seus comprimidos. Pra isso vc precisa me configurar. Vamos lá?',
-
 		alarmeCancelar: '3. Texto para cancelamento do alarme',
-		menuOptions: ['OK', 'Cancelar Lembrete'],
-		menuPostback: ['alarmeConfigurar', 'alarmeCancelar'],
-		comoTomando: {
-			text1: 'Como está tomando?',
-			sobDemanda: '2. Texto para "Prep sob demanda"',
+		comoTomando: 'Como tá tomando?',
+		comoTomandoBtn: {
 			menuOptions: ['PrEP sob demanda', 'PrEP diária'],
 			menuPostback: ['alarmeSobDemanda', 'alarmeDiaria'],
 		},
-		comoAjudo: {
-			text1: 'Como eu ajudo você?',
+		sobDemanda: 'Vou te ajudar a tomar o esquema certinho dos comprimidos. Clica no botão "TOMEI", no seu menu principal, quando vc tomar a dose dupla antes de transar.',
+		sobDemandaBtn: {
+			menuOptions: ['Tudo bem', 'Agora não'],
+			menuPostback: ['alarmeDemandaTudoBem', 'mainMenu'],
+		},
+		comoAjudo: 'Como eu ajudo você?',
+		comoAjudoBtn: {
 			menuOptions: ['Me lembrando na hora', 'Perguntando se eu já tomei', 'Me lembrando quando o medicamento vai acabar'],
 			menuPostback: ['alarmeNaHora', 'alarmeJaTomei', 'alarmeAcabar'],
 		},

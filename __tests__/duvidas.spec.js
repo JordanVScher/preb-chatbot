@@ -101,7 +101,7 @@ describe('alarmeConfigurar', async () => {
 		context.state.user.voucher_type = 'combina';
 
 		await duvidas.alarmeConfigurar(context);
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoTomando.text1, await getQR(flow.alarmePrep.comoTomando));
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoTomando, await getQR(flow.alarmePrep.comoTomandoBtn));
 	});
 
 	it('não é combina - faz pergunta como ajudo você', async () => {
@@ -109,7 +109,7 @@ describe('alarmeConfigurar', async () => {
 		context.state.user.voucher_type = 'foobar';
 
 		await duvidas.alarmeConfigurar(context);
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo, await getQR(flow.alarmePrep.comoAjudoBtn));
 	});
 });
 
