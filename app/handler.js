@@ -96,7 +96,6 @@ module.exports = async (context) => {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				await context.setState({ dialog: 'alarmeAcabar' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -575,7 +574,8 @@ module.exports = async (context) => {
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
 				break;
 			case 'alarmeAcabarFinal':
-				await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco);
+				await context.setState({ dataMsg: await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco) });
+				// TODO: replace xx/xx/xxxx with dataMsg
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text3);
 				await mainMenu.sendMain(context);
 				break;

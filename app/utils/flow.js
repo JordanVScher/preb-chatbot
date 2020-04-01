@@ -430,10 +430,10 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 		alarmeAcabar: {
 			text1: 'Coloque a data da sua última consulta no formato DD/MM/AAAA',
 			invalid: 'Data inválida!',
-			text2: 'Quantos frascos você retirou nesta data?',
+			text2: 'Quantos frascos vc retirou nesta data?',
 			menuOptions: ['1 Frasco', '2 Frascos', '3 Frascos'],
 			menuPostback: ['alarmeFrasco1', 'alarmeFrasco2', 'alarmeFrasco3'],
-			text3: 'Ok, pelos meus cálculos os seus comprimidos acabarão dia xx/xx/xxxx, te lembrarei 15 dias  antes.',
+			text3: 'Okay, nos meus cálculos seus comprimidos vão acabar dia xx/xx/xxxx, te lembro 15 dias  antes!',
 		},
 		alarmeConfirmaData: 'Vc digitou a data correta?',
 		alarmeConfirmaDataBtn: {

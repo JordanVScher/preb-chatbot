@@ -140,12 +140,9 @@ async function alarmeDate(context) {
 async function alarmeSemMedicacao(context) {
 	await context.sendText(flow.alarmePrep.alarmeSemMedicacao);
 	if (context.state.user.voucher_type === 'combina') {
-		await sendMain(context);
-	} else {
 		await context.sendText(flow.alarmePrep.alarmeSemMedicacaoExtra);
-
-		await sendMain(context);
 	}
+	await sendMain(context);
 }
 
 async function buildTestagem(cityID, newRule) {
