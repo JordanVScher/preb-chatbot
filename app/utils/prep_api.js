@@ -35,7 +35,7 @@ module.exports = {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, prep_reminder_after, prep_reminder_after_interval }));
 	},
 
-	async putUpdateAlarme(fb_id, data, frascos) {
+	async putUpdateDespertador(fb_id, data, frascos) {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, data, frascos }));
 	},
 

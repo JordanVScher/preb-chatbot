@@ -393,37 +393,37 @@ Se quiser fala com a gente no whats: (11) 98209-2911
 
 Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de tomar PrEP por 7 dias seguidos!!'`,
 	},
-	alarmePrep: {
+	despertadorPrep: {
 		text1: 'Vamos começar me configurando, inserir dicas para escolher o melhor horário para medicação ser lembrada e ser tomada',
-		alarmeCancelar: '3. Texto para cancelamento do alarme',
+		despertadorCancelar: '3. Texto para cancelamento do despertador',
 		menuOptions: ['OK', 'Cancelar Lembrete'],
-		menuPostback: ['alarmeOK', 'alarmeCancelar'],
+		menuPostback: ['despertadorOK', 'despertadorCancelar'],
 		comoTomando: {
 			text1: 'Como está tomando?',
 			sobDemanda: '2. Texto para "Prep sob demanda"',
 			menuOptions: ['PrEP sob demanda', 'PrEP diária'],
-			menuPostback: ['alarmeSobDemanda', 'alarmeDiaria'],
+			menuPostback: ['despertadorSobDemanda', 'despertadorDiaria'],
 		},
 		comoAjudo: {
 			text1: 'Como eu ajudo você?',
 			menuOptions: ['Me lembrando na hora', 'Perguntando se eu já tomei', 'Me lembrando quando o medicamento vai acabar'],
-			menuPostback: ['alarmeNaHora', 'alarmeJaTomei', 'alarmeAcabar'],
+			menuPostback: ['despertadorNaHora', 'despertadorJaTomei', 'despertadorAcabar'],
 		},
-		alarmeNaHora1: 'Qual horário?',
-		alarmeNaHora2: 'E os minutos?',
-		alarmeFinal: '4. Oferecer/configurar para perguntar se já tomou',
-		alarmeJaTomei: {
+		despertadorNaHora1: 'Qual horário?',
+		despertadorNaHora2: 'E os minutos?',
+		despertadorFinal: '4. Oferecer/configurar para perguntar se já tomou',
+		despertadorJaTomei: {
 			text1: 'De quanto em quanto tempo?',
 			text2: '5. Oferecer/configurar para lembrar na hora',
 			menuOptions: ['10 em 10 minutos', '30 em 30 minutos', '1h em 1h', '1h30 em 1h30', '2h em 2h'],
-			menuPostback: ['alarmeTempo10', 'alarmeTempo30', 'alarmeTempo60', 'alarmeTempo90', 'alarmeTempo120'],
+			menuPostback: ['despertadorTempo10', 'despertadorTempo30', 'despertadorTempo60', 'despertadorTempo90', 'despertadorTempo120'],
 		},
-		alarmeAcabar: {
+		despertadorAcabar: {
 			text1: 'Coloque a data da sua última consulta no formato DD/MM/AAAA',
 			invalid: 'Data inválida!',
 			text2: 'Quantos frascos você retirou nesta data?',
 			menuOptions: ['1 Frasco', '2 Frascos', '3 Frascos'],
-			menuPostback: ['alarmeFrasco1', 'alarmeFrasco2', 'alarmeFrasco3'],
+			menuPostback: ['despertadorFrasco1', 'despertadorFrasco2', 'despertadorFrasco3'],
 			text3: 'Ok, pelos meus cálculos os seus comprimidos acabarão dia xx/xx/xxxx, te lembrarei 15 dias  antes.',
 		},
 	},

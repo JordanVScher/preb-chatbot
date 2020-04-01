@@ -312,7 +312,7 @@ describe('duvidasNaoPrep', async () => {
 		const context = cont.quickReplyContext('duvidasQuiz', 'duvidasQuiz');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith('Quiz dúvida em construção');
+		await expect(context.sendText).toBeCalledWith('<Quiz dúvida em construção>');
 		await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.duvidasNaoPrep.end);
 	});
 
@@ -611,138 +611,139 @@ describe('deuRuimNaoPrep', async () => {
 	});
 });
 
-describe('alarmePrep', async () => {
+describe('despertadorPrep', async () => {
 	it('intro', async () => {
-		const context = cont.quickReplyContext('alarmePrep', 'alarmePrep');
+		const context = cont.quickReplyContext('despertadorPrep', 'despertadorPrep');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.text1, await getQR(flow.alarmePrep));
+		await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.text1, await getQR(flow.despertadorPrep));
 	});
 
-	it('alarmeOK - verificar voucher', async () => {
-		const context = cont.quickReplyContext('alarmeOK', 'alarmeOK');
+	it('despertadorOK - verificar voucher', async () => {
+		const context = cont.quickReplyContext('despertadorOK', 'despertadorOK');
 		await handler(context);
 
-		await expect(duvidas.alarmeOK).toBeCalledWith(context);
+		await expect(duvidas.despertadorOK).toBeCalledWith(context);
 	});
 
-	it('alarmeSobDemanda - explicação e menu', async () => {
-		const context = cont.quickReplyContext('alarmeSobDemanda', 'alarmeSobDemanda');
+	it('despertadorSobDemanda - explicação e menu', async () => {
+		const context = cont.quickReplyContext('despertadorSobDemanda', 'despertadorSobDemanda');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoTomando.sobDemanda);
+		await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.comoTomando.sobDemanda);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 
-	it('alarmeDiaria - opções', async () => {
-		const context = cont.quickReplyContext('alarmeDiaria', 'alarmeDiaria');
+	it('despertadorDiaria - opções', async () => {
+		const context = cont.quickReplyContext('despertadorDiaria', 'despertadorDiaria');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
+		await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.comoAjudo.text1, await getQR(flow.despertadorPrep.comoAjudo));
 	});
 
-	it('alarmeCancelar - explicação e menu', async () => {
-		const context = cont.quickReplyContext('alarmeCancelar', 'alarmeCancelar');
+	it('despertadorCancelar - explicação e menu', async () => {
+		const context = cont.quickReplyContext('despertadorCancelar', 'despertadorCancelar');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeCancelar);
+		await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorCancelar);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 
-	describe('alarme - escolher hora', async () => {
-		it('alarmeNaHora - página 1 e lista de horários', async () => {
-			const context = cont.quickReplyContext('alarmeNaHora', 'alarmeNaHora');
+	describe('despertador - escolher hora', async () => {
+		it('despertadorNaHora - página 1 e lista de horários', async () => {
+			const context = cont.quickReplyContext('despertadorNaHora', 'despertadorNaHora');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askHorario' });
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+			await expect(context.setState).toBeCalledWith({ despertadorPage: 1, pageKey: 'askHorario' });
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorNaHora1, await duvidas.despertadorHorario(context.state.despertadorPage, context.state.pageKey, 1));
 		});
 
-		it('alarmeNaHora - mais cedo', async () => {
-			const context = cont.quickReplyContext('pageaskHorario0', 'alarmeNaHora');
+		it('despertadorNaHora - mais cedo', async () => {
+			const context = cont.quickReplyContext('pageaskHorario0', 'despertadorNaHora');
 			await handler(context);
 
 			await expect(duvidas.receivePage).toBeCalledWith(context);
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorNaHora1, await duvidas.despertadorHorario(context.state.despertadorPage, context.state.pageKey, 1));
 		});
 
-		it('alarmeNaHora - mais tarde', async () => {
-			const context = cont.quickReplyContext('pageHorario2', 'alarmeNaHora');
+		it('despertadorNaHora - mais tarde', async () => {
+			const context = cont.quickReplyContext('pageHorario2', 'despertadorNaHora');
 			await handler(context);
 
 			await expect(duvidas.receivePage).toBeCalledWith(context);
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorNaHora1, await duvidas.despertadorHorario(context.state.despertadorPage, context.state.pageKey, 1));
 		});
 
 		it('pageHorario - escolhe hora e vê minutos', async () => {
-			const context = cont.quickReplyContext('askHorario10', 'alarmeMinuto');
+			const context = cont.quickReplyContext('askHorario10', 'despertadorMinuto');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ alarmeHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'alarmeMinuto' });
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora));
+			await expect(context.setState).toBeCalledWith({ despertadorHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'despertadorMinuto' });
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorNaHora2, await duvidas.despertadorMinuto(context.state.despertadorHora));
 		});
 
-		it('alarmeFinal - encerra, manda request e vai pro menu', async () => {
-			const context = cont.quickReplyContext('alarmeFinal1', 'alarmeFinal');
+		it('despertadorFinal - encerra, manda request e vai pro menu', async () => {
+			const context = cont.quickReplyContext('despertadorFinal1', 'despertadorFinal');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
+
+			await expect(context.setState).toBeCalledWith({ despertadorMinuto: await context.state.lastQRpayload.replace('despertadorFinal', ''), dialog: 'despertadorFinal' });
 			await expect(prepAPI.putUpdateReminderBefore)
-				.toBeCalledWith(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
+				.toBeCalledWith(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.despertadorHora, context.state.despertadorMinuto));
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorFinal);
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 	});
 
-	describe('alarme - escolher intervalo', async () => {
-		it('alarmeJaTomei', async () => {
-			const context = cont.quickReplyContext('alarmeJaTomei', 'alarmeJaTomei');
+	describe('despertador - escolher intervalo', async () => {
+		it('despertadorJaTomei', async () => {
+			const context = cont.quickReplyContext('despertadorJaTomei', 'despertadorJaTomei');
 			await handler(context);
 
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeJaTomei.text1, await getQR(flow.alarmePrep.alarmeJaTomei));
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorJaTomei.text1, await getQR(flow.despertadorPrep.despertadorJaTomei));
 		});
 
-		it('alarmeTempo10 - esolhe uma opção, salva o intervalo e manda a request', async () => {
-			const context = cont.quickReplyContext('alarmeTempo10', 'alarmeTempoFinal');
+		it('despertadorTempo10 - esolhe uma opção, salva o intervalo e manda a request', async () => {
+			const context = cont.quickReplyContext('despertadorTempo10', 'despertadorTempoFinal');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ alarmeTempo: `${await context.state.lastQRpayload.replace('alarmeTempo', '')} minutes`, dialog: 'alarmeTempoFinal' });
-			await expect(prepAPI.putUpdateReminderAfter).toBeCalledWith(context.session.user.id, 1, context.state.alarmeTempo);
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeJaTomei.text2);
+			await expect(context.setState).toBeCalledWith({ despertadorTempo: `${await context.state.lastQRpayload.replace('despertadorTempo', '')} minutes`, dialog: 'despertadorTempoFinal' });
+			await expect(prepAPI.putUpdateReminderAfter).toBeCalledWith(context.session.user.id, 1, context.state.despertadorTempo);
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorJaTomei.text2);
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 	});
 
-	describe('alarmeAcabar - avisar quando acabar os comprimidos', async () => {
+	describe('despertadorAcabar - avisar quando acabar os comprimidos', async () => {
 		it('intro - espera data', async () => {
-			const context = cont.quickReplyContext('alarmeAcabar', 'alarmeAcabar');
+			const context = cont.quickReplyContext('despertadorAcabar', 'despertadorAcabar');
 			await handler(context);
 
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text1);
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorAcabar.text1);
 		});
 
-		it('alarmeAcabar - entra data inválida', async () => {
-			const context = cont.textContext('foobar', 'alarmeAcabar');
+		it('despertadorAcabar - entra data inválida', async () => {
+			const context = cont.textContext('foobar', 'despertadorAcabar');
 			await handler(context);
 
-			await expect(duvidas.alarmeDate).toBeCalledWith(context);
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text1);
+			await expect(duvidas.despertadorDate).toBeCalledWith(context);
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorAcabar.text1);
 		});
 
-		it('alarmeAcabar - vê opções de frascos', async () => {
-			const context = cont.quickReplyContext('alarmeAcabarFrascos', 'alarmeAcabarFrascos');
+		it('despertadorAcabar - vê opções de frascos', async () => {
+			const context = cont.quickReplyContext('despertadorAcabarFrascos', 'despertadorAcabarFrascos');
 			await handler(context);
 
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorAcabar.text2, await getQR(flow.despertadorPrep.despertadorAcabar));
 		});
 
-		it('alarmeAcabarFinal - escolheu opção, faz request e encerra', async () => {
-			const context = cont.quickReplyContext('alarmeFrasco1', 'alarmeAcabarFinal');
+		it('despertadorAcabarFinal - escolheu opção, faz request e encerra', async () => {
+			const context = cont.quickReplyContext('despertadorFrasco1', 'despertadorAcabarFinal');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
-			await expect(prepAPI.putUpdateAlarme).toBeCalledWith(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco);
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text3);
+			await expect(context.setState).toBeCalledWith({ despertadorFrasco: await context.state.lastQRpayload.replace('despertadorFrasco', ''), dialog: 'despertadorAcabarFinal' });
+			await expect(prepAPI.putUpdateDespertador).toBeCalledWith(context.session.user.id, context.state.dataUltimaConsulta, context.state.despertadorFrasco);
+			await expect(context.sendText).toBeCalledWith(flow.despertadorPrep.despertadorAcabar.text3);
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 	});
@@ -763,8 +764,8 @@ describe('Tomei - tomeiPrep', async () => {
 		const context = cont.quickReplyContext('tomeiPrep', 'tomeiPrep');
 		await handler(context);
 
-		await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askTomei' });
-		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.text1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+		await expect(context.setState).toBeCalledWith({ despertadorPage: 1, pageKey: 'askTomei' });
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.text1, await duvidas.despertadorHorario(context.state.despertadorPage, context.state.pageKey, 1));
 	});
 
 	it('tomeiHoraDepois - escolheu opção e vê outras opções, formatadas diferente', async () => {
@@ -772,8 +773,8 @@ describe('Tomei - tomeiPrep', async () => {
 		await handler(context);
 
 		await expect(context.setState).toBeCalledWith({ tomeiHora: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
-		await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askDepois' });
-		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.text2, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+		await expect(context.setState).toBeCalledWith({ despertadorPage: 1, pageKey: 'askDepois' });
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.text2, await duvidas.despertadorHorario(context.state.despertadorPage, context.state.pageKey, 2));
 	});
 
 	it('tomeiFinal - escolheu opção, faz request e encerra', async () => {

@@ -249,7 +249,7 @@ describe('checkMainMenu', async () => {
 		await expect(result.quick_replies[3].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
-	it('é prep -> vê Bater Papo, Dúvidas, Deu Ruim, Voltar a Tomar e Alarme para PREPs', async () => {
+	it('é prep -> vê Bater Papo, Dúvidas, Deu Ruim, Voltar a Tomar e Despertador para PREPs', async () => {
 		const context = cont.quickReplyContext('greetings', 'greetings');
 		context.state.user = { is_prep: 1 };
 
@@ -260,7 +260,7 @@ describe('checkMainMenu', async () => {
 		await expect(result.quick_replies[1].payload === 'duvidasPrep').toBeTruthy();
 		await expect(result.quick_replies[2].payload === 'deuRuimPrep').toBeTruthy();
 		await expect(result.quick_replies[3].payload === 'voltarTomarPrep').toBeTruthy();
-		await expect(result.quick_replies[4].payload === 'alarmePrep').toBeTruthy();
+		await expect(result.quick_replies[4].payload === 'despertadorPrep').toBeTruthy();
 		await expect(result.quick_replies[5].payload === 'tomeiPrep').toBeTruthy();
 	});
 

@@ -34,15 +34,15 @@ async function prepDuvidaFollowUp(context) {
 	// }
 }
 
-async function alarmeOK(context) {
+async function despertadorOK(context) {
 	if (context.state.user.voucher_type === 'combina') {
-		await context.sendText(flow.alarmePrep.comoTomando.text1, await getQR(flow.alarmePrep.comoTomando));
+		await context.sendText(flow.despertadorPrep.comoTomando.text1, await getQR(flow.despertadorPrep.comoTomando));
 	} else {
-		await context.sendText(flow.alarmePrep.comoAjudo.text1, await getQR(flow.alarmePrep.comoAjudo));
+		await context.sendText(flow.despertadorPrep.comoAjudo.text1, await getQR(flow.despertadorPrep.comoAjudo));
 	}
 }
 
-async function alarmeHorario(page = 1, btnParam, textType = 1) {
+async function despertadorHorario(page = 1, btnParam, textType = 1) {
 	if (page < 0) { page = 2; }
 	if (page > 2) { page = 0; }
 
@@ -64,12 +64,12 @@ async function alarmeHorario(page = 1, btnParam, textType = 1) {
 	return { quick_replies: opts };
 }
 
-async function alarmeMinuto(hora) {
+async function despertadorMinuto(hora) {
 	const opts = [];
 	let minutos = '00';
 
 	while (minutos < 60) {
-		opts.push({ content_type: 'text', title: `As ${hora}:${minutos}`, payload: `alarmeFinal${minutos}` });
+		opts.push({ content_type: 'text', title: `As ${hora}:${minutos}`, payload: `despertadorFinal${minutos}` });
 		minutos = parseInt(minutos, 10) + 10;
 	}
 
@@ -81,7 +81,7 @@ async function receivePage(context) {
 	const nextDialog = context.state.pageKey;
 	const newPage = payload.replace(nextDialog, '');
 
-	await context.setState({ alarmePage: newPage, dialog: nextDialog });
+	await context.setState({ despertadorPage: newPage, dialog: nextDialog });
 }
 
 async function buildChoiceTimeStamp(hour, minutes) {
@@ -119,14 +119,14 @@ async function checkDate(date) {
 	return date;
 }
 
-async function alarmeDate(context) {
+async function despertadorDate(context) {
 	let date = await formatDate(context.state.whatWasTyped);
 	if (date) date = await checkDate(date);
 	if (!date || typeof date === 'string') {
-		await context.sendText(`${flow.alarmePrep.alarmeAcabar.invalid} ${date || ''}`);
-		await context.setState({ dialog: 'alarmeAcabar' });
+		await context.sendText(`${flow.despertadorPrep.despertadorAcabar.invalid} ${date || ''}`);
+		await context.setState({ dialog: 'despertadorAcabar' });
 	} else {
-		await context.setState({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: date });
+		await context.setState({ dialog: 'despertadorAcabarFrascos', dataUltimaConsulta: date });
 	}
 
 	return date;
@@ -190,14 +190,14 @@ async function autotesteServico(context) {
 
 module.exports = {
 	prepDuvidaFollowUp,
-	alarmeOK,
-	alarmeHorario,
-	alarmeMinuto,
+	despertadorOK,
+	despertadorHorario,
+	despertadorMinuto,
 	buildChoiceTimeStamp,
 	receivePage,
 	formatDate,
 	checkDate,
-	alarmeDate,
+	despertadorDate,
 	buildTestagem,
 	sendAutotesteMsg,
 	buildServicoInfo,
