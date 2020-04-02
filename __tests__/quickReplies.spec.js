@@ -811,8 +811,32 @@ describe('Tomei - tomeiPrep', async () => {
 		await handler(context);
 
 		await expect(context.setState).toBeCalledWith({ askProxima: await context.state.lastQRpayload.replace('askProxima', ''), dialog: 'tomeiFinal' });
-		await expect(prepAPI.putUpdateTomei).toBeCalledWith(context.session.user.id, context.state.askTomei, context.state.askProxima);
+		await expect(prepAPI.putUpdateNotificacao24).toBeCalledWith(context.session.user.id, context.state.askTomei, context.state.askProxima);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
+	});
+
+	it('NaoTomouPrep - vê opções', async () => {
+		const context = cont.quickReplyContext('NaoTomouPrep', 'NaoTomouPrep');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.naoTomou, await getQR(flow.tomeiPrep.naoTomouBtn));
+	});
+
+	it('naoTransou - vê msg, faz request e manda pro menu', async () => {
+		const context = cont.quickReplyContext('naoTransou', 'naoTransou');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.naoTransou);
+		await expect(prepAPI.putUpdateNotificacao22).toBeCalledWith(context.session.user.id);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
+	});
+
+	it('transou - vê mensagens', async () => {
+		const context = cont.quickReplyContext('transou', 'transou');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.transou);
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.contatoSitio);
 	});
 });
 

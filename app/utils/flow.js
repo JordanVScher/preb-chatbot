@@ -456,12 +456,15 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 		},
 		horas: 'Que horas?',
 		askProxima: 'Quanto tempo antes da próxima dose vc quer que eu te lembre amanhã?',
+		naoTomou: 'Já transou?',
+		naoTomouBtn: {
+			menuOptions: ['Não transei', 'Já transei'],
+			menuPostback: ['naoTransou', 'transou'],
+		},
+		naoTransou: 'Se vc já tomou um comprimido, tome mais um e espere até duas horas para transar.\nSe não tomou nenhum, tome dois comprimidos juntos e espere duas horas antes de transar.',
+		transou: 'É possível q vc precise tomar PEP. Que tal conversar melhor com meus migles humanes?',
+		contatoSitio: 'Inserir contato do sítio com base no voucher.',
 	},
-	// tomeiPrep: {
-	// 	text1: 'Que horas?',
-	// 	text2: 'Quanto tempo antes da próxima dose vc quer que eu te lembre?',
-	// 	text3: '<msg de encerramento>',
-	// },
 	falarComHumano: {
 		text1: 'Tá afim de conversar com meus amigles humanes?',
 		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],

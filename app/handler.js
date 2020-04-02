@@ -594,9 +594,21 @@ module.exports = async (context) => {
 			case 'askProxima':
 				await context.sendText(flow.tomeiPrep.askProxima, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
 				break;
-			case 'tomeiFinal': // cria notificação de 24h
-				await prepAPI.putUpdateTomei(context.session.user.id, context.state.askTomei, context.state.askProxima);
+			case 'tomeiFinal':
+				await prepAPI.putUpdateNotificacao24(context.session.user.id, context.state.askTomei, context.state.askProxima);
 				await mainMenu.sendMain(context);
+				break;
+			case 'NaoTomouPrep':
+				await context.sendText(flow.tomeiPrep.naoTomou, await getQR(flow.tomeiPrep.naoTomouBtn));
+				break;
+			case 'naoTransou':
+				await context.sendText(flow.tomeiPrep.naoTransou);
+				await prepAPI.putUpdateNotificacao22(context.session.user.id);
+				await mainMenu.sendMain(context);
+				break;
+			case 'transou':
+				await context.sendText(flow.tomeiPrep.transou);
+				await context.sendText(flow.tomeiPrep.contatoSitio);
 				break;
 			case 'TCLE':
 				await research.TCLE(context);

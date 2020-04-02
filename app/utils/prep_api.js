@@ -42,8 +42,12 @@ module.exports = {
 			}));
 	},
 
-	async putUpdateTomei(fb_id, askTomei, askProxima) {
+	async putUpdateNotificacao24(fb_id, askTomei, askProxima) {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, askTomei, askProxima }));
+	},
+
+	async putUpdateNotificacao22(fb_id) {
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, transou: true }));
 	},
 
 	async postTestPrep(fb_id, prep) {
