@@ -249,9 +249,9 @@ describe('checkMainMenu', async () => {
 		await expect(result.quick_replies[3].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
-	it('é prep -> vê Bater Papo, Dúvidas, Deu Ruim, Voltar a Tomar e Alarme para PREPs', async () => {
+	it('é prep e voucher sisprep -> vê Bater Papo, Dúvidas, Deu Ruim, Voltar a Tomar, Autoteste e Alarme para PrEP', async () => {
 		const context = cont.quickReplyContext('greetings', 'greetings');
-		context.state.user = { is_prep: 1 };
+		context.state.user = { is_prep: 1, voucher_type: 'sisprep' };
 
 		const result = await checkQR.checkMainMenu(context);
 		await expect(result.quick_replies.length === 6).toBeTruthy();
@@ -259,9 +259,39 @@ describe('checkMainMenu', async () => {
 		await expect(result.quick_replies[0].payload === 'baterPapo').toBeTruthy();
 		await expect(result.quick_replies[1].payload === 'duvidasPrep').toBeTruthy();
 		await expect(result.quick_replies[2].payload === 'deuRuimPrep').toBeTruthy();
+		await expect(result.quick_replies[3].payload === 'autotesteIntro').toBeTruthy();
+		await expect(result.quick_replies[4].payload === 'voltarTomarPrep').toBeTruthy();
+		await expect(result.quick_replies[5].payload === 'alarmePrep').toBeTruthy();
+	});
+
+	it('é prep e voucher combina -> vê Bater Papo, Dúvidas, Deu Ruim, Voltar a Tomar, Autoteste, Alarme para PrEP e Tomei', async () => {
+		const context = cont.quickReplyContext('greetings', 'greetings');
+		context.state.user = { is_prep: 1, voucher_type: 'combina' };
+
+		const result = await checkQR.checkMainMenu(context);
+		await expect(result.quick_replies.length === 7).toBeTruthy();
+
+		await expect(result.quick_replies[0].payload === 'baterPapo').toBeTruthy();
+		await expect(result.quick_replies[1].payload === 'duvidasPrep').toBeTruthy();
+		await expect(result.quick_replies[2].payload === 'deuRuimPrep').toBeTruthy();
+		await expect(result.quick_replies[3].payload === 'autotesteIntro').toBeTruthy();
+		await expect(result.quick_replies[4].payload === 'voltarTomarPrep').toBeTruthy();
+		await expect(result.quick_replies[5].payload === 'alarmePrep').toBeTruthy();
+		await expect(result.quick_replies[6].payload === 'tomeiPrep').toBeTruthy();
+	});
+
+	it('é prep e voucher sus -> vê Bater Papo, Dúvidas, Deu Ruim, Voltar a Tomar e Alarme para PrEP', async () => {
+		const context = cont.quickReplyContext('greetings', 'greetings');
+		context.state.user = { is_prep: 1, voucher_type: 'sus' };
+
+		const result = await checkQR.checkMainMenu(context);
+		await expect(result.quick_replies.length === 5).toBeTruthy();
+
+		await expect(result.quick_replies[0].payload === 'baterPapo').toBeTruthy();
+		await expect(result.quick_replies[1].payload === 'duvidasPrep').toBeTruthy();
+		await expect(result.quick_replies[2].payload === 'deuRuimPrep').toBeTruthy();
 		await expect(result.quick_replies[3].payload === 'voltarTomarPrep').toBeTruthy();
 		await expect(result.quick_replies[4].payload === 'alarmePrep').toBeTruthy();
-		await expect(result.quick_replies[5].payload === 'tomeiPrep').toBeTruthy();
 	});
 
 	it('não é prep -> vê Bater Papo, Dúvidas, Deu Ruim e Autoteste', async () => {
