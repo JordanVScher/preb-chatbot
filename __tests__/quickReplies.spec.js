@@ -942,3 +942,46 @@ describe('testagem', async () => {
 		await expect(mainMenu.falarComHumano).toBeCalledWith(context);
 	});
 });
+
+describe('notificações', () => {
+	describe('alarme', () => {
+		it('notiAlarmeA_Sim - atualiza stop_soneca com true', async () => {
+			const context = cont.quickReplyContext('notiAlarmeA_Sim', 'notiAlarmeA_Sim');
+			await handler(context);
+
+			await prepAPI.putRecipientPrep(context.session.user.id, { stop_soneca: true });
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+
+		it('notiAlarmeA_Nao - atualiza stop_soneca com false', async () => {
+			const context = cont.quickReplyContext('notiAlarmeA_Nao', 'notiAlarmeA_Nao');
+			await handler(context);
+
+			await prepAPI.putRecipientPrep(context.session.user.id, { stop_soneca: false });
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+
+		it('notiAlarmeB_Sim - atualiza rolou_consulta com true', async () => {
+			const context = cont.quickReplyContext('notiAlarmeB_Sim', 'notiAlarmeB_Sim');
+			await handler(context);
+
+			await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: true });
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+
+		it('notiAlarmeB_Nao - atualiza rolou_consulta com false', async () => {
+			const context = cont.quickReplyContext('notiAlarmeB_Nao', 'notiAlarmeB_Nao');
+			await handler(context);
+
+			await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: false });
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+
+		it('notiAlarmeC_Ok - só manda pro menu', async () => {
+			const context = cont.quickReplyContext('notiAlarmeC_Ok', 'notiAlarmeC_Ok');
+			await handler(context);
+
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+	});
+});

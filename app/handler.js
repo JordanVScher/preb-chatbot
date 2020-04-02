@@ -802,6 +802,26 @@ module.exports = async (context) => {
 				await context.sendText(flow.baterPapo.text1);
 				await timer.createBaterPapoTimer(context.session.user.id, context);
 				break;
+			// notificações
+			case 'notiAlarmeA_Sim':
+				await prepAPI.putRecipientPrep(context.session.user.id, { stop_soneca: true });
+				await mainMenu.sendMain(context);
+				break;
+			case 'notiAlarmeA_Nao':
+				await prepAPI.putRecipientPrep(context.session.user.id, { stop_soneca: false });
+				await mainMenu.sendMain(context);
+				break;
+			case 'notiAlarmeB_Sim':
+				await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: true });
+				await mainMenu.sendMain(context);
+				break;
+			case 'notiAlarmeB_Nao':
+				await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: false });
+				await mainMenu.sendMain(context);
+				break;
+			case 'notiAlarmeC_Ok':
+				await mainMenu.sendMain(context);
+				break;
 			case 'notificationOn':
 				await MaAPI.updateBlacklistMA(context.session.user.id, 1);
 				await prepAPI.putRecipientNotification(context.session.user.id, 1);
