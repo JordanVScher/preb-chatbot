@@ -991,7 +991,7 @@ describe('notificações', () => {
 			await handler(context);
 
 			await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
-			await context.sendText(flow.tomeiPrep.notiTansou.replace('<HORA>', context.state.askProxima));
+			await context.sendText(flow.tomeiPrep.notiTransou.replace('<HORA>', context.state.askProxima));
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -1025,6 +1025,42 @@ describe('notificações', () => {
 
 			await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
 			await mainMenu.sendMain(context);
+		});
+
+		it('notiTomeiC_Sim - manda horários', async () => {
+			const context = cont.quickReplyContext('notiTomeiC_Sim', 'notiTomeiC_Sim');
+			await handler(context);
+
+			await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askNotiTomei' });
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.askNotiTomei, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+		});
+
+		it('askNotiTomeiDepois - escolheu opção, salva o dado e vê outras opções, formatadas diferente', async () => {
+			const context = cont.quickReplyContext('askNotiTomei10', 'askNotiTomeiDepois');
+			await handler(context);
+
+			await expect(context.setState).toBeCalledWith({ askNotiTomei: await context.state.lastQRpayload.replace('askNotiTomei', ''), dialog: 'askNotiTomeiDepois' });
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.askNotiHoje.replace('<HORA>', context.state.askProxima));
+			await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askNotiProxima' });
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.askNotiAmanha.replace('<HORA>', context.state.askProxima), await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+		});
+
+		it('notiTomeiFinal - escolheu opção, faz request e encerra', async () => {
+			const context = cont.quickReplyContext('askNotiProxima12', 'notiTomeiFinal');
+			await handler(context);
+
+			await expect(context.setState).toBeCalledWith({ askNotiProxima: await context.state.lastQRpayload.replace('askNotiProxima', ''), dialog: 'notiTomeiFinal' });
+			await expect(prepAPI.putUpdateNotificacao24).toBeCalledWith(context.session.user.id, context.state.askNotiTomei, context.state.askNotiProxima);
+			await expect(context.setState).toBeCalledWith({ askProxima: context.state.askNotiProxima });
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
+		});
+
+		it('notiTomeiC_Nao - manda msg', async () => {
+			const context = cont.quickReplyContext('notiTomeiC_Nao', 'notiTomeiC_Nao');
+			await handler(context);
+
+			await context.sendText(flow.tomeiPrep.notiNaoTransou);
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 	});
 });

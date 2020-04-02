@@ -159,6 +159,10 @@ module.exports = async (context) => {
 					await context.setState({ askTomei: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
 				} else if (context.state.lastQRpayload.slice(0, 10) === 'askProxima') {
 					await context.setState({ askProxima: await context.state.lastQRpayload.replace('askProxima', ''), dialog: 'tomeiFinal' });
+				} else if (context.state.lastQRpayload.slice(0, 12) === 'askNotiTomei') {
+					await context.setState({ askNotiTomei: await context.state.lastQRpayload.replace('askNotiTomei', ''), dialog: 'askNotiTomeiDepois' });
+				} else if (context.state.lastQRpayload.slice(0, 14) === 'askNotiProxima') {
+					await context.setState({ askNotiProxima: await context.state.lastQRpayload.replace('askNotiProxima', ''), dialog: 'notiTomeiFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 12) === 'alarmeFrasco') {
 					await context.setState({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 20) === 'autoServicoSisprepSP') {
@@ -824,7 +828,7 @@ module.exports = async (context) => {
 				break;
 			case 'notiTomeiA_Sim':
 				await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
-				await context.sendText(flow.tomeiPrep.notiTansou.replace('<HORA>', context.state.askProxima)); // TODO askProxima on prep recipient
+				await context.sendText(flow.tomeiPrep.notiTransou.replace('<HORA>', context.state.askProxima)); // TODO askProxima on prep recipient
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiTomeiA_Nao':
@@ -841,6 +845,28 @@ module.exports = async (context) => {
 				break;
 			case 'notiNaoConfiguraDiario':
 				await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
+				await mainMenu.sendMain(context);
+				break;
+			case 'notiTomeiC_Sim':
+				await context.setState({ alarmePage: 1, pageKey: 'askNotiTomei' });
+				// fallsthrough
+			case 'askNotiTomei':
+				await context.sendText(flow.tomeiPrep.askNotiTomei, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+				break;
+			case 'askNotiTomeiDepois':
+				await context.sendText(flow.tomeiPrep.askNotiHoje.replace('<HORA>', context.state.askProxima)); // TODO askProxima on prep recipient
+				await context.setState({ alarmePage: 1, pageKey: 'askNotiProxima' });
+				// fallsthrough
+			case 'askNotiProxima': // TODO askProxima on prep recipient
+				await context.sendText(flow.tomeiPrep.askNotiAmanha.replace('<HORA>', context.state.askProxima), await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+				break;
+			case 'notiTomeiFinal':
+				await prepAPI.putUpdateNotificacao24(context.session.user.id, context.state.askNotiTomei, context.state.askNotiProxima);
+				await context.setState({ askProxima: context.state.askNotiProxima }); // TODO askProxima on prep recipient
+				await mainMenu.sendMain(context);
+				break;
+			case 'notiTomeiC_Nao':
+				await context.sendText(flow.tomeiPrep.notiNaoTransou);
 				await mainMenu.sendMain(context);
 				break;
 			case 'notificationOn':
