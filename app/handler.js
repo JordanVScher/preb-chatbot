@@ -822,6 +822,27 @@ module.exports = async (context) => {
 			case 'notiAlarmeC_Ok':
 				await mainMenu.sendMain(context);
 				break;
+			case 'notiTomeiA_Sim':
+				await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
+				await context.sendText(flow.tomeiPrep.notiTansou.replace('<HORA>', context.state.askProxima)); // TODO askProxima on prep recipient
+				await mainMenu.sendMain(context);
+				break;
+			case 'notiTomeiA_Nao':
+				await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: false });
+				await context.sendText(flow.tomeiPrep.notiNaoTransou);
+				await mainMenu.sendMain(context);
+				break;
+			case 'notiTomeiB_Demanda':
+				await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
+				await mainMenu.sendMain(context);
+				break;
+			case 'notiTomeiB_Diariamente':
+				await context.sendText(flow.tomeiPrep.notiDiariamente, await getQR(flow.tomeiPrep.notiDiariamenteBtn));
+				break;
+			case 'notiNaoConfiguraDiario':
+				await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
+				await mainMenu.sendMain(context);
+				break;
 			case 'notificationOn':
 				await MaAPI.updateBlacklistMA(context.session.user.id, 1);
 				await prepAPI.putRecipientNotification(context.session.user.id, 1);
