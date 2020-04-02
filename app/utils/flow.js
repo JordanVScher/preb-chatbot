@@ -449,10 +449,19 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 > Se de Curitiba`,
 	},
 	tomeiPrep: {
-		text1: 'Que horas?',
-		text2: 'Quanto tempo antes da próxima dose vc quer que eu te lembre?',
-		text3: '<msg de encerramento>',
+		intro: 'Vc tomou os dois comprimidos iniciais?',
+		introBtn: {
+			menuOptions: ['Sim', 'Não tomei'],
+			menuPostback: ['tomouPrep', 'NaoTomouPrep'],
+		},
+		horas: 'Que horas?',
+		askProxima: 'Quanto tempo antes da próxima dose vc quer que eu te lembre amanhã?',
 	},
+	// tomeiPrep: {
+	// 	text1: 'Que horas?',
+	// 	text2: 'Quanto tempo antes da próxima dose vc quer que eu te lembre?',
+	// 	text3: '<msg de encerramento>',
+	// },
 	falarComHumano: {
 		text1: 'Tá afim de conversar com meus amigles humanes?',
 		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],

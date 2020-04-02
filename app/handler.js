@@ -156,9 +156,9 @@ module.exports = async (context) => {
 				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeTempo') {
 					await context.setState({ alarmeTempo: `${await context.state.lastQRpayload.replace('alarmeTempo', '')} minutes`, dialog: 'alarmeTempoFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 8) === 'askTomei') {
-					await context.setState({ tomeiHora: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
-				} else if (context.state.lastQRpayload.slice(0, 9) === 'askDepois') {
-					await context.setState({ tomeiDepois: await context.state.lastQRpayload.replace('askDepois', ''), dialog: 'tomeiFinal' });
+					await context.setState({ askTomei: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
+				} else if (context.state.lastQRpayload.slice(0, 10) === 'askProxima') {
+					await context.setState({ askProxima: await context.state.lastQRpayload.replace('askProxima', ''), dialog: 'tomeiFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 12) === 'alarmeFrasco') {
 					await context.setState({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 20) === 'autoServicoSisprepSP') {
@@ -580,20 +580,22 @@ module.exports = async (context) => {
 				await mainMenu.sendMain(context);
 				break;
 			case 'tomeiPrep':
+				await context.sendText(flow.tomeiPrep.intro, await getQR(flow.tomeiPrep.introBtn));
+				break;
+			case 'tomouPrep':
 				await context.setState({ alarmePage: 1, pageKey: 'askTomei' });
-			// fallsthrough
+				// fallsthrough
 			case 'askTomei':
-				await context.sendText(flow.tomeiPrep.text1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+				await context.sendText(flow.tomeiPrep.horas, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
 				break;
 			case 'tomeiHoraDepois':
-				await context.setState({ alarmePage: 1, pageKey: 'askDepois' });
+				await context.setState({ alarmePage: 1, pageKey: 'askProxima' });
 				// fallsthrough
-			case 'askDepois':
-				await context.sendText(flow.tomeiPrep.text2, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+			case 'askProxima':
+				await context.sendText(flow.tomeiPrep.askProxima, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
 				break;
-			case 'tomeiFinal':
-				await prepAPI.putUpdateTomei(context.session.user.id, context.state.tomeiHora, context.state.tomeiDepois);
-				await context.sendText(flow.tomeiPrep.text3);
+			case 'tomeiFinal': // cria notificação de 24h
+				await prepAPI.putUpdateTomei(context.session.user.id, context.state.askTomei, context.state.askProxima);
 				await mainMenu.sendMain(context);
 				break;
 			case 'TCLE':

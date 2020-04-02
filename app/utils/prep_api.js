@@ -42,8 +42,8 @@ module.exports = {
 			}));
 	},
 
-	async putUpdateTomei(fb_id, tomeiHora, tomeiDepois) {
-		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, tomeiHora, tomeiDepois }));
+	async putUpdateTomei(fb_id, askTomei, askProxima) {
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, askTomei, askProxima }));
 	},
 
 	async postTestPrep(fb_id, prep) {
