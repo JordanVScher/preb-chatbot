@@ -264,16 +264,17 @@ describe('checkMainMenu', async () => {
 		await expect(result.quick_replies[5].payload === 'tomeiPrep').toBeTruthy();
 	});
 
-	it('não é prep -> vê Bater Papo, Dúvidas e Deu Ruim', async () => {
+	it('não é prep -> vê Bater Papo, Dúvidas, Deu Ruim e Autoteste', async () => {
 		const context = cont.quickReplyContext('greetings', 'greetings');
 		context.state.user = { is_prep: 0 };
 
 		const result = await checkQR.checkMainMenu(context);
-		await expect(result.quick_replies.length === 3).toBeTruthy();
+		await expect(result.quick_replies.length === 4).toBeTruthy();
 
 		await expect(result.quick_replies[0].payload === 'baterPapo').toBeTruthy();
 		await expect(result.quick_replies[1].payload === 'duvidasNaoPrep').toBeTruthy();
 		await expect(result.quick_replies[2].payload === 'deuRuimNaoPrep').toBeTruthy();
+		await expect(result.quick_replies[3].payload === 'autotesteIntro').toBeTruthy();
 	});
 });
 
