@@ -1,8 +1,10 @@
 
 const { withTyping } = require('bottender');
-// const { getPoliticianData } = require('./app/chatbot_api');
+const { getStarted } = require('./app/utils/flow');
 
 const messageWaiting = eval(process.env.WITH_TYPING); // eslint-disable-line no-eval
+
+// const { getPoliticianData } = require('./app/chatbot_api');
 
 // const mapPageToAccessToken = async (pageId) => {
 // 	const perfilData = await getPoliticianData(pageId);
@@ -20,6 +22,46 @@ module.exports = {
 			appSecret: process.env.MESSENGER_APP_SECRET,
 			verifyToken: process.env.MESSENGER_VERIFY_TOKEN,
 			// mapPageToAccessToken,
+			profile: {
+				getStarted: {
+					payload: 'greetings',
+				},
+				greeting: [
+					{
+						locale: 'default',
+						text: getStarted,
+					},
+				],
+				persistentMenu: [
+					{
+						locale: 'default',
+						composerInputDisabled: false,
+						callToActions: [
+							{
+								type: 'postback',
+								title: 'Ir para o início',
+								payload: 'greetings',
+							},
+							{
+								type: 'nested',
+								title: 'Notificações 🔔',
+								call_to_actions: [
+									{
+										type: 'postback',
+										title: 'Ligar Notificações 👌',
+										payload: 'notificationOn',
+									},
+									{
+										type: 'postback',
+										title: 'Parar Notificações 🛑',
+										payload: 'notificationOff',
+									},
+								],
+							},
+						],
+					},
+				],
+			},
 		},
 	},
 
