@@ -10,10 +10,6 @@ const port = Number(process.env.API_PORT) || 5000;
 
 const handle = app.getRequestHandler();
 
-const config = require('./bottender.config');
-
-console.log('config', config);
-
 app.prepare().then(() => {
 	const server = express();
 
@@ -37,10 +33,10 @@ app.prepare().then(() => {
 		console.log(`Server is running on ${port} port...`);
 		console.log(`App: ${process.env.APP} & Page: ${process.env.PAGE} - ${process.env.SHARE_LINK}`);
 		console.log(`MA User: ${process.env.MA_USER}`);
-		console.log('process.env.MESSENGER_PAGE_ID', process.env.MESSENGER_PAGE_ID);
-		console.log('process.env.MESSENGER_ACCESS_TOKEN', process.env.MESSENGER_ACCESS_TOKEN);
-		console.log('process.env.MESSENGER_APP_ID', process.env.MESSENGER_APP_ID);
-		console.log('process.env.MESSENGER_APP_SECRET', process.env.MESSENGER_APP_SECRET);
-		console.log('process.env.MESSENGER_VERIFY_TOKEN', process.env.MESSENGER_VERIFY_TOKEN);
+		console.log('PAGE_ID', process.env.MESSENGER_PAGE_ID);
+		console.log('ACCESS_TOKEN', process.env.MESSENGER_ACCESS_TOKEN);
+		console.log('APP_ID', process.env.MESSENGER_APP_ID);
+		console.log('APP_SECRET', process.env.MESSENGER_APP_SECRET);
+		console.log('VERIFY_TOKEN', process.env.MESSENGER_VERIFY_TOKEN);
 	});
 });

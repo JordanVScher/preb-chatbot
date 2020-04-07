@@ -1,13 +1,13 @@
 
 const { withTyping } = require('bottender');
-const { getPoliticianData } = require('./app/chatbot_api');
+// const { getPoliticianData } = require('./app/chatbot_api');
 
 const messageWaiting = eval(process.env.WITH_TYPING); // eslint-disable-line no-eval
 
-const mapPageToAccessToken = async (pageId) => {
-	const perfilData = await getPoliticianData(pageId);
-	return perfilData && perfilData.fb_access_token ? perfilData.fb_access_token : process.env.ACCESS_TOKEN;
-};
+// const mapPageToAccessToken = async (pageId) => {
+// 	const perfilData = await getPoliticianData(pageId);
+// 	return perfilData && perfilData.fb_access_token ? perfilData.fb_access_token : process.env.MESSENGER_ACCESS_TOKEN;
+// };
 
 module.exports = {
 	channels: {
@@ -19,7 +19,7 @@ module.exports = {
 			appId: process.env.MESSENGER_APP_ID,
 			appSecret: process.env.MESSENGER_APP_SECRET,
 			verifyToken: process.env.MESSENGER_VERIFY_TOKEN,
-			mapPageToAccessToken,
+			// mapPageToAccessToken,
 		},
 	},
 
