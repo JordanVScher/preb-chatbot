@@ -13,7 +13,7 @@
     "remove": "pm2 remove \"prep-homol\"",
     "docker_restart": "docker rm -f prep-chatbot; bash build-container.sh; bash sample-run-container.sh",
     "docker_logs": "docker logs prep-chatbot",
-    "webhook": "npx bottender messenger webhook set"
+    "webhook": "npx bottender messenger webhook set -w"
   },
   "dependencies": {
     "@sentry/node": "^5.15.4",
