@@ -2,7 +2,7 @@ const req = require('requisition');
 const { MessengerClient } = require('messaging-api-messenger');
 const prepAPI = require('./prep_api');
 
-const config = require('../bottender.config').messenger;
+const config = require('../../bottender.config.js').channels.messenger;
 
 const client = MessengerClient.connect({
 	accessToken: config.accessToken,

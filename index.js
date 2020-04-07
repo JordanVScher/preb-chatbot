@@ -1,23 +1,23 @@
-const MaAPI = require('./chatbot_api.js');
-const prepAPI = require('./utils/prep_api.js');
-const DF = require('./dialogFlow');
-const flow = require('./utils/flow');
-const opt = require('./utils/options');
-const help = require('./utils/helper');
-const quiz = require('./utils/quiz');
-const desafio = require('./utils/desafio');
-const consulta = require('./utils/consulta');
-const mainMenu = require('./utils/mainMenu');
-const research = require('./utils/research');
-const timer = require('./utils/timer');
-const checkQR = require('./utils/checkQR');
-const joinToken = require('./utils/joinToken');
-const duvidas = require('./utils/duvidas');
-const { sendMail } = require('./utils/mailer');
-const { getQR } = require('./utils/attach');
-const { addNewUser } = require('./utils/labels');
-const { sentryError } = require('./utils/error');
-const { buildNormalErrorMsg } = require('./utils/error');
+const MaAPI = require('./app/chatbot_api.js');
+const prepAPI = require('./app/utils/prep_api.js');
+const DF = require('./app/dialogFlow');
+const flow = require('./app/utils/flow');
+const opt = require('./app/utils/options');
+const help = require('./app/utils/helper');
+const quiz = require('./app/utils/quiz');
+const desafio = require('./app/utils/desafio');
+const consulta = require('./app/utils/consulta');
+const mainMenu = require('./app/utils/mainMenu');
+const research = require('./app/utils/research');
+const timer = require('./app/utils/timer');
+const checkQR = require('./app/utils/checkQR');
+const joinToken = require('./app/utils/joinToken');
+const duvidas = require('./app/utils/duvidas');
+const { sendMail } = require('./app/utils/mailer');
+const { getQR } = require('./app/utils/attach');
+const { addNewUser } = require('./app/utils/labels');
+const { sentryError } = require('./app/utils/error');
+const { buildNormalErrorMsg } = require('./app/utils/error');
 
 async function vouPensarMelhorFollowUp(context) {
 	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
@@ -60,7 +60,7 @@ async function startInteration(fbID) {
 	if (!status || !status[0] || status[0].closed_at !== null) await prepAPI.postRecipientInteraction(fbID);
 }
 
-module.exports = async (context) => {
+module.exports = async function App(context) {
 	try {
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 		await addNewUser(context);
