@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const handler = require('../app/handler');
+const handler = require('../index');
 const MaAPI = require('../app/chatbot_api');
 // const flow = require('../app/utils/flow');
 const cont = require('./context');

@@ -1,7 +1,7 @@
 const cont = require('./context');
 const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
-const handler = require('../app/handler');
+const handler = require('../index');
 const MaAPI = require('../app/chatbot_api');
 const quiz = require('../app/utils/quiz');
 const prepAPI = require('../app/utils/prep_api');
@@ -74,7 +74,7 @@ it('joinResearchAfter', async () => {
 	await expect(consulta.checarConsulta).toBeCalledWith(context);
 });
 
-describe('recrutamentoTimer', async () => {
+describe('recrutamentoTimer', () => {
 	it('addRecrutamentoTimer - first time - creates', async () => {
 		const context = cont.quickReplyContext('addRecrutamentoTimer', 'addRecrutamentoTimer');
 		context.state.preCadastroSignature = false;
@@ -126,7 +126,7 @@ describe('recrutamentoTimer', async () => {
 });
 
 
-describe('join - já tomo prep', async () => {
+describe('join - já tomo prep', () => {
 	it('intro - texto e botões', async () => {
 		const context = cont.quickReplyContext('join', 'join');
 		await handler(context);
@@ -222,7 +222,7 @@ describe('join - já tomo prep', async () => {
 });
 
 
-describe('duvidasPrep - Dúvidas de usuário prep', async () => {
+describe('duvidasPrep - Dúvidas de usuário prep', () => {
 	it('intro - texto e botões', async () => {
 		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
 		await handler(context);
@@ -270,7 +270,7 @@ describe('duvidasPrep - Dúvidas de usuário prep', async () => {
 	});
 });
 
-describe('duvidasNaoPrep', async () => {
+describe('duvidasNaoPrep', () => {
 	it('intro', async () => {
 		const context = cont.quickReplyContext('duvidasNaoPrep', 'duvidasNaoPrep');
 		await handler(context);
@@ -326,7 +326,7 @@ describe('duvidasNaoPrep', async () => {
 });
 
 
-describe('deuRuimPrep', async () => {
+describe('deuRuimPrep', () => {
 	it('intro', async () => {
 		const context = cont.quickReplyContext('deuRuimPrep', 'deuRuimPrep');
 		await handler(context);
@@ -358,7 +358,7 @@ describe('deuRuimPrep', async () => {
 		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
-	describe('drpEfeitos', async () => {
+	describe('drpEfeitos', () => {
 		it('intro', async () => {
 			const context = cont.quickReplyContext('drpEfeitos', 'drpEfeitos');
 			await handler(context);
@@ -407,7 +407,7 @@ describe('deuRuimPrep', async () => {
 		});
 	});
 
-	describe('drpIST', async () => {
+	describe('drpIST', () => {
 		it('intro', async () => {
 			const context = cont.quickReplyContext('drpIST', 'drpIST');
 			await handler(context);
@@ -498,7 +498,7 @@ describe('deuRuimPrep', async () => {
 	});
 });
 
-describe('deuRuimNaoPrep', async () => {
+describe('deuRuimNaoPrep', () => {
 	it('intro', async () => {
 		const context = cont.quickReplyContext('deuRuimNaoPrep', 'deuRuimNaoPrep');
 		await handler(context);
@@ -561,7 +561,7 @@ describe('deuRuimNaoPrep', async () => {
 		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
-	describe('drnpPEPNao', async () => {
+	describe('drnpPEPNao', () => {
 		it('intro', async () => {
 			const context = cont.quickReplyContext('drnpPEPNao', 'drnpPEPNao');
 			await handler(context);
@@ -611,7 +611,7 @@ describe('deuRuimNaoPrep', async () => {
 	});
 });
 
-describe('alarmePrep', async () => {
+describe('alarmePrep', () => {
 	it('intro', async () => {
 		const context = cont.quickReplyContext('alarmePrep', 'alarmePrep');
 		await handler(context);
@@ -657,7 +657,7 @@ describe('alarmePrep', async () => {
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 
-	describe('alarme - escolher hora', async () => {
+	describe('alarme - escolher hora', () => {
 		it('alarmeNaHora - página 1 e lista de horários', async () => {
 			const context = cont.quickReplyContext('alarmeNaHora', 'alarmeNaHora');
 			await handler(context);
@@ -702,7 +702,7 @@ describe('alarmePrep', async () => {
 		});
 	});
 
-	describe('alarme - escolher intervalo', async () => {
+	describe('alarme - escolher intervalo', () => {
 		it('alarmeJaTomei', async () => {
 			const context = cont.quickReplyContext('alarmeJaTomei', 'alarmeJaTomei');
 			await handler(context);
@@ -771,7 +771,7 @@ describe('alarmePrep', async () => {
 	});
 });
 
-describe('Quero voltar a tomar prep', async () => {
+describe('Quero voltar a tomar prep', () => {
 	it('voltarTomarPrep', async () => {
 		const context = cont.quickReplyContext('voltarTomarPrep', 'voltarTomarPrep');
 		await handler(context);
@@ -781,7 +781,7 @@ describe('Quero voltar a tomar prep', async () => {
 	});
 });
 
-describe('Tomei - tomeiPrep', async () => {
+describe('Tomei - tomeiPrep', () => {
 	it('intro - mostra opções de hora', async () => {
 		const context = cont.quickReplyContext('tomeiPrep', 'tomeiPrep');
 		await handler(context);
@@ -849,7 +849,7 @@ it('triagemCQ_entrar - manda msg e vai pro menu', async () => {
 });
 
 
-describe('autoteste', async () => {
+describe('autoteste', () => {
 	it('do menu não prep - see intro msg and offer options', async () => {
 		const context = cont.quickReplyContext('autotesteIntro', 'autotesteIntro');
 		await handler(context);
@@ -910,7 +910,7 @@ describe('autoteste', async () => {
 	});
 });
 
-describe('triagemSQ - triagem sem questionário', async () => {
+describe('triagemSQ - triagem sem questionário', () => {
 	it('intro - see msg and options', async () => {
 		const context = cont.quickReplyContext('triagemSQ', 'triagemSQ');
 		await handler(context);
@@ -920,7 +920,7 @@ describe('triagemSQ - triagem sem questionário', async () => {
 	});
 });
 
-describe('testagem', async () => {
+describe('testagem', () => {
 	it('intro - envia mensagem de tipos por cidade', async () => {
 		const context = cont.quickReplyContext('testagem', 'testagem');
 		await handler(context);

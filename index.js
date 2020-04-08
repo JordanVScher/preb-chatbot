@@ -62,6 +62,7 @@ async function startInteration(fbID) {
 
 module.exports = async function App(context) {
 	try {
+		await context.setState({ sessionUser: { ...await context.getUserProfile() } });
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 		await addNewUser(context);
 		await startInteration(context.session.user.id);
@@ -69,10 +70,9 @@ module.exports = async function App(context) {
 		// we update context data at every interaction (post ony on the first time)
 		await MaAPI.postRecipientMA(context.state.politicianData.user_id, {
 			fb_id: context.session.user.id,
-			name: `${context.session.user.first_name} ${context.session.user.last_name}`,
-			gender: context.session.user.gender === 'male' ? 'M' : 'F',
+			name: context.state.sessionUser.name,
 			origin_dialog: 'greetings',
-			picture: context.session.user.profile_pic,
+			picture: context.state.sessionUser.profilePic,
 			extra_fields: await help.buildLabels(context.state.user.system_labels),
 		});
 
@@ -107,12 +107,10 @@ module.exports = async function App(context) {
 			await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id, context.event.postback.payload, context.event.postback.title);
 			await prepAPI.logFlowChange(context.session.user.id, context.event.postback.payload, context.event.postback.title);
 		} else if (context.event.isQuickReply) {
-			// console.log(context.session.user.first_name, 'clicks lastQRpayload => new payload:', `${context.state.lastQRpayload} => ${context.event.quickReply.payload}`);
-
 			if (context.state.lastQRpayload || context.state.lastQRpayload !== context.event.quickReply.payload) { // check if last clicked button is the same as the new one
 				await context.setState({ lastQRpayload: context.event.quickReply.payload }); // update last quick reply chosen
-				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id, context.event.message.quick_reply.payload, context.event.message.quick_reply.payload); // eslint-disable-line max-len
-				await prepAPI.logFlowChange(context.session.user.id, context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
+				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id, context.state.lastQRpayload, context.state.lastQRpayload); // eslint-disable-line max-len
+				await prepAPI.logFlowChange(context.session.user.id, context.state.lastQRpayload, context.state.lastQRpayload);
 
 				if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
 					await context.setState({ selectedDate: context.state.lastQRpayload.slice(9, -1) });
@@ -175,7 +173,7 @@ module.exports = async function App(context) {
 			}
 		} else if (context.event.isText) {
 			console.log('--------------------------');
-			console.log(`${context.session.user.first_name} ${context.session.user.last_name} digitou ${context.event.message.text}`);
+			console.log(`${context.state.sessionUser.name} digitou ${context.event.message.text}`);
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
 			if (context.state.dialog === 'alarmeAcabar') {
@@ -893,13 +891,13 @@ module.exports = async function App(context) {
 		}
 	} catch (error) {
 		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
-		await sentryError(await buildNormalErrorMsg(`${context.session.user.first_name} ${context.session.user.last_name}`, error.stack, context.state));
+		await sentryError(await buildNormalErrorMsg(context.state.sessionUser.name, error.stack, context.state));
 		if (process.env.ENV !== 'local') {
 			await help.Sentry.configureScope(async (scope) => { // sending to sentry
-				scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
+				scope.setUser({ username: context.state.sessionUser.name });
 				scope.setExtra('state', context.state);
 				throw error;
 			});
 		}
 	} // catch
-}; // handler function
+};
