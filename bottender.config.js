@@ -4,12 +4,12 @@ const { getStarted } = require('./app/utils/flow');
 
 const messageWaiting = eval(process.env.WITH_TYPING); // eslint-disable-line no-eval
 
-// const { getPoliticianData } = require('./app/chatbot_api');
+const { getPoliticianData } = require('./app/chatbot_api');
 
-// const mapPageToAccessToken = async (pageId) => {
-// 	const perfilData = await getPoliticianData(pageId);
-// 	return perfilData && perfilData.fb_access_token ? perfilData.fb_access_token : process.env.MESSENGER_ACCESS_TOKEN;
-// };
+const mapPageToAccessToken = async (pageId) => {
+	const perfilData = await getPoliticianData(pageId);
+	return perfilData && perfilData.fb_access_token ? perfilData.fb_access_token : process.env.MESSENGER_ACCESS_TOKEN;
+};
 
 module.exports = {
 	channels: {
@@ -17,11 +17,11 @@ module.exports = {
 			enabled: true,
 			path: '/webhooks/messenger',
 			pageId: process.env.MESSENGER_PAGE_ID,
-			accessToken: process.env.MESSENGER_ACCESS_TOKEN,
+			// accessToken: process.env.MESSENGER_ACCESS_TOKEN,
 			appId: process.env.MESSENGER_APP_ID,
 			appSecret: process.env.MESSENGER_APP_SECRET,
 			verifyToken: process.env.MESSENGER_VERIFY_TOKEN,
-			// mapPageToAccessToken,
+			mapPageToAccessToken,
 			profile: {
 				getStarted: {
 					payload: 'greetings',
