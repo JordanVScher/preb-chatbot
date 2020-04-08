@@ -145,10 +145,10 @@ function buildCidadeText(consulta) {
 function buildMail(context, tipo, dado) {
 	let text = 'Olá, equipe PrEP.\n\n';
 	text += 'O usuário <NOME>, deixou um contato para que nossa equipe entre em contato com ele(a).\n\n';
-	text = text.replace('<NOME>', context.session.user.name);
+	text = text.replace('<NOME>', context.state.sessionUser.name);
 	text += 'Segue abaixo os dados:\n\n';
 
-	text += `Nome: ${context.session.user.name}\n`;
+	text += `Nome: ${context.state.sessionUser.name}\n`;
 	if (context.state.user.integration_token) { text += `Voucher: ${context.state.user.integration_token}\n`; }
 	if (tipo && dado) { text += `${tipo}: ${dado}\n`; }
 	text += 'Assunto: Agendamento\n';
