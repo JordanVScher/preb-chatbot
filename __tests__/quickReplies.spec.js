@@ -47,7 +47,7 @@ it('quiz - multiple choice answer', async () => {
 	await expect(context.state.lastQRpayload !== context.event.quickReply.payload).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ lastQRpayload: context.event.quickReply.payload });
 	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id,
-		context.event.message.quick_reply.payload, context.event.message.quick_reply.payload);
+		context.state.lastQRpayload, context.state.lastQRpayload);
 	await expect(context.state.lastQRpayload.slice(0, 4) === 'quiz').toBeTruthy();
 
 	await expect(quiz.handleAnswer).toBeCalledWith(context, context.state.lastQRpayload.replace('quiz', ''));
