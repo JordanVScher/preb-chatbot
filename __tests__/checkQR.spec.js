@@ -9,7 +9,7 @@ jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/consulta');
 jest.mock('../app/utils/consulta-aux');
 
-describe('checkMainMenu', async () => {
+describe('checkMainMenu', () => {
 	it('não acabou publico_interesse, não tem Token de integração -> Vê botões Quiz e Já Tomo PrEP', async () => {
 		const context = cont.quickReplyContext('greetings', 'greetings');
 		context.state.user = { is_target_audience: 0 }; context.state.currentQuestion = { code: 'a5' };
@@ -360,7 +360,7 @@ it('autotesteOption - city 3 - nothing changes', async () => {
 });
 
 
-describe('checkDeuRuimPrep', async () => {
+describe('checkDeuRuimPrep', () => {
 	const options = deuRuimPrep;
 
 	it('on sisprep - see Não Tomei option', async () => {
@@ -403,7 +403,7 @@ describe('checkDeuRuimPrep', async () => {
 	});
 });
 
-describe('buildAlarmeBtn', async () => {
+describe('buildAlarmeBtn', () => {
 	it('Has Alarm - Sees Config and Cancel', async () => {
 		let result = await checkQR.buildAlarmeBtn(true);
 		result = result.quick_replies;

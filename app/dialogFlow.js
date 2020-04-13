@@ -116,7 +116,7 @@ async function dialogFlow(context) {
 		await context.setState({ apiaiTextAnswer: context.state.apiaiResp[0].queryResult.fulfillmentText || '' }); // response text
 		await checkPosition(context);
 	} else {
-		await context.setState({ dialog: 'prompt' });
+		await context.setState({ dialog: 'mainMenu' });
 		await createIssue(context);
 	}
 }
