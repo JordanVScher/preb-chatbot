@@ -5,8 +5,7 @@ const handler = require('../index');
 const flow = require('../app/utils/flow');
 const MaAPI = require('../app/chatbot_api');
 const prepAPI = require('../app/utils/prep_api');
-const desafio = require('../app/utils/desafio');
-// const help = require('../app/utils/helper');
+const help = require('../app/utils/helper');
 const timer = require('../app/utils/timer');
 const { addNewUser } = require('../app/utils/labels');
 
@@ -22,29 +21,31 @@ jest.mock('../app/utils/labels');
 it('Voltar para o inicio - menu', async () => {
 	const context = cont.postbackContext('greetings', 'Voltar para o inicio', 'greetings');
 	await handler(context);
+
+	await expect(context.setState).toBeCalledWith({ sessionUser: { ...await context.getUserProfile() } });
 	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
+	await expect(addNewUser).toBeCalledWith(context);
+
 	await expect(MaAPI.postRecipientMA).toBeCalledWith(context.state.politicianData.user_id, {
 		fb_id: context.session.user.id,
 		name: context.state.sessionUser.name,
 		origin_dialog: 'greetings',
 		picture: context.state.sessionUser.profilePic,
-		// session: JSON.stringify(context.state),
+		extra_fields: await help.buildLabels(context.state.user.system_labels),
 	});
 
-	await expect(addNewUser).toBeCalledWith(context, prepAPI);
 	await expect(timer.deleteTimers).toBeCalledWith(context.session.user.id);
 
 	await expect(context.event.isPostback).toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ lastPBpayload: context.event.postback.payload, lastQRpayload: '' });
-	await expect(context.setState).toBeCalledWith({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false, goBackToTriagem: false }); // eslint-disable-line
-	await expect(context.state.lastPBpayload === 'greetings').toBeTruthy();
+	await expect(context.setState).toBeCalledWith({
+		onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false,
+	});
+	await expect(!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings').toBeTruthy();
 	await expect(context.setState).toBeCalledWith({ dialog: 'greetings' });
-	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id,
-		context.event.postback.payload, context.event.postback.title);
 
-	await expect(context.sendText).toBeCalledWith(flow.greetings.text1);
-	await expect(context.sendText).toBeCalledWith(flow.greetings.text2);
-	await expect(desafio.asksDesafio).toBeCalledWith(context);
+	await expect(MaAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.state.politicianData.user_id, context.event.postback.payload, context.event.postback.title);
+	await expect(prepAPI.logFlowChange).toBeCalledWith(context.session.user.id, context.event.postback.payload, context.event.postback.title);
 });
 
 it('Notifications on - menu', async () => {
