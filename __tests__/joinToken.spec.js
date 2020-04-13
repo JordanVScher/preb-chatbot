@@ -12,7 +12,7 @@ jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/labels');
 jest.mock('../app/utils/attach');
 
-describe('handlePrepToken', async () => {
+describe('handlePrepToken', () => {
 	it('success, not prep - goes to menu', async () => {
 		const context = cont.textContext('123123', 'joinToken');
 		await joinToken.handlePrepToken(context, true);
@@ -45,5 +45,27 @@ describe('handlePrepToken', async () => {
 		await expect(context.sendText).toBeCalledWith(join.askPrep.fail1);
 		await expect(context.sendText).toBeCalledWith(join.askPrep.fail2, await getQR(join.askPrep));
 		await expect(context.setState).toBeCalledWith({ dialog: 'joinPrepErro' });
+	});
+});
+
+describe('handleCombinaToken', () => {
+	it('success - becomes combina and goes to joinCombinaEnd', async () => {
+		const context = cont.textContext('123123', 'joinCombinaAsk');
+		await joinToken.handleCombinaToken(context, true);
+
+		await expect(context.sendText).toBeCalledWith(join.joinCombinaAsk.success);
+		await expect(putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'combina');
+		await expect(context.setState).toBeCalledWith({ user: await getRecipientPrep(context.session.user.id) });
+		await expect(linkIntegrationTokenLabel).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ dialog: 'joinCombinaEnd' });
+	});
+
+	it('failure - try again', async () => {
+		const context = cont.textContext('foobar', 'joinCombinaAsk');
+		await joinToken.handleCombinaToken(context, false);
+
+		await expect(context.sendText).toBeCalledWith(join.joinCombinaAsk.fail1);
+		await expect(context.sendText).toBeCalledWith(join.joinCombinaAsk.fail2, await getQR(join.joinCombinaAsk));
+		await expect(context.setState).toBeCalledWith({ dialog: 'joinCombinaAskErro' });
 	});
 });
