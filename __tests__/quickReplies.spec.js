@@ -949,7 +949,7 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiAlarmeA_Sim', 'notiAlarmeA_Sim');
 			await handler(context);
 
-			await prepAPI.putRecipientPrep(context.session.user.id, { stop_soneca: true });
+			await expect(prepAPI.postRecipientTookMedicine).toBeCalledWith(context.session.user.id);
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -957,7 +957,7 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiAlarmeA_Nao', 'notiAlarmeA_Nao');
 			await handler(context);
 
-			await prepAPI.putRecipientPrep(context.session.user.id, { stop_soneca: false });
+			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { stop_soneca: false });
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -965,7 +965,7 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiAlarmeB_Sim', 'notiAlarmeB_Sim');
 			await handler(context);
 
-			await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: true });
+			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { rolou_consulta: true });
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -973,7 +973,7 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiAlarmeB_Nao', 'notiAlarmeB_Nao');
 			await handler(context);
 
-			await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: false });
+			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { rolou_consulta: false });
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -990,8 +990,8 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiTomeiA_Sim', 'notiTomeiA_Sim');
 			await handler(context);
 
-			await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
-			await context.sendText(flow.tomeiPrep.notiTransou.replace('<HORA>', context.state.askProxima));
+			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { repeat_notification: true });
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.notiTransou.replace('<HORA>', context.state.askProxima));
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -999,8 +999,8 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiTomeiA_Nao', 'notiTomeiA_Nao');
 			await handler(context);
 
-			await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: false });
-			await context.sendText(flow.tomeiPrep.notiNaoTransou);
+			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { repeat_notification: false });
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.notiNaoTransou);
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -1008,7 +1008,7 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiTomeiB_Demanda', 'notiTomeiB_Demanda');
 			await handler(context);
 
-			await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
+			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { repeat_notification: true });
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -1016,15 +1016,15 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiTomeiB_Diariamente', 'notiTomeiB_Diariamente');
 			await handler(context);
 
-			await context.sendText(flow.tomeiPrep.notiDiariamente, await getQR(flow.tomeiPrep.notiDiariamenteBtn));
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.notiDiariamente, await getQR(flow.tomeiPrep.notiDiariamenteBtn));
 		});
 
 		it('notiTomeiB_Diariamente, não quer configurar - atualiza repeat_notification com true', async () => {
 			const context = cont.quickReplyContext('notiNaoConfiguraDiario', 'notiNaoConfiguraDiario');
 			await handler(context);
 
-			await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
-			await mainMenu.sendMain(context);
+			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { repeat_notification: true });
+			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
 		it('notiTomeiC_Sim - manda horários', async () => {
@@ -1059,7 +1059,7 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiTomeiC_Nao', 'notiTomeiC_Nao');
 			await handler(context);
 
-			await context.sendText(flow.tomeiPrep.notiNaoTransou);
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.notiNaoTransou);
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 	});

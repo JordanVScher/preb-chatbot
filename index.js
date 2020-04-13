@@ -806,7 +806,7 @@ module.exports = async function App(context) {
 				break;
 			// notificações
 			case 'notiAlarmeA_Sim':
-				await prepAPI.putRecipientPrep(context.session.user.id, { stop_soneca: true });
+				await prepAPI.postRecipientTookMedicine(context.session.user.id);
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiAlarmeA_Nao':
