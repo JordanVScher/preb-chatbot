@@ -9,7 +9,7 @@ const { getQR } = require('../app/utils/attach');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
 
-// describe('prepDuvidaFollowUp - Dúvidas para PrER seguimento', async () => {
+// describe('prepDuvidaFollowUp - Dúvidas para PrER seguimento', () => {
 // 	it('SUS - MG', async () => {
 // 		const context = cont.quickReplyContext('duvidasPrep', 'duvidasPrep');
 // 		context.state.user.voucher_type = 'sus';
@@ -59,7 +59,7 @@ jest.mock('../app/utils/attach');
 // 	});
 // });
 
-describe('prepDuvidaFollowUp', async () => {
+describe('prepDuvidaFollowUp', () => {
 	it('sisprep - goes to falar com humanos', async () => {
 		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'sisprep';
@@ -95,7 +95,7 @@ describe('prepDuvidaFollowUp', async () => {
 	});
 });
 
-describe('alarmeConfigurar', async () => {
+describe('alarmeConfigurar', () => {
 	it('combina - faz pergunta como está tomando', async () => {
 		const context = cont.quickReplyContext('alarmeConfigurar', 'alarmeConfigurar');
 		context.state.user.voucher_type = 'combina';
@@ -114,7 +114,7 @@ describe('alarmeConfigurar', async () => {
 });
 
 
-describe('alarmeHorario', async () => {
+describe('alarmeHorario', () => {
 	it('page 1 (horaAlarme) - tipo 1', async () => {
 		const alarmePage = 1;
 		const pageKey = 'horaAlarme';
@@ -267,7 +267,7 @@ describe('alarmeHorario', async () => {
 });
 
 
-describe('alarmeMinuto', async () => {
+describe('alarmeMinuto', () => {
 	it('0 horas', async () => {
 		const context = cont.quickReplyContext('alarmeMinuto', 'alarmeMinuto');
 		context.state.alarmeHora = 0;
@@ -315,7 +315,7 @@ describe('alarmeMinuto', async () => {
 	});
 });
 
-describe('buildChoiceTimeStamp', async () => {
+describe('buildChoiceTimeStamp', () => {
 	it('replace hour and minute', async () => {
 		const hour = 8;
 		const minute = 15;
@@ -338,7 +338,7 @@ describe('buildChoiceTimeStamp', async () => {
 });
 
 
-describe('formatDate', async () => {
+describe('formatDate', () => {
 	it('Empty - false', async () => {
 		const res = await duvidas.formatDate();
 		await expect(res).toBeFalsy();
@@ -371,7 +371,7 @@ describe('formatDate', async () => {
 });
 
 
-describe('checkDate', async () => {
+describe('checkDate', () => {
 	it('data after today - string', async () => {
 		const data = new Date();
 		data.setDate(data.getDate() + 1);
@@ -405,7 +405,7 @@ describe('checkDate', async () => {
 	});
 });
 
-describe('alarmeDate', async () => {
+describe('alarmeDate', () => {
 	it('formato inválido - tenta de novo', async () => {
 		const context = await cont.textContext('foobar', 'alarmeAcabar');
 		const date = await duvidas.alarmeDate(context);
@@ -453,7 +453,7 @@ describe('alarmeDate', async () => {
 });
 
 
-describe('autotesteServico', async () => {
+describe('autotesteServico', () => {
 	it('combina - vê msg e vai para menu', async () => {
 		const context = await cont.textContext('autoServico', 'autoServico');
 		context.state.user = { voucher_type: 'combina' };
@@ -486,7 +486,7 @@ describe('autotesteServico', async () => {
 	});
 });
 
-describe('sendAutotesteMsg', async () => {
+describe('sendAutotesteMsg', () => {
 	it('envia intro, mensagem customizada e outra mensagem com botões', async () => {
 		const context = await cont.textContext('autoServico', 'autoServico');
 		context.state.user = { city: '1' };
@@ -502,7 +502,7 @@ describe('sendAutotesteMsg', async () => {
 });
 
 
-describe('buildTestagem', async () => {
+describe('buildTestagem', () => {
 	const rules = {
 		1: ['autoteste', 'serviço', 'ong'],
 		2: ['ong', 'serviço'],
@@ -540,7 +540,7 @@ describe('buildTestagem', async () => {
 	});
 });
 
-describe('sendAlarmeIntro', async () => {
+describe('sendAlarmeIntro', () => {
 	const btn = {};
 	it('Tem alarme - vê uma mensagem e botões', async () => {
 		const context = await cont.quickReplyContext('sendAlarmeIntro', 'sendAlarmeIntro');
@@ -559,7 +559,7 @@ describe('sendAlarmeIntro', async () => {
 	});
 });
 
-describe('alarmeSemMedicacao', async () => {
+describe('alarmeSemMedicacao', () => {
 	it('É Combina - vê duas msgs e vai pro menu', async () => {
 		const context = await cont.quickReplyContext('alarmeSemMedicacao', 'alarmeSemMedicacao');
 		context.state.user = { voucher_type: 'combina' };
