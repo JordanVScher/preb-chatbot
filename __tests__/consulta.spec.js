@@ -1,10 +1,10 @@
 const cont = require('./context');
 const consulta = require('../app/utils/consulta');
 const aux = require('../app/utils/consulta-aux');
-const opt = require('../app/utils/options');
+// const opt = require('../app/utils/options');
 const flow = require('../app/utils/flow');
 const prepApi = require('../app/utils/prep_api');
-const help = require('../app/utils/helper');
+// const help = require('../app/utils/helper');
 const { sendMain } = require('../app/utils/mainMenu');
 
 jest.mock('../app/utils/options');
@@ -15,7 +15,7 @@ jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/consulta-aux');
 
-describe('sendSalvador', async () => {
+describe('sendSalvador', () => {
 	it('city 2 - send salvador msg', async () => {
 		const context = cont.quickReplyContext();
 		context.state.user = { city: 2 };
@@ -47,7 +47,7 @@ it('loadCalendar', async () => {
 	await expect(context.setState).toBeCalledWith({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
 });
 
-describe('startConsulta', async () => {
+describe('startConsulta', () => {
 	it('user is not target_audience - cant schedule consulta', async () => {
 		const context = cont.quickReplyContext();
 		context.state.user = { is_target_audience: 0 };

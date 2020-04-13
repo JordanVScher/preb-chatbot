@@ -30,7 +30,7 @@ async function separateDaysQR(dates, next, pageNumber) {
 		dateOptions.push({ content_type: 'text', title: formatDate(date), payload: `dia${element.ymd}` });
 	});
 
-	if (next && next && next.length > 0) { // if there's still dates to send, add a button to load them
+	if (next && next.length > 0) { // if there's still dates to send, add a button to load them
 		dateOptions.push({ content_type: 'text', title: 'Próximo', payload: 'nextDay' });
 	} else { // no more dates, show extra option
 		dateOptions.push({ content_type: 'text', title: 'Outras Datas', payload: 'outrasDatas' });
