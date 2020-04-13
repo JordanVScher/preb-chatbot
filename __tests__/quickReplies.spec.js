@@ -722,7 +722,7 @@ describe('alarmePrep', () => {
 	});
 
 
-	describe('alarmeAcabar - avisar quando acabar os comprimidos', async () => {
+	describe('alarmeAcabar - avisar quando acabar os comprimidos', () => {
 		it('intro - espera data', async () => {
 			const context = cont.quickReplyContext('alarmeAcabar', 'alarmeAcabar');
 			await handler(context);

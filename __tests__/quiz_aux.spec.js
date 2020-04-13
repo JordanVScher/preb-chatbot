@@ -2,9 +2,9 @@ const cont = require('./context');
 const questions = require('./question');
 const aux = require('../app/utils/quiz_aux');
 
-jest.mock('../app/utils/helper');
+// jest.mock('../app/utils/helper');
 
-describe('buildMultipleChoice', async () => {
+describe('buildMultipleChoice', () => {
 	it('"quiz" complement with no extra option', async () => {
 		const complement = 'quiz';
 		const question = questions.regularMultipleChoice;
@@ -13,11 +13,10 @@ describe('buildMultipleChoice', async () => {
 		result = result.quick_replies;
 		await expect(result.length === 2).toBeTruthy();
 
-		result.forEach(async (e, i) => {
-			const questionCode = i + 1;
-			await expect(e.title === question.multiple_choices[questionCode]).toBeTruthy();
-			await expect(e.payload === `${complement}${questionCode}${question.code}`).toBeTruthy();
-		});
+		await expect(result[0].title).toBe(question.multiple_choices[1]);
+		await expect(result[0].payload).toBe(`${complement}${1}${question.code}`);
+		await expect(result[1].title).toBe(question.multiple_choices[2]);
+		await expect(result[1].payload).toBe(`${complement}${2}${question.code}`);
 	});
 
 	it('"triagemQuiz" complement with extra option', async () => {
@@ -28,21 +27,16 @@ describe('buildMultipleChoice', async () => {
 		result = result.quick_replies;
 		await expect(result.length === 3).toBeTruthy();
 
-
-		result.forEach(async (e, i) => {
-			const questionCode = i + 1;
-			if (i !== result.length) {
-				await expect(e.title === question.multiple_choices[questionCode]).toBeTruthy();
-				await expect(e.payload === `${complement}${questionCode}${question.code}`).toBeTruthy();
-			} else {
-				await expect(e.title === question.extra_quick_replies[0].label).toBeTruthy();
-				await expect(e.payload === 'extraQuestion0').toBeTruthy();
-			}
-		});
+		await expect(result[0].title).toBe(question.multiple_choices[1]);
+		await expect(result[0].payload).toBe(`${complement}${1}${question.code}`);
+		await expect(result[1].title).toBe(question.multiple_choices[2]);
+		await expect(result[1].payload).toBe(`${complement}${2}${question.code}`);
+		await expect(result[2].title).toBe(question.extra_quick_replies[0].label);
+		await expect(result[2].payload).toBe('extraQuestion0');
 	});
 });
 
-describe('sendQuizQuestion', async () => {
+describe('sendQuizQuestion', () => {
 	it('multiple_choice', async () => {
 		const context = cont.quickReplyContext('startQuiz', 'startQuiz');
 		context.state.categoryQuestion = 'publico_interesse';
@@ -72,7 +66,7 @@ describe('sendQuizQuestion', async () => {
 	});
 });
 
-describe('buildQuizText', async () => {
+describe('buildQuizText', () => {
 	it('local - shows code', async () => {
 		const currentQuestion = questions.regularOpenText;
 

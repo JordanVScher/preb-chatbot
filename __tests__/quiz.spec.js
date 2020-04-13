@@ -12,7 +12,7 @@ jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/labels');
 jest.mock('../app/utils/helper');
 
-describe('answerQuiz', async () => {
+describe('answerQuiz', () => {
 	it('no startedQuiz with empty startedQuiz - update startedQuiz and set categoryQuestion to "publico_interesse" before sending question', async () => {
 		const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
 		context.state.currentQuestion = questions.regularMultipleChoice;
@@ -26,7 +26,7 @@ describe('answerQuiz', async () => {
 	});
 });
 
-describe('answerQuiz', async () => {
+describe('answerQuiz', () => {
 	it('startedQuiz and category is already filled - load and send the question', async () => {
 		const context = cont.quickReplyContext('desafioAceito', 'beginQuiz');
 		context.state.currentQuestion = questions.regularMultipleChoice;
@@ -51,7 +51,7 @@ it('AnswerExtraQuestion', async () => {
 	await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
 });
 
-describe('handleAnswer', async () => {
+describe('handleAnswer', () => {
 	const context = cont.quickReplyContext('quiz1', 'beginQuiz');
 	context.state.currentQuestion = questions.extraMultiple;
 	const quizOpt = '1';
@@ -97,7 +97,7 @@ describe('handleAnswer', async () => {
 	});
 });
 
-describe('handleQuizResposta and sentAnswer', async () => {
+describe('handleQuizResposta and sentAnswer', () => {
 	const context = cont.quickReplyContext('quiz0', 'beginQuiz');
 	context.state.currentQuestion = questions.extraMultiple;
 	context.state.sentAnswer = questions.regularMultipleChoice;

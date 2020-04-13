@@ -45,6 +45,7 @@ async function getButtonTextList(qr) {
 async function buildMultipleChoice(question, complement) {
 	// complement -> quiz or triagem to put on the button payload for each type of quiz
 	const qrButtons = [];
+
 	Object.keys(question.multiple_choices).forEach(async (element) => {
 		qrButtons.push({ content_type: 'text', title: await capQR(question.multiple_choices[element]), payload: `${complement}${element}${question.code}` });
 	});
