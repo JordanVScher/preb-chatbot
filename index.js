@@ -175,7 +175,7 @@ module.exports = async function App(context) {
 			console.log('--------------------------');
 			console.log(`${context.state.sessionUser.name} digitou ${context.event.message.text}`);
 			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
-			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '' });
+			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '', lastPBpayload: '' });
 			if (context.state.dialog === 'alarmeAcabar') {
 				await duvidas.alarmeDate(context);
 			} else if (context.state.dialog === 'leavePhoneTwo' || context.state.dialog === 'phoneInvalid') {
