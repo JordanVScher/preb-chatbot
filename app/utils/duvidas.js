@@ -53,7 +53,7 @@ async function alarmeHorario(page = 1, btnParam, textType = 1) {
 
 	for (let i = 1; i <= 8; i++) {
 		let title = null;
-		if (textType === 1) title = pivot === 1 ? `A ${pivot}` : `As ${pivot}`;
+		if (textType === 1) title = pivot === 1 ? `À ${pivot}` : `Às ${pivot}`;
 		if (textType === 2 && pivot > 0) title = pivot === 1 ? `${pivot} hora antes` : `${pivot} horas antes`;
 
 		if (title) opts.push({ content_type: 'text', title, payload: `${btnParam}${pivot}` });
@@ -64,12 +64,12 @@ async function alarmeHorario(page = 1, btnParam, textType = 1) {
 	return { quick_replies: opts };
 }
 
-async function alarmeMinuto(hora) {
+async function alarmeMinuto(hora, btnParam) {
 	const opts = [];
 	let minutos = '00';
 
 	while (minutos < 60) {
-		opts.push({ content_type: 'text', title: `As ${hora}:${minutos}`, payload: `alarmeFinal${minutos}` });
+		opts.push({ content_type: 'text', title: `Às ${hora}:${minutos}`, payload: `${btnParam}${minutos}` });
 		minutos = parseInt(minutos, 10) + 10;
 	}
 
@@ -201,12 +201,21 @@ async function autotesteServico(context) {
 	}
 }
 
-async function sendAlarmeIntro(context, btn) {
-	if (context.state.user.has_alarm) {
+async function sendAlarmeIntro(context, btn, hasAlarm) {
+	if (hasAlarm) {
 		await context.sendText(flow.alarmePrep.hasAlarm, btn);
 	} else {
 		await context.sendText(flow.alarmePrep.noAlarm, btn);
 	}
+}
+
+async function alarmeCancelar(context, { id }) {
+	if (id) {
+		await context.sendText(flow.alarmePrep.alarmeCancelarSuccess);
+	} else {
+		await context.sendText(flow.alarmePrep.alarmeCancelarFailure);
+	}
+	await sendMain(context);
 }
 
 module.exports = {
@@ -225,5 +234,6 @@ module.exports = {
 	autotesteServico,
 	sendAutoServicoMsg,
 	sendAlarmeIntro,
+	alarmeCancelar,
 	alarmeSemMedicacao,
 };

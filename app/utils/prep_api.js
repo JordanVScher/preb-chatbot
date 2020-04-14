@@ -26,13 +26,14 @@ module.exports = {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, voucher_type }));
 	},
 
-	async putUpdateReminderBefore(fb_id, prep_reminder_before, prep_reminder_before_interval) {
+	async putUpdateReminderBefore(fb_id, { string }) {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`)
-			.query({ fb_id, prep_reminder_before, prep_reminder_before_interval: prep_reminder_before_interval.string }));
+			.query({ fb_id, prep_reminder_before: 1, prep_reminder_before_interval: string }));
 	},
 
-	async putUpdateReminderAfter(fb_id, prep_reminder_after, prep_reminder_after_interval) {
-		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, prep_reminder_after, prep_reminder_after_interval }));
+	async putUpdateReminderAfter(fb_id, { string }) {
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`)
+			.query({ fb_id, prep_reminder_after: 1, prep_reminder_after_interval: string }));
 	},
 
 	async putUpdateAlarme(fb_id, data, frascos) {

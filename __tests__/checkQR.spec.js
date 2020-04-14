@@ -404,13 +404,13 @@ describe('checkDeuRuimPrep', () => {
 });
 
 describe('buildAlarmeBtn', () => {
-	it('Has Alarm - Sees Config and Cancel', async () => {
+	it('Has Alarm - Sees Config and CancelConfirma', async () => {
 		let result = await checkQR.buildAlarmeBtn(true);
 		result = result.quick_replies;
 
 		await expect(result.length).toBe(2);
 		await expect(result[0].payload).toBe('alarmeConfigurar');
-		await expect(result[1].payload).toBe('alarmeCancelar');
+		await expect(result[1].payload).toBe('alarmeCancelarConfirma');
 	});
 
 	it('Doesnt have Alarm - Sees Depois and Config', async () => {

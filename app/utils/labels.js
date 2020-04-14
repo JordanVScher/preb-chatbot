@@ -156,11 +156,13 @@ async function linkIntegrationTokenLabel(context) {
 
 async function addNewUser(context) {
 	if (context.state.onButtonQuiz || context.state.onTextQuiz) return false;
-	await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
+	await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) || {} });
 	await linkIntegrationTokenLabel(context);
 	if (context.state.user.form_error || context.state.user.error || !context.state.user || !context.state.user.id) { // check if there was an error or if user doesnt exist
 		await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, context.state.sessionUser.name);
 		await context.setState({ user: {} });
+	} else {
+		await context.setState({ has_alarm: context.state.user.prep_reminder_after || context.state.user.prep_reminder_before });
 	}
 
 	return true;

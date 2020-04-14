@@ -1,6 +1,7 @@
 const Sentry = require('@sentry/node');
 const moment = require('moment');
 const accents = require('remove-accents');
+const flow = require('./flow');
 
 // Sentry - error reporting
 Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.ENV, captureUnhandledRejections: false });
@@ -203,6 +204,27 @@ async function removeTimezone(date) {
 	return date;
 }
 
+async function buildAlarmeMsg(user) {
+	let msg = '';
+	let when;
+	let interval;
+
+	if (user.prep_reminder_before) {
+		when = 'antes';
+		interval = user.prep_reminder_before_interval || null;
+	} else if (user.prep_reminder_after) {
+		when = 'depois';
+		interval = user.prep_reminder_after_interval || null;
+	}
+
+	if (when) {
+		msg = flow.alarmePrep.cancelarConfirma.text1.replace('<WHEN>', when);
+		if (interval && typeof interval === 'string') msg = msg.replace('.', `, às ${interval.slice(0, 5)}.`);
+	}
+
+	return msg;
+}
+
 
 module.exports = {
 	Sentry,
@@ -230,4 +252,5 @@ module.exports = {
 	formatPhone,
 	buildCidadeText,
 	removeTimezone,
+	buildAlarmeMsg,
 };

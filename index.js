@@ -147,12 +147,14 @@ module.exports = async function App(context) {
 					await context.setState({ dialog: 'greetings', askDesafio: false });
 				} else if (context.state.lastQRpayload.slice(0, 4) === 'page') {
 					await duvidas.receivePage(context);
-				} else if (context.state.lastQRpayload.slice(0, 10) === 'askHorario') {
+				} else if (context.state.lastQRpayload.startsWith('askHorario')) {
 					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'alarmeMinuto' });
-				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeFinal') {
+				} else if (context.state.lastQRpayload.startsWith('alarmeFinal')) {
 					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
-				} else if (context.state.lastQRpayload.slice(0, 11) === 'alarmeTempo') {
-					await context.setState({ alarmeTempo: `${await context.state.lastQRpayload.replace('alarmeTempo', '')} minutes`, dialog: 'alarmeTempoFinal' });
+				} else if (context.state.lastQRpayload.startsWith('askJaTomei')) {
+					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askJaTomei', ''), dialog: 'askJaTomeiMinuto' });
+				} else if (context.state.lastQRpayload.startsWith('alarmeJaTomeiFinal')) {
+					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeJaTomeiFinal', ''), dialog: 'alarmeJaTomeiFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 8) === 'askTomei') {
 					await context.setState({ askTomei: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
 				} else if (context.state.lastQRpayload.slice(0, 10) === 'askProxima') {
@@ -172,9 +174,11 @@ module.exports = async function App(context) {
 				await context.setState({ ignore: true });
 			}
 		} else if (context.event.isText) {
-			console.log('--------------------------');
-			console.log(`${context.state.sessionUser.name} digitou ${context.event.message.text}`);
-			console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
+			if (process.env.ENV === 'prod') {
+				console.log('--------------------------');
+				console.log(`${context.state.sessionUser.name} digitou ${context.event.message.text}`);
+				console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
+			}
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '', lastPBpayload: '' });
 			if (context.state.dialog === 'alarmeAcabar') {
 				await duvidas.alarmeDate(context);
@@ -521,7 +525,7 @@ module.exports = async function App(context) {
 				await duvidas.sendAutoServicoMsg(context, context.state.cityType);
 				break;
 			case 'alarmePrep':
-				await duvidas.sendAlarmeIntro(context, await checkQR.buildAlarmeBtn(context.state.user.has_alarm));
+				await duvidas.sendAlarmeIntro(context, await checkQR.buildAlarmeBtn(context.state.has_alarm), context.state.has_alarm);
 				break;
 			case 'alarmeConfigurar':
 				await duvidas.alarmeConfigurar(context);
@@ -530,16 +534,21 @@ module.exports = async function App(context) {
 				await context.sendText(flow.alarmePrep.sobDemanda, await getQR(flow.alarmePrep.sobDemandaBtn));
 				break;
 			case 'alarmeDemandaTudoBem':
-				await prepAPI.putRecipientPrep(context.session.user.id, { prep_reminder_on_demand: true });
+				await prepAPI.putRecipientPrep(context.session.user.id, { prep_reminder_on_demand: 1 });
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 				await mainMenu.sendMain(context);
 				break;
 			case 'alarmeDiaria':
 				await context.sendText(flow.alarmePrep.comoAjudo, await getQR(flow.alarmePrep.comoAjudoBtn));
 				break;
+			case 'alarmeCancelarConfirma': {
+				let msg = await help.buildAlarmeMsg(context.state.user) || '';
+				if (msg) msg += '\n';
+				msg += flow.alarmePrep.cancelarConfirma.text2;
+				await context.sendText(msg, await getQR(flow.alarmePrep.cancelarConfirma));
+			} break;
 			case 'alarmeCancelar':
-				await context.sendText(flow.alarmePrep.alarmeCancelar);
-				await mainMenu.sendMain(context);
+				await duvidas.alarmeCancelar(context, await prepAPI.putRecipientPrep(context.session.user.id, { cancel_prep_reminder: 1 }));
 				break;
 			case 'alarmeNaHora':
 				await context.setState({ alarmePage: 1, pageKey: 'askHorario' });
@@ -548,19 +557,25 @@ module.exports = async function App(context) {
 				await context.sendText(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
 				break;
 			case 'alarmeMinuto':
-				await context.sendText(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora));
+				await context.sendText(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora, 'alarmeFinal'));
 				break;
 			case 'alarmeFinal':
-				await prepAPI.putUpdateReminderBefore(context.session.user.id, 1, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
+				await prepAPI.putUpdateReminderBefore(context.session.user.id, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
 				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await alarmeFollowUp(context);
 				break;
 			case 'alarmeJaTomei':
-				await context.sendText(flow.alarmePrep.alarmeJaTomei.text1, await getQR(flow.alarmePrep.alarmeJaTomei));
+				await context.setState({ alarmePage: 1, pageKey: 'askJaTomei' });
+				// fallsthrough
+			case 'askJaTomei':
+				await context.sendText(flow.alarmePrep.alarmeJaTomei1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
 				break;
-			case 'alarmeTempoFinal':
-				await prepAPI.putUpdateReminderAfter(context.session.user.id, 1, context.state.alarmeTempo);
-				await context.sendText(flow.alarmePrep.alarmeJaTomei.text2);
+			case 'askJaTomeiMinuto':
+				await context.sendText(flow.alarmePrep.alarmeJaTomei2, await duvidas.alarmeMinuto(context.state.alarmeHora, 'alarmeJaTomeiFinal'));
+				break;
+			case 'alarmeJaTomeiFinal':
+				await prepAPI.putUpdateReminderAfter(context.session.user.id, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
+				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await alarmeFollowUp(context);
 				break;
 			case 'alarmeAcabar':

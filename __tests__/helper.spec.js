@@ -55,3 +55,114 @@ it('getPhoneValid', async () => {
 	await expect(await help.getPhoneValid('+5511912345678')).toBe('5511912345678');
 	await expect(await help.getPhoneValid('12345678901234')).toBeFalsy();
 });
+
+describe('buildAlarmeMsg', () => {
+	it('empty user - no msg', async () => {
+		const user = {};
+
+		const res = await help.buildAlarmeMsg(user);
+		await expect(res).toBe('');
+	});
+
+	it('user doesnt have alarm - no msg', async () => {
+		const user = {
+			prep_reminder_before: 0,
+			prep_reminder_before_interval: null,
+			prep_reminder_after: 0,
+			prep_reminder_after_interval: null,
+		};
+
+		const res = await help.buildAlarmeMsg(user);
+		await expect(res).toBe('');
+	});
+
+	it('user has before alarme but no interval - partial msg', async () => {
+		const user = {
+			prep_reminder_before: 1,
+			prep_reminder_before_interval: null,
+			prep_reminder_after: 0,
+			prep_reminder_after_interval: null,
+		};
+
+		const res = await help.buildAlarmeMsg(user);
+		await expect(res.includes('antes')).toBeTruthy();
+		await expect(res.includes(', às')).toBeFalsy();
+	});
+
+	it('user has before alarme and interval - full msg', async () => {
+		const user = {
+			prep_reminder_before: 1,
+			prep_reminder_before_interval: '12:00:00',
+			prep_reminder_after: 0,
+			prep_reminder_after_interval: null,
+		};
+
+		const res = await help.buildAlarmeMsg(user);
+		await expect(res.includes('antes')).toBeTruthy();
+		await expect(res.includes(', às')).toBeTruthy();
+	});
+
+	it('user has after alarme but no interval - partial msg', async () => {
+		const user = {
+			prep_reminder_before: 0,
+			prep_reminder_before_interval: null,
+			prep_reminder_after: 1,
+			prep_reminder_after_interval: null,
+		};
+
+		const res = await help.buildAlarmeMsg(user);
+		await expect(res.includes('depois')).toBeTruthy();
+		await expect(res.includes(', às')).toBeFalsy();
+	});
+
+	it('user has after alarme and interval - full msg', async () => {
+		const user = {
+			prep_reminder_before: 0,
+			prep_reminder_before_interval: null,
+			prep_reminder_after: 1,
+			prep_reminder_after_interval: '12:00:00',
+		};
+
+		const res = await help.buildAlarmeMsg(user);
+		await expect(res.includes('depois')).toBeTruthy();
+		await expect(res.includes(', às')).toBeTruthy();
+	});
+
+	it('user has before alarme and after interval - dont show different interval', async () => {
+		const user = {
+			prep_reminder_before: 1,
+			prep_reminder_before_interval: null,
+			prep_reminder_after: 0,
+			prep_reminder_after_interval: '12:00:00',
+		};
+
+		const res = await help.buildAlarmeMsg(user);
+		await expect(res.includes('antes')).toBeTruthy();
+		await expect(res.includes(', às')).toBeFalsy();
+	});
+
+	it('user has before alarme but interval isnt a string - partial msg', async () => {
+		const user = {
+			prep_reminder_before: 1,
+			prep_reminder_before_interval: 1,
+			prep_reminder_after: 0,
+			prep_reminder_after_interval: null,
+		};
+
+		const res = await help.buildAlarmeMsg(user);
+		await expect(res.includes('antes')).toBeTruthy();
+		await expect(res.includes(', às')).toBeFalsy();
+	});
+
+	it('user only has interval - no msg', async () => {
+		const user = {
+			prep_reminder_before: 0,
+			prep_reminder_before_interval: '12:00:00',
+			prep_reminder_after: 0,
+			prep_reminder_after_interval: null,
+		};
+
+		const res = await help.buildAlarmeMsg(user);
+		await expect(res).toBe('');
+	});
+});

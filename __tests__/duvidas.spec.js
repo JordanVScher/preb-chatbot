@@ -125,14 +125,14 @@ describe('alarmeHorario', () => {
 		await expect(result.length === 10).toBeTruthy();
 
 		await expect(result[0].title === 'Mais Cedo').toBeTruthy();
-		await expect(result[1].title === 'As 8').toBeTruthy();
-		await expect(result[2].title === 'As 9').toBeTruthy();
-		await expect(result[3].title === 'As 10').toBeTruthy();
-		await expect(result[4].title === 'As 11').toBeTruthy();
-		await expect(result[5].title === 'As 12').toBeTruthy();
-		await expect(result[6].title === 'As 13').toBeTruthy();
-		await expect(result[7].title === 'As 14').toBeTruthy();
-		await expect(result[8].title === 'As 15').toBeTruthy();
+		await expect(result[1].title === 'Às 8').toBeTruthy();
+		await expect(result[2].title === 'Às 9').toBeTruthy();
+		await expect(result[3].title === 'Às 10').toBeTruthy();
+		await expect(result[4].title === 'Às 11').toBeTruthy();
+		await expect(result[5].title === 'Às 12').toBeTruthy();
+		await expect(result[6].title === 'Às 13').toBeTruthy();
+		await expect(result[7].title === 'Às 14').toBeTruthy();
+		await expect(result[8].title === 'Às 15').toBeTruthy();
 		await expect(result[9].title === 'Mais Tarde').toBeTruthy();
 
 		await expect(result[0].payload === `page${pageKey}0`).toBeTruthy();
@@ -185,16 +185,15 @@ describe('alarmeHorario', () => {
 		result1 = result1.quick_replies;
 
 		await expect(result1.length === 10).toBeTruthy();
-
 		await expect(result1[0].title === 'Mais Cedo').toBeTruthy();
-		await expect(result1[1].title === 'As 0').toBeTruthy();
-		await expect(result1[2].title === 'A 1').toBeTruthy();
-		await expect(result1[3].title === 'As 2').toBeTruthy();
-		await expect(result1[4].title === 'As 3').toBeTruthy();
-		await expect(result1[5].title === 'As 4').toBeTruthy();
-		await expect(result1[6].title === 'As 5').toBeTruthy();
-		await expect(result1[7].title === 'As 6').toBeTruthy();
-		await expect(result1[8].title === 'As 7').toBeTruthy();
+		await expect(result1[1].title === 'Às 0').toBeTruthy();
+		await expect(result1[2].title === 'À 1').toBeTruthy();
+		await expect(result1[3].title === 'Às 2').toBeTruthy();
+		await expect(result1[4].title === 'Às 3').toBeTruthy();
+		await expect(result1[5].title === 'Às 4').toBeTruthy();
+		await expect(result1[6].title === 'Às 5').toBeTruthy();
+		await expect(result1[7].title === 'Às 6').toBeTruthy();
+		await expect(result1[8].title === 'Às 7').toBeTruthy();
 		await expect(result1[9].title === 'Mais Tarde').toBeTruthy();
 
 		await expect(result1[0].payload === `page${pageKey}${alarmePage - 1}`).toBeTruthy();
@@ -231,14 +230,14 @@ describe('alarmeHorario', () => {
 		await expect(result1.length === 10).toBeTruthy();
 
 		await expect(result1[0].title === 'Mais Cedo').toBeTruthy();
-		await expect(result1[1].title === 'As 16').toBeTruthy();
-		await expect(result1[2].title === 'As 17').toBeTruthy();
-		await expect(result1[3].title === 'As 18').toBeTruthy();
-		await expect(result1[4].title === 'As 19').toBeTruthy();
-		await expect(result1[5].title === 'As 20').toBeTruthy();
-		await expect(result1[6].title === 'As 21').toBeTruthy();
-		await expect(result1[7].title === 'As 22').toBeTruthy();
-		await expect(result1[8].title === 'As 23').toBeTruthy();
+		await expect(result1[1].title === 'Às 16').toBeTruthy();
+		await expect(result1[2].title === 'Às 17').toBeTruthy();
+		await expect(result1[3].title === 'Às 18').toBeTruthy();
+		await expect(result1[4].title === 'Às 19').toBeTruthy();
+		await expect(result1[5].title === 'Às 20').toBeTruthy();
+		await expect(result1[6].title === 'Às 21').toBeTruthy();
+		await expect(result1[7].title === 'Às 22').toBeTruthy();
+		await expect(result1[8].title === 'Às 23').toBeTruthy();
 		await expect(result1[9].title === 'Mais Tarde').toBeTruthy();
 
 		await expect(result1[0].payload === `page${pageKey}${alarmePage - 1}`).toBeTruthy();
@@ -270,48 +269,50 @@ describe('alarmeHorario', () => {
 describe('alarmeMinuto', () => {
 	it('0 horas', async () => {
 		const context = cont.quickReplyContext('alarmeMinuto', 'alarmeMinuto');
+		const btnParam = 'alarmeFinal';
 		context.state.alarmeHora = 0;
 
-		let result = await duvidas.alarmeMinuto(context.state.alarmeHora);
+		let result = await duvidas.alarmeMinuto(context.state.alarmeHora, btnParam);
 		result = result.quick_replies;
 		await expect(result.length === 6).toBeTruthy();
 
-		await expect(result[0].title === `As ${context.state.alarmeHora}:00`).toBeTruthy();
-		await expect(result[1].title === `As ${context.state.alarmeHora}:10`).toBeTruthy();
-		await expect(result[2].title === `As ${context.state.alarmeHora}:20`).toBeTruthy();
-		await expect(result[3].title === `As ${context.state.alarmeHora}:30`).toBeTruthy();
-		await expect(result[4].title === `As ${context.state.alarmeHora}:40`).toBeTruthy();
-		await expect(result[5].title === `As ${context.state.alarmeHora}:50`).toBeTruthy();
+		await expect(result[0].title === `Às ${context.state.alarmeHora}:00`).toBeTruthy();
+		await expect(result[1].title === `Às ${context.state.alarmeHora}:10`).toBeTruthy();
+		await expect(result[2].title === `Às ${context.state.alarmeHora}:20`).toBeTruthy();
+		await expect(result[3].title === `Às ${context.state.alarmeHora}:30`).toBeTruthy();
+		await expect(result[4].title === `Às ${context.state.alarmeHora}:40`).toBeTruthy();
+		await expect(result[5].title === `Às ${context.state.alarmeHora}:50`).toBeTruthy();
 
-		await expect(result[0].payload === 'alarmeFinal00').toBeTruthy();
-		await expect(result[1].payload === 'alarmeFinal10').toBeTruthy();
-		await expect(result[2].payload === 'alarmeFinal20').toBeTruthy();
-		await expect(result[3].payload === 'alarmeFinal30').toBeTruthy();
-		await expect(result[4].payload === 'alarmeFinal40').toBeTruthy();
-		await expect(result[5].payload === 'alarmeFinal50').toBeTruthy();
+		await expect(result[0].payload === `${btnParam}00`).toBeTruthy();
+		await expect(result[1].payload === `${btnParam}10`).toBeTruthy();
+		await expect(result[2].payload === `${btnParam}20`).toBeTruthy();
+		await expect(result[3].payload === `${btnParam}30`).toBeTruthy();
+		await expect(result[4].payload === `${btnParam}40`).toBeTruthy();
+		await expect(result[5].payload === `${btnParam}50`).toBeTruthy();
 	});
 
 	it('12 horas', async () => {
 		const context = cont.quickReplyContext('alarmeMinuto', 'alarmeMinuto');
 		context.state.alarmeHora = '12';
+		const btnParam = 'alarmeJaTomeiFinal';
 
-		let result = await duvidas.alarmeMinuto(context.state.alarmeHora);
+		let result = await duvidas.alarmeMinuto(context.state.alarmeHora, btnParam);
 		result = result.quick_replies;
 		await expect(result.length === 6).toBeTruthy();
 
-		await expect(result[0].title === `As ${context.state.alarmeHora}:00`).toBeTruthy();
-		await expect(result[1].title === `As ${context.state.alarmeHora}:10`).toBeTruthy();
-		await expect(result[2].title === `As ${context.state.alarmeHora}:20`).toBeTruthy();
-		await expect(result[3].title === `As ${context.state.alarmeHora}:30`).toBeTruthy();
-		await expect(result[4].title === `As ${context.state.alarmeHora}:40`).toBeTruthy();
-		await expect(result[5].title === `As ${context.state.alarmeHora}:50`).toBeTruthy();
+		await expect(result[0].title === `Às ${context.state.alarmeHora}:00`).toBeTruthy();
+		await expect(result[1].title === `Às ${context.state.alarmeHora}:10`).toBeTruthy();
+		await expect(result[2].title === `Às ${context.state.alarmeHora}:20`).toBeTruthy();
+		await expect(result[3].title === `Às ${context.state.alarmeHora}:30`).toBeTruthy();
+		await expect(result[4].title === `Às ${context.state.alarmeHora}:40`).toBeTruthy();
+		await expect(result[5].title === `Às ${context.state.alarmeHora}:50`).toBeTruthy();
 
-		await expect(result[0].payload === 'alarmeFinal00').toBeTruthy();
-		await expect(result[1].payload === 'alarmeFinal10').toBeTruthy();
-		await expect(result[2].payload === 'alarmeFinal20').toBeTruthy();
-		await expect(result[3].payload === 'alarmeFinal30').toBeTruthy();
-		await expect(result[4].payload === 'alarmeFinal40').toBeTruthy();
-		await expect(result[5].payload === 'alarmeFinal50').toBeTruthy();
+		await expect(result[0].payload === `${btnParam}00`).toBeTruthy();
+		await expect(result[1].payload === `${btnParam}10`).toBeTruthy();
+		await expect(result[2].payload === `${btnParam}20`).toBeTruthy();
+		await expect(result[3].payload === `${btnParam}30`).toBeTruthy();
+		await expect(result[4].payload === `${btnParam}40`).toBeTruthy();
+		await expect(result[5].payload === `${btnParam}50`).toBeTruthy();
 	});
 });
 
@@ -540,24 +541,6 @@ describe('buildTestagem', () => {
 	});
 });
 
-describe('sendAlarmeIntro', () => {
-	const btn = {};
-	it('Tem alarme - vê uma mensagem e botões', async () => {
-		const context = await cont.quickReplyContext('sendAlarmeIntro', 'sendAlarmeIntro');
-		context.state.user = { has_alarm: true };
-
-		await duvidas.sendAlarmeIntro(context, btn);
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.hasAlarm, btn);
-	});
-
-	it('Não tem alarme - vê outra mensagem e botões', async () => {
-		const context = await cont.quickReplyContext('sendAlarmeIntro', 'sendAlarmeIntro');
-		context.state.user = { has_alarm: false };
-
-		await duvidas.sendAlarmeIntro(context, btn);
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.noAlarm, btn);
-	});
-});
 
 describe('alarmeSemMedicacao', () => {
 	it('É Combina - vê duas msgs e vai pro menu', async () => {
@@ -577,6 +560,37 @@ describe('alarmeSemMedicacao', () => {
 		await duvidas.alarmeSemMedicacao(context);
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeSemMedicacao);
 		await expect(context.sendText).not.toBeCalledWith(flow.alarmePrep.alarmeSemMedicacaoExtra);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+});
+
+describe('sendAlarmeIntro', () => {
+	const btn = {};
+	it('Tem alarme - vê uma mensagem e botões', async () => {
+		const context = await cont.quickReplyContext('sendAlarmeIntro', 'sendAlarmeIntro');
+		await duvidas.sendAlarmeIntro(context, btn, true);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.hasAlarm, btn);
+	});
+
+	it('Não tem alarme - vê outra mensagem e botões', async () => {
+		const context = await cont.quickReplyContext('sendAlarmeIntro', 'sendAlarmeIntro');
+		await duvidas.sendAlarmeIntro(context, btn, false);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.noAlarm, btn);
+	});
+});
+
+describe('alarmeCancelar', () => {
+	it('Cancelou com sucesso - vê mensagem e vai pro menu', async () => {
+		const context = await cont.quickReplyContext('alarmeCancelar', 'alarmeCancelar');
+		await duvidas.alarmeCancelar(context, { id: 1 });
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeCancelarSuccess);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('Fracasso ao cancelar - vê mensagem de erro e vai pro menu', async () => {
+		const context = await cont.quickReplyContext('sendAlarmeIntro', 'sendAlarmeIntro');
+		await duvidas.alarmeCancelar(context, { success: false });
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeCancelarFailure);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 });

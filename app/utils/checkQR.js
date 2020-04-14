@@ -81,7 +81,7 @@ async function checkMainMenu(context) {
 async function buildAlarmeBtn(hasAlarm) {
 	const depois = { content_type: 'text', title: 'Depois', payload: 'mainMenu' };
 	const config = { content_type: 'text', title: 'Configurar Alarme', payload: 'alarmeConfigurar' };
-	const cancelar = { content_type: 'text', title: 'Cancelar Alarme', payload: 'alarmeCancelar' };
+	const cancelar = { content_type: 'text', title: 'Cancelar Alarme', payload: 'alarmeCancelarConfirma' };
 
 	if (hasAlarm) return { quick_replies: [config, cancelar] };
 	return { quick_replies: [depois, config] };

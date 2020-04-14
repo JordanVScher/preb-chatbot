@@ -396,7 +396,14 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 	alarmePrep: {
 		hasAlarm: 'O que quer fazer?',
 		noAlarm: 'Eu sou muito ligeira e vou te ajudar a lembrar de tomar seus comprimidos. Pra isso vc precisa me configurar. Vamos lá?',
-		alarmeCancelar: '3. Texto para cancelamento do alarme',
+		cancelarConfirma: {
+			text1: 'Seu alarme está configurado para te avisar <WHEN> de tomar o remédio.',
+			text2: 'Tem certeza que deseja cancelar?',
+			menuOptions: ['Quero Cancelar', 'Reconfigurar', 'Voltar'],
+			menuPostback: ['alarmeCancelar', 'alarmeConfigurar', 'mainMenu'],
+		},
+		alarmeCancelarSuccess: 'Seu alarme foi cancelado com sucesso.',
+		alarmeCancelarFailure: 'Ops, tive um erro e não consegui cancelar seu alarme. Tente novamente mais tarde.',
 		comoTomando: 'Como tá tomando?',
 		comoTomandoBtn: {
 			menuOptions: ['PrEP sob demanda', 'PrEP diária'],
@@ -415,16 +422,11 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 		alarmeNaHora1: 'Qual horário?',
 		alarmeNaHora2: 'E os minutos?',
 		alarmeFinal: 'Prontinho. Seu alarme foi configurado! Amanhã te chamo pra perguntar se vc tomou.',
-		alarmeJaTomei: {
-			text1: 'De quanto em quanto tempo?',
-			// text1: 'Q horas vc costuma tomar seu remédio?',
-			text2: 'Prontinho. Seu alarme foi configurado! Amanhã te chamo pra perguntar se vc tomou.',
-			menuOptions: ['10 em 10 minutos', '30 em 30 minutos', '1h em 1h', '1h30 em 1h30', '2h em 2h'],
-			menuPostback: ['alarmeTempo10', 'alarmeTempo30', 'alarmeTempo60', 'alarmeTempo90', 'alarmeTempo120'],
-		},
+		alarmeJaTomei1: 'Q horas vc costuma tomar seu remédio?',
+		alarmeJaTomei2: 'E os minutos?',
 		alarmeFollowUp: 'Quer q eu te lembre quando o medicamento vai acabar?',
 		alarmeFollowUpBtn: {
-			menuOptions: ['Sim.', 'Não quero.'],
+			menuOptions: ['Sim', 'Não quero'],
 			menuPostback: ['alarmeAcabar', 'mainMenu'],
 		},
 		alarmeAcabar: {
