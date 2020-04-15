@@ -546,10 +546,20 @@ describe('alarmeSemMedicacao', () => {
 	it('É Combina - vê duas msgs e vai pro menu', async () => {
 		const context = await cont.quickReplyContext('alarmeSemMedicacao', 'alarmeSemMedicacao');
 		context.state.user = { voucher_type: 'combina' };
+		const msg = 'foobar';
 
-		await duvidas.alarmeSemMedicacao(context);
+		await duvidas.alarmeSemMedicacao(context, msg);
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeSemMedicacao);
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeSemMedicacaoExtra);
+		await expect(context.sendText).toBeCalledWith(`${flow.alarmePrep.alarmeSemMedicacaoExtra}\n${msg}`);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('É Combina mas houve um erro com o telefone - Não vê mensagem com telefone', async () => {
+		const context = await cont.quickReplyContext('alarmeSemMedicacao', 'alarmeSemMedicacao');
+		context.state.user = { voucher_type: 'combina' };
+
+		await duvidas.alarmeSemMedicacao(context, null);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeSemMedicacao);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 

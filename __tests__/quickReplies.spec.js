@@ -11,6 +11,7 @@ const duvidas = require('../app/utils/duvidas');
 const checkQR = require('../app/utils/checkQR');
 const mainMenu = require('../app/utils/mainMenu');
 const joinToken = require('../app/utils/joinToken');
+const help = require('../app/utils/helper');
 const { getQR } = require('../app/utils/attach');
 
 jest.mock('../app/utils/helper');
@@ -788,7 +789,7 @@ describe('alarmeAcabar - avisar quando acabar os comprimidos', () => {
 		const context = cont.quickReplyContext('alarmeSemMedicacao', 'alarmeSemMedicacao');
 		await handler(context);
 
-		await expect(duvidas.alarmeSemMedicacao).toBeCalledWith(context);
+		await expect(duvidas.alarmeSemMedicacao).toBeCalledWith(context, await help.buildCombinaCidadeMsg());
 	});
 
 	it('alarmeAcabarFinal - escolheu opção, faz request e encerra', async () => {

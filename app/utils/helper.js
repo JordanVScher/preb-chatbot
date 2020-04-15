@@ -225,6 +225,10 @@ async function buildAlarmeMsg(user) {
 	return msg;
 }
 
+async function buildCombinaCidadeMsg() {
+	return '📞: (00)00000-0000';
+}
+
 
 module.exports = {
 	Sentry,
@@ -253,4 +257,5 @@ module.exports = {
 	buildCidadeText,
 	removeTimezone,
 	buildAlarmeMsg,
+	buildCombinaCidadeMsg,
 };

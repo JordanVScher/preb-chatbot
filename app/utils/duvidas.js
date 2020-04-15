@@ -137,10 +137,12 @@ async function alarmeDate(context) {
 	return date;
 }
 
-async function alarmeSemMedicacao(context) {
+async function alarmeSemMedicacao(context, msg) {
 	await context.sendText(flow.alarmePrep.alarmeSemMedicacao);
 	if (context.state.user.voucher_type === 'combina') {
-		await context.sendText(flow.alarmePrep.alarmeSemMedicacaoExtra);
+		if (msg && typeof msg === 'string') {
+			await context.sendText(`${flow.alarmePrep.alarmeSemMedicacaoExtra}\n${msg}`);
+		}
 	}
 	await sendMain(context);
 }
