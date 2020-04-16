@@ -187,7 +187,9 @@ module.exports = async function App(context) {
 			} else if (context.state.dialog === 'leaveInsta') {
 				await context.setState({ insta: context.state.whatWasTyped, dialog: 'leaveInstaValid' });
 			} else if (context.state.dialog === 'autoCorreio') {
-				await context.setState({ endereco: context.state.whatWasTyped, dialog: 'autoCorreioEnd' });
+				await duvidas.handleCorreioEndereco(context);
+			} else if (context.state.dialog === 'autoCorreioContato') {
+				await context.setState({ autoCorreioContato: context.state.whatWasTyped, dialog: 'autoCorreioEnd' });
 			} else if (context.state.onTextQuiz === true) {
 				await context.setState({ whatWasTyped: parseInt(context.state.whatWasTyped, 10) });
 				if (Number.isInteger(context.state.whatWasTyped, 10) === true) {
@@ -524,6 +526,9 @@ module.exports = async function App(context) {
 				break;
 			case 'autoCorreio':
 				await context.sendText(flow.autoteste.autoCorreio);
+				break;
+			case 'autoCorreioContato':
+				await context.sendText(flow.autoteste.autoCorreioContato);
 				break;
 			case 'autoCorreioEnd':
 				await prepAPI.putRecipientPrep(context.session.user.id, { address: context.state.endereco });

@@ -153,6 +153,7 @@ module.exports = {
 			menuPostback: ['autoCorreio', 'autoServico'],
 		},
 		autoCorreio: 'Coloque o endereço',
+		autoCorreioContato: 'Me deixa um contanto, pode ser e-mail, insta ou whats!',
 		autoCorreioEnd: 'Close! Vamo entrar em contato com vc pra confirmar! Bjs!',
 		autoServicoCombina: 'Ahazou! Passa no serviço q vc faz acompanhamento de PrEP pra retirar!',
 		autoServicoSisprepSP: 'Qual serviço vc prefere retirar seu autoteste?',

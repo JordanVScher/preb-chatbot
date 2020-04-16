@@ -904,11 +904,11 @@ describe('autoteste', () => {
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreio);
 	});
 
-	it('autoCorreio - receive endereço, save it and go to autoCorreioEnd', async () => {
-		const context = cont.textContext('Rua foobar', 'autoCorreio');
+	it('autoCorreioContato - ask contato', async () => {
+		const context = cont.quickReplyContext('autoCorreioContato', 'autoCorreioContato');
 		await handler(context);
 
-		await expect(context.setState).toBeCalledWith({ endereco: context.state.whatWasTyped, dialog: 'autoCorreioEnd' });
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioContato);
 	});
 
 	it('autoCorreioEnd - make endereço request, send msg and go to main main', async () => {

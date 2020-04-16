@@ -220,6 +220,20 @@ async function alarmeCancelar(context, { id }) {
 	await sendMain(context);
 }
 
+async function handleCorreioEndereco(context) {
+	await context.setState({ endereco: context.state.whatWasTyped });
+
+	const { instagram, phone } = context.state.user;
+
+	if (instagram && phone) {
+		await context.setState({ dialog: 'autoCorreioEnd', autoCorreioContato: `${instagram} ou ${phone}` });
+	} else if (instagram || phone) {
+		await context.setState({ dialog: 'autoCorreioEnd', autoCorreioContato: instagram || phone });
+	} else {
+		await context.setState({ dialog: 'autoCorreioContato' });
+	}
+}
+
 module.exports = {
 	prepDuvidaFollowUp,
 	alarmeConfigurar,
@@ -238,4 +252,5 @@ module.exports = {
 	sendAlarmeIntro,
 	alarmeCancelar,
 	alarmeSemMedicacao,
+	handleCorreioEndereco,
 };

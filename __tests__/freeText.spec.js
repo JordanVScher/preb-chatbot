@@ -55,7 +55,14 @@ describe('Receive text message', () => {
 		const context = cont.textContext('foobar', 'autoCorreio');
 		await handler(context);
 
-		await expect(context.setState).toBeCalledWith({ endereco: context.state.whatWasTyped, dialog: 'autoCorreioEnd' });
+		await expect(duvidas.handleCorreioEndereco).toBeCalledWith(context);
+	});
+
+	it('autoCorreioContato - gets contato and goes to the end', async () => {
+		const context = cont.textContext('foobar', 'autoCorreioContato');
+		await handler(context);
+
+		await expect(context.setState).toBeCalledWith({ autoCorreioContato: context.state.whatWasTyped, dialog: 'autoCorreioEnd' });
 	});
 
 	it('joinPrep - checks joinPrep token', async () => {
