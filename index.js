@@ -416,22 +416,18 @@ module.exports = async function App(context) {
 				await context.sendText(flow.deuRuimPrep.drpIST.text1, await getQR(flow.deuRuimPrep.drpIST));
 				break;
 			case 'drpBolhas':
-			case 'drnpBolhas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpFeridas':
-			case 'drnpFeridas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpFeridas);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpVerrugas':
-			case 'drnpVerrugas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpVerrugas);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpCorrimento':
-			case 'drnpCorrimento':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpCorrimento);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
@@ -465,6 +461,22 @@ module.exports = async function App(context) {
 				break;
 			case 'drnpIST':
 				await context.sendText(flow.deuRuimNaoPrep.drnpIST.text1, await getQR(flow.deuRuimNaoPrep.drnpIST));
+				break;
+			case 'drnpBolhas':
+				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas);
+				await mainMenu.falarComHumano(context);
+				break;
+			case 'drnpFeridas':
+				await context.sendText(flow.deuRuimPrep.drpIST.drpFeridas);
+				await mainMenu.falarComHumano(context);
+				break;
+			case 'drnpVerrugas':
+				await context.sendText(flow.deuRuimPrep.drpIST.drpVerrugas);
+				await mainMenu.falarComHumano(context);
+				break;
+			case 'drnpCorrimento':
+				await context.sendText(flow.deuRuimPrep.drpIST.drpCorrimento);
+				await mainMenu.falarComHumano(context);
 				break;
 			case 'drnpPEPNao':
 				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.text1, await getQR(flow.deuRuimNaoPrep.drnpPEPNao));

@@ -530,36 +530,36 @@ describe('deuRuimNaoPrep', () => {
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpIST.text1, await getQR(flow.deuRuimNaoPrep.drnpIST));
 	});
 
-	it('drnpBolhas - explicação e followUp', async () => {
+	it('drnpBolhas - explicação e falar com humano', async () => {
 		const context = cont.quickReplyContext('drnpBolhas', 'drnpBolhas');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpBolhas);
-		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context);
 	});
 
-	it('drnpFeridas - explicação e followUp', async () => {
+	it('drnpFeridas - explicação e falar com humano', async () => {
 		const context = cont.quickReplyContext('drnpFeridas', 'drnpFeridas');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpFeridas);
-		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context);
 	});
 
-	it('drnpVerrugas - explicação e followUp', async () => {
+	it('drnpVerrugas - explicação e falar com humano', async () => {
 		const context = cont.quickReplyContext('drnpVerrugas', 'drnpVerrugas');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpVerrugas);
-		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context);
 	});
 
-	it('drnpCorrimento - explicação e followUp', async () => {
+	it('drnpCorrimento - explicação e falar com humano', async () => {
 		const context = cont.quickReplyContext('drnpCorrimento', 'drnpCorrimento');
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpCorrimento);
-		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context);
 	});
 
 	describe('drnpPEPNao', () => {
