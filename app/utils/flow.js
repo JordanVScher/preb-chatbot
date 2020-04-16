@@ -346,7 +346,7 @@ module.exports = {
 		drnpIST: {
 			text1: 'Sobre qual sintoma vc quer saber?',
 			menuOptions: ['Bolhas', 'Feridas', 'Verrugas', 'Corrimento (pus)'],
-			menuPostback: ['drnpBolhas', 'drnpFeridas', 'drnpVerruga', 'drnpCorrimento'],
+			menuPostback: ['drnpBolhas', 'drnpFeridas', 'drnpVerrugas', 'drnpCorrimento'],
 		},
 	},
 	triagemCQ: {
