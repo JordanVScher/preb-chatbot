@@ -530,7 +530,8 @@ module.exports = async function App(context) {
 				await context.sendText(flow.autoteste.autoCorreioContato);
 				break;
 			case 'autoCorreioEnd':
-				await prepAPI.putRecipientPrep(context.session.user.id, { address: context.state.endereco });
+				await prepAPI.postAutoTeste(context.session.user.id, context.state.autoCorreioEndereco, context.state.autoCorreioContato);
+				await sendMail('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context));
 				await context.sendText(flow.autoteste.autoCorreioEnd);
 				await mainMenu.sendMain(context);
 				break;

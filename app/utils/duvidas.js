@@ -222,7 +222,7 @@ async function alarmeCancelar(context, { id }) {
 
 async function handleCorreioEndereco(context, address) {
 	if (address) {
-		await context.setState({ endereco: address });
+		await context.setState({ autoCorreioEndereco: address });
 
 		const { instagram, phone } = context.state.user;
 
@@ -233,6 +233,8 @@ async function handleCorreioEndereco(context, address) {
 		} else {
 			await context.setState({ dialog: 'autoCorreioContato' });
 		}
+
+		await context.setState({ dialog: 'autoCorreioContato' });
 	} else {
 		await context.sendText(flow.autoteste.autoCorreioInválido);
 	}

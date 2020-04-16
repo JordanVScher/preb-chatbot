@@ -157,6 +157,22 @@ function buildMail(context, tipo, dado) {
 	return text;
 }
 
+function buildMailAutoTeste(context) {
+	let text = 'Olá, equipe PrEP.\n\n';
+	text += 'O usuário <NOME>, deixou um endereço e contato pedindo uma autoteste pelo correio.\n\n';
+	text = text.replace('<NOME>', context.state.sessionUser.name);
+	text += 'Segue abaixo os dados:\n\n';
+
+	text += `Nome: ${context.state.sessionUser.name}\n`;
+	if (context.state.user.integration_token) text += `Voucher: ${context.state.user.integration_token}\n`;
+	if (context.state.autoCorreioEndereco) text += `Endereço: ${context.state.autoCorreioEndereco}\n`;
+	if (context.state.autoCorreioContato) text += `Contatos: ${context.state.autoCorreioContato}\n`;
+
+	text += 'Assunto: Autoteste por correio\n';
+
+	return text;
+}
+
 function buildPhoneText(calendar, cidadeID) {
 	let text = calendar ? calendar.phone : '';
 	if (!text) text = telefoneDictionary[cidadeID];
@@ -256,6 +272,7 @@ module.exports = {
 	extraMessageDictionary,
 	checkSuggestWaitForTest,
 	buildMail,
+	buildMailAutoTeste,
 	buildConsultaFinal,
 	getPhoneValid,
 	buildContatoMsg,

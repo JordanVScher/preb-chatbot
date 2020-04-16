@@ -914,7 +914,7 @@ describe('autoteste', () => {
 		const context = cont.quickReplyContext('autoCorreioEnd', 'autoCorreioEnd');
 		await handler(context);
 
-		await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { address: context.state.endereco });
+		await expect(prepAPI.postAutoTeste).toBeCalledWith(context.session.user.id, context.state.autoCorreioEndereco, context.state.autoCorreioContato);
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioEnd);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});

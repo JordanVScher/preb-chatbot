@@ -55,6 +55,10 @@ module.exports = {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient/prep-reminder-yes?security_token=${security_token}`).query({ fb_id }));
 	},
 
+	async postAutoTeste(fb_id, address, contact) {
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/test-request?security_token=${security_token}`).query({ fb_id, address, contact }));
+	},
+
 	async postTestPrep(fb_id, prep) {
 		return handleRequestAnswer(await request.post(`${apiUri}/api/internal/set-profile?security_token=${security_token}`)
 			.query({ fb_id, profile: prep ? 'prep' : 'not-prep' }));

@@ -611,7 +611,7 @@ describe('handleCorreioEndereco', () => {
 		const context = await cont.textContext('foobar', 'autoCorreio');
 		await duvidas.handleCorreioEndereco(context, address);
 
-		await expect(context.setState).toBeCalledWith({ endereco: address });
+		await expect(context.setState).toBeCalledWith({ autoCorreioEndereco: address });
 		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioContato' });
 	});
 
@@ -621,7 +621,7 @@ describe('handleCorreioEndereco', () => {
 		context.state.user.instagram = '@foobar';
 		await duvidas.handleCorreioEndereco(context, address);
 
-		await expect(context.setState).toBeCalledWith({ endereco: address });
+		await expect(context.setState).toBeCalledWith({ autoCorreioEndereco: address });
 		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioEnd', autoCorreioContato: `${context.state.user.instagram} ou ${context.state.user.phone}` });
 	});
 
@@ -630,7 +630,7 @@ describe('handleCorreioEndereco', () => {
 		context.state.user.instagram = '@foobar';
 		await duvidas.handleCorreioEndereco(context, address);
 
-		await expect(context.setState).toBeCalledWith({ endereco: address });
+		await expect(context.setState).toBeCalledWith({ autoCorreioEndereco: address });
 		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioEnd', autoCorreioContato: context.state.user.instagram });
 	});
 
@@ -639,7 +639,7 @@ describe('handleCorreioEndereco', () => {
 		context.state.user.phone = '+11';
 		await duvidas.handleCorreioEndereco(context, address);
 
-		await expect(context.setState).toBeCalledWith({ endereco: address });
+		await expect(context.setState).toBeCalledWith({ autoCorreioEndereco: address });
 		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioEnd', autoCorreioContato: context.state.user.phone });
 	});
 
