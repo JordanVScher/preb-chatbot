@@ -12,6 +12,7 @@ const checkQR = require('../app/utils/checkQR');
 const mainMenu = require('../app/utils/mainMenu');
 const joinToken = require('../app/utils/joinToken');
 const help = require('../app/utils/helper');
+const { sendMail } = require('../app/utils/mailer');
 const { getQR } = require('../app/utils/attach');
 
 jest.mock('../app/utils/helper');
@@ -27,7 +28,9 @@ jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/joinToken');
-jest.mock('../app/utils/prep_api'); // mock prep_api tp avoid making the postRecipientPrep request
+jest.mock('../app/utils/mailer');
+jest.mock('../app/utils/labels');
+jest.mock('../app/utils/prep_api');
 
 it('quiz - begin', async () => {
 	const context = cont.quickReplyContext('beginQuiz', 'greetings');
@@ -903,6 +906,14 @@ describe('autoteste', () => {
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreio);
 	});
 
+	it('autoCorreioConfirma - shows contato and buttons', async () => {
+		const context = cont.quickReplyContext('autoCorreioConfirma', 'autoCorreioConfirma');
+		context.state.autoCorreioContato = 'foobar';
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioConfirma.replace('<CONTATO>', context.state.autoCorreioContato), await getQR(flow.autoteste.autoCorreioConfirmaBtn));
+	});
+
 	it('autoCorreioContato - ask contato', async () => {
 		const context = cont.quickReplyContext('autoCorreioContato', 'autoCorreioContato');
 		await handler(context);
@@ -915,6 +926,7 @@ describe('autoteste', () => {
 		await handler(context);
 
 		await expect(prepAPI.postAutoTeste).toBeCalledWith(context.session.user.id, context.state.autoCorreioEndereco, context.state.autoCorreioContato);
+		await expect(sendMail).toBeCalledWith('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context));
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioEnd);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});

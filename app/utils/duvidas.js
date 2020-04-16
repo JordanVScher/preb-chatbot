@@ -227,9 +227,9 @@ async function handleCorreioEndereco(context, address) {
 		const { instagram, phone } = context.state.user;
 
 		if (instagram && phone) {
-			await context.setState({ dialog: 'autoCorreioEnd', autoCorreioContato: `${instagram} ou ${phone}` });
+			await context.setState({ dialog: 'autoCorreioConfirma', autoCorreioContato: `${instagram} ou ${phone}` });
 		} else if (instagram || phone) {
-			await context.setState({ dialog: 'autoCorreioEnd', autoCorreioContato: instagram || phone });
+			await context.setState({ dialog: 'autoCorreioConfirma', autoCorreioContato: instagram || phone });
 		} else {
 			await context.setState({ dialog: 'autoCorreioContato' });
 		}

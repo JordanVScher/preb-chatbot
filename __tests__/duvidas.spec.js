@@ -622,7 +622,7 @@ describe('handleCorreioEndereco', () => {
 		await duvidas.handleCorreioEndereco(context, address);
 
 		await expect(context.setState).toBeCalledWith({ autoCorreioEndereco: address });
-		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioEnd', autoCorreioContato: `${context.state.user.instagram} ou ${context.state.user.phone}` });
+		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioConfirma', autoCorreioContato: `${context.state.user.instagram} ou ${context.state.user.phone}` });
 	});
 
 	it('Has instagram - saved it and goes to the end', async () => {
@@ -631,7 +631,7 @@ describe('handleCorreioEndereco', () => {
 		await duvidas.handleCorreioEndereco(context, address);
 
 		await expect(context.setState).toBeCalledWith({ autoCorreioEndereco: address });
-		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioEnd', autoCorreioContato: context.state.user.instagram });
+		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioConfirma', autoCorreioContato: context.state.user.instagram });
 	});
 
 	it('Has phone - saved it and goes to the end', async () => {
@@ -640,7 +640,7 @@ describe('handleCorreioEndereco', () => {
 		await duvidas.handleCorreioEndereco(context, address);
 
 		await expect(context.setState).toBeCalledWith({ autoCorreioEndereco: address });
-		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioEnd', autoCorreioContato: context.state.user.phone });
+		await expect(context.setState).toBeCalledWith({ dialog: 'autoCorreioConfirma', autoCorreioContato: context.state.user.phone });
 	});
 
 	it('Invalid address - sees msg and tries again', async () => {

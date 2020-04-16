@@ -164,9 +164,11 @@ function buildMailAutoTeste(context) {
 	text += 'Segue abaixo os dados:\n\n';
 
 	text += `Nome: ${context.state.sessionUser.name}\n`;
+	if (context.state.user.phone) text += `Telefone: ${context.state.user.phone}\n`;
+	if (context.state.user.instagram) text += `Instagram: ${context.state.user.instagram}\n`;
 	if (context.state.user.integration_token) text += `Voucher: ${context.state.user.integration_token}\n`;
 	if (context.state.autoCorreioEndereco) text += `Endereço: ${context.state.autoCorreioEndereco}\n`;
-	if (context.state.autoCorreioContato) text += `Contatos: ${context.state.autoCorreioContato}\n`;
+	if (context.state.autoCorreioContato) text += `Contato: ${context.state.autoCorreioContato}\n`;
 
 	text += 'Assunto: Autoteste por correio\n';
 

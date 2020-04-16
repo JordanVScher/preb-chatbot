@@ -154,7 +154,12 @@ module.exports = {
 		},
 		autoCorreio: 'Coloque seu endereço, a rua da sua casa junto com o número!',
 		autoCorreioInválido: 'Desculpe, não consegui entender seu endereço.',
-		autoCorreioContato: 'Me deixa um contanto, pode ser e-mail, insta ou whats!',
+		autoCorreioConfirma: 'O seu contato <CONTATO> está correto? Ou você prefere me dizer outro melhor?',
+		autoCorreioConfirmaBtn: {
+			menuOptions: ['Está certo', 'Mudar valor'],
+			menuPostback: ['autoCorreioEnd', 'autoCorreioContato'],
+		},
+		autoCorreioContato: 'Me deixa um contato, pode ser e-mail, insta ou whats!',
 		autoCorreioEnd: 'Close! Vamo entrar em contato com vc pra confirmar! Bjs!',
 		autoServicoCombina: 'Ahazou! Passa no serviço q vc faz acompanhamento de PrEP pra retirar!',
 		autoServicoSisprepSP: 'Qual serviço vc prefere retirar seu autoteste?',

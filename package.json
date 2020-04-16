@@ -14,8 +14,8 @@
     "docker_restart": "docker rm -f prep-chatbot; bash build-container.sh; bash sample-run-container.sh",
     "docker_logs": "docker logs prep-chatbot",
     "webhook": "npx bottender messenger webhook set",
-    "profileGet": "npx bottender messenger profile get", 
-    "profileSet": "npx bottender messenger profile set" 
+    "profileGet": "npx bottender messenger profile get",
+    "profileSet": "npx bottender messenger profile set"
   },
   "dependencies": {
     "@sentry/node": "^5.15.4",
