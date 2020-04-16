@@ -314,7 +314,7 @@ module.exports = {
 		drpEfeitos: {
 			text1: 'Sobre qual efeito colateral vc quer saber?',
 			drpEnjoo: 'Pode acontecer na 1ª. Semana de uso da PrEP, até seu corpo se acostumar com os comprimidos. Para evitar de ter náuseas, algumas dicas:\n- Tome seu comprimido após se alimentar ou à noite, antes de dormir, após uma refeição leve.\nCaso o enjôo seja intenso, prejudique suas atividades diárias, seja seguido de vômitos ou não melhore após 3-7 dias, é melhor ser avaliado por um profissional de saúde.',
-			drpGases: 'Quando presente, costuma melhorar até o fim do 1° mês de uso da PrEP.\nSe você se incomoda com os gases:\n-Evite alimentos como feijão, repolho, batata doce, ovo cozido, refrigerantes\n- Chá de erva- doce pode ajudar',
+			drpGases: 'Quando presente, costuma melhorar até o fim do 1° mês de uso da PrEP.\nSe você se incomoda com os gases:\n-Evite alimentos como feijão, repolho, batata doce, ovo cozido, refrigerantes\n-Chá de erva- doce pode ajudar',
 			drpDiarreia: 'A PrEP não costuma causar diarreia forte, mas pode aumentar o número de evacuações e diminuir um pouco a consistência das fezes, em algumas pessoas.\n- Beber bastante água(mais de 2,5- 3l/ dia) e evitar alimentos que soltam o intestino pode ajudar',
 			drpDorCabeca: 'É Pouco frequente dor de cabeça relacionada à PrEP costuma ser leve e melhorar após 2-3 dias.',
 			drpMoleza: 'Sintoma raro, dura em geral 1.2 dias e costuma melhorar com repouso.',
