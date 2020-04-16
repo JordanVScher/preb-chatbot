@@ -233,8 +233,6 @@ async function handleCorreioEndereco(context, address) {
 		} else {
 			await context.setState({ dialog: 'autoCorreioContato' });
 		}
-
-		await context.setState({ dialog: 'autoCorreioContato' });
 	} else {
 		await context.sendText(flow.autoteste.autoCorreioInválido);
 	}
