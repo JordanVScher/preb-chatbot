@@ -225,6 +225,15 @@ async function buildAlarmeMsg(user) {
 	return msg;
 }
 
+async function checkValidAddress(address) {
+	if (!address || typeof address !== 'string') return false;
+	if (address.length < 8) return false;
+	if (/\d/.test(address) === false) return false;
+	if (/[a-zA-Z]/.test(address) === false) return false;
+
+	return address;
+}
+
 async function buildCombinaCidadeMsg() {
 	return '📞: (00)00000-0000';
 }
@@ -257,5 +266,6 @@ module.exports = {
 	buildCidadeText,
 	removeTimezone,
 	buildAlarmeMsg,
+	checkValidAddress,
 	buildCombinaCidadeMsg,
 };

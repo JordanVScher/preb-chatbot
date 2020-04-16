@@ -7,6 +7,7 @@ const duvidas = require('../app/utils/duvidas');
 const research = require('../app/utils/research');
 const joinToken = require('../app/utils/joinToken');
 const prepAPI = require('../app/utils/prep_api');
+const help = require('../app/utils/helper');
 const DF = require('../app/dialogFlow');
 const quiz = require('../app/utils/quiz');
 
@@ -51,11 +52,11 @@ describe('Receive text message', () => {
 		await expect(context.setState).toBeCalledWith({ insta: context.state.whatWasTyped, dialog: 'leaveInstaValid' });
 	});
 
-	it('autoCorreio - gets endereco and follows up', async () => {
+	it('autoCorreio - gets endereco and runs handleCorreioEndereco', async () => {
 		const context = cont.textContext('foobar', 'autoCorreio');
 		await handler(context);
 
-		await expect(duvidas.handleCorreioEndereco).toBeCalledWith(context);
+		await expect(duvidas.handleCorreioEndereco).toBeCalledWith(context, await help.checkValidAddress(context.state.whatWasTyped));
 	});
 
 	it('autoCorreioContato - gets contato and goes to the end', async () => {

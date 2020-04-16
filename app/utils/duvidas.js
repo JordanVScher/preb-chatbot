@@ -220,17 +220,21 @@ async function alarmeCancelar(context, { id }) {
 	await sendMain(context);
 }
 
-async function handleCorreioEndereco(context) {
-	await context.setState({ endereco: context.state.whatWasTyped });
+async function handleCorreioEndereco(context, address) {
+	if (address) {
+		await context.setState({ endereco: address });
 
-	const { instagram, phone } = context.state.user;
+		const { instagram, phone } = context.state.user;
 
-	if (instagram && phone) {
-		await context.setState({ dialog: 'autoCorreioEnd', autoCorreioContato: `${instagram} ou ${phone}` });
-	} else if (instagram || phone) {
-		await context.setState({ dialog: 'autoCorreioEnd', autoCorreioContato: instagram || phone });
+		if (instagram && phone) {
+			await context.setState({ dialog: 'autoCorreioEnd', autoCorreioContato: `${instagram} ou ${phone}` });
+		} else if (instagram || phone) {
+			await context.setState({ dialog: 'autoCorreioEnd', autoCorreioContato: instagram || phone });
+		} else {
+			await context.setState({ dialog: 'autoCorreioContato' });
+		}
 	} else {
-		await context.setState({ dialog: 'autoCorreioContato' });
+		await context.sendText(flow.autoteste.autoCorreioInválido);
 	}
 }
 

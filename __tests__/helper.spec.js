@@ -166,3 +166,42 @@ describe('buildAlarmeMsg', () => {
 		await expect(res).toBe('');
 	});
 });
+
+describe('checkValidAddress', () => {
+	it('empty address - returns false', async () => {
+		const res = await help.checkValidAddress(null);
+
+		await expect(res).toBe(false);
+	});
+
+	it('address is not a string - returns false', async () => {
+		const res = await help.checkValidAddress(10);
+
+		await expect(res).toBe(false);
+	});
+
+	it('address is too short - returns false', async () => {
+		const res = await help.checkValidAddress('foobar');
+
+		await expect(res).toBe(false);
+	});
+
+	it('address doesnt have number - returns false', async () => {
+		const res = await help.checkValidAddress('avenida foobar');
+
+		await expect(res).toBe(false);
+	});
+
+	it('address only has numbers - returns false', async () => {
+		const res = await help.checkValidAddress('123456789');
+
+		await expect(res).toBe(false);
+	});
+
+	it('valid address - returns address', async () => {
+		const address = 'avenida foobar n2666';
+		const res = await help.checkValidAddress(address);
+
+		await expect(res).toBe(address);
+	});
+});
