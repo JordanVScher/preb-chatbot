@@ -156,7 +156,7 @@ module.exports = {
 		autoCorreioInválido: 'Desculpe, não consegui entender seu endereço.',
 		autoCorreioConfirma: 'O seu contato <CONTATO> está correto? Ou você prefere me dizer outro melhor?',
 		autoCorreioConfirmaBtn: {
-			menuOptions: ['Está certo', 'Mudar valor'],
+			menuOptions: ['Está certo', 'Mudar contato'],
 			menuPostback: ['autoCorreioEnd', 'autoCorreioContato'],
 		},
 		autoCorreioContato: 'Me deixa um contato, pode ser e-mail, insta ou whats!',
