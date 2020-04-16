@@ -153,7 +153,7 @@ module.exports = {
 			menuPostback: ['autoCorreio', 'autoServico'],
 		},
 		autoCorreio: 'Coloque seu endereço, a rua da sua casa junto com o número!',
-		autoCorreioInválido: 'Endereço inválido!',
+		autoCorreioInválido: 'Desculpe, não consegui entender seu endereço.',
 		autoCorreioContato: 'Me deixa um contanto, pode ser e-mail, insta ou whats!',
 		autoCorreioEnd: 'Close! Vamo entrar em contato com vc pra confirmar! Bjs!',
 		autoServicoCombina: 'Ahazou! Passa no serviço q vc faz acompanhamento de PrEP pra retirar!',
