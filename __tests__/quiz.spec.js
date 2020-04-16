@@ -224,4 +224,13 @@ describe('handleQuizResposta and sentAnswer', () => {
 		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
 		await expect(context.setState).toBeCalledWith({ dialog: 'testagem' });
 	});
+
+	it('duvidas_nao_prep triagem false - go to falarComHumano', async () => {
+		context.state.categoryQuestion = 'triagem';
+		context.state.sentAnswer = { finished_quiz: 1, ir_para_menu: 0 };
+
+		await quiz.handleQuizResposta(context);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ dialog: 'falarComHumano' });
+	});
 });

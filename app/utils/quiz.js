@@ -85,6 +85,11 @@ async function handleQuizResposta(context) {
 		}
 	}
 
+	if (categoryQuestion === 'duvidas_nao_prep' && sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'falarComHumano' });
+		return false;
+	}
+
 	if (context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
 		await context.setState({ dialog: 'startQuiz' });
 		return false;
@@ -95,6 +100,8 @@ async function handleQuizResposta(context) {
 
 async function handleAnswer(context, quizOpt) {
 	await context.setState({ onTextQuiz: false, onButtonQuiz: false, quizOpt });
+
+	if (process.env.ENV === 'local') await context.sendText(JSON.stringify({ category: context.state.categoryQuestion, code: context.state.currentQuestion.code, answer_value: context.state.quizOpt }, null, 2));
 	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, context.state.quizOpt) });
 	if (process.env.ENV === 'local') await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2));
 

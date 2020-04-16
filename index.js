@@ -367,9 +367,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.duvidasNaoPrep.querFalar.text1, await getQR(flow.duvidasNaoPrep.querFalar));
 				break;
 			case 'duvidasQuiz':
-				// await quiz.answerQuiz(context, 'duvidas');
-				await context.sendText('<Quiz dúvida em construção>');
-				await mainMenu.falarComHumano(context, null, flow.duvidasNaoPrep.end);
+				await quiz.answerQuiz(context, 'duvidas_nao_prep');
 				break;
 			case 'dnpMeTestar':
 				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);

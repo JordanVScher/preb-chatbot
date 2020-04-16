@@ -309,12 +309,11 @@ describe('duvidasNaoPrep', () => {
 		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.querFalar.text1, await getQR(flow.duvidasNaoPrep.querFalar));
 	});
 
-	it('duvidasQuiz - quiz pendente', async () => {
+	it('duvidasQuiz - starts duvidas_nao_prep quiz', async () => {
 		const context = cont.quickReplyContext('duvidasQuiz', 'duvidasQuiz');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith('<Quiz dúvida em construção>');
-		await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.duvidasNaoPrep.end);
+		await expect(quiz.answerQuiz).toBeCalledWith(context, 'duvidas_nao_prep');
 	});
 
 	it('dnpMeTestar - explicação e autoteste', async () => {
