@@ -98,6 +98,15 @@ describe('prepDuvidaFollowUp', () => {
 		await expect(context.sendText).toBeCalledWith(txt);
 		await expect(sendMain).toBeCalledWith(context);
 	});
+
+	it('other voucher, no initial msg - goes to menu, dont send msg', async () => {
+		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
+		context.state.user.voucher_type = 'foobar';
+		await duvidas.prepDuvidaFollowUp(context);
+
+		await expect(context.sendText).not.toBeCalledWith(txt);
+		await expect(sendMain).toBeCalledWith(context);
+	});
 });
 
 describe('alarmeConfigurar', () => {

@@ -6,7 +6,7 @@ const help = require('./helper');
 
 
 async function prepDuvidaFollowUp(context, txt) {
-	await context.sendText(txt);
+	if (txt) await context.sendText(txt);
 
 	switch (context.state.user.voucher_type) {
 	case 'sisprep':
