@@ -5,7 +5,9 @@ const { falarComHumano } = require('./mainMenu');
 const help = require('./helper');
 
 
-async function prepDuvidaFollowUp(context) {
+async function prepDuvidaFollowUp(context, txt) {
+	await context.sendText(txt);
+
 	switch (context.state.user.voucher_type) {
 	case 'sisprep':
 		await falarComHumano(context, null, flow.duvidasPrep.followUpSisPrep);

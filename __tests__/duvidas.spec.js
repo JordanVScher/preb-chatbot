@@ -60,19 +60,22 @@ jest.mock('../app/utils/attach');
 // });
 
 describe('prepDuvidaFollowUp', () => {
+	const txt = 'foobar';
 	it('sisprep - goes to falar com humanos', async () => {
 		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'sisprep';
-		await duvidas.prepDuvidaFollowUp(context);
+		await duvidas.prepDuvidaFollowUp(context, txt);
 
+		await expect(context.sendText).toBeCalledWith(txt);
 		await expect(falarComHumano).toBeCalledWith(context, null, flow.duvidasPrep.followUpSisPrep);
 	});
 
 	it('combina - sees msg and goes to menu', async () => {
 		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'combina';
-		await duvidas.prepDuvidaFollowUp(context);
+		await duvidas.prepDuvidaFollowUp(context, txt);
 
+		await expect(context.sendText).toBeCalledWith(txt);
 		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.followUpCombina);
 		await expect(sendMain).toBeCalledWith(context);
 	});
@@ -80,17 +83,19 @@ describe('prepDuvidaFollowUp', () => {
 	it('sus - sees msg and goes to menu', async () => {
 		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'sus';
-		await duvidas.prepDuvidaFollowUp(context);
+		await duvidas.prepDuvidaFollowUp(context, txt);
 
+		await expect(context.sendText).toBeCalledWith(txt);
 		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.followUpSUS);
-		await expect(sendMain).toBeCalledWith(context);
+		await expect(sendMain).toBeCalledWith(context,);
 	});
 
 	it('other voucher - goes to menu', async () => {
 		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'foobar';
-		await duvidas.prepDuvidaFollowUp(context);
+		await duvidas.prepDuvidaFollowUp(context, txt);
 
+		await expect(context.sendText).toBeCalledWith(txt);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 });
