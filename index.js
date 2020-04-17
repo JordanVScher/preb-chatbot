@@ -447,10 +447,7 @@ module.exports = async function App(context) {
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'deuRuimPrepFim':
-				await mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
-				break;
-			case 'deuRuimNPrepFim':
-				await mainMenu.sendMain(context);
+				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'deuRuimNaoPrep':
 				await context.sendText(flow.deuRuimNaoPrep.text1, await getQR(flow.deuRuimNaoPrep));

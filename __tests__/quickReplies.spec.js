@@ -489,14 +489,7 @@ describe('deuRuimPrep', () => {
 			const context = cont.quickReplyContext('deuRuimPrepFim', 'deuRuimPrepFim');
 			await handler(context);
 
-			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.followUpTriagem);
-		});
-
-		it('deuRuimNPrepFim - falar com humano', async () => {
-			const context = cont.quickReplyContext('deuRuimNPrepFim', 'deuRuimNPrepFim');
-			await handler(context);
-
-			await expect(mainMenu.sendMain).toBeCalledWith(context);
+			await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 		});
 	});
 });

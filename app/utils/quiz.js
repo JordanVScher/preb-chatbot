@@ -53,13 +53,8 @@ async function handleQuizResposta(context) {
 		return false;
 	}
 
-	if (categoryQuestion === 'deu_ruim_nao_tomei' && sentAnswer.finished_quiz === 1 && context.state.user.voucher_type === 'sisprep') { // check if the quiz is over
+	if (categoryQuestion === 'deu_ruim_nao_tomei' && sentAnswer.finished_quiz === 1) { // check if the quiz is over
 		await context.setState({ dialog: 'deuRuimPrepFim' });
-		return false;
-	}
-
-	if (categoryQuestion === 'deu_ruim_nao_tomei' && sentAnswer.finished_quiz === 1 && context.state.user.voucher_type !== 'sisprep') { // check if the quiz is over
-		await context.setState({ dialog: 'deuRuimNPrepFim' });
 		return false;
 	}
 

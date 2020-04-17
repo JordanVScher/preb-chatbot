@@ -24,16 +24,6 @@ async function prepDuvidaFollowUp(context, txt) {
 		await sendMain(context);
 		break;
 	}
-
-	// antigo followUp da dúvida
-	// if (context.state.user.voucher_type === 'sus') {
-	// 	let text = flow.duvidasPrep.textosSUS[context.state.user.city];
-	// 	if (!text) text = flow.duvidasPrep.demaisLocalidades;
-	// 	if (text) await context.sendText(flow.duvidasPrep.prefixSUS + text);
-	// 	await sendMain(context);
-	// } else {
-	// 	await falarComHumano(context, null, flow.duvidasPrep.notSUS);
-	// }
 }
 
 async function alarmeConfigurar(context) {

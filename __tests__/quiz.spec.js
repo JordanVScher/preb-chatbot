@@ -163,7 +163,7 @@ describe('handleQuizResposta and sentAnswer', () => {
 		await expect(context.setState).toBeCalledWith({ dialog: 'preTCLE', recrutamentoEnd: true });
 	});
 
-	it('Finished deu_ruim_nao_tomei, voucher_type is sisprep - go to deuRuimPrepFim', async () => {
+	it('Finished deu_ruim_nao_tomei - go to deuRuimPrepFim', async () => {
 		context.state.categoryQuestion = 'deu_ruim_nao_tomei';
 		context.state.sentAnswer = { finished_quiz: 1 };
 		context.state.user = { voucher_type: 'sisprep' };
@@ -172,17 +172,6 @@ describe('handleQuizResposta and sentAnswer', () => {
 		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
 		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
 		await expect(context.setState).toBeCalledWith({ dialog: 'deuRuimPrepFim' });
-	});
-
-	it('Finished deu_ruim_nao_tomei, voucher_type is not sisprep - go to deuRuimPrepFim', async () => {
-		context.state.categoryQuestion = 'deu_ruim_nao_tomei';
-		context.state.sentAnswer = { finished_quiz: 1 };
-		context.state.user = { voucher_type: 'combina' };
-
-		await quiz.handleQuizResposta(context);
-		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
-		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
-		await expect(context.setState).toBeCalledWith({ dialog: 'deuRuimNPrepFim' });
 	});
 
 	it('Finished triagem, entrar_em_contato - go to triagemCQ_entrar', async () => {
