@@ -118,12 +118,12 @@ async function alarmeDate(context) {
 	let date = await formatDate(context.state.whatWasTyped);
 	if (date) date = await checkDate(date);
 	if (!date || typeof date === 'string') {
-		await context.sendText(`${flow.alarmePrep.alarmeAcabar.invalid} ${date || ''}`);
+		await context.sendText(`${flow.alarmePrep.alarmeAcabar.invalid}`);
 		await context.setState({ dialog: 'alarmeAcabar' });
 	} else if (typeof date === 'boolean') {
 		await context.setState({ dialog: 'alarmeConfirmaData' });
 	} else {
-		await context.setState({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: date });
+		await context.setState({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: help.moment(date).format('YYYY-MM-DD') });
 	}
 
 	return date;
