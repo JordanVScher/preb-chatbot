@@ -4,16 +4,55 @@ const help = require('../app/utils/helper');
 
 jest.mock('../app/chatbot_api');
 
-it('formatDialogFlow - 250 chars or more, upperCase, remove-accents', async () => {
-	const largetext = 'Estou sentado num escritório, cercado de cabeças e corpos. Minha postura está conscientemente moldada ao formato da cadeira dura. '
-	+ 'Trata-se de uma sala fria da Administração da Universidade, com paredes revestidas de madeira e enfeitadas com Remingtons, janelas duplas contra o calor '
-	+ 'de novembro, insulada dos sons administrativos pela área da recepção à sua frente, onde o Tio Charles, o sr.deLint e eu tínhamos sido recebidos um pouco antes.';
+const exampleText = 'Estou sentado num escritório, cercado de cabeças e corpos. Minha postura está conscientemente moldada ao formato da cadeira dura.'
+			+ ' Trata-se de uma sala fria da Administração da Universidade, com paredes revestidas de madeira e enfeitadas com Remingtons, janelas duplas contra o calor '
+			+ 'de novembro, insulada dos sons administrativos pela área da recepção à sua frente, onde o Tio Charles, o sr.deLint e eu tínhamos sido recebidos um pouco antes.'
+			+ 'Eu estou aqui.'
+			+ 'Três rostos ganharam nitidez logo acima de blazers esportivos de verão e meios - windsors do outro lado de uma mesa de reunião envernizada que reluzia sob a luz aracnoide de uma tarde do Arizona. '
+			+ 'São os três Gestores — de Seleção, Assuntos Acadêmicos, Assuntos Esportivos. Não sei qual rosto é de quem.';
 
+it('formatDialogFlow - 250 chars or more, upperCase, remove-accents', async () => {
 	const expectedResult = 'estou sentado num escritorio, cercado de cabecas e corpos. minha postura esta conscientemente moldada ao formato da cadeira dura. '
     + 'trata-se de uma sala fria da administracao da universidade, com paredes revestidas de madeira e enfeitadas com remington';
-	const actualResult = await help.formatDialogFlow(largetext);
 
+	const actualResult = await help.formatDialogFlow(exampleText);
 	expect(expectedResult === actualResult).toBeTruthy();
+});
+
+describe('separateString', () => {
+	it('Short Text - dont split in two (dont split on "sr.", dont add missing dot)', async () => {
+		const shortText = exampleText.slice(0, 40); // when we slit here, there's no dot at the end and it shouldn't be added
+
+		const { firstString, secondString } = await help.separateString(shortText);
+		await expect(firstString).toBeTruthy();
+		await expect(firstString.length).toBe(shortText.length);
+		await expect(secondString).toBeFalsy();
+	});
+
+	it('Large Text - split in two (dont split on "sr." nor e-mail nor website)', async () => {
+		const test = 'foobar@email.com www.foobar.com.br';
+		const text = `${exampleText.slice(0, 300)} ${test} ${exampleText.slice(300)}`;
+		const { firstString, secondString } = await help.separateString(text);
+
+		await expect(firstString).toBeTruthy();
+		await expect(firstString.includes(test)).toBeTruthy();
+		await expect(secondString).toBeTruthy();
+		await expect(firstString.length < text.length).toBeTruthy();
+		await expect(secondString.length < text.length).toBeTruthy();
+		await expect(firstString.length + secondString.length === text.length).toBeTruthy();
+	});
+
+	it('Large Text, missing comma - split and dont add the missing comma', async () => {
+		const text = exampleText.slice(0, -1);
+
+		const { firstString, secondString } = await help.separateString(text);
+		await expect(firstString).toBeTruthy();
+		await expect(secondString).toBeTruthy();
+		await expect(secondString.charAt(-1) !== '.').toBeTruthy();
+		await expect(firstString.length < text.length).toBeTruthy();
+		await expect(secondString.length < text.length).toBeTruthy();
+		await expect(firstString.length + secondString.length === text.length).toBeTruthy();
+	});
 });
 
 it('formatPhone', async () => {
