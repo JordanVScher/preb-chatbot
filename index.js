@@ -838,15 +838,12 @@ module.exports = async function App(context) {
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiAlarmeA_Nao':
-				await prepAPI.putRecipientPrep(context.session.user.id, { stop_soneca: false });
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiAlarmeB_Sim':
-				await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: true });
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text1);
 				break;
 			case 'notiAlarmeB_Nao':
-				await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: false });
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiAlarmeC_Ok':

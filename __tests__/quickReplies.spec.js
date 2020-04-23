@@ -990,7 +990,6 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiAlarmeA_Nao', 'notiAlarmeA_Nao');
 			await handler(context);
 
-			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { stop_soneca: false });
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -998,7 +997,6 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiAlarmeB_Sim', 'notiAlarmeB_Sim');
 			await handler(context);
 
-			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { rolou_consulta: true });
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text1);
 		});
 
@@ -1006,7 +1004,6 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiAlarmeB_Nao', 'notiAlarmeB_Nao');
 			await handler(context);
 
-			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { rolou_consulta: false });
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
