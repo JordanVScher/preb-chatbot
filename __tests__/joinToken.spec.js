@@ -51,10 +51,9 @@ describe('handlePrepToken', () => {
 describe('handleCombinaToken', () => {
 	it('success - becomes combina and goes to joinCombinaEnd', async () => {
 		const context = cont.textContext('123123', 'joinCombinaAsk');
-		await joinToken.handleCombinaToken(context, true);
+		await joinToken.handleCombinaToken(context, { id: 1 });
 
 		await expect(context.sendText).toBeCalledWith(join.joinCombinaAsk.success);
-		await expect(putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'combina');
 		await expect(context.setState).toBeCalledWith({ user: await getRecipientPrep(context.session.user.id) });
 		await expect(linkIntegrationTokenLabel).toBeCalledWith(context);
 		await expect(context.setState).toBeCalledWith({ dialog: 'joinCombinaEnd' });
@@ -62,7 +61,7 @@ describe('handleCombinaToken', () => {
 
 	it('failure - try again', async () => {
 		const context = cont.textContext('foobar', 'joinCombinaAsk');
-		await joinToken.handleCombinaToken(context, false);
+		await joinToken.handleCombinaToken(context, {});
 
 		await expect(context.sendText).toBeCalledWith(join.joinCombinaAsk.fail1);
 		await expect(context.sendText).toBeCalledWith(join.joinCombinaAsk.fail2, await getQR(join.joinCombinaAsk));

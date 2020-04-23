@@ -150,7 +150,7 @@ describe('join - já tomo prep', () => {
 		const context = cont.textContext('foobar', 'joinPrep');
 		await handler(context);
 
-		await expect(joinToken.handlePrepToken).toBeCalledWith(context, await prepAPI.postIntegrationPrepToken(context.session.user.id, context.state.whatWasTyped));
+		await expect(joinToken.handlePrepToken).toBeCalledWith(context, await prepAPI.putCombinaToken(context.session.user.id, context.state.whatWasTyped));
 	});
 
 	it('joinCombina - explicação e confirmação', async () => {
@@ -172,7 +172,7 @@ describe('join - já tomo prep', () => {
 		const context = cont.textContext('foobar', 'joinCombinaAsk');
 		await handler(context);
 
-		await expect(joinToken.handleCombinaToken).toBeCalledWith(context, await prepAPI.postIntegrationCombinaToken(context.session.user.id, context.state.whatWasTyped));
+		await expect(joinToken.handleCombinaToken).toBeCalledWith(context, await prepAPI.putCombinaToken(context.session.user.id, context.state.whatWasTyped));
 	});
 
 	it('joinCombinaEnd - Encerra fluxo', async () => {

@@ -93,14 +93,14 @@ describe('Receive text message', () => {
 		const context = cont.textContext('foobar', 'joinCombinaAsk');
 		await handler(context);
 
-		await expect(joinToken.handleCombinaToken).toBeCalledWith(context, await prepAPI.postIntegrationCombinaToken(context.session.user.id, context.state.whatWasTyped));
+		await expect(joinToken.handleCombinaToken).toBeCalledWith(context, await prepAPI.putCombinaToken(context.session.user.id, context.state.whatWasTyped));
 	});
 
 	it('joinCombinaAskErro - checks joinCombina token', async () => {
 		const context = cont.textContext('foobar', 'joinCombinaAskErro');
 		await handler(context);
 
-		await expect(joinToken.handleCombinaToken).toBeCalledWith(context, await prepAPI.postIntegrationCombinaToken(context.session.user.id, context.state.whatWasTyped));
+		await expect(joinToken.handleCombinaToken).toBeCalledWith(context, await prepAPI.putCombinaToken(context.session.user.id, context.state.whatWasTyped));
 	});
 
 	it('Not handled - goes to dialogflow', async () => {

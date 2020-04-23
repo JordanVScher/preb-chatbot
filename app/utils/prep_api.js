@@ -121,10 +121,9 @@ module.exports = {
 		return !!(res.statusCode && res.statusCode.toString() === '200');
 	},
 
-	async putIntegrationCombinaToken(fb_id, integration_token) {
-		const res = await handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`)
+	async putCombinaToken(fb_id, integration_token) {
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`)
 			.query({ fb_id, voucher_type: 'combina', integration_token }));
-		return !!((res.statusCode && res.statusCode.toString() === '200'));
 	},
 
 	async getCount(fb_id, type) {

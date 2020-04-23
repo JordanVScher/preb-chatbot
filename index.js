@@ -208,7 +208,7 @@ module.exports = async function App(context) {
 			} else if (context.state.dialog === 'joinPrep' || context.state.dialog === 'joinPrepErro') {
 				await joinToken.handlePrepToken(context, await prepAPI.postIntegrationPrepToken(context.session.user.id, context.state.whatWasTyped));
 			} else if (context.state.dialog === 'joinCombinaAsk' || context.state.dialog === 'joinCombinaAskErro') {
-				await joinToken.handleCombinaToken(context, await prepAPI.postIntegrationCombinaToken(context.session.user.id, context.state.whatWasTyped));
+				await joinToken.handleCombinaToken(context, await prepAPI.putCombinaToken(context.session.user.id, context.state.whatWasTyped));
 			} else if (context.state.whatWasTyped.toLowerCase() === process.env.GET_PERFILDATA && process.env.ENV !== 'prod2') {
 				console.log('Deletamos o quiz?', await prepAPI.deleteQuizAnswer(context.session.user.id));
 				await context.resetState();

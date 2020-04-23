@@ -21,9 +21,8 @@ async function handlePrepToken(context, answer) {
 }
 
 async function handleCombinaToken(context, answer) {
-	if (answer === true) {
+	if (answer && answer.id) {
 		await context.sendText(join.joinCombinaAsk.success);
-		await putUpdateVoucherFlag(context.session.user.id, 'combina');
 		await context.setState({ user: await getRecipientPrep(context.session.user.id) });
 		await linkIntegrationTokenLabel(context);
 		await context.setState({ dialog: 'joinCombinaEnd' });
