@@ -997,12 +997,12 @@ describe('notificações', () => {
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
-		it('notiAlarmeB_Sim - atualiza rolou_consulta com true', async () => {
+		it('notiAlarmeB_Sim - atualiza rolou_consulta com true e pergunta da última consulta', async () => {
 			const context = cont.quickReplyContext('notiAlarmeB_Sim', 'notiAlarmeB_Sim');
 			await handler(context);
 
 			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { rolou_consulta: true });
-			await expect(mainMenu.sendMain).toBeCalledWith(context);
+			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text1);
 		});
 
 		it('notiAlarmeB_Nao - atualiza rolou_consulta com false', async () => {

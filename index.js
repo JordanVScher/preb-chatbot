@@ -180,7 +180,7 @@ module.exports = async function App(context) {
 				console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			}
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '', lastPBpayload: '' });
-			if (context.state.dialog === 'alarmeAcabar') {
+			if (context.state.dialog === 'alarmeAcabar' || context.state.dialog === 'notiAlarmeB_Sim') {
 				await duvidas.alarmeDate(context);
 			} else if (context.state.dialog === 'leavePhoneTwo' || context.state.dialog === 'phoneInvalid') {
 				await research.checkPhone(context);
@@ -846,7 +846,7 @@ module.exports = async function App(context) {
 				break;
 			case 'notiAlarmeB_Sim':
 				await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: true });
-				await mainMenu.sendMain(context);
+				await context.sendText(flow.alarmePrep.alarmeAcabar.text1);
 				break;
 			case 'notiAlarmeB_Nao':
 				await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: false });

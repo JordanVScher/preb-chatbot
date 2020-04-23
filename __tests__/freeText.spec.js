@@ -31,6 +31,15 @@ describe('Receive text message', () => {
 		await expect(duvidas.alarmeDate).toBeCalledWith(context);
 	});
 
+	it('notiAlarmeB_Sim - expect date, runs duvidas.alarmeDate', async () => {
+		const context = cont.textContext('foobar', 'notiAlarmeB_Sim');
+		await handler(context);
+
+		await expect(context.event.isText).toBeTruthy();
+		await expect(context.setState).toBeCalledWith({ whatWasTyped: context.event.message.text, lastQRpayload: '', lastPBpayload: '' });
+		await expect(duvidas.alarmeDate).toBeCalledWith(context);
+	});
+
 	it('leavePhoneTwo - expects phone, runs research.checkPhone', async () => {
 		const context = cont.textContext('foobar', 'leavePhoneTwo');
 		await handler(context);
