@@ -37,7 +37,7 @@ describe('prepDuvidaFollowUp', () => {
 
 		await expect(context.sendText).toBeCalledWith(txt);
 		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.followUpSUS);
-		await expect(sendMain).toBeCalledWith(context,);
+		await expect(sendMain).toBeCalledWith(context);
 	});
 
 	it('other voucher - goes to menu', async () => {
@@ -376,7 +376,7 @@ describe('alarmeDate', () => {
 		const date = await duvidas.alarmeDate(context);
 
 		await expect(date).toBeFalsy();
-		await expect(context.sendText).toBeCalledWith(`${flow.alarmePrep.alarmeAcabar.invalid} ${date || ''}`);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.invalid);
 		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabar' });
 	});
 
@@ -389,7 +389,7 @@ describe('alarmeDate', () => {
 		const date = await duvidas.alarmeDate(context);
 
 		await expect(typeof date).toBe('string');
-		await expect(context.sendText).toBeCalledWith(`${flow.alarmePrep.alarmeAcabar.invalid} ${date || ''}`);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.invalid);
 		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabar' });
 	});
 
@@ -413,7 +413,7 @@ describe('alarmeDate', () => {
 		const date = await duvidas.alarmeDate(context);
 
 		await expect(typeof date).toBe('object');
-		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: date });
+		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: help.moment(date).format('YYYY-MM-DD') });
 	});
 });
 

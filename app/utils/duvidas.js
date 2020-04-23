@@ -118,7 +118,7 @@ async function alarmeDate(context) {
 	let date = await formatDate(context.state.whatWasTyped);
 	if (date) date = await checkDate(date);
 	if (!date || typeof date === 'string') {
-		await context.sendText(`${flow.alarmePrep.alarmeAcabar.invalid}`);
+		await context.sendText(flow.alarmePrep.alarmeAcabar.invalid);
 		await context.setState({ dialog: 'alarmeAcabar' });
 	} else if (typeof date === 'boolean') {
 		await context.setState({ dialog: 'alarmeConfirmaData' });
