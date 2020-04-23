@@ -417,6 +417,23 @@ describe('alarmeDate', () => {
 	});
 });
 
+describe('alarmeAcabarFinal', () => {
+	it('Tem data na resposta - manda msg com a data', async () => {
+		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
+		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: '01-01-1970' });
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text3.replace('<DATE>', '01/01/1970'));
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('Sem data na resposta - manda msg de fallback', async () => {
+		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
+		await duvidas.alarmeAcabarFinal(context, { id: 1 });
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.fallback);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+});
 
 describe('autotesteServico', () => {
 	it('combina - vê msg e vai para menu', async () => {

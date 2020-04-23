@@ -39,7 +39,7 @@ module.exports = {
 	async putUpdateAlarme(fb_id, data, frascos) {
 		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`)
 			.query({
-				fb_id, prep_reminder_running_out: true, prep_reminder_running_out_date: data, prep_reminder_running_out_amount: frascos,
+				fb_id, prep_reminder_running_out: 1, prep_reminder_running_out_date: data, prep_reminder_running_out_count: frascos,
 			}));
 	},
 

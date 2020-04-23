@@ -607,10 +607,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
 				break;
 			case 'alarmeAcabarFinal':
-				await context.setState({ dataMsg: await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco) });
-				// TODO: replace xx/xx/xxxx with dataMsg
-				await context.sendText(flow.alarmePrep.alarmeAcabar.text3);
-				await mainMenu.sendMain(context);
+				await duvidas.alarmeAcabarFinal(context, await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco));
 				break;
 			case 'tomeiPrep':
 				await context.sendText(flow.tomeiPrep.intro, await getQR(flow.tomeiPrep.introBtn));

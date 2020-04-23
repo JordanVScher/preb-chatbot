@@ -791,10 +791,7 @@ describe('alarmeAcabar - avisar quando acabar os comprimidos', () => {
 		const context = cont.quickReplyContext('alarmeFrasco1', 'alarmeAcabarFinal');
 		await handler(context);
 
-		await expect(context.setState).toBeCalledWith({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
-		await expect(context.setState).toBeCalledWith({ dataMsg: await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco) });
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text3);
-		await expect(mainMenu.sendMain).toBeCalledWith(context);
+		await expect(duvidas.alarmeAcabarFinal).toBeCalledWith(context, await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco));
 	});
 });
 

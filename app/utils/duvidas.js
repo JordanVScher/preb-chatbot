@@ -139,6 +139,17 @@ async function alarmeSemMedicacao(context, msg) {
 	await sendMain(context);
 }
 
+async function alarmeAcabarFinal(context, res) {
+	if (res && res.running_out_wait_until && typeof res.running_out_wait_until === 'string') {
+		const data = res.running_out_wait_until.replace(/-/g, '/');
+		await context.sendText(flow.alarmePrep.alarmeAcabar.text3.replace('<DATE>', data));
+	} else {
+		await context.sendText(flow.alarmePrep.alarmeAcabar.fallback);
+	}
+
+	await sendMain(context);
+}
+
 async function buildTestagem(cityID, newRule) {
 	const { types } = flow.testagem;
 	const rules = newRule || flow.testagem.rules[cityID];
@@ -248,5 +259,6 @@ module.exports = {
 	sendAlarmeIntro,
 	alarmeCancelar,
 	alarmeSemMedicacao,
+	alarmeAcabarFinal,
 	handleCorreioEndereco,
 };
