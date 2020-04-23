@@ -262,6 +262,16 @@ async function buildCombinaCidadeMsg() {
 	return '📞: (00)00000-0000';
 }
 
+function getTomarHoras(context) {
+	let res;
+	const { user } = context.state;
+	if (user.prep_reminder_after_interval) res = user.prep_reminder_after_interval;
+	if (user.prep_reminder_before_interval) res = user.prep_reminder_before_interval;
+
+	if (!res || typeof res !== 'string') return '';
+	return res.slice(0, 5);
+}
+
 
 module.exports = {
 	Sentry,
@@ -293,4 +303,5 @@ module.exports = {
 	buildAlarmeMsg,
 	checkValidAddress,
 	buildCombinaCidadeMsg,
+	getTomarHoras,
 };

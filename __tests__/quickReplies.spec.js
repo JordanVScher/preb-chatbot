@@ -1021,7 +1021,7 @@ describe('notificações', () => {
 			await handler(context);
 
 			await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { repeat_notification: true });
-			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.notiTransou.replace('<HORA>', context.state.askProxima));
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.notiTransou.replace('<HORA>', help.getTomarHoras(context)));
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
 
@@ -1070,9 +1070,9 @@ describe('notificações', () => {
 			await handler(context);
 
 			await expect(context.setState).toBeCalledWith({ askNotiTomei: await context.state.lastQRpayload.replace('askNotiTomei', ''), dialog: 'askNotiTomeiDepois' });
-			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.askNotiHoje.replace('<HORA>', context.state.askProxima));
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.askNotiHoje.replace('<HORA>', help.getTomarHoras(context)));
 			await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askNotiProxima' });
-			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.askNotiAmanha.replace('<HORA>', context.state.askProxima), await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.askNotiAmanha.replace('<HORA>', help.getTomarHoras(context)), await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
 		});
 
 		it('notiTomeiFinal - escolheu opção, faz request e encerra', async () => {

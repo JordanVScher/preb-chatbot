@@ -851,7 +851,7 @@ module.exports = async function App(context) {
 				break;
 			case 'notiTomeiA_Sim':
 				await prepAPI.putRecipientPrep(context.session.user.id, { repeat_notification: true });
-				await context.sendText(flow.tomeiPrep.notiTransou.replace('<HORA>', context.state.askProxima)); // TODO askProxima on prep recipient
+				await context.sendText(flow.tomeiPrep.notiTransou.replace('<HORA>', help.getTomarHoras(context)));
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiTomeiA_Nao':
@@ -877,15 +877,15 @@ module.exports = async function App(context) {
 				await context.sendText(flow.tomeiPrep.askNotiTomei, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
 				break;
 			case 'askNotiTomeiDepois':
-				await context.sendText(flow.tomeiPrep.askNotiHoje.replace('<HORA>', context.state.askProxima)); // TODO askProxima on prep recipient
+				await context.sendText(flow.tomeiPrep.askNotiHoje.replace('<HORA>', help.getTomarHoras(context)));
 				await context.setState({ alarmePage: 1, pageKey: 'askNotiProxima' });
 				// fallsthrough
-			case 'askNotiProxima': // TODO askProxima on prep recipient
-				await context.sendText(flow.tomeiPrep.askNotiAmanha.replace('<HORA>', context.state.askProxima), await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+			case 'askNotiProxima':
+				await context.sendText(flow.tomeiPrep.askNotiAmanha.replace('<HORA>', help.getTomarHoras(context)), await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
 				break;
 			case 'notiTomeiFinal':
 				await prepAPI.putUpdateNotificacao24(context.session.user.id, context.state.askNotiTomei, context.state.askNotiProxima);
-				await context.setState({ askProxima: context.state.askNotiProxima }); // TODO askProxima on prep recipient
+				await context.setState({ askProxima: context.state.askNotiProxima });
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiTomeiC_Nao':
