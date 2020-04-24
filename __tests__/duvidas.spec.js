@@ -25,10 +25,12 @@ describe('prepDuvidaFollowUp', () => {
 	it('combina - sees msg and goes to menu', async () => {
 		const context = cont.quickReplyContext('prepDuvidaFollowUp', 'prepDuvidaFollowUp');
 		context.state.user.voucher_type = 'combina';
+		const msg = await help.getCombinaContact(context.state.user.combina_city);
+
 		await duvidas.prepDuvidaFollowUp(context, txt);
 
 		await expect(context.sendText).toBeCalledWith(txt);
-		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.followUpCombina);
+		await expect(context.sendText).toBeCalledWith(msg);
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
