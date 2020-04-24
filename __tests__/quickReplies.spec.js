@@ -848,13 +848,11 @@ describe('Tomei - tomeiPrep', () => {
 		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.naoTomou, await getQR(flow.tomeiPrep.naoTomouBtn));
 	});
 
-	it('naoTransou - vê msg, faz request e manda pro menu', async () => {
+	it('naoTransou - chama duvidas.naoTransouEnd', async () => {
 		const context = cont.quickReplyContext('naoTransou', 'naoTransou');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.naoTransou);
-		await expect(prepAPI.putUpdateNotificacao22).toBeCalledWith(context.session.user.id);
-		await expect(mainMenu.sendMain).toBeCalledWith(context);
+		await expect(duvidas.naoTransouEnd).toBeCalledWith(context);
 	});
 
 	it('transou - vê mensagens', async () => {

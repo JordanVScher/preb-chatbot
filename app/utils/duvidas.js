@@ -3,6 +3,7 @@ const { getQR } = require('./attach');
 const { sendMain } = require('./mainMenu');
 const { falarComHumano } = require('./mainMenu');
 const help = require('./helper');
+const { putUpdateNotificacao22 } = require('./prep_api');
 
 
 async function prepDuvidaFollowUp(context, txt) {
@@ -242,6 +243,14 @@ async function handleCorreioEndereco(context, address) {
 	}
 }
 
+async function naoTransouEnd(context) {
+	await context.sendText(flow.tomeiPrep.naoTransou);
+	let now = await help.removeTimezone(new Date());
+	now = now.toISOString().slice(0, -1);
+	await putUpdateNotificacao22(context.session.user.id, now, now);
+	await sendMain(context);
+}
+
 module.exports = {
 	prepDuvidaFollowUp,
 	alarmeConfigurar,
@@ -262,4 +271,5 @@ module.exports = {
 	alarmeSemMedicacao,
 	alarmeAcabarFinal,
 	handleCorreioEndereco,
+	naoTransouEnd,
 };

@@ -5,9 +5,11 @@ const help = require('../app/utils/helper');
 const { sendMain } = require('../app/utils/mainMenu');
 const { falarComHumano } = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
+const { putUpdateNotificacao22 } = require('../app/utils/prep_api');
 
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
+jest.mock('../app/utils/prep_api');
 
 describe('prepDuvidaFollowUp', () => {
 	const txt = 'foobar';
@@ -629,5 +631,16 @@ describe('handleCorreioEndereco', () => {
 		await duvidas.handleCorreioEndereco(context, null);
 
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioInválido);
+	});
+});
+
+describe('naoTransouEnd', () => {
+	it('Vê msg e faz request', async () => {
+		const context = await cont.quickReplyContext('naoTransouEnd', 'naoTransouEnd');
+		await duvidas.naoTransouEnd(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.naoTransou);
+		await expect(putUpdateNotificacao22).toBeCalled();
+		await expect(sendMain).toBeCalledWith(context);
 	});
 });

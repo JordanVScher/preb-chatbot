@@ -48,8 +48,9 @@ module.exports = {
 			.query({ fb_id, combina_reminder_hour_exact, combina_reminder_hours_before }));
 	},
 
-	async putUpdateNotificacao22(fb_id) {
-		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id }));
+	async putUpdateNotificacao22(fb_id, combina_reminder_22h, combina_reminder_double) {
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`)
+			.query({ fb_id, combina_reminder_22h, combina_reminder_double }));
 	},
 
 	async postRecipientTookMedicine(fb_id, yes_prep = 1) {

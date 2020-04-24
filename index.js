@@ -634,9 +634,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.tomeiPrep.naoTomou, await getQR(flow.tomeiPrep.naoTomouBtn));
 				break;
 			case 'naoTransou':
-				await context.sendText(flow.tomeiPrep.naoTransou);
-				await prepAPI.putUpdateNotificacao22(context.session.user.id);
-				await mainMenu.sendMain(context);
+				await duvidas.naoTransouEnd(context);
 				break;
 			case 'transou':
 				await context.sendText(flow.tomeiPrep.transou);
