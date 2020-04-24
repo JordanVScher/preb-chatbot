@@ -288,8 +288,7 @@ describe('buildChoiceDuration', () => {
 		const offset = now.getTimezoneOffset() / 60;
 
 		const result = await duvidas.buildChoiceDuration(hour, minute);
-		const { date } = result;
-
+		const { date, string } = result;
 
 		await expect(date).toBeTruthy();
 		await expect(now.getDay() === date.getDay()).toBeTruthy();
@@ -299,6 +298,7 @@ describe('buildChoiceDuration', () => {
 		await expect(date.getMinutes() === minute).toBeTruthy();
 		await expect(date.getSeconds() === 0).toBeTruthy();
 		await expect(date.getMilliseconds() === 0).toBeTruthy();
+		await expect(string).toBe('08:15:00');
 	});
 });
 

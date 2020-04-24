@@ -625,7 +625,9 @@ module.exports = async function App(context) {
 				await context.sendText(flow.tomeiPrep.askProxima, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
 				break;
 			case 'tomeiFinal':
-				await prepAPI.putUpdateNotificacao24(context.session.user.id, context.state.askTomei, context.state.askProxima);
+				await prepAPI.putUpdateNotificacao24(
+					context.session.user.id, await duvidas.buildChoiceDuration(context.state.askTomei), await duvidas.buildChoiceDuration(context.state.askProxima),
+				);
 				await mainMenu.sendMain(context);
 				break;
 			case 'NaoTomouPrep':
@@ -884,7 +886,9 @@ module.exports = async function App(context) {
 				await context.sendText(flow.tomeiPrep.askNotiAmanha.replace('<HORA>', help.getTomarHoras(context)), await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
 				break;
 			case 'notiTomeiFinal':
-				await prepAPI.putUpdateNotificacao24(context.session.user.id, context.state.askNotiTomei, context.state.askNotiProxima);
+				await prepAPI.putUpdateNotificacao24(
+					context.session.user.id, await duvidas.buildChoiceDuration(context.state.askNotiTomei), await duvidas.buildChoiceDuration(context.state.askNotiProxima),
+				);
 				await context.setState({ askProxima: context.state.askNotiProxima });
 				await mainMenu.sendMain(context);
 				break;

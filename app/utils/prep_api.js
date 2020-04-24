@@ -43,15 +43,16 @@ module.exports = {
 			}));
 	},
 
-	async putUpdateNotificacao24(fb_id, askTomei, askProxima) {
-		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, askTomei, askProxima }));
+	async putUpdateNotificacao24(fb_id, { string: combina_reminder_hour_exact }, { string: combina_reminder_hours_before }) {
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`)
+			.query({ fb_id, combina_reminder_hour_exact, combina_reminder_hours_before }));
 	},
 
 	async putUpdateNotificacao22(fb_id) {
-		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, transou: true }));
+		return handleRequestAnswer(await request.put(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id }));
 	},
 
-	async postRecipientTookMedicine(fb_id, yes_prep = true) {
+	async postRecipientTookMedicine(fb_id, yes_prep = 1) {
 		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/prep-reminder-yes?security_token=${security_token}`).query({ fb_id, yes_prep }));
 	},
 

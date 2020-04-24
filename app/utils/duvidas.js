@@ -84,7 +84,8 @@ async function buildChoiceDuration(hour, minutes) {
 	ts.setMilliseconds(0);
 
 	ts = await help.removeTimezone(ts);
-	return { date: ts, string: ts.toISOString().split('T')[1].replace('Z', '') };
+
+	return { date: ts, string: ts.toISOString().slice(11, 19) };
 }
 
 async function formatDate(text) {
