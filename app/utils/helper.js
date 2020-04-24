@@ -258,10 +258,6 @@ async function checkValidAddress(address) {
 	return address;
 }
 
-async function buildCombinaCidadeMsg() {
-	return '📞: (00)00000-0000';
-}
-
 function getTomarHoras(context) {
 	let res;
 	const { user } = context.state;
@@ -279,6 +275,30 @@ const combinaCityDictionary = {
 	4: 'Porto Alegre',
 	5: 'Curitiba',
 };
+
+const combinaContactDictionary = {
+	1: '(00) 00000-0000',
+	2: '(00) 00000-0000',
+	3: '(00) 00000-0000',
+	4: '(00) 00000-0000',
+	5: '(00) 00000-0000',
+};
+
+function getCombinaContact(combinaCity) {
+	const cityID = Object.keys(combinaCityDictionary).find((key) => combinaCityDictionary[key] === combinaCity);
+
+	const city = combinaCity;
+	const phone = combinaContactDictionary[cityID];
+	if (cityID && phone) return `${city}: 📞 ${phone}`;
+
+	let res = '';
+	const keys = Object.keys(combinaCityDictionary);
+	keys.forEach((e) => {
+		res += `${combinaCityDictionary[e]}: 📞 ${combinaContactDictionary[e]}\n`;
+	});
+
+	return res.trim();
+}
 
 module.exports = {
 	Sentry,
@@ -309,7 +329,8 @@ module.exports = {
 	removeTimezone,
 	buildAlarmeMsg,
 	checkValidAddress,
-	buildCombinaCidadeMsg,
 	getTomarHoras,
 	combinaCityDictionary,
+	combinaContactDictionary,
+	getCombinaContact,
 };

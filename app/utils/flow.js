@@ -453,11 +453,6 @@ Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de toma
 		},
 		alarmeSemMedicacao: 'Vc deve tá quase sem medicação...',
 		alarmeSemMedicacaoExtra: 'Axo q vc já tá ficando sem comprimidos, chama meus migles no whats ou liga q vão te ajudar a ñ ficar sem PrEP.',
-		// > Se de Ribeirão Preto
-		// > Se de São Paulo / SP
-		// > Se de Fortaleza
-		// > Se de Porto Alegre
-		// > Se de Curitiba
 	},
 	tomeiPrep: {
 		intro: 'Vc tomou os dois comprimidos iniciais?',

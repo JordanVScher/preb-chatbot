@@ -800,7 +800,7 @@ describe('alarmeAcabar - avisar quando acabar os comprimidos', () => {
 		const context = cont.quickReplyContext('alarmeSemMedicacao', 'alarmeSemMedicacao');
 		await handler(context);
 
-		await expect(duvidas.alarmeSemMedicacao).toBeCalledWith(context, await help.buildCombinaCidadeMsg());
+		await expect(duvidas.alarmeSemMedicacao).toBeCalledWith(context, await help.getCombinaContact(context.state.user.combina_city));
 	});
 
 	it('alarmeAcabarFinal - escolheu opção, faz request e encerra', async () => {

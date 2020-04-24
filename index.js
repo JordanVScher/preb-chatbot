@@ -607,7 +607,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.alarmePrep.alarmeConfirmaData, await getQR(flow.alarmePrep.alarmeConfirmaDataBtn));
 				break;
 			case 'alarmeSemMedicacao':
-				await duvidas.alarmeSemMedicacao(context, await help.buildCombinaCidadeMsg());
+				await duvidas.alarmeSemMedicacao(context, await help.getCombinaContact(context.state.user.combina_city));
 				break;
 			case 'alarmeAcabarFrascos':
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
