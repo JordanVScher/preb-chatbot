@@ -24,8 +24,16 @@ async function createNewLabel(name) {
 }
 
 // get every label
-async function listAllLabels(next) { // eslint-disable-line no-unused-vars
+async function listAllLabels(next) {
 	let url = `https://graph.facebook.com/v${labelApiVersion}/me/custom_labels?fields=name&access_token=${pageToken}&limit=200`;
+	if (next) url += `&next=${next}`;
+	const res = await req.get(url);
+	const response = await res.json();
+	return response;
+}
+
+async function getUserLabels(PSID, next) {
+	let url = `https://graph.facebook.com/v${labelApiVersion}/${PSID}/custom_labels?fields=name&access_token=${pageToken}`;
 	if (next) url += `&next=${next}`;
 	const res = await req.get(url);
 	const response = await res.json();
@@ -38,8 +46,9 @@ async function getBroadcastMetrics(broadcastID) {
 	return response;
 }
 
-async function getUserLabels(PSID) {
-	const res = await req.get(`https://graph.facebook.com/v${labelApiVersion}/${PSID}/custom_labels`).query({ access_token: pageToken, fields: 'name' });
+// TODO: fix associateLabelToPSID
+async function associateLabelToPSID(PSID, labelID) {
+	const res = await req.post(`https://graph.facebook.com/v${labelApiVersion}/${labelID}/label?access_token=${pageToken}`).send({ user: PSID });
 	return res.json();
 }
 
@@ -58,8 +67,24 @@ async function getAllLabels() {
 	return result;
 }
 
+async function getAssociatedLabels(PSID) {
+	const result = [];
+	let next = false;
+
+	do {
+		const aux = await getUserLabels(PSID, next);
+		const { data } = aux;
+
+		next = aux.paging.next;
+
+		if (data) result.push(...data);
+	} while (next);
+
+	return result;
+}
+
 async function dissociateLabelsFromUser(UserID) {
-	const userLabels = await client.getAssociatedLabels(UserID);
+	const userLabels = await getAssociatedLabels(UserID);
 	if (userLabels.data) {
 		await userLabels.data.forEach(async (element) => {
 			await client.dissociateLabel(UserID, element.id);
@@ -69,17 +94,9 @@ async function dissociateLabelsFromUser(UserID) {
 	return false;
 }
 
-async function addUserToBlackList(UserID) {
-	return client.associateLabel(UserID, process.env.LABEL_BLACKLIST);
-}
-
-async function removeUserFromBlackList(UserID) {
-	return client.dissociateLabel(UserID, process.env.LABEL_BLACKLIST);
-}
-
 async function checkUserOnLabel(UserID, labelID) { // checks if user is on the label
-	const userLabels = await client.getAssociatedLabels(UserID);
-	const theOneLabel = await userLabels.data.find((x) => x.id === `${labelID}`); // find the one label with the name same
+	const userLabels = await getAssociatedLabels(UserID);
+	const theOneLabel = await userLabels.find((x) => x.id === labelID.toString()); // find the one label with the name id
 
 	// if we found the label on the user
 	if (theOneLabel) return true;
@@ -87,8 +104,7 @@ async function checkUserOnLabel(UserID, labelID) { // checks if user is on the l
 }
 
 async function removeAllUserLabels(UserID) {
-	const userLabels = await client.getAssociatedLabels(UserID);
-
+	const userLabels = await getAssociatedLabels(UserID);
 
 	for (let i = 0; i < userLabels.data.length; i++) {
 		const element = userLabels.data[i];
@@ -99,34 +115,8 @@ async function removeAllUserLabels(UserID) {
 // Associates user to a label. Pass in the custom label id and the user psid
 // associatesLabelToUser('123123', process.env.LABEL_ADMIN);
 async function associatesLabelToUser(userID, labelID) {
-	if (await checkUserOnLabel(userID, labelID) === true) {
-		return true;
-	}
-
-	// const userLabels = await client.getAssociatedLabels(userID);
-	// if (userLabels.data.length >= 20) { // actual facebook limit is 25 (by limit i mean before pagination starts to act up)
-	// 	userLabels.data.forEach(async (element) => {
-	// 		if (element.id !== process.env.LABEL_ADMIN) { // remove every tag except for admin
-	// 			client.dissociateLabel(userID, element.id);
-	// 		}
-	// 	});
-	// }
-
-	return client.associateLabel(userID, labelID);
-}
-
-async function getLabelID(labelName) {
-	const labelList = await client.getLabelList();
-
-	const theOneLabel = await labelList.data.find((x) => x.name === `${labelName}`);
-	if (theOneLabel && theOneLabel.id) { // check if label exists
-		return theOneLabel.id;
-	}
-	const newLabel = await client.createLabel(labelName);
-	if (newLabel) {
-		return newLabel.id;
-	}
-	return undefined;
+	if (await checkUserOnLabel(userID, labelID)) return true;
+	return associateLabelToPSID(userID, labelID);
 }
 
 // link an user to an agendaLabel
@@ -169,39 +159,40 @@ async function addCityLabel(userID, cityId) {
 
 async function linkIntegrationTokenLabel(context) {
 	try {
-		// check if user has a integration_voucher but we haven't saved it yet (voucher) because we need to create a label
-		if (context.state.user.integration_token) {
-			if (await linkUserToCustomLabel(context.session.user.id, `${context.state.user.integration_token}`) === true) {
-				await context.setState({ voucher: context.state.user.integration_token });
-			}
+		// check if user has a integration_voucher but we haven't saved it yet (voucher) because we need to create a label first
+		const token = context.state.user ? context.state.user.integration_token : null;
+		if (token) {
+			const res = await linkUserToCustomLabel(context.session.user.id, token);
+			if (!res || res.error) await sentryError('Erro ao criar label do token', { fb_id: context.session.user.id, token, error: res.error });
 		}
 	} catch (error) {
-		console.log('Error', error);
+		sentryError('Erro em linkIntegrationTokenLabel', error);
 	}
 }
 
 async function addNewUser(context) {
-	if (context.state.onButtonQuiz || context.state.onTextQuiz) return false;
-	await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) || {} });
-	await linkIntegrationTokenLabel(context);
-	if (context.state.user.form_error || context.state.user.error || !context.state.user || !context.state.user.id) { // check if there was an error or if user doesnt exist
-		await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, context.state.sessionUser.name);
-		await context.setState({ user: {} });
-	} else {
-		await context.setState({ has_alarm: context.state.user.prep_reminder_after || context.state.user.prep_reminder_before });
-	}
+	try {
+		if (context.state.onButtonQuiz || context.state.onTextQuiz) return false;
+		await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) || {} });
+		await linkIntegrationTokenLabel(context);
+		if (context.state.user.form_error || context.state.user.error || !context.state.user || !context.state.user.id) { // check if there was an error or if user doesnt exist
+			await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, context.state.sessionUser.name);
+			await context.setState({ user: {} });
+		} else {
+			await context.setState({ has_alarm: context.state.user.prep_reminder_after || context.state.user.prep_reminder_before });
+		}
 
-	return true;
+		return true;
+	} catch (error) {
+		return sentryError('Erro em addNewUser', error);
+	}
 }
 
 
 module.exports = {
 	linkUserToCustomLabel,
-	getLabelID,
 	associatesLabelToUser,
 	checkUserOnLabel,
-	removeUserFromBlackList,
-	addUserToBlackList,
 	dissociateLabelsFromUser,
 	createNewLabel,
 	getAllLabels,
