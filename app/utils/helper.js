@@ -272,6 +272,13 @@ function getTomarHoras(context) {
 	return res.slice(0, 5);
 }
 
+const combinaCityDictionary = {
+	1: 'Ribeirão Preto',
+	2: 'São Paulo',
+	3: 'Fortaleza',
+	4: 'Porto Alegre',
+	5: 'Curitiba',
+};
 
 module.exports = {
 	Sentry,
@@ -304,4 +311,5 @@ module.exports = {
 	checkValidAddress,
 	buildCombinaCidadeMsg,
 	getTomarHoras,
+	combinaCityDictionary,
 };

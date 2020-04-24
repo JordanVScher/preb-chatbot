@@ -1,4 +1,5 @@
 const { moment } = require('./helper');
+const { combinaCityDictionary } = require('./helper');
 const { checkAppointment } = require('./consulta-aux');
 
 async function checkMainMenu(context) {
@@ -85,6 +86,19 @@ async function buildAlarmeBtn(hasAlarm) {
 
 	if (hasAlarm) return { quick_replies: [config, cancelar] };
 	return { quick_replies: [depois, config] };
+}
+
+async function buildCombinaCity() {
+	const opt = [];
+	const cities = combinaCityDictionary;
+
+	const ids = Object.keys(cities);
+
+	ids.forEach((e) => {
+		opt.push({ content_type: 'text', title: cities[e], payload: `combinaCity${e}` });
+	});
+
+	return { quick_replies: opt };
 }
 
 async function checkMedication(prepSince) { // eslint-disable-line
@@ -224,4 +238,5 @@ module.exports = {
 	sendShare,
 	checkDeuRuimPrep,
 	buildAlarmeBtn,
+	buildCombinaCity,
 };

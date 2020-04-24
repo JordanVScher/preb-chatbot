@@ -175,10 +175,26 @@ describe('join - já tomo prep', () => {
 		await expect(joinToken.handleCombinaToken).toBeCalledWith(context, await prepAPI.putCombinaToken(context.session.user.id, context.state.whatWasTyped));
 	});
 
-	it('joinCombinaEnd - Encerra fluxo', async () => {
+	it('joinCombinaCity - Mostra opções de cidade', async () => {
+		const context = cont.quickReplyContext('joinCombinaCity', 'joinCombinaCity');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.join.joinCombina.city, await checkQR.buildCombinaCity());
+	});
+
+
+	it('combinaCity - Escolhe opção e vai pro fim', async () => {
+		const context = cont.quickReplyContext('combinaCity1', 'joinCombinaEnd');
+		await handler(context);
+
+		await expect(context.setState).toBeCalledWith({ combinaCity: await context.state.lastQRpayload.replace('combinaCity', ''), dialog: 'joinCombinaEnd' });
+	});
+
+	it('joinCombinaEnd - Faz request e encerra fluxo', async () => {
 		const context = cont.quickReplyContext('joinCombinaEnd', 'joinCombinaEnd');
 		await handler(context);
 
+		await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { combina_city: help.combinaCityDictionary[context.state.combinaCity] });
 		await expect(context.sendText).toBeCalledWith(flow.join.end);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});

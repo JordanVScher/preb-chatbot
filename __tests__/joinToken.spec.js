@@ -56,7 +56,7 @@ describe('handleCombinaToken', () => {
 		await expect(context.sendText).toBeCalledWith(join.joinCombinaAsk.success);
 		await expect(context.setState).toBeCalledWith({ user: await getRecipientPrep(context.session.user.id) });
 		await expect(linkIntegrationTokenLabel).toBeCalledWith(context);
-		await expect(context.setState).toBeCalledWith({ dialog: 'joinCombinaEnd' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'joinCombinaCity' });
 	});
 
 	it('failure - try again', async () => {

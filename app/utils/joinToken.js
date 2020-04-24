@@ -25,7 +25,7 @@ async function handleCombinaToken(context, answer) {
 		await context.sendText(join.joinCombinaAsk.success);
 		await context.setState({ user: await getRecipientPrep(context.session.user.id) });
 		await linkIntegrationTokenLabel(context);
-		await context.setState({ dialog: 'joinCombinaEnd' });
+		await context.setState({ dialog: 'joinCombinaCity' });
 	} else { // error or invalid number
 		await context.sendText(join.joinCombinaAsk.fail1);
 		await context.sendText(join.joinCombinaAsk.fail2, await getQR(join.joinCombinaAsk));

@@ -167,6 +167,8 @@ module.exports = async function App(context) {
 					await context.setState({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
 				} else if (context.state.lastQRpayload.slice(0, 20) === 'autoServicoSisprepSP') {
 					await context.setState({ cityType: await context.state.lastQRpayload.replace('autoServicoSisprepSP', ''), dialog: 'autoServicoSP' });
+				} else if (context.state.lastQRpayload.startsWith('combinaCity')) {
+					await context.setState({ combinaCity: await context.state.lastQRpayload.replace('combinaCity', ''), dialog: 'joinCombinaEnd' });
 				} else { // regular quick_replies
 					await context.setState({ dialog: context.state.lastQRpayload });
 				}
@@ -306,7 +308,11 @@ module.exports = async function App(context) {
 			case 'joinCombinaAsk':
 				await context.sendText(flow.join.joinCombinaAsk.text1, await getQR(flow.join.joinCombinaAsk));
 				break;
+			case 'joinCombinaCity':
+				await context.sendText(flow.join.joinCombina.city, await checkQR.buildCombinaCity());
+				break;
 			case 'joinCombinaEnd':
+				await prepAPI.putRecipientPrep(context.session.user.id, { combina_city: help.combinaCityDictionary[context.state.combinaCity] });
 				await context.sendText(flow.join.end);
 				await mainMenu.sendMain(context);
 				break;

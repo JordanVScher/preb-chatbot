@@ -422,3 +422,17 @@ describe('buildAlarmeBtn', () => {
 		await expect(result[1].payload).toBe('alarmeConfigurar');
 	});
 });
+
+describe('buildCombinaCity', () => {
+	it('Builds options', async () => {
+		let result = await checkQR.buildCombinaCity();
+		result = result.quick_replies;
+
+		await expect(result.length).toBe(5);
+		await expect(result[0].payload).toBe('combinaCity1');
+		await expect(result[1].payload).toBe('combinaCity2');
+		await expect(result[2].payload).toBe('combinaCity3');
+		await expect(result[3].payload).toBe('combinaCity4');
+		await expect(result[4].payload).toBe('combinaCity5');
+	});
+});

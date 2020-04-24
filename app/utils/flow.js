@@ -233,6 +233,7 @@ module.exports = {
 		joinCombina: {
 			text1: 'O Projeto Combina faz parte de uma pesquisa que tem a finalidade de avaliar o uso dos métodos de prevenção ao HIV disponíveis nos serviços públicos de saúde pelas pessoas. Quais motivações pra usar os métodos preventivos, em que situações e quais práticas eles são usados etc. Esse projeto é tudo de bom!',
 			text2: 'Você realmente faz parte do programa Combina?',
+			city: 'De qual cidade você é?',
 			menuOptions: ['Sim', 'Não'],
 			menuPostback: ['joinCombinaAsk', 'join'],
 		},
