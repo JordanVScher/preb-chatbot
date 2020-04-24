@@ -5,7 +5,6 @@ const { falarComHumano } = require('./mainMenu');
 const help = require('./helper');
 const { putUpdateNotificacao22 } = require('./prep_api');
 
-
 async function prepDuvidaFollowUp(context, txt) {
 	if (txt && typeof txt === 'string') await context.sendText(txt);
 
@@ -13,10 +12,11 @@ async function prepDuvidaFollowUp(context, txt) {
 	case 'sisprep':
 		await falarComHumano(context, null, flow.duvidasPrep.followUpSisPrep);
 		break;
-	case 'combina':
-		await context.sendText(flow.duvidasPrep.followUpCombina);
+	case 'combina': {
+		const msg = await help.getCombinaContact(context.state.user.combina_city);
+		if (msg) await context.sendText(msg);
 		await sendMain(context);
-		break;
+	} break;
 	case 'sus':
 		await context.sendText(flow.duvidasPrep.followUpSUS);
 		await sendMain(context);
