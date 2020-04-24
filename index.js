@@ -576,7 +576,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora, 'alarmeFinal'));
 				break;
 			case 'alarmeFinal':
-				await prepAPI.putUpdateReminderBefore(context.session.user.id, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
+				await prepAPI.putUpdateReminderBefore(context.session.user.id, await duvidas.buildChoiceDuration(context.state.alarmeHora, context.state.alarmeMinuto));
 				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await alarmeFollowUp(context);
 				break;
@@ -590,7 +590,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.alarmePrep.alarmeJaTomei2, await duvidas.alarmeMinuto(context.state.alarmeHora, 'alarmeJaTomeiFinal'));
 				break;
 			case 'alarmeJaTomeiFinal':
-				await prepAPI.putUpdateReminderAfter(context.session.user.id, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
+				await prepAPI.putUpdateReminderAfter(context.session.user.id, await duvidas.buildChoiceDuration(context.state.alarmeHora, context.state.alarmeMinuto));
 				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await alarmeFollowUp(context);
 				break;

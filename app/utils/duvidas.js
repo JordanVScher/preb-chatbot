@@ -76,7 +76,7 @@ async function receivePage(context) {
 	await context.setState({ alarmePage: newPage, dialog: nextDialog });
 }
 
-async function buildChoiceTimeStamp(hour, minutes) {
+async function buildChoiceDuration(hour, minutes) {
 	let ts = new Date();
 	ts.setHours(hour || 0);
 	ts.setMinutes(minutes || 0);
@@ -246,7 +246,7 @@ module.exports = {
 	alarmeConfigurar,
 	alarmeHorario,
 	alarmeMinuto,
-	buildChoiceTimeStamp,
+	buildChoiceDuration,
 	receivePage,
 	formatDate,
 	checkDate,

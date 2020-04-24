@@ -280,14 +280,14 @@ describe('alarmeMinuto', () => {
 	});
 });
 
-describe('buildChoiceTimeStamp', () => {
+describe('buildChoiceDuration', () => {
 	it('replace hour and minute', async () => {
 		const hour = 8;
 		const minute = 15;
 		const now = new Date();
 		const offset = now.getTimezoneOffset() / 60;
 
-		const result = await duvidas.buildChoiceTimeStamp(hour, minute);
+		const result = await duvidas.buildChoiceDuration(hour, minute);
 		const { date } = result;
 
 

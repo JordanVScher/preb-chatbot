@@ -698,7 +698,7 @@ describe('alarmePrep', () => {
 
 			await expect(context.setState).toBeCalledWith({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
 			await expect(prepAPI.putUpdateReminderBefore)
-				.toBeCalledWith(context.session.user.id, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
+				.toBeCalledWith(context.session.user.id, await duvidas.buildChoiceDuration(context.state.alarmeHora, context.state.alarmeMinuto));
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUp));
 		});
@@ -743,7 +743,7 @@ describe('alarmePrep', () => {
 
 			await expect(context.setState).toBeCalledWith({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeJaTomeiFinal', ''), dialog: 'alarmeJaTomeiFinal' });
 			await expect(prepAPI.putUpdateReminderAfter)
-				.toBeCalledWith(context.session.user.id, await duvidas.buildChoiceTimeStamp(context.state.alarmeHora, context.state.alarmeMinuto));
+				.toBeCalledWith(context.session.user.id, await duvidas.buildChoiceDuration(context.state.alarmeHora, context.state.alarmeMinuto));
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUp));
 		});
