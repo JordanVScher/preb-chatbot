@@ -13,12 +13,8 @@ async function offerQuiz(context, categoryQuestion) {
 	if (categoryQuestion) await context.setState({ categoryQuestion });
 	if (context.state.startedQuiz === true) { // check if user started quiz
 		await context.sendText(flow.desafio.started, opt.answer.sendQuiz); // send quiz when user has started the quiz already
-	}
-	//
-	if (context.state.user.finished_publico_interesse && context.state.user.risk_group && !context.state.user.finished_recrutamento === 0) {
-		await context.sendText(flow.recrutamento.text1, await getQR(flow.recrutamento));
-	} else if (context.state.user.finished_publico_interesse === 0) {
-		await context.sendText(flow.desafio.willStart, opt.answer.sendQuiz); // send quiz when user hasn't even started the quiz
+	} else {
+	await context.sendText(flow.desafio.willStart, opt.answer.sendQuiz); // send quiz when user hasn't even started the quiz
 	}
 }
 
@@ -33,9 +29,11 @@ async function sendFollowUp(context, type, categoryQuestion) {
 		// type: each type of counter we have, each has a followup
 		switch (type) {
 		case 'publico-interesse':
-		case 'quiz-brincadeira':
-		case 'recrutamento':
 			await offerQuiz(context, categoryQuestion);
+		case 'quiz-brincadeira':
+			await context.sendText(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
+		case 'recrutamento':
+			await context.sendText(flow.recrutamento.text1, await getQR(flow.recrutamento));
 			break;
 		case 'share':
 			await research.TCLE(context);

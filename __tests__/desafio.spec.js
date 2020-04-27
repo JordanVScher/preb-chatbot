@@ -8,6 +8,7 @@ const prepApi = require('../app/utils/prep_api');
 const { sendMain } = require('../app/utils/mainMenu');
 const { checkAppointment } = require('../app/utils/consulta-aux');
 const research = require('../app/utils/research');
+const { getQR } = require('../app/utils/attach');
 const { sentryError } = require('../app/utils/error');
 
 jest.mock('../app/utils/flow');
@@ -19,6 +20,7 @@ jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/helper');
 jest.mock('../app/utils/consulta');
+jest.mock('../app/utils/attach');
 
 it('offerQuiz - user nunca começou quiz, oferece pela primeira vez', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
@@ -113,7 +115,7 @@ it('Follow up - user não acabou publico_interesse, perguntamos mais de 3 vezes,
 	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('Follow up - user não é publico_interesse e não acabou brincadeira, perguntamos se quer terminar brincadeira (menos de 3 vezes)', async () => {
+it('Follow up - user não é publico_interesse e não acabou brincadeira, perguntamos se quer fazer quiz brincadeira (menos de 3 vezes)', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
 	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 0; context.state.quizBrincadeiraEnd = false;
@@ -128,8 +130,9 @@ it('Follow up - user não é publico_interesse e não acabou brincadeira, pergun
 	await expect(context.state.currentCounter >= 3).toBeFalsy();
 	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
 
-	await expect(context.setState).toBeCalledWith({ categoryQuestion });
-	await expect(context.sendText).toBeCalledWith(flow.desafio.started, opt.answer.sendQuiz);
+	await expect(context.sendText).toBeCalledWith(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
+
+
 });
 
 it('Follow up - user não é publico_interesse e não acabou brincadeira, perguntamos mais de 3 vezes, vai pro menu', async () => {
@@ -247,8 +250,7 @@ it('Follow up - user é publico_interesse e de risco, já marcou consulta mas n�
 	await expect(context.state.currentCounter >= 3).toBeFalsy();
 	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
 
-	await expect(context.setState).toBeCalledWith({ categoryQuestion });
-	await expect(context.sendText).toBeCalledWith(flow.desafio.started, opt.answer.sendQuiz);
+	await expect(context.sendText).toBeCalledWith(flow.recrutamento.text1, await getQR(flow.recrutamento));
 });
 
 it('Follow up - user é publico_interesse e de risco, deixou contato mas não acabou recrutamento, perguntamos mais de 3 vezes, vai pro menu', async () => {
