@@ -211,9 +211,7 @@ describe('join - já tomo prep', () => {
 		const context = cont.quickReplyContext('joinSUSSim', 'joinSUSSim');
 		await handler(context);
 
-		await expect(prepAPI.putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'sus');
-		await expect(context.sendText).toBeCalledWith(flow.join.end);
-		await expect(mainMenu.sendMain).toBeCalledWith(context);
+		await expect(joinToken.joinSus).toBeCalledWith(context);
 	});
 
 	it('joinNaoSabe - explicações e volta pro join', async () => {

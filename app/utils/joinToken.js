@@ -3,6 +3,7 @@ const { getQR } = require('./attach');
 const { getRecipientPrep } = require('./prep_api');
 const { putUpdateVoucherFlag } = require('./prep_api');
 const { linkIntegrationTokenLabel } = require('./labels');
+const { sendMain } = require('./mainMenu');
 
 // fluxo já faço parte
 async function handlePrepToken(context, answer) {
@@ -33,7 +34,14 @@ async function handleCombinaToken(context, answer) {
 	}
 }
 
+async function joinSus(context) {
+	await context.sendText(join.end);
+	await putUpdateVoucherFlag(context.session.user.id, 'sus');
+	await context.setState({ user: await getRecipientPrep(context.session.user.id) });
+	await sendMain(context);
+}
+
 
 module.exports = {
-	handlePrepToken, handleCombinaToken,
+	handlePrepToken, handleCombinaToken, joinSus
 };

@@ -321,9 +321,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.join.joinSUS.text2, await getQR(flow.join.joinSUS));
 				break;
 			case 'joinSUSSim':
-				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'sus');
-				await context.sendText(flow.join.end);
-				await mainMenu.sendMain(context);
+				await joinToken.joinSus(context);
 				break;
 			case 'joinNaoSabe':
 				await context.sendText(flow.join.joinNaoSabe.text1);
