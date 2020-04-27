@@ -2,6 +2,7 @@ const flow = require('./flow');
 const opt = require('./options');
 const prepApi = require('./prep_api');
 const help = require('./helper');
+const { getQR } = require('./attach');
 const { sendMain } = require('./mainMenu');
 const { checkAppointment } = require('./consulta-aux');
 const research = require('./research');
@@ -12,7 +13,11 @@ async function offerQuiz(context, categoryQuestion) {
 	if (categoryQuestion) await context.setState({ categoryQuestion });
 	if (context.state.startedQuiz === true) { // check if user started quiz
 		await context.sendText(flow.desafio.started, opt.answer.sendQuiz); // send quiz when user has started the quiz already
-	} else {
+	}
+	//
+	if (context.state.user.finished_publico_interesse && context.state.user.risk_group && !context.state.user.finished_recrutamento === 0) {
+		await context.sendText(flow.recrutamento.text1, await getQR(flow.recrutamento));
+	} else if (context.state.user.finished_publico_interesse === 0) {
 		await context.sendText(flow.desafio.willStart, opt.answer.sendQuiz); // send quiz when user hasn't even started the quiz
 	}
 }
