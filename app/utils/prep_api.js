@@ -90,14 +90,13 @@ module.exports = {
 	},
 
 	async deleteQuizAnswer(fb_id) {
-		let token = '';
-		if (security_token2 && security_token2.length > 0) {
-			token = security_token2;
-		} else {
-			token = security_token;
-		}
+		return handleRequestAnswer(await request.post(`${apiUri}/api/internal/delete-answers?`)
+			.query({ security_token: security_token2 || security_token, fb_id }));
+	},
 
-		return handleRequestAnswer(await request.post(`${apiUri}/api/internal/delete-answers?`).query({ security_token: token, fb_id }));
+	async getValidVouchers() {
+		return handleRequestAnswer(await request.get(`${apiUri}/api/internal/available-combina-vouchers`)
+			.query({ security_token: security_token2 || security_token, }));
 	},
 
 	async getAvailableCities() {

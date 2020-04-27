@@ -221,21 +221,29 @@ module.exports = async function App(context) {
 				await context.setState({ dialog: 'greetings' });
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ dialog: 'mainMenu' });
-			} else if (context.state.whatWasTyped === process.env.PREP_TEST) {
+			} else if (context.state.whatWasTyped === process.env.PREP_TEST && process.env.ENV !== 'prod') {
 				await prepAPI.postTestPrep(context.session.user.id, true);
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
-			} else if (context.state.whatWasTyped === process.env.N_PREP_TEST) {
+			} else if (context.state.whatWasTyped === process.env.N_PREP_TEST && process.env.ENV !== 'prod') {
 				await prepAPI.postTestPrep(context.session.user.id, false);
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
-			} else if (context.state.whatWasTyped === process.env.SISPREP_TEST) {
+			} else if (context.state.whatWasTyped === process.env.SISPREP_TEST && process.env.ENV !== 'prod') {
 				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'sisprep');
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
-			} else if (context.state.whatWasTyped === process.env.COMBINA_TEST) {
+			} else if (context.state.whatWasTyped === process.env.COMBINA_TEST && process.env.ENV !== 'prod') {
 				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'combina');
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
-			} else if (context.state.whatWasTyped === process.env.SUS_TEST) {
+			} else if (context.state.whatWasTyped === process.env.SUS_TEST && process.env.ENV !== 'prod') {
 				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'sus');
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
+			} else if (context.state.whatWasTyped === process.env.COMBINA_VOUCHER_GET && process.env.ENV !== 'prod') {
+				const res = await prepAPI.getValidVouchers();
+				if (res && res.available_combina_vouchers) {
+					const text = res.available_combina_vouchers.join('\n');
+					if (text) await context.sendText(`Alguns vouchers válidos:\n${text}`);
+				}
+				await context.setState({ dialog: 'mainMenu' });
+
 			} else {
 				await DF.dialogFlow(context);
 			}
