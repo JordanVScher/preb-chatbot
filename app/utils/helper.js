@@ -259,13 +259,9 @@ async function checkValidAddress(address) {
 }
 
 function getTomarHoras(context) {
-	let res;
 	const { user } = context.state;
-	if (user.prep_reminder_after_interval) res = user.prep_reminder_after_interval;
-	if (user.prep_reminder_before_interval) res = user.prep_reminder_before_interval;
-
-	if (!res || typeof res !== 'string') return '';
-	return res.slice(0, 5);
+	if (!user || !user.combina_reminder_hours_before || typeof user.combina_reminder_hours_before !== 'string') return '';
+	return user.combina_reminder_hours_before.slice(0, 5);
 }
 
 const combinaCityDictionary = {
