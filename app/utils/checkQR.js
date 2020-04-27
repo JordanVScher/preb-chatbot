@@ -46,7 +46,10 @@ async function checkMainMenu(context) {
 			if (context.state.user.is_target_audience === 1) {
 				await context.setState({ temConsulta: await checkAppointment(context.session.user.id) });
 				if (!context.state.temConsulta && !context.state.leftContact) {
-					if (index) { opt[index] = marcarConsulta; opt.splice(index + 1, 0, deixarContato); }
+					if (index) {
+						opt[index] = marcarConsulta;
+						opt.splice(index + 1, 0, deixarContato);
+					}
 				} else if (!context.state.recrutamentoEnd && context.state.user.risk_group) {
 					if (index) opt[index] = quizRecrutamento;
 				} else if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
