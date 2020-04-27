@@ -5,7 +5,7 @@ const help = require('./helper');
 const { sendMain } = require('./mainMenu');
 const { checkAppointment } = require('./consulta-aux');
 const research = require('./research');
-const quiz = require('./quiz');
+// const quiz = require('./quiz');
 const { sentryError } = require('./error');
 
 async function offerQuiz(context, categoryQuestion) {

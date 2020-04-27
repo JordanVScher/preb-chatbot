@@ -198,4 +198,5 @@ module.exports = {
 	checkSP,
 	sendConsultas,
 	sendSalvador,
+	checkAppointment: aux.checkAppointment,
 };
