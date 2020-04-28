@@ -348,7 +348,7 @@ module.exports = {
 			drnpExposicao: 'Vc vai tá protegide se ñ teve transa anal na primeira semana de uso da PEP e se tomou os medicamentos certinho! Mas isso ñ vale se rolou penetração na vagina. E ainda ñ existem dados suficientes pra quem tá se hormonizando, então, é mais recomendado vc procurar um serviço de saúde pra estender a PEP. Vamo agendar pra pensar isso melhor?',
 			drnpTomeiCerto: 'Pra terminar o seguimento de PEP, é importante fazer um teste 30 dias após a exposição.\nBora marcar esse babado?',
 			followUpAgendamento: 'Partiu! Bora falar com humanes! Q opção é melhor pra vc??',
-			menuOptions: ['Não tomei tudo', 'Não me senti bem', 'Perdi o medicamento', 'Tive nova exposiçãoo', 'Tomei certinho e agora?'],
+			menuOptions: ['Não tomei tudo', 'Não me senti bem', 'Perdi o medicamento', 'Tive nova exposição', 'Tomei certinho e agora?'],
 			menuPostback: ['drnpTomeiTudo', 'drnpNaoSentiBem', 'drnpPerdi', 'drnpExposicao', 'drnpTomeiCerto'],
 		},
 		drnpIST: {
