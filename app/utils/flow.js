@@ -338,7 +338,7 @@ module.exports = {
 		drnpMedoTestar: 'Ter medo de fazer o teste é super comum, bee! O jeito mais fácil de perder o medo é encarar e ñ ter mais dúvidas sobre a sua sorologia!',
 		followUpTriagem: 'Vamo lá! Escolhe a opção q vc tem dúvida e vou te ajudar!',
 		drnpArrisquei: 'Estou entendendo q vc teve uma relação com penetração e sem proteção, então vou te fazer algumas perguntas para te ajudar',
-		menuOptions: ['Me arrisquei e agora?', 'Medo de me testar?', 'IST', 'PEP não foi boa?'],
+		menuOptions: ['Me arrisquei e agora?', 'Medo de me testar?', 'Feridas no pau/cu', 'PEP não foi boa?'],
 		menuPostback: ['drnpArrisquei', 'drnpMedoTestar', 'drnpIST', 'drnpPEPNao'],
 		drnpPEPNao: {
 			text1: 'o que aconteceu?',
