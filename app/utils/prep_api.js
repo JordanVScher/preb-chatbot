@@ -10,8 +10,8 @@ const security_token2 = process.env.SECURITY_TOKEN_PREP2;
 
 
 module.exports = {
-	async postRecipientPrep(fb_id, page_id) {
-		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, page_id }));
+	async postRecipientPrep(fb_id, page_id, name) {
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient?security_token=${security_token}`).query({ fb_id, page_id, name }));
 	},
 
 	async putRecipientPrep(fb_id, recipient) {
@@ -96,7 +96,7 @@ module.exports = {
 
 	async getValidVouchers() {
 		return handleRequestAnswer(await request.get(`${apiUri}/api/internal/available-combina-vouchers`)
-			.query({ security_token: security_token2 || security_token, }));
+			.query({ security_token: security_token2 || security_token }));
 	},
 
 	async getAvailableCities() {
