@@ -5,7 +5,7 @@ const { linkIntegrationTokenLabel } = require('./labels');
 const { getPhoneValid } = require('./helper');
 
 async function handleToken(context, answer) {
-	if (answer === true) {
+	if (answer && answer.id) {
 		await context.sendText(flow.joinToken.success);
 		await context.setState({ user: await getRecipientPrep(context.session.user.id) }); // integration_token is added to user
 		await linkIntegrationTokenLabel(context);

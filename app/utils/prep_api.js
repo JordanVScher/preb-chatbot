@@ -74,11 +74,7 @@ module.exports = {
 	},
 
 	async postIntegrationToken(fb_id, integration_token) {
-		const res = await handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/integration-token?security_token=${security_token}`).query({ fb_id, integration_token }));
-		if (res.statusCode && res.statusCode.toString() === '200') { // integration token found successfully
-			return true;
-		}
-		return false;
+		return handleRequestAnswer(await request.post(`${apiUri}/api/chatbot/recipient/integration-token?security_token=${security_token}`).query({ fb_id, integration_token }));
 	},
 
 	async getCountQuiz(fb_id) {
