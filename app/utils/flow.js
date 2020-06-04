@@ -109,6 +109,7 @@ module.exports = {
 		text4: 'Cola na grade pra gente escolher melhor dia e horário pra tu, tenho uma agenda, keride!! Vem de boa receber todas as orientações baphos! 😉',
 	},
 	consulta: {
+		quarentena: 'Amore, por conta da quarentena eu ñ tô marcando encontros por aqui! Vou passar seu contato pra te chamarem e se quiser pode falar com a gente pelo whatsapp <PHONE>.',
 		city: 'Qual cidade vc qr q eu agende??',
 		date: 'Q data?',
 		hours: 'Chic, e q horário?',
@@ -186,6 +187,7 @@ module.exports = {
 		success: 'O mais rapidinho possível a gnt te xama 💙',
 		failure: 'Esse telefone não é válido! Tente de novo',
 		sendMail: '<USERNAME> quer que entre em contato pelo <CONTATO> <PHONE> depois de receber a notificação.',
+		quarentena: '<USERNAME> quer que entre em contato pelo <CONTATO> <PHONE> depois de tentar marcar uma consulta durante a quarentena.',
 	},
 	error: {
 		text1: 'Ihhh. Deu um bug interno aqui comigo. Tente novamente, pliiiss',

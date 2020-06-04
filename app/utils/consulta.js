@@ -101,22 +101,33 @@ async function finalDate(context, quota) { // where we actually schedule the con
 }
 
 async function loadCalendar(context) {
-	/* load and prepare calendar */
-	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
-	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar
-	await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
-	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
-	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
-
-	if (context.state.sendExtraMessages === true) {
-		await context.setState({ sendExtraMessages2: true, sendExtraMessages: false }); // because of "outras datas" we cant show these again, but we still have to show the next ones
-		await context.sendText(flow.quizYes.text3.replace('<LOCAL>', help.extraMessageDictionary[context.state.user.city]));
-		await context.sendText(flow.quizYes.text4);
-	} else {
-		await context.sendText(flow.consulta.checar2);
+	const phone = { 1: '31 997269307', 2: '71 996409030', 3: '11 982092911' };
+	const userPhone = phone[context.state.user.city];
+	if (userPhone) {
+		await context.setState({ veioDaConsulta: true });
+		const text = flow.consulta.quarentena.replace('<PHONE>', userPhone);
+		await context.sendText(text);
 	}
+	await context.sendText(flow.leavePhone.opening, opt.leavePhone);
 
-	await showDays(context);
+
+	// original, before quaretena adjustment
+	/* load and prepare calendar */
+	// await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
+	// await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.user.city, context.state.paginationDate) }); // getting calendar
+	// await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
+	// await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
+	// await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
+
+	// if (context.state.sendExtraMessages === true) {
+	// 	await context.setState({ sendExtraMessages2: true, sendExtraMessages: false }); // because of "outras datas" we cant show these again, but we still have to show the next ones
+	// 	await context.sendText(flow.quizYes.text3.replace('<LOCAL>', help.extraMessageDictionary[context.state.user.city]));
+	// 	await context.sendText(flow.quizYes.text4);
+	// } else {
+	// 	await context.sendText(flow.consulta.checar2);
+	// }
+
+	// await showDays(context);
 }
 
 async function checarConsulta(context) {

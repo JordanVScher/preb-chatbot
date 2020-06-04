@@ -132,8 +132,15 @@ function capQR(text) {
 }
 
 
-function buildMail(name, phone, contato) {
-	return flow.leavePhone.sendMail.replace('<USERNAME>', name).replace('<PHONE>', phone).replace('<CONTATO>', contato);
+function buildMail(context, phone, contato) {
+	const { name } = context.session.user;
+	let text = flow.leavePhone.sendMail;
+
+	if (context.state.veioDaConsulta === true) {
+		text = flow.leavePhone.quarentena;
+	}
+
+	return text.replace('<USERNAME>', name).replace('<PHONE>', phone).replace('<CONTATO>', contato);
 }
 
 async function buildConsultaFinal(state, chosenHour) {

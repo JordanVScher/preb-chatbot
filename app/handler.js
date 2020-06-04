@@ -208,7 +208,8 @@ module.exports = async (context) => {
 				await context.sendText(`${flow.joinToken.view} ${context.state.user.integration_token}`);
 				await mainMenu.sendMain(context);
 				break;
-			case 'leavePhone':
+			case 'leavePhone': // comes from notification
+				await context.setState({ veioDaNotificacao: true });
 				await context.sendText(flow.leavePhone.opening, opt.leavePhone);
 				break;
 			case 'leavePhoneTwo':
@@ -220,12 +221,12 @@ module.exports = async (context) => {
 				break;
 			case 'leaveInstaValid':
 				await context.sendText(flow.leavePhone.success);
-				await sendMail('Novo instagram de contato', await help.buildMail(context.session.user.name, context.state.insta, 'instagram'), context.state.user.city);
+				await sendMail('Novo instagram de contato', await help.buildMail(context, context.state.insta, 'instagram'), context.state.user.city);
 				await mainMenu.sendMain(context);
 				break;
 			case 'phoneValid':
 				await context.sendText(flow.leavePhone.success);
-				await sendMail('Novo telefone de contato', await help.buildMail(context.session.user.name, context.state.phone, 'telefone'), context.state.user.city);
+				await sendMail('Novo telefone de contato', await help.buildMail(context, context.state.phone, 'telefone'), context.state.user.city);
 				await mainMenu.sendMain(context);
 				break;
 			case 'phoneInvalid':
