@@ -263,7 +263,7 @@ module.exports = {
 		dpDrogas: 'Beber álcool e usar outras drogas ñ influencia no efeito da PrEP. É um luxo!',
 		dpHormonios: 'Se vc tá se hormonizando, é close vc avaliar seu caso de acordo com suas doses, mas usar hormônios ñ influencia no efeito da PrEP!',
 		dpEsqueci: 'Se ontem vc esqueceu de tomar e hj trepou sem camisinha, mas lembrou hj e recomeçou hj mesmo, tá tudo bafo! Um dia só ñ corta o efeito, mas, se vc ficar mais de 2 dias sem tomar e não usar camisinha em alguma relação, aí ñ funciona e talvez vc precise tomar PEP.',
-		dpInfo: 'Aqui vc encontra links e arquivos q podem te interessar sobre o uso de PrEP!\nhttp://www.aids.gov.br/pt-br/publico-geral/prevencao-combinada/profilaxia-pre-exposicao-prep\nhttp://prepbrasil.com.br/',
+		dpInfo: 'Aqui vc encontra links e arquivos q podem te interessar sobre o uso de PrEP!\nhttp://www.aids.gov.br/pt-br/publico-geral/prevencao-combinada/profilaxia-pre-exposicao-prep\nhttp://prepbrasil.com.br/\nhttp://imprep.org/\nhttps://projetocombina.wordpress.com/',
 		notSUS: 'Quer nossa ajuda pra mais alguma coisa? Topa um bate papo com a gente?',
 		followUpSisPrep: 'Quer nossa ajuda para mais alguma coisa? Topa um bate papo com a gente?',
 		followUpCombina: 'Contatos Combina',

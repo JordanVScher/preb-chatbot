@@ -243,7 +243,6 @@ module.exports = async function App(context) {
 					if (text) await context.sendText(`Alguns vouchers válidos:\n${text}`);
 				}
 				await context.setState({ dialog: 'mainMenu' });
-
 			} else {
 				await DF.dialogFlow(context);
 			}
