@@ -22,7 +22,7 @@ async function handleErrorApi(options, res, err) {
 	if (res) msg += `\nResposta: ${JSON.stringify(res, null, 2)}`;
 	if (err) msg += `\nErro: ${err.stack}`;
 
-	console.log('----------------------------------------------', `\n${msg}`, '\n\n');
+	// console.log('----------------------------------------------', `\n${msg}`, '\n\n');
 
 	if ((res && (res.error || res.form_error)) || (!res && err)) {
 		if (process.env.ENV !== 'local') {

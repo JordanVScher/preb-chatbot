@@ -145,7 +145,7 @@ module.exports = async function App(context) {
 					await context.setState({ dialog: 'showDays' });
 				} else if (context.state.lastQRpayload === 'joinNaoToma') {
 					await context.setState({ dialog: 'greetings', askDesafio: false });
-				} else if (context.state.lastQRpayload.slice(0, 4) === 'page') {
+				} else if (context.state.lastQRpayload.startsWith('page')) {
 					await duvidas.receivePage(context);
 				} else if (context.state.lastQRpayload.startsWith('askHorario')) {
 					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'alarmeMinuto' });
@@ -155,17 +155,17 @@ module.exports = async function App(context) {
 					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askJaTomei', ''), dialog: 'askJaTomeiMinuto' });
 				} else if (context.state.lastQRpayload.startsWith('alarmeJaTomeiFinal')) {
 					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeJaTomeiFinal', ''), dialog: 'alarmeJaTomeiFinal' });
-				} else if (context.state.lastQRpayload.slice(0, 8) === 'askTomei') {
+				} else if (context.state.lastQRpayload.startsWith('askTomei')) {
 					await context.setState({ askTomei: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
-				} else if (context.state.lastQRpayload.slice(0, 10) === 'askProxima') {
+				} else if (context.state.lastQRpayload.startsWith('askProxima')) {
 					await context.setState({ askProxima: await context.state.lastQRpayload.replace('askProxima', ''), dialog: 'tomeiFinal' });
-				} else if (context.state.lastQRpayload.slice(0, 12) === 'askNotiTomei') {
+				} else if (context.state.lastQRpayload.startsWith('askNotiTomei')) {
 					await context.setState({ askNotiTomei: await context.state.lastQRpayload.replace('askNotiTomei', ''), dialog: 'askNotiTomeiDepois' });
-				} else if (context.state.lastQRpayload.slice(0, 14) === 'askNotiProxima') {
+				} else if (context.state.lastQRpayload.startsWith('askNotiProxima')) {
 					await context.setState({ askNotiProxima: await context.state.lastQRpayload.replace('askNotiProxima', ''), dialog: 'notiTomeiFinal' });
-				} else if (context.state.lastQRpayload.slice(0, 12) === 'alarmeFrasco') {
+				} else if (context.state.lastQRpayload.startsWith('alarmeFrasco')) {
 					await context.setState({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
-				} else if (context.state.lastQRpayload.slice(0, 20) === 'autoServicoSisprepSP') {
+				} else if (context.state.lastQRpayload.startsWith('autoServicoSisprepSP')) {
 					await context.setState({ cityType: await context.state.lastQRpayload.replace('autoServicoSisprepSP', ''), dialog: 'autoServicoSP' });
 				} else if (context.state.lastQRpayload.startsWith('combinaCity')) {
 					await context.setState({ combinaCity: await context.state.lastQRpayload.replace('combinaCity', ''), dialog: 'joinCombinaEnd' });

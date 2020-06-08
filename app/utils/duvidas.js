@@ -201,7 +201,7 @@ async function autotesteServico(context) {
 	if (context.state.user.voucher_type === 'combina') {
 		await context.sendText(flow.autoteste.autoServicoCombina);
 		await sendMain(context);
-	} else if (context.state.user.city.toString() === '3') {
+	} else if (context.state.user && context.state.user.city && context.state.user.city.toString() === '3') {
 		await context.sendText(flow.autoteste.autoServicoSisprepSP, await getQR(flow.autoteste.autoServicoSisprepSPBtn));
 	} else {
 		await sendAutoServicoMsg(context);
