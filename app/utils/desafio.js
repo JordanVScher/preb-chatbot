@@ -14,7 +14,7 @@ async function offerQuiz(context, categoryQuestion) {
 	if (context.state.startedQuiz === true) { // check if user started quiz
 		await context.sendText(flow.desafio.started, opt.answer.sendQuiz); // send quiz when user has started the quiz already
 	} else {
-	await context.sendText(flow.desafio.willStart, opt.answer.sendQuiz); // send quiz when user hasn't even started the quiz
+		await context.sendText(flow.desafio.willStart, opt.answer.sendQuiz); // send quiz when user hasn't even started the quiz
 	}
 }
 
@@ -30,8 +30,10 @@ async function sendFollowUp(context, type, categoryQuestion) {
 		switch (type) {
 		case 'publico-interesse':
 			await offerQuiz(context, categoryQuestion);
+			break;
 		case 'quiz-brincadeira':
 			await context.sendText(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
+			break;
 		case 'recrutamento':
 			await context.sendText(flow.recrutamento.text1, await getQR(flow.recrutamento));
 			break;
