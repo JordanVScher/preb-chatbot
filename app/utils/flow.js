@@ -201,6 +201,10 @@ module.exports = {
 		sendMail: '<USERNAME> quer que entre em contato pelo <CONTATO> "<PHONE>".',
 		menuOptions: ['Instagram', 'WhatsApp', 'Não deixar contato'],
 		menuPostback: ['leaveInsta', 'leavePhoneTwo', 'dontLeaveContact'],
+		menuImages: [
+			'https://mcusercontent.com/926cb477483bcd8122304bc56/images/c29e26a6-143a-46d2-a49d-d0d21fd016cd.png',
+			'https://mcusercontent.com/926cb477483bcd8122304bc56/images/0bf1604c-fb30-4179-9cb6-0a331b00c161.png',
+		],
 	},
 	preTCLE: {
 		eligible: 'Pelo o que vejo, pegação e prevenção nem sempre combinam. Qm nunk! Vamo falar sobre isso?',

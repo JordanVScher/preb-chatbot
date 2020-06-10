@@ -131,11 +131,14 @@ module.exports.getQR = async (opt) => {
 	const firstArray = opt.menuOptions;
 
 	firstArray.forEach(async (element, index) => {
-		elements.push({
+		const aux = {
 			content_type: 'text',
 			title: await capQR(element),
 			payload: opt.menuPostback[index],
-		});
+		};
+
+		// if (opt.menuImages[index]) aux.image_url = opt.menuImages[index];
+		elements.push(aux);
 	});
 
 	return { quick_replies: elements || [] };
