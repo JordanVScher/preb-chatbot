@@ -264,10 +264,15 @@ module.exports = {
 	},
 	duvidasPrep: {
 		text1: 'Bora acabar agora com essas dúvidas sobre PrEP? Escolhe aí e eu te explico tudinhu!',
-		dpDrogas: 'Beber álcool e usar outras drogas ñ influencia no efeito da PrEP. É um luxo!',
+		dpDrogas: 'Usar hormônios não influencia no efeito da PrEP! Mas se vc tá se hormonizando é close avaliar o caso de acordo com suas doses com um profissional do projeto!',
 		dpHormonios: 'Se vc tá se hormonizando, é close vc avaliar seu caso de acordo com suas doses, mas usar hormônios ñ influencia no efeito da PrEP!',
-		dpEsqueci: 'Se ontem vc esqueceu de tomar e hj trepou sem camisinha, mas lembrou hj e recomeçou hj mesmo, tá tudo bafo! Um dia só ñ corta o efeito, mas, se vc ficar mais de 2 dias sem tomar e não usar camisinha em alguma relação, aí ñ funciona e talvez vc precise tomar PEP.',
-		dpInfo: 'Aqui vc encontra links e arquivos q podem te interessar sobre o uso de PrEP!\nhttp://www.aids.gov.br/pt-br/publico-geral/prevencao-combinada/profilaxia-pre-exposicao-prep\nhttp://prepbrasil.com.br/\nhttp://imprep.org/\nhttps://projetocombina.wordpress.com/',
+		dpEsqueci: 'Se ontem vc esqueceu de tomar e hj rolou sem camisinha, tome o comprimido assim que se lembrar, q vai ficar tudo bapho! Esquecer um dia só ñ corta o efeito, mas, se vc ficar mais de 2 dias sem tomar e não usar camisinha em alguma relação, aí ñ funciona e talvez vc precise tomar PEP.',
+		dpInfo: `Aqui vc encontra links sobre o uso de PrEP q podem te interessar!
+
+http://www.aids.gov.br/pt-br/publico-geral/prevencao-combinada/profilaxia-pre-exposicao-prep
+http://prepbrasil.com.br/
+http://imprep.org/
+https://projetocombina.wordpress.com/`,
 		notSUS: 'Quer nossa ajuda pra mais alguma coisa? Topa um bate papo com a gente?',
 		followUpSisPrep: 'Tá a fim de falar mais sobre isso? Bora com meus amigues humanes!',
 		followUpCombina: 'Contatos Combina',
@@ -284,11 +289,11 @@ module.exports = {
 		menuPostback: ['dpDrogas', 'dpHormonios', 'dpEsqueci', 'dpInfo', 'dpEfeitos'],
 	},
 	duvidasNaoPrep: {
-		text1: 'Bora acabar agora com essas dúvidas sobre PrEP? Escolhe aí e eu te explico tudinhu!',
+		text1: 'Bora acabar agora com essas duvidas sobre Prep? Escolhe ai e eu te explico tuduuu!',
 		dnpDrogas: 'Beber álcool e usar outras drogas ñ influencia no efeito da PrEP. É um luxo!',
 		dnpHormonios: 'Se vc tá se hormonizando, é close vc avaliar seu caso de acordo com suas doses, mas usar hormônios ñ influencia no efeito da PrEP!',
 		dnpMeTestar: 'O medo some quando vc se testa e tira o peso da dúvida, vc já ouviu falar no autoteste? Vou te explicar esse bafo!',
-		end: 'Se ainda quer falar mais sobre isso, tem meus amigles humanes',
+		end: 'Se ainda quiser falar mais sobre isso, tem meus amigues humanes. O que acha?',
 		menuOptions: ['Drogas e PrEP', 'Hormônios e PrEP', 'PrEP é para mim?', 'Me testar em casa'],
 		menuPostback: ['dnpDrogas', 'dnpHormonios', 'dnpParaMim', 'dnpMeTestar'],
 		dnpParaMim: {
@@ -297,7 +302,7 @@ module.exports = {
 			menuPostback: ['duvidasQuiz', 'querFalar'],
 		},
 		querFalar: {
-			text1: 'Quer falar com um humano?',
+			text1: 'Se ainda quiser falar mais sobre isso, tem meus amigues humanes. O que acha?',
 			menuOptions: ['Sim', 'Não'],
 			menuPostback: ['falarComHumano', 'mainMenu'],
 		},
@@ -308,8 +313,9 @@ module.exports = {
 		menuPostback: ['drpFamilia', 'drpParceiros', 'drpAmigos', 'drpEfeitos', 'drpIST', 'drpNaoTomei'],
 		drpFamilia1: 'É uó falar com as pessoas da nossa família e ñ podermos nos abrir... Também não é fácil conversar sobre sexualidade com nossos pais. Aí vc pensa: como contar de uma forma que eles vão entender e me apoiar? Principalmente quando falamos de prevenção!',
 		drpFamilia2: 'Se vc já sabe que usar PrEP, fazer testagens etc são importantes, minha dica é: Procure conversar primeiro com alguém da família q vc tem proximidade e depois, se sentir confortável, fale com as outras pessoas envolvidas. Agora se alguém descobriu e deu ruim, fale com a gente, podemos te ajudar!',
-		drpParceiros: 'Nem todo mundo descobriu a importância de cuidar da saúde assim como vc. Precisamos quebrar o estereótipo "monstruoso" q criaram pras IST e o HIV! Se testar e usar PrEP é a sua escolha para se prevenir e a pessoa com quem vc se relaciona pode não entender. Q tal trocar uma ideia com seu parceire sobre essa sua escolha?\nAgora se o constragimento rolou com o crush, podemos te ajudar.',
-		drpAmigos: 'Será q suas amizades sabem o benefício de dar atenção pra saúde sexual? Rola trocar ideia sem constrangimento, falar da tua descoberta e qm sabe recomendar pra essas pessoas o uso da PrEP e de outros métodos de prevenir HIV e IST? Afinal, é maravilhoso ter segurança e se cuidar fazendo esse acompanhamento babado, né? Nossas amizades merecem!Agora se o constragimento rolou na roda de amigles, podemos te ajudar.',
+		drpParceiros1: 'A pessoa com quem vc se relaciona pode ñ entender bem sua escolha em se testar pra HIV, outras IST e usar PrEP pra se prevenir, né?',
+		drpParceiros2: 'Q tal sentar pra um bate papo e explicar como funciona esses métodos e a importância para a prevenção de vcs dois? Muitas vezes o parceiro não aceita bem por pouca de informação! #fikdik',
+		drpAmigos: 'Rola trocar ideia sobre métodos de prevenção com seus amigues? Falar de suas descobertas e ter acompanhamento seria babado, nénom? Já pensou em falar pra todes? E se o constrangimento rolou na roda de amigues, podemos te ajudar!',
 		drpNaoTomei: {
 			text1: 'Vou te fazer umas perguntas pra te ajudar agora!',
 			combina: 'Como você está tomando a PrEP?',
@@ -319,7 +325,9 @@ module.exports = {
 		},
 		drpEfeitos: {
 			text1: 'Sobre qual efeito colateral vc quer saber?',
-			drpEnjoo: 'Pode acontecer na 1ª. Semana de uso da PrEP, até seu corpo se acostumar com os comprimidos. Para evitar de ter náuseas, algumas dicas:\n- Tome seu comprimido após se alimentar ou à noite, antes de dormir, após uma refeição leve.\nCaso o enjôo seja intenso, prejudique suas atividades diárias, seja seguido de vômitos ou não melhore após 3-7 dias, é melhor ser avaliado por um profissional de saúde.',
+			drpEnjoo: `Pode acontecer na 1ª. Semana de uso da PrEP até o corpo se acostumar com os comprimidos. Pra evitar enjoos:
+- Tome o comprimido dps q comer ou à noite, antes de dormir, dps de uma comidinha leve.
+Se o enjôo continuar intenso, seguido de vômitos ou ñ melhorar após 3-7 dias, seria bom ser avaliado por profissional de saúde!`,
 			drpGases: `Quando acontece, costuma melhorar até o fim do 1° mês de uso da PrEP.
 Se vc se incomodar muito com os gases:
 - Evite alimentos como feijão, repolho, batata doce, ovo cozido e refrigerantes.

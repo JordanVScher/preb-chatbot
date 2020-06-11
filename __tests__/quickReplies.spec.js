@@ -365,7 +365,9 @@ describe('deuRuimPrep', () => {
 		const context = cont.quickReplyContext('drpParceiros', 'drpParceiros');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpParceiros);
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpParceiros1);
+		await expect(context.typing).toBeCalledWith(1000 * 30);
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpParceiros2);
 		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 

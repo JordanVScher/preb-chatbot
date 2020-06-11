@@ -394,7 +394,9 @@ module.exports = async function App(context) {
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpParceiros':
-				await context.sendText(flow.deuRuimPrep.drpParceiros);
+				await context.sendText(flow.deuRuimPrep.drpParceiros1);
+				await context.typing(1000 * 30);
+				await context.sendText(flow.deuRuimPrep.drpParceiros2);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpAmigos':
