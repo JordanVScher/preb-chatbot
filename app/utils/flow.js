@@ -130,7 +130,7 @@ module.exports = {
 		fail2: 'Babado, acho que me confundi! Não achei nenhum horário disponível nesse dia. Vamos tentar novamente?',
 		fail3: 'Iiiihhh, parece que acabaram de marcar uma consulta nesse mesmo horário! Mas tudo bem, vamos escolher outro!',
 		success: 'Trá! A gnt conseguiu! Foi mara! Agora anota tudo ou salva no cel:\n',
-		view: 'se precisar de ajuda com a passagem, chama no número que eu acabei de te dar. Pode ser no zap!',
+		view: 'PS: se precisar de ajuda com a passagem, chama no número que eu acabei de te dar. Pode ser no zap.',
 		checar1: 'Beee, você já tem consulta marcada:',
 		emptyCalendar: 'Não temos nenhuma data disponível. Tente novamente mais tarde.',
 		outrasDatas: 'Hum, axo q não rolou as datas, né? Fala com a gente pelo zap!',

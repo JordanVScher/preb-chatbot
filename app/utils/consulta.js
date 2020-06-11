@@ -103,13 +103,15 @@ async function finalDate(context, quota) { // where we actually schedule the con
 		await sendExtraMessages(context);
 		await context.typing(1000 * 3);
 
-		if (context.state.nextDialog === 'ofertaPesquisaEnd') {
-			await context.setState({ dialog: 'ofertaPesquisaEnd' });
-		} else if (context.state.nextDialog === 'TCLE') {
-			await context.setState({ dialog: 'TCLE' });
-		} else {
-			await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
-		}
+		// after consulta, go to menu
+		await sendMain(context);
+		// if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+		// 	await context.setState({ dialog: 'ofertaPesquisaEnd' });
+		// } else if (context.state.nextDialog === 'TCLE') {
+		// 	await context.setState({ dialog: 'TCLE' });
+		// } else {
+		// 	await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
+		// }
 	} else {
 		await context.sendText(flow.consulta.fail3, opt.consultaFail);
 		console.log('context.state.appointmentResponse', context.state.appointmentResponse);
