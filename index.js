@@ -388,7 +388,9 @@ module.exports = async function App(context) {
 				await context.sendText(flow.deuRuimPrep.text1, await checkQR.checkDeuRuimPrep(context, await getQR(flow.deuRuimPrep)));
 				break;
 			case 'drpFamilia':
-				await context.sendText(flow.deuRuimPrep.drpFamilia);
+				await context.sendText(flow.deuRuimPrep.drpFamilia1);
+				await context.typing(1000 * 30);
+				await context.sendText(flow.deuRuimPrep.drpFamilia2);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpParceiros':

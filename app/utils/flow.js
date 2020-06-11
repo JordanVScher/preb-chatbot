@@ -306,7 +306,8 @@ module.exports = {
 		text1: 'Deu ruim! Vou te dar algumas opções pra te ajudar a resolver algum possivel problema. Sobre o q vc qr falar?',
 		menuOptions: ['Família', 'Parceiros', 'Amigos', 'Efeitos Colaterais', 'ISTs', 'Não Tomei'],
 		menuPostback: ['drpFamilia', 'drpParceiros', 'drpAmigos', 'drpEfeitos', 'drpIST', 'drpNaoTomei'],
-		drpFamilia: ' É uó falar com as pessoas da nossa família e ñ podermos nos abrir... Também não é fácil conversar sobre sexualidade com nossos pais. Aí vc pensa: como contar de uma forma que eles vão entender e me apoiar? Principalmente quando falamos de prevenção! Se vc já sabe que usar PrEP, fazer testagens etc são importantes, minha dica é: Procure conversar primeiro com alguém da família q vc tem proximidade e depois, se sentir confortável, fale com as outras pessoas envolvidas.Agora se alguém descobriu e deu ruim, fale com a gente, podemos te ajudar!',
+		drpFamilia1: 'É uó falar com as pessoas da nossa família e ñ podermos nos abrir... Também não é fácil conversar sobre sexualidade com nossos pais. Aí vc pensa: como contar de uma forma que eles vão entender e me apoiar? Principalmente quando falamos de prevenção!',
+		drpFamilia2: 'Se vc já sabe que usar PrEP, fazer testagens etc são importantes, minha dica é: Procure conversar primeiro com alguém da família q vc tem proximidade e depois, se sentir confortável, fale com as outras pessoas envolvidas. Agora se alguém descobriu e deu ruim, fale com a gente, podemos te ajudar!',
 		drpParceiros: 'Nem todo mundo descobriu a importância de cuidar da saúde assim como vc. Precisamos quebrar o estereótipo "monstruoso" q criaram pras IST e o HIV! Se testar e usar PrEP é a sua escolha para se prevenir e a pessoa com quem vc se relaciona pode não entender. Q tal trocar uma ideia com seu parceire sobre essa sua escolha?\nAgora se o constragimento rolou com o crush, podemos te ajudar.',
 		drpAmigos: 'Será q suas amizades sabem o benefício de dar atenção pra saúde sexual? Rola trocar ideia sem constrangimento, falar da tua descoberta e qm sabe recomendar pra essas pessoas o uso da PrEP e de outros métodos de prevenir HIV e IST? Afinal, é maravilhoso ter segurança e se cuidar fazendo esse acompanhamento babado, né? Nossas amizades merecem!Agora se o constragimento rolou na roda de amigles, podemos te ajudar.',
 		drpNaoTomei: {
@@ -319,7 +320,11 @@ module.exports = {
 		drpEfeitos: {
 			text1: 'Sobre qual efeito colateral vc quer saber?',
 			drpEnjoo: 'Pode acontecer na 1ª. Semana de uso da PrEP, até seu corpo se acostumar com os comprimidos. Para evitar de ter náuseas, algumas dicas:\n- Tome seu comprimido após se alimentar ou à noite, antes de dormir, após uma refeição leve.\nCaso o enjôo seja intenso, prejudique suas atividades diárias, seja seguido de vômitos ou não melhore após 3-7 dias, é melhor ser avaliado por um profissional de saúde.',
-			drpGases: 'Quando presente, costuma melhorar até o fim do 1° mês de uso da PrEP.\nSe você se incomoda com os gases:\n-Evite alimentos como feijão, repolho, batata doce, ovo cozido, refrigerantes\n-Chá de erva- doce pode ajudar',
+			drpGases: `Quando acontece, costuma melhorar até o fim do 1° mês de uso da PrEP.
+Se vc se incomodar muito com os gases:
+- Evite alimentos como feijão, repolho, batata doce, ovo cozido e refrigerantes.
+
+OBS: Chá de erva- doce pode ajudar!`,
 			drpDiarreia: 'A PrEP não costuma causar diarreia forte, mas pode aumentar o número de evacuações e diminuir um pouco a consistência das fezes, em algumas pessoas.\n- Beber bastante água(mais de 2,5- 3l/ dia) e evitar alimentos que soltam o intestino pode ajudar',
 			drpDorCabeca: 'É Pouco frequente dor de cabeça relacionada à PrEP costuma ser leve e melhorar após 2-3 dias.',
 			drpMoleza: 'Sintoma raro, dura em geral 1.2 dias e costuma melhorar com repouso.',
