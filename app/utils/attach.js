@@ -137,7 +137,7 @@ module.exports.getQR = async (opt) => {
 			payload: opt.menuPostback[index],
 		};
 
-		if (opt.menuImages[index]) aux.image_url = opt.menuImages[index];
+		if (opt.menuImages && opt.menuImages[index]) aux.image_url = opt.menuImages[index];
 		elements.push(aux);
 	});
 
