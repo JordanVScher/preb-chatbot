@@ -59,7 +59,7 @@ async function buildMultipleChoice(question, complement) {
 }
 
 // show question code locally for dev purposes
-const buildQuizText = (text, code, env) => (env !== 'local' ? text : `${code}. ${text}`);
+const buildQuizText = (text, code, env) => (env === 'local' ? `${code}. ${text}` : text);
 
 async function sendQuizQuestion(context, btnPrefix) {
 	await context.setState({ quizText: await buildQuizText(context.state.currentQuestion.text, context.state.currentQuestion.code, process.env.ENV) });
