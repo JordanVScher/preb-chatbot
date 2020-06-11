@@ -20,20 +20,23 @@ const { sentryError } = require('./app/utils/error');
 const { buildNormalErrorMsg } = require('./app/utils/error');
 
 async function vouPensarMelhorFollowUp(context) {
-	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
-		await research.ofertaPesquisaEnd(context);
-	} else {
-		await mainMenu.sendMain(context);
-	}
+	await mainMenu.sendMain(context);
+
+	// if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+	// 	await research.ofertaPesquisaEnd(context);
+	// } else {
+	// 	await mainMenu.sendMain(context);
+	// }
 }
 
 async function meContaDepoisFollowUp(context) {
-	if (context.state.nextDialog === 'ofertaPesquisaEnd') {
-		await context.setState({ meContaDepois: true });
-		await research.ofertaPesquisaSim(context);
-	} else {
-		await mainMenu.sendMain(context);
-	}
+	await mainMenu.sendMain(context);
+	// if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+	// 	await context.setState({ meContaDepois: true });
+	// 	await research.ofertaPesquisaSim(context);
+	// } else {
+	// 	await mainMenu.sendMain(context);
+	// }
 }
 
 async function contactFollowUp(context) {
