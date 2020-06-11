@@ -506,4 +506,9 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],
 		menuPostback: ['pesquisaPresencial', 'pesquisaVirtual', 'pesquisaNao'],
 	},
+	quizCityMsg: {
+		1: 'Ô trem! Terra boa demais da conta, sô!',
+		2: 'Barril dobrado! Vc mora na terra do axé!',
+		3: 'Daora! Aposto q o casaco num sai da mochila!',
+	},
 };

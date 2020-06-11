@@ -21,8 +21,12 @@ async function handleQuizResposta(context) {
 	const { categoryQuestion } = context.state;
 	const { sentAnswer } = context.state;
 
-	// saving city labels
-	if (context.state.currentQuestion.code === 'A1') await addCityLabel(context.session.user.id, context.state.quizOpt);
+	// after city question show extra message and save city labels
+	if (context.state.currentQuestion.code === 'A1') {
+		const textToSend = flow.quizCityMsg[context.state.quizOpt];
+		if (textToSend) await context.sendText(textToSend);
+		await addCityLabel(context.session.user.id, context.state.quizOpt);
+	}
 
 	// add registration form link to send later
 	if (sentAnswer.offline_pre_registration_form) await context.setState({ registrationForm: sentAnswer.offline_pre_registration_form });

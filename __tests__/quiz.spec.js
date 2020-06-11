@@ -102,11 +102,27 @@ describe('handleQuizResposta and sentAnswer', () => {
 	context.state.currentQuestion = questions.extraMultiple;
 	context.state.sentAnswer = questions.regularMultipleChoice;
 
-	it('A1 - Save city and keep going', async () => {
+	it('A1 - Save city and keep going and show message', async () => {
 		context.state.sentAnswer.finished_quiz = 0;
 		context.state.currentQuestion.code = 'A1';
+		context.state.quizOpt = 3;
+		const textToSend = flow.quizCityMsg[context.state.quizOpt];
 		await quiz.handleQuizResposta(context);
 
+		await expect(context.sendText).toBeCalledWith(textToSend);
+		await expect(addCityLabel).toBeCalledWith(context.session.user.id, context.state.quizOpt);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
+	});
+
+	it('A1 - Save city and keep going and dont show message', async () => {
+		context.state.sentAnswer.finished_quiz = 0;
+		context.state.currentQuestion.code = 'A1';
+		context.state.quizOpt = 4;
+		const textToSend = flow.quizCityMsg[context.state.quizOpt];
+		await quiz.handleQuizResposta(context);
+
+		await expect(context.sendText).not.toBeCalledWith(textToSend);
 		await expect(addCityLabel).toBeCalledWith(context.session.user.id, context.state.quizOpt);
 		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
 		await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
