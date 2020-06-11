@@ -174,6 +174,8 @@ async function sendAutotesteMsg(context) {
 		await context.sendText(flow.testagem.text1);
 		await context.sendText(context.state.testagem.msg);
 		await context.sendText(flow.testagem.text2, context.state.testagem.opt);
+	} else {
+		await sendMain(context);
 	}
 }
 
