@@ -403,7 +403,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.deuRuimPrep.drpAmigos);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
-			case 'dpEfeitos':
+			// case 'dpEfeitos': // removed efeitos colaterais from duvidas (prep)
 			case 'drpEfeitos':
 				await context.sendText(flow.deuRuimPrep.drpEfeitos.text1, await getQR(flow.deuRuimPrep.drpEfeitos));
 				break;

@@ -287,8 +287,8 @@ https://projetocombina.wordpress.com/`,
 		// 	3: 'Procure serviços de saúde nas capitais: SP: https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/dstaids/index.php?p=248175 .',
 		// },
 		// demaisLocalidades: 'http://www.aids.gov.br/pt-br/acesso_a_informacao/servicos-de-saude',
-		menuOptions: ['Drogas e PrEP', 'Hormônios e PrEP', 'Esqueci de Tomar', '+ informações', 'Efeitos Colaterais'],
-		menuPostback: ['dpDrogas', 'dpHormonios', 'dpEsqueci', 'dpInfo', 'dpEfeitos'],
+		menuOptions: ['Drogas e PrEP', 'Hormônios e PrEP', 'Esqueci de Tomar', '+ informações'],
+		menuPostback: ['dpDrogas', 'dpHormonios', 'dpEsqueci', 'dpInfo'], // removed dpEfeitos
 	},
 	duvidasNaoPrep: {
 		text1: 'Bora acabar agora com essas duvidas sobre Prep? Escolhe ai e eu te explico tuduuu!',

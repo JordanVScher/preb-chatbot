@@ -248,12 +248,12 @@ describe('duvidasPrep - Dúvidas de usuário prep', () => {
 		await expect(context.sendText).toBeCalledWith(flow.duvidasPrep.text1, await getQR(flow.duvidasPrep));
 	});
 
-	it('dpEfeitos - mosta menu de efeitos', async () => {
-		const context = cont.quickReplyContext('dpEfeitos', 'dpEfeitos');
-		await handler(context);
+	// it('dpEfeitos - mosta menu de efeitos', async () => {
+	// 	const context = cont.quickReplyContext('dpEfeitos', 'dpEfeitos');
+	// 	await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.text1, await getQR(flow.deuRuimPrep.drpEfeitos));
-	});
+	// 	await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpEfeitos.text1, await getQR(flow.deuRuimPrep.drpEfeitos));
+	// });
 
 	it('dpDrogas - explicação e followUp', async () => {
 		const context = cont.quickReplyContext('dpDrogas', 'dpDrogas');
