@@ -172,7 +172,7 @@ module.exports = {
 		autoServicoEnd: 'Close! Vamo te esperar! Você pode fazer esse teste onde vc quiser, inclusive fazer no serviço numa sala sozinhe ou com ajuda de profissional! Até lá vc decide! Bjs!',
 	},
 	triagem: {
-		intro: 'Estou entendendo q vc teve uma relação com penetração e sem proteção, então vou te fazer algumas perguntas para te ajudar',
+		intro: 'Quem nunca? Se rolou alguma relação desprotegida vamos descobrir como posso te ajudar? Vou te fazer uma perguntinha!',
 		retryTriagem: '[texto informativo do perigo]',
 		emergency1: 'Já ouviu falar de PEP, a Profilaxia Pós-Exposição? A PEP são alguns comprimidos que te ajudam a se prevenir do HIV no caso de exposições de risco recentes. Mas fique esperto, você tem no máximo 72 horas após a relação para começar a tomar, e quanto antes, MELHOR!  Escolhe ai sua cidade e corre lá! Tem também o contato do pessoal para tirar alguma dúvida.',
 		suggest: 'Tendi, eu axo q vc tá com alguma IST, a melhor coisa agora é agendar uma consulta com um médico ou médica pra te atender melhor\nok?',
@@ -356,7 +356,6 @@ OBS: Chá de erva- doce pode ajudar!`,
 		text1: 'Partiu! Clica aí na opção da sua dúvida e te explico tuduuuu!',
 		drnpMedoTestar: 'Ter medo de fazer o teste é super comum, bee! O jeito mais fácil de perder o medo é encarar e ñ ter mais dúvidas sobre a sua sorologia!',
 		followUpTriagem: 'Vamo lá! Escolhe a opção q vc tem dúvida e vou te ajudar!',
-		drnpArrisquei: 'Estou entendendo q vc teve uma relação com penetração e sem proteção, então vou te fazer algumas perguntas para te ajudar',
 		menuOptions: ['Me arrisquei e agora?', 'Medo de me testar?', 'Feridas no pau/cu', 'PEP não foi boa?'],
 		menuPostback: ['drnpArrisquei', 'drnpMedoTestar', 'drnpIST', 'drnpPEPNao'],
 		drnpPEPNao: {

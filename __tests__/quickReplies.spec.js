@@ -524,7 +524,7 @@ describe('deuRuimNaoPrep', () => {
 		const context = cont.quickReplyContext('drnpArrisquei', 'drnpArrisquei');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimNaoPrep.drnpArrisquei);
+		await expect(context.sendText).toBeCalledWith(flow.triagem.intro);
 		await expect(quiz.answerQuiz).toBeCalledWith(context, 'triagem');
 	});
 

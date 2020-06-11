@@ -360,7 +360,7 @@ module.exports = async function App(context) {
 				await inicioDuvidasNaoPrep(context);
 				break;
 			case 'drnpArrisquei':
-				await context.sendText(flow.deuRuimNaoPrep.drnpArrisquei);
+				await context.sendText(flow.triagem.intro);
 				await quiz.answerQuiz(context, 'triagem');
 				break;
 			case 'dnpDrogas':
