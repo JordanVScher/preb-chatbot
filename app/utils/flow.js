@@ -137,6 +137,11 @@ module.exports = {
 		outrosHorarios: 'Hum, axo q não rolou os horários, né? Fala com a gente pelo whats:',
 		askContato: 'Se quiser, passa seu contato q a gente te xama! 😉',
 		salvadorMsg: 'Traga seu documento e cartão SUS. Caso não tenha entre em contato pelo telefone informado para receber orientações.',
+		cityMessages: {
+			1: 'Legal! O projeto prep 1519 funciona no centro de referencia da juventude CRJ fica na praça da estação, pertinho da estação central do metrô. Rua Guaicurus 50. ',
+			2: '', // TEXTO de Salvador ainda pendente
+			3: 'O bate papo pode ser na Casa 1 q fica na Rua Adoniran Barbosa, 151 próximo do metrô São Joaquim ou no CTA Henfil na Rua Libero Badaró, 144 próximo do metrô Anhangabau!',
+		},
 	},
 	prevention: {
 		text1: 'Keride, colocar capinha é importante, até pq não previne só HIV nééé?? Mas não é o único método não!',

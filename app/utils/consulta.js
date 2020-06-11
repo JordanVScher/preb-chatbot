@@ -129,6 +129,7 @@ async function loadCalendar(context) {
 async function checkSP(context) {
 	try {
 		const cidade = context.state.user.city;
+		const extraMsg = flow.consulta.cityMessages[cidade];
 		const { calendars } = await prepApi.getAvailableCities();
 
 		if (!cidade) { // if user has no cidade send him back to the menu
@@ -142,11 +143,9 @@ async function checkSP(context) {
 				});
 			});
 
-			await context.sendText(`O bate papo pode ser na ${await help.cidadeDictionary(cidade, '0')}`, { quick_replies: options });
+			await context.sendText(extraMsg || 'Onde você prefere fazer?', { quick_replies: options });
 		} else { // if its not SP send location and follow up with the regular
-			const location = await help.cidadeDictionary(cidade);
-			if (!location) throw Error(`Couldn't find location for city id ${cidade}`);
-			await context.sendText(`O bate papo pode ser no ${location}`);
+			if (extraMsg) await context.sendText(extraMsg);
 			const calendar = await calendars.find((x) => x.state === help.siglaMap[cidade]);
 			await context.setState({ calendarID: calendar.id });
 			await loadCalendar(context);
