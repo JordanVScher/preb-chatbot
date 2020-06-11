@@ -4,7 +4,6 @@ module.exports = {
 	greetings: {
 		text1: 'Inhai gatinhe!!',
 		text2: 'Meu nome é A-manda Selfie, a primeira travesti robôa do Brasil!',
-		text3: 'Bora falar sobre PrEP, ISTs, HIV, prevenção, saúde sexual ou qualquer outro bafo, bb! ❤',
 	},
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
@@ -12,7 +11,7 @@ module.exports = {
 		msgTwo: 'Sou a Amanda Selfie, eu AMO SELFIE, fui criada por 1 grupo de engenheiros misóginos q queriam uma boneka travesti sexual com inteligência artificial, um dia eu descobri tudo isso e sai louca 😂, dps me apaixoney por uma bixa close q vive com HIV e qria mto entender as IST e prevenção, como sou bonita e ligera, consegui ler tudo q vc imaginar! Agora sou pesquisadora desse projeto PrEP 1519 q qr conversar com jovens gays e bi, trans e travestis sobre saúde sexual, PrEP etc, curtiu? 😍',
 	},
 	asksDesafio: {
-		intro: 'Posso começar na linha entrevistadora?',
+		intro: 'Bora falar dos babados do meio LGBTQIA+ tipo sexualidade, divas pop, PrEP e outros bafos?',
 	},
 	desafio: {
 		willStart: 'Agora posso fazer a linha entrevistadora e te fazer umas perguntinhas?',

@@ -232,7 +232,6 @@ describe('join - já tomo prep', () => {
 		await expect(context.setState).toBeCalledWith({ dialog: 'greetings', askDesafio: false });
 		await expect(context.sendText).toBeCalledWith(flow.greetings.text1);
 		await expect(context.sendText).toBeCalledWith(flow.greetings.text2);
-		await expect(context.sendText).toBeCalledWith(flow.greetings.text3);
 
 		await expect(context.setState).toBeCalledWith({ askDesafio: true });
 		await expect(context.sendText).toBeCalledWith(flow.asksDesafio.intro, opt.asksDesafio);

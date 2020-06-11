@@ -253,7 +253,6 @@ module.exports = async function App(context) {
 			case 'greetings':
 				await context.sendText(flow.greetings.text1);
 				await context.sendText(flow.greetings.text2);
-				await context.sendText(flow.greetings.text3);
 				await desafio.asksDesafio(context);
 				break;
 			case 'medicaçao':
