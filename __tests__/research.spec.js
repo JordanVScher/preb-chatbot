@@ -35,6 +35,9 @@ it('ofertaPesquisaSim - não clica em meContaDepois - vê explicação do projet
 	await expect(context.setState).toBeCalledWith({ nextDialog: 'ofertaPesquisaEnd' });
 	await expect(context.state.meContaDepois !== true).toBeTruthy();
 	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text1);
+	await expect(context.typing).toBeCalledWith(1000 * 5);
+	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text2);
+
 	await expect(falarComHumano).toBeCalledWith(context, 'ofertaPesquisaEnd');
 });
 
@@ -131,7 +134,10 @@ it('TCLE - escolheu meContaDepois -> recebe mensagem da pesquisa', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.ofertaPesquisaSim.text1);
 	await expect(context.typing).toBeCalledWith(1000 * 20);
 
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.TCLE.text2, opt.Research_TCLE);
+	await expect(context.sendText).toBeCalledWith(flow.TCLE.text2a);
+	await expect(context.typing).toBeCalledWith(1000 * 5);
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.TCLE.text2b, opt.Research_TCLE);
+
 	await expect(context.sendText).toBeCalledWith(flow.TCLE.text3, opt.Research_Termos);
 });
 
@@ -144,7 +150,10 @@ it('TCLE -  não escolheu meContaDepois -> recebe calma aí', async () => {
 	await expect(context.state.meContaDepois).toBeFalsy();
 	await expect(context.sendText).toBeCalledWith(flow.TCLE.text1);
 
-	await expect(context.sendButtonTemplate).toBeCalledWith(flow.TCLE.text2, opt.Research_TCLE);
+	await expect(context.sendText).toBeCalledWith(flow.TCLE.text2a);
+	await expect(context.typing).toBeCalledWith(1000 * 5);
+	await expect(context.sendButtonTemplate).toBeCalledWith(flow.TCLE.text2b, opt.Research_TCLE);
+
 	await expect(context.sendText).toBeCalledWith(flow.TCLE.text3, opt.Research_Termos);
 });
 

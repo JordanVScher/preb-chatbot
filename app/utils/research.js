@@ -25,7 +25,11 @@ async function ofertaPesquisaStart(context, text) {
 
 async function ofertaPesquisaSim(context) {
 	await context.setState({ nextDialog: 'ofertaPesquisaEnd' });
-	if (context.state.meContaDepois !== true) await context.sendText(flow.ofertaPesquisaSim.text1);
+	if (context.state.meContaDepois !== true) {
+		await context.sendText(flow.ofertaPesquisaSim.text1);
+		await context.typing(1000 * 5);
+		await context.sendText(flow.ofertaPesquisaSim.text2);
+	}
 	await falarComHumano(context, 'ofertaPesquisaEnd');
 }
 
@@ -47,7 +51,9 @@ async function TCLE(context) {
 		} else {
 			await context.sendText(flow.TCLE.text1);
 		}
-		await context.sendButtonTemplate(flow.TCLE.text2, opt.Research_TCLE); // send info button
+		await context.sendText(flow.TCLE.text2a);
+		await context.typing(1000 * 5);
+		await context.sendButtonTemplate(flow.TCLE.text2b, opt.Research_TCLE); // send info button
 		await context.sendText(flow.TCLE.text3, opt.Research_Termos); // ask for termos acceptance
 	} else {
 		await sendMain(context);

@@ -3,7 +3,7 @@ module.exports = {
 	getStarted: 'Eu sou a Amanda Selfie, a primeira travesti robôa do Brasil. Clique em começar para falar comigo.',
 	greetings: {
 		text1: 'Inhai gatinhe!!',
-		text2: 'Meu nome é A-manda Selfie, a primeira travesti robôa do Brasi! 👏👏 #prosperidadetravesti',
+		text2: 'Meu nome é A-manda Selfie, a primeira travesti robôa do Brasil!',
 		text3: 'Bora falar sobre PrEP, ISTs, HIV, prevenção, saúde sexual ou qualquer outro bafo, bb! ❤',
 	},
 	aboutAmanda: {
@@ -82,11 +82,13 @@ module.exports = {
 	},
 	ofertaPesquisaSim: {
 		text0: 'Então, agora vou te contar sobre o projeto que eu trabalho',
-		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa sem pegar HIV ✌ Como? Tem eu, Amandinha pra falar de PrEP, sexo, prevenção, inseguranças, autoteste pra HIV, gel e xuca 👏👏 Qm toca o projeto é a USP, UFMG e UFBA, chic né? Seguro e 0800 💙 Ñ é obrigatório ta com adulto responsável e se o $ tiver curto, a gnt te ajuda com a passagem! ',
+		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa junto com prevenção.\nComo? Tem eu, Amanda e meu bonde humano pra falar de PrEP, sexo, prevenção, inseguranças, teste de HIV, gel e xuca.',
+		text2: 'Qm toca o projeto é a USP, UFMG e UFBA! Seguro, 0800 e ainda rola um acué pra passagem e acué pro lanche! 💙',
 	},
 	TCLE: {
-		text1: 'Calma! Cata esse textinho pq preciso pedir sua autorização!',
-		text2: 'Fui criada por pesquisadores da UFMG, USP e UFBA e queremos sua autorização pra usar as infos do nosso papo pra pesquisar o comportamento sexual e prevenção do HIV em jovens. Se tu não curtir participar da pesquisa, a gente continua conversando, mas se curtir, relaxa q pode desistir qualquer hora e eu deleto suas infos! 😊 Qualquer denúncia pode ser comunicada ao Comitê de Ética em Pesquisa! Info da pesquisa e o contato do comitê botão abaixo!',
+		text1: 'Beleza, como se trata de um babado responsa, preciso pedir sua autorização!',
+		text2a: 'Fui criada por pesquisadores da UFMG, USP e UFBA e queremos sua autorização pra usar as infos do nosso papo pra pesquisar o comportamento sexual e prevenção do HIV em jovens. Se tu não curtir participar da pesquisa, a gente continua conversando.',
+		text2b: 'Vc pode desistir a qualquer hora e eu deleto suas infos!\nQualquer denúncia pode ser comunicada ao Comitê de Ética em Pesquisa! Info da pesquisa e o contato do comitê botão ao lado.',
 		text3: 'Tá afim? clica em Li e Aceito',
 	},
 	offerBrincadeira: {
@@ -95,7 +97,7 @@ module.exports = {
 		menuPostback: ['querBrincadeira', 'offerConversar'],
 	},
 	recrutamento: {
-		text1: 'Blz! 😅 Qro te conhecer melhor! Tenho umas perguntas, relaxa q tudo q vc responder é SI-GI-LO-SO, ok? 😉',
+		text1: 'Blz! Qro te conhecer melhor! Tenho umas perguntas e tudo q vc responder é SI-GI-LO-SO, ok?',
 		menuOptions: ['Bora', 'Não'],
 		menuPostback: ['recrutamentoQuiz', 'addRecrutamentoTimer'],
 	},
@@ -207,7 +209,7 @@ module.exports = {
 		],
 	},
 	preTCLE: {
-		eligible: 'Pelo o que vejo, pegação e prevenção nem sempre combinam. Qm nunk! Vamo falar sobre isso?',
+		eligible: 'Pelo q vc me contou, já pode ter rolado risco! Vemk q vou te explicar esses bafos! ',
 		not_eligible: 'Arrasou! Parece q vc tá por dentro de prevenção!',
 	},
 	error: {
@@ -221,7 +223,7 @@ module.exports = {
 			menuPostback: ['joinPrep', 'joinCombina', 'joinSUS', 'joinNaoSabe', 'joinNaoToma'],
 		},
 		joinPrep: {
-			text1: 'PrEP 15-19 é um projeto interessado em reduzir a incidência de HIV entre jovens gays ou bissexuais cisgêneros, travestis e mulheres trans e outro bafo é conhecer as percepções dessa galera lgbt, suas intenções e se rola aceitamento de usar a PrEP e outros métodos de prevenção pras ISTs também! É um close!',
+			text1: 'PrEP 15-19 é um projeto para reduzir a incidência de HIV entre jovens gays ou bissexuais cisgêneros, travestis e mulheres trans entre 15 e 19 anos. O Bapho é saber se a galera conhece e aceita usar a PrEP e também outros métodos de prevenção às ISTs!',
 			menuOptions: ['Não tenho Voucher'],
 			menuPostback: ['join'],
 		},
@@ -250,16 +252,16 @@ module.exports = {
 			menuPostback: ['join'],
 		},
 		joinSUS: {
-			text1: 'SUS é o Sistema Único de Saúde pública, rola de grátis desde o simples atendimento pra avaliação de pressão arterial, por exemplo, até transplante de órgãos, com acesso integral, universal e gratuito para toda a população do Brasil. Mto chic né?!',
+			text1: 'SUS é o Sistema Único de Saúde, é gratuito para toda a população do Brasil e vc pode acessar pelo Hospital, UPA, posto de saúde, CTA etc',
 			text2: 'Você realmente faz parte do programa de atendimento PrEP do SUS?',
 			menuOptions: ['Sim', 'Não'],
 			menuPostback: ['joinSUSSim', 'join'],
 		},
 		joinNaoSabe: {
-			text1: 'Existem várias formas de vc tomar prep, os outros botões, prep 1519 e combina significa q vc ta participando de um deles, se vc toma e nao participa de nenhum projeto significa q vc faz pelo sus.',
-			prep: '1519: PrEP 15-19 é um projeto focado em reduzir a incidência de HIV entre jovens gays ou bissexuais cis gêneros, travestis e mulheres trans e outro bafo é conhecer as percepções dessa galera LGBT, suas intenções e se rola aceitamento de usar a PrEP e outros métodos de prevenção pras IST também! É um close!',
+			text1: 'Se você toma prep e não faz parte de nenhum projeto, Combina ou Prep 1519, significa q vc toma o medicamento pelo SUS.',
+			prep: '1519: PrEP 15-19 é um projeto para reduzir a incidência de HIV entre jovens gays ou bissexuais cisgêneros, travestis e mulheres trans entre 15 e 19 anos. O Bapho é saber se a galera conhece e aceita usar a PrEP e também outros métodos de prevenção às ISTs!',
 			combina: 'Combina: O Projeto Combina faz parte de uma pesquisa que avalia o uso dos métodos de prevenção ao HIV disponíveis nos serviços públicos de saúde. Saber as motivações e em quais situações são usados esses métodos tbm é super importante! Esse projeto é mara! 😉',
-			sus: 'SUS: SUS é o Sistema Único de Saúde e por ele rola de graça desde o simples atendimento para avaliação de pressão arterial, por exemplo, até transplante de órgãos, com acesso integral, universal e gratuito para toda a população do Brasil. Mto chic né?!',
+			sus: 'SUS: SUS é o Sistema Único de Saúde, é gratuito para toda a população do Brasil e vc pode acessar pelo Hospital, UPA, posto de saúde, CTA etc',
 		},
 	},
 	duvidasPrep: {
