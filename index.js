@@ -387,6 +387,7 @@ module.exports = async function App(context) {
 				break;
 			case 'dnpMeTestar':
 				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);
+				await context.sendText(flow.autoteste.intro);
 				await opcaoAutoteste(context);
 				break;
 			case 'deuRuimPrep':
