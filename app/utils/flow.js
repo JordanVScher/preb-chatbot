@@ -397,17 +397,14 @@ module.exports = {
 		},
 	},
 	queroVoltarTomar: {
-		text1: `Se vc parou há 3 dias ou menos: volte a tomar os comprimidos normalmente. 
+		text1: `Se vc parou há 3 dias ou menos: volta com os comprimidos normal.
 
-Se parou de 3 a 7 dias e TRANSOU nas últimas 72h, procure o CTA ou serviço de saúde próximo pra tomar PEP, se ñ transou, volte a tomar os comprimidos normalmente.
+Se parou há mais 3 dias, fale com a gente no whats: (11) 98209-2911
 
-Se já parou há 28 dias e TRANSOU nas últimas 72h, procure o serviço pra PEP e remarcar sua consulta. Se ñ, reinicie os comprimidos normal. 
+Se vc transou nas últimas 72h sem camisinha ou deu ruim, procure um CTA, UPA ou serviço
+de saúde próximo para tomar PEP e remarque uma nova consulta pra rever seu uso de PrEP.
 
-E se já parou faz mais de 1 mês e transou nas últimas 72h, procure o serviço pra tomar PEP e agendar uma nova consulta pra rever seu uso de PrEP. 
-
-Se quiser fala com a gente no whats: (11) 98209-2911
-
-Lembre- se q vc tá protegide contra o HIV em 99% das chances só depois de tomar PrEP por 7 dias seguidos!!'`,
+Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar PrEP por 7 dias seguidos!`,
 	},
 	alarmePrep: {
 		hasAlarm: 'O que quer fazer?',
