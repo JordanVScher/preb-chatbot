@@ -18,7 +18,7 @@ describe('checkMainMenu', () => {
 
 		await expect(result.quick_replies.length === 5).toBeTruthy();
 		await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-		await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
+		await expect(result.quick_replies[1].title === 'Quero Participar').toBeTruthy();
 		await expect(result.quick_replies[1].payload === 'beginQuiz').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
@@ -33,7 +33,7 @@ describe('checkMainMenu', () => {
 
 		await expect(result.quick_replies.length === 5).toBeTruthy();
 		await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-		await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
+		await expect(result.quick_replies[1].title === 'Quero Participar').toBeTruthy();
 		await expect(result.quick_replies[1].payload === 'beginQuiz').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Ver meu Voucher').toBeTruthy();
@@ -49,7 +49,7 @@ describe('checkMainMenu', () => {
 
 		await expect(result.quick_replies.length === 5).toBeTruthy();
 		await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-		await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
+		await expect(result.quick_replies[1].title === 'Quero Participar').toBeTruthy();
 		await expect(result.quick_replies[1].payload === 'querBrincadeira').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
@@ -110,7 +110,7 @@ describe('checkMainMenu', () => {
 
 		await expect(result.quick_replies.length === 6).toBeTruthy();
 		await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-		await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
+		await expect(result.quick_replies[1].title === 'Quero Participar').toBeTruthy();
 		await expect(result.quick_replies[1].payload === 'recrutamento').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Ver Consulta').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
@@ -162,7 +162,7 @@ describe('checkMainMenu', () => {
 
 		await expect(result.quick_replies.length === 5).toBeTruthy();
 		await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
-		await expect(result.quick_replies[1].title === 'Quiz').toBeTruthy();
+		await expect(result.quick_replies[1].title === 'Quero Participar').toBeTruthy();
 		await expect(result.quick_replies[1].payload === 'recrutamento').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();

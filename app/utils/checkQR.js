@@ -5,9 +5,9 @@ const { checkAppointment } = require('./consulta-aux');
 async function checkMainMenu(context) {
 	let opt = [];
 	const baterPapo = { content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' };
-	const quiz = { content_type: 'text', title: 'Quiz', payload: 'beginQuiz' };
-	const quizRecrutamento = { content_type: 'text', title: 'Quiz', payload: 'recrutamento' };
-	const quizBrincadeira = { content_type: 'text', title: 'Quiz', payload: 'querBrincadeira' };
+	const quiz = { content_type: 'text', title: 'Quero Participar', payload: 'beginQuiz' };
+	const quizRecrutamento = { content_type: 'text', title: 'Quero Participar', payload: 'recrutamento' };
+	const quizBrincadeira = { content_type: 'text', title: 'Quero Participar', payload: 'querBrincadeira' };
 	const prevencoes = { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' };
 	const join = { content_type: 'text', title: 'Já Tomo PrEP', payload: 'join' };
 	const seePrepToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seePrepToken' };
@@ -37,7 +37,7 @@ async function checkMainMenu(context) {
 		opt.push(sobreAmanda);
 
 		if (context.state.publicoInteresseEnd) {
-			const index = opt.findIndex((x) => x.title === 'Quiz');
+			const index = opt.findIndex((x) => x.title === 'Quero Participar');
 			if (context.state.user.is_target_audience === 0) {
 				if (!context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; } else
 				if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
@@ -62,7 +62,7 @@ async function checkMainMenu(context) {
 
 		// dont show quiz option if either of brincadeira and recrutamento are answered, also dont show quiz if user is taget_audiece but is not in the risk group
 		if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || (context.state.recrutamentoEnd
-		|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter((x) => x.title !== 'Quiz'); } // dont show quiz option if user has finished the quiz
+			|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter((x) => x.title !== 'Quero Participar'); } // dont show quiz option if user has finished the quiz
 
 		if (context.state.user.integration_token) { // replace token options if user has one
 			const index = opt.findIndex((x) => x.payload === 'join'); if (index) opt[index] = seePrepToken;

@@ -1,7 +1,7 @@
 module.exports = {
 	greetings: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' },
+			{ content_type: 'text', title: 'Quero Participar', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' },
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],

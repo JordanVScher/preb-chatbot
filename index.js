@@ -51,7 +51,7 @@ const inicioJoin = async (context) => context.sendText(flow.join.intro.text1, aw
 const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
 const inicioTriagemSQ = async (context) => context.sendText(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
 // const drnpFollowUpTriagem = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
-const drnpFollowUpAgendamento = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
+const drnpFollowUpAgendamento = async (context, text) => mainMenu.falarComHumano(context, null, text || flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 const alarmeFollowUp = async (context) => context.sendText(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUpBtn));
 
 
@@ -490,29 +490,27 @@ module.exports = async function App(context) {
 				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.text1, await getQR(flow.deuRuimNaoPrep.drnpPEPNao));
 				break;
 			case 'drnpTomeiTudo':
-				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpTomeiTudo);
-				await drnpFollowUpAgendamento(context);
+				await drnpFollowUpAgendamento(context, flow.deuRuimNaoPrep.drnpPEPNao.drnpTomeiTudo);
 				break;
 			case 'drnpNaoSentiBem':
-				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpNaoSentiBem);
-				await drnpFollowUpAgendamento(context);
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpNaoSentiBem1);
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpNaoSentiBem2);
+				await drnpFollowUpAgendamento(context, flow.deuRuimNaoPrep.drnpPEPNao.drnpNaoSentiBem3);
 				break;
 			case 'drnpPerdi':
-				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpPerdi);
-				await drnpFollowUpAgendamento(context);
+				await drnpFollowUpAgendamento(context, flow.deuRuimNaoPrep.drnpPEPNao.drnpPerdi);
 				break;
 			case 'drnpExposicao':
-				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpExposicao);
-				await drnpFollowUpAgendamento(context);
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpExposicao1);
+				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpExposicao2);
+				await drnpFollowUpAgendamento(context, flow.deuRuimNaoPrep.drnpPEPNao.drnpExposicao3);
 				break;
 			case 'drnpTomeiCerto':
-				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.drnpTomeiCerto);
-				await drnpFollowUpAgendamento(context);
+				await drnpFollowUpAgendamento(context, flow.deuRuimNaoPrep.drnpPEPNao.drnpTomeiCerto);
 				break;
 			case 'voltarTomarPrep':
 			case 'voltarTomarNaoPrep':
-				await context.sendText(flow.queroVoltarTomar.text1);
-				await drnpFollowUpAgendamento(context);
+				await drnpFollowUpAgendamento(context, flow.queroVoltarTomar.text1);
 				break;
 			case 'triagemSQ':
 				await inicioTriagemSQ(context);
