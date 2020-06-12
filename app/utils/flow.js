@@ -485,7 +485,11 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 			menuPostback: ['tomouPrep', 'NaoTomouPrep'],
 		},
 		horas: 'Que horas?',
-		askProxima: 'Quanto tempo antes da próxima dose vc quer que eu te lembre amanhã?',
+		askProxima: {
+			intro: 'Quanto tempo antes da próxima dose vc quer que eu te lembre amanhã?',
+			menuOptions: ['3 horas antes', '2 horas antes', '1 hora antes', '30 minutos antes', '15 minutos antes'],
+			menuPostback: ['askProxima180', 'askProxima120', 'askProxima60', 'askProxima30', 'askProxima15'],
+		},
 		naoTomou: 'Já transou?',
 		naoTomouBtn: {
 			menuOptions: ['Não transei', 'Já transei'],

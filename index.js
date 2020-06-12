@@ -639,14 +639,14 @@ module.exports = async function App(context) {
 				await context.sendText(flow.tomeiPrep.horas, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
 				break;
 			case 'tomeiHoraDepois':
-				await context.setState({ alarmePage: 1, pageKey: 'askProxima' });
-				// fallsthrough
 			case 'askProxima':
-				await context.sendText(flow.tomeiPrep.askProxima, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+				await context.setState({ dialog: 'askProxima' });
+				await context.sendText(flow.tomeiPrep.askProxima.intro, await getQR(flow.tomeiPrep.askProxima));
 				break;
 			case 'tomeiFinal':
 				await prepAPI.putUpdateNotificacao24(
-					context.session.user.id, await duvidas.buildChoiceDuration(context.state.askTomei), await duvidas.buildChoiceDuration(context.state.askProxima),
+					context.session.user.id, await duvidas.buildChoiceDuration(context.state.askTomei),
+					await duvidas.buildChoiceDuration(null, context.state.askProxima),
 				);
 				await mainMenu.sendMain(context);
 				break;
