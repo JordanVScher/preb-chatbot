@@ -497,7 +497,7 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		},
 		naoTransou: 'Se vc já tomou um comprimido, tome mais um e espere até duas horas para transar.\nSe não tomou nenhum, tome dois comprimidos juntos e espere duas horas antes de transar.',
 		transou: 'É possível q vc precise tomar PEP. Que tal conversar melhor com meus migles humanes?',
-		contatoSitio: 'Inserir contato do sítio com base no voucher.',
+		contatoSUS: 'Disque DST- Aids: 0800-16 25 50',
 		notiTransou: 'Tome um comprimido de hoje às <HORA> horas',
 		notiNaoTransou: 'Então vc já finalizou seu esquema sob demanda.\nClica no Tomei no menu inicial quando quiser começar outro esquema.',
 		notiDiariamente: 'Então vamo me configurar pra uso diário?',

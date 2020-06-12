@@ -284,9 +284,8 @@ const combinaContactDictionary = {
 
 
 function getCombinaContact(combinaCity) {
-	console.log('combinaCity', combinaCity);
 	const cityID = Object.keys(combinaCityDictionary).find((key) => combinaCityDictionary[key] === combinaCity);
-	console.log('cityID', cityID);
+
 	const city = combinaCity;
 	const phone = combinaContactDictionary[cityID];
 	if (cityID && phone) return `${city}: 📞 ${phone}`;

@@ -656,10 +656,26 @@ module.exports = async function App(context) {
 			case 'naoTransou':
 				await duvidas.naoTransouEnd(context);
 				break;
-			case 'transou':
-				await context.sendText(flow.tomeiPrep.transou);
-				await context.sendText(flow.tomeiPrep.contatoSitio);
+			case 'transou': {
+				const introMsg = flow.tomeiPrep.transou;
+				switch (context.state.user.voucher_type) {
+				case 'sisprep':
+					await mainMenu.falarComHumano(context, '', introMsg);
+					break;
+				case 'combina': {
+					await context.sendText(introMsg);
+					const msg = await help.getCombinaContact(context.state.user.combina_city);
+					if (msg) await context.sendText(msg);
+					await mainMenu.sendMain(context);
+				} break;
+				case 'sus':
+					await context.sendText(introMsg);
+					await context.sendText(flow.tomeiPrep.contatoSUS);
+					await mainMenu.sendMain(context);
+					break;
+				}
 				break;
+			}
 			case 'TCLE':
 				await research.TCLE(context);
 				break;
