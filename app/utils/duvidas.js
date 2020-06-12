@@ -5,6 +5,11 @@ const { falarComHumano } = require('./mainMenu');
 const help = require('./helper');
 const { putUpdateNotificacao22 } = require('./prep_api');
 
+async function showCombinaContact(context) {
+	const msg = await help.getCombinaContact(context.state.user.combina_city);
+	if (msg) await context.sendText(msg);
+}
+
 async function prepDuvidaFollowUp(context, txt) {
 	if (txt && typeof txt === 'string') await context.sendText(txt);
 
@@ -12,11 +17,10 @@ async function prepDuvidaFollowUp(context, txt) {
 	case 'sisprep':
 		await falarComHumano(context, null, flow.duvidasPrep.followUpSisPrep);
 		break;
-	case 'combina': {
-		const msg = await help.getCombinaContact(context.state.user.combina_city);
-		if (msg) await context.sendText(msg);
+	case 'combina':
+		await showCombinaContact(context);
 		await sendMain(context);
-	} break;
+		break;
 	case 'sus':
 		await context.sendText(flow.duvidasPrep.followUpSUS);
 		await sendMain(context);
@@ -131,12 +135,12 @@ async function alarmeDate(context) {
 	return date;
 }
 
-async function alarmeSemMedicacao(context, msg) {
-	await context.sendText(flow.alarmePrep.alarmeSemMedicacao);
+async function alarmeSemMedicacao(context) {
 	if (context.state.user.voucher_type === 'combina') {
-		if (msg && typeof msg === 'string') {
-			await context.sendText(`${flow.alarmePrep.alarmeSemMedicacaoExtra}\n${msg}`);
-		}
+		await context.sendText(flow.alarmePrep.alarmeSemMedicacaoExtra);
+		await showCombinaContact(context);
+	} else {
+		await context.sendText(flow.alarmePrep.alarmeSemMedicacao);
 	}
 	await sendMain(context);
 }
@@ -254,6 +258,7 @@ async function naoTransouEnd(context) {
 }
 
 module.exports = {
+	showCombinaContact,
 	prepDuvidaFollowUp,
 	alarmeConfigurar,
 	alarmeHorario,

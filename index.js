@@ -101,6 +101,7 @@ module.exports = async function App(context) {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
+				await context.setState({ dialog: 'alarmeSemMedicacao' });
 				// await context.setState({ dialog: 'pesquisaPresencial' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
@@ -621,7 +622,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.alarmePrep.alarmeConfirmaData, await getQR(flow.alarmePrep.alarmeConfirmaDataBtn));
 				break;
 			case 'alarmeSemMedicacao':
-				await duvidas.alarmeSemMedicacao(context, await help.getCombinaContact(context.state.user.combina_city));
+				await duvidas.alarmeSemMedicacao(context);
 				break;
 			case 'alarmeAcabarFrascos':
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
@@ -662,12 +663,11 @@ module.exports = async function App(context) {
 				case 'sisprep':
 					await mainMenu.falarComHumano(context, '', introMsg);
 					break;
-				case 'combina': {
+				case 'combina':
 					await context.sendText(introMsg);
-					const msg = await help.getCombinaContact(context.state.user.combina_city);
-					if (msg) await context.sendText(msg);
+					await duvidas.showCombinaContact(context);
 					await mainMenu.sendMain(context);
-				} break;
+					break;
 				case 'sus':
 					await context.sendText(introMsg);
 					await context.sendText(flow.tomeiPrep.contatoSUS);

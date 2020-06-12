@@ -281,7 +281,6 @@ http://imprep.org/
 https://projetocombina.wordpress.com/`,
 		notSUS: 'Quer nossa ajuda pra mais alguma coisa? Topa um bate papo com a gente?',
 		followUpSisPrep: 'Tá a fim de falar mais sobre isso? Bora com meus amigues humanes!',
-		followUpCombina: 'Contatos Combina',
 		followUpSUS: 'Então, pra tirar mais dúvidas entra em contato:\nDisque DST- Aids: 0800-16 25 50',
 		// prefixSUS: 'Tá precisando de mais informação Gatinhe?\n',
 		// textosSUS: {

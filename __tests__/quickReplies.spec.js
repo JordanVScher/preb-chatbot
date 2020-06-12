@@ -801,7 +801,7 @@ describe('alarmeAcabar - avisar quando acabar os comprimidos', () => {
 		const context = cont.quickReplyContext('alarmeSemMedicacao', 'alarmeSemMedicacao');
 		await handler(context);
 
-		await expect(duvidas.alarmeSemMedicacao).toBeCalledWith(context, await help.getCombinaContact(context.state.user.combina_city));
+		await expect(duvidas.alarmeSemMedicacao).toBeCalledWith(context);
 	});
 
 	it('alarmeAcabarFinal - escolheu opção, faz request e encerra', async () => {
@@ -841,9 +841,8 @@ describe('Tomei - tomeiPrep', () => {
 		const context = cont.quickReplyContext('askTomei10', 'tomeiHoraDepois');
 		await handler(context);
 
-		await expect(context.setState).toBeCalledWith({ askTomei: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
-		await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askProxima' });
-		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.askProxima, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+		await expect(context.setState).toBeCalledWith({ dialog: 'askProxima' });
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.askProxima.intro, await getQR(flow.tomeiPrep.askProxima));
 	});
 
 	it('tomeiFinal - escolheu opção, faz request e encerra', async () => {
@@ -871,12 +870,33 @@ describe('Tomei - tomeiPrep', () => {
 		await expect(duvidas.naoTransouEnd).toBeCalledWith(context);
 	});
 
-	it('transou - vê mensagens', async () => {
+	it('transou - sisprep, vê falar com humanos', async () => {
 		const context = cont.quickReplyContext('transou', 'transou');
+		context.state.user = { voucher_type: 'sisprep' };
+		await handler(context);
+
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context, '', flow.tomeiPrep.transou);
+	});
+
+	it('transou - combina, vê telefone da cidade e menu', async () => {
+		const context = cont.quickReplyContext('transou', 'transou');
+		context.state.user = { voucher_type: 'combina', combina_city: 1 };
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.transou);
-		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.contatoSitio);
+		await expect(duvidas.showCombinaContact).toBeCalledWith(context);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
+	});
+
+	it('transou - sus, vê telefone e menu', async () => {
+		const context = cont.quickReplyContext('transou', 'transou');
+		context.state.user = { voucher_type: 'sus' };
+
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.transou);
+		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.contatoSUS);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 });
 
