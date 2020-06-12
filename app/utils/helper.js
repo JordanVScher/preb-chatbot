@@ -265,24 +265,28 @@ function getTomarHoras(context) {
 }
 
 const combinaCityDictionary = {
-	1: 'Ribeirão Preto',
-	2: 'São Paulo',
+	1: 'CRT São Paulo',
+	2: 'Campos Elíseos - SP',
 	3: 'Fortaleza',
 	4: 'Porto Alegre',
-	5: 'Curitiba',
+	5: 'Ribeirão Preto',
+	6: 'Curitiba',
 };
 
 const combinaContactDictionary = {
-	1: '(00) 00000-0000',
-	2: '(00) 00000-0000',
-	3: '(00) 00000-0000',
-	4: '(00) 00000-0000',
-	5: '(00) 00000-0000',
+	1: '(11) 94005-0601', //	CRT São Paulo
+	2: '(11) 94701-5901', //	Campos Elíseos - SP
+	3: '(11) 94701-5248', //	Fortaleza
+	4: '(11) 94701-4561', //	Porto Alegre
+	5: '(11) 94701-6803', //	Ribeirão Preto
+	6: '(11) 94007-0011', //	Curitiba
 };
 
-function getCombinaContact(combinaCity) {
-	const cityID = Object.keys(combinaCityDictionary).find((key) => combinaCityDictionary[key] === combinaCity);
 
+function getCombinaContact(combinaCity) {
+	console.log('combinaCity', combinaCity);
+	const cityID = Object.keys(combinaCityDictionary).find((key) => combinaCityDictionary[key] === combinaCity);
+	console.log('cityID', cityID);
 	const city = combinaCity;
 	const phone = combinaContactDictionary[cityID];
 	if (cityID && phone) return `${city}: 📞 ${phone}`;
