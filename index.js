@@ -101,7 +101,6 @@ module.exports = async function App(context) {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'tomouPrep' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -163,10 +162,6 @@ module.exports = async function App(context) {
 					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeJaTomeiFinal', ''), dialog: 'alarmeJaTomeiFinal' });
 				} else if (context.state.lastQRpayload.startsWith('askProxima')) {
 					await context.setState({ askProxima: await context.state.lastQRpayload.replace('askProxima', ''), dialog: 'tomeiFinal' });
-				} else if (context.state.lastQRpayload.startsWith('askNotiTomei')) {
-					await context.setState({ askNotiTomei: await context.state.lastQRpayload.replace('askNotiTomei', ''), dialog: 'askNotiTomeiDepois' });
-				} else if (context.state.lastQRpayload.startsWith('askNotiProxima')) {
-					await context.setState({ askNotiProxima: await context.state.lastQRpayload.replace('askNotiProxima', ''), dialog: 'notiTomeiFinal' });
 				} else if (context.state.lastQRpayload.startsWith('alarmeFrasco')) {
 					await context.setState({ alarmeFrasco: await context.state.lastQRpayload.replace('alarmeFrasco', ''), dialog: 'alarmeAcabarFinal' });
 				} else if (context.state.lastQRpayload.startsWith('autoServicoSisprepSP')) {
@@ -225,6 +220,10 @@ module.exports = async function App(context) {
 				await context.setState({ dialog: 'greetings' });
 			} else if (context.state.dialog === 'tomouPrep') {
 				await duvidas.checkHorario(context, 'askTomei', 'tomeiHoraDepois', 'tomouPrep');
+			} else if (context.state.dialog === 'askNotiTomei') {
+				await duvidas.checkHorario(context, 'askNotiTomei', 'askNotiProxima', 'askNotiTomei');
+			} else if (context.state.dialog === 'askNotiProxima') {
+				await duvidas.checkHorario(context, 'askNotiProxima', 'notiTomeiFinal', 'askNotiProxima');
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ dialog: 'mainMenu' });
 			} else if (context.state.whatWasTyped === process.env.PREP_TEST && process.env.ENV !== 'prod') {
@@ -903,21 +902,21 @@ module.exports = async function App(context) {
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiTomeiC_Sim':
-				await context.setState({ alarmePage: 1, pageKey: 'askNotiTomei' });
-				// fallsthrough
 			case 'askNotiTomei':
-				await context.sendText(flow.tomeiPrep.askNotiTomei, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+				await context.setState({ dialog: 'askNotiTomei' });
+				await duvidas.askHorario(context, flow.tomeiPrep.askNotiTomei);
 				break;
 			case 'askNotiTomeiDepois':
 				await context.sendText(flow.tomeiPrep.askNotiHoje.replace('<HORA>', help.getTomarHoras(context)));
-				await context.setState({ alarmePage: 1, pageKey: 'askNotiProxima' });
+				await context.sendText(flow.tomeiPrep.askNotiAmanha.replace('<HORA>', help.getTomarHoras(context)));
 				// fallsthrough
 			case 'askNotiProxima':
-				await context.sendText(flow.tomeiPrep.askNotiAmanha.replace('<HORA>', help.getTomarHoras(context)), await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 2));
+				await context.setState({ dialog: 'askNotiProxima' });
+				await duvidas.askHorario(context, flow.tomeiPrep.askNotiAsk);
 				break;
 			case 'notiTomeiFinal':
 				await prepAPI.putUpdateNotificacao24(
-					context.session.user.id, await duvidas.buildChoiceDuration(context.state.askNotiTomei), await duvidas.buildChoiceDuration(context.state.askNotiProxima),
+					context.session.user.id, await help.dateHorario(context.state.askNotiTomei), await help.dateHorario(context.state.askNotiProxima),
 				);
 				await context.setState({ askProxima: context.state.askNotiProxima });
 				await mainMenu.sendMain(context);

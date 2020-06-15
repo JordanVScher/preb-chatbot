@@ -300,6 +300,18 @@ function getCombinaContact(combinaCity) {
 	return res.trim();
 }
 
+async function dateHorario(horario) {
+	const [hour, minutes] = horario.split(':');
+	let ts = new Date();
+	ts.setHours(hour || 0);
+	ts.setMinutes(minutes || 0);
+	ts.setSeconds(0);
+	ts.setMilliseconds(0);
+	ts = await removeTimezone(ts);
+
+	return { date: ts, string: ts.toISOString().slice(11, 19) };
+}
+
 module.exports = {
 	Sentry,
 	moment,
@@ -334,4 +346,5 @@ module.exports = {
 	combinaContactDictionary,
 	getCombinaContact,
 	instagramDictionary,
+	dateHorario,
 };

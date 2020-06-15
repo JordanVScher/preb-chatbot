@@ -507,7 +507,8 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		},
 		askNotiTomei: 'Q horas vc tomou seu primeiro comprimido da dose dupla inicial?',
 		askNotiHoje: 'Vc precisa tomar o comprimido de hoje também às <HORA> horas.',
-		askNotiAmanha: 'Amanhã sua dose também será às <HORA> horas.\nCom quantas horas de antecedência vc quer q eu te lembre dessa dose?',
+		askNotiAmanha: 'Amanhã sua dose também será às <HORA> horas.',
+		askNotiAsk: 'Com quantas horas de antecedência vc quer q eu te lembre dessa dose?',
 	},
 	falarComHumano: {
 		text1: 'Vamo conversar com meus amigues humanes?',
