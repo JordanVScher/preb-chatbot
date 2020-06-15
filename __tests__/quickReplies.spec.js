@@ -722,45 +722,29 @@ describe('alarmePrep', () => {
 	});
 
 	describe('alarme - escolher hora depois', () => {
-		it('alarmeJaTomei - página 1 e lista de horários', async () => {
+		it('alarmeJaTomei - Pede horário', async () => {
 			const context = cont.quickReplyContext('alarmeJaTomei', 'alarmeJaTomei');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askJaTomei' });
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeJaTomei1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+			await expect(context.setState).toBeCalledWith({ dialog: 'askJaTomei' });
+			await duvidas.askHorario(context, flow.alarmePrep.alarmeJaTomei1);
+			await expect(duvidas.askHorario).toBeCalledWith(context, flow.alarmePrep.alarmeJaTomei1);
 		});
 
-		it('alarmeJaTomei - mais cedo', async () => {
-			const context = cont.quickReplyContext('pageaskJaTomei0', 'alarmeJaTomei');
+		it('alarmeJaTomei - Recebe horário', async () => {
+			const context = cont.textContext('askJaTomei', 'askJaTomei');
+			context.state.whatWasTyped = 'foobar';
 			await handler(context);
 
-			await expect(duvidas.receivePage).toBeCalledWith(context);
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeJaTomei1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+			await expect(duvidas.checkHorario).toBeCalledWith(context, 'alarmeHora', 'alarmeJaTomeiFinal', 'askJaTomei');
 		});
 
-		it('alarmeJaTomei - mais tarde', async () => {
-			const context = cont.quickReplyContext('pageaskJaTomei2', 'alarmeJaTomei');
-			await handler(context);
-
-			await expect(duvidas.receivePage).toBeCalledWith(context);
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeJaTomei1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
-		});
-
-		it('askJaTomeiMinuto - escolhe hora e vê minutos', async () => {
-			const context = cont.quickReplyContext('askJaTomei', 'askJaTomeiMinuto');
-			await handler(context);
-
-			await expect(context.setState).toBeCalledWith({ alarmeHora: await context.state.lastQRpayload.replace('askJaTomei', ''), dialog: 'askJaTomeiMinuto' });
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeJaTomei2, await duvidas.alarmeMinuto(context.state.alarmeHora));
-		});
 
 		it('alarmeJaTomeiFinal - encerra, manda request e vai pro menu', async () => {
 			const context = cont.quickReplyContext('alarmeJaTomeiFinal1', 'alarmeJaTomeiFinal');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeJaTomeiFinal', ''), dialog: 'alarmeJaTomeiFinal' });
-			await expect(prepAPI.putUpdateReminderAfter)
-				.toBeCalledWith(context.session.user.id, await duvidas.buildChoiceDuration(context.state.alarmeHora, context.state.alarmeMinuto));
+			await expect(prepAPI.putUpdateReminderAfter).toBeCalledWith(context.session.user.id, await help.dateHorario(context.state.alarmeHora));
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUp));
 		});

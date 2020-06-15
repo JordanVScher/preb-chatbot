@@ -156,10 +156,6 @@ module.exports = async function App(context) {
 					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'alarmeMinuto' });
 				} else if (context.state.lastQRpayload.startsWith('alarmeFinal')) {
 					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
-				} else if (context.state.lastQRpayload.startsWith('askJaTomei')) {
-					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askJaTomei', ''), dialog: 'askJaTomeiMinuto' });
-				} else if (context.state.lastQRpayload.startsWith('alarmeJaTomeiFinal')) {
-					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeJaTomeiFinal', ''), dialog: 'alarmeJaTomeiFinal' });
 				} else if (context.state.lastQRpayload.startsWith('askProxima')) {
 					await context.setState({ askProxima: await context.state.lastQRpayload.replace('askProxima', ''), dialog: 'tomeiFinal' });
 				} else if (context.state.lastQRpayload.startsWith('alarmeFrasco')) {
@@ -224,6 +220,8 @@ module.exports = async function App(context) {
 				await duvidas.checkHorario(context, 'askNotiTomei', 'askNotiProxima', 'askNotiTomei');
 			} else if (context.state.dialog === 'askNotiProxima') {
 				await duvidas.checkHorario(context, 'askNotiProxima', 'notiTomeiFinal', 'askNotiProxima');
+			} else if (context.state.dialog === 'askJaTomei') {
+				await duvidas.checkHorario(context, 'alarmeHora', 'alarmeJaTomeiFinal', 'askJaTomei');
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ dialog: 'mainMenu' });
 			} else if (context.state.whatWasTyped === process.env.PREP_TEST && process.env.ENV !== 'prod') {
@@ -600,16 +598,13 @@ module.exports = async function App(context) {
 				await alarmeFollowUp(context);
 				break;
 			case 'alarmeJaTomei':
-				await context.setState({ alarmePage: 1, pageKey: 'askJaTomei' });
-				// fallsthrough
 			case 'askJaTomei':
-				await context.sendText(flow.alarmePrep.alarmeJaTomei1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
-				break;
 			case 'askJaTomeiMinuto':
-				await context.sendText(flow.alarmePrep.alarmeJaTomei2, await duvidas.alarmeMinuto(context.state.alarmeHora, 'alarmeJaTomeiFinal'));
+				await context.setState({ dialog: 'askJaTomei' });
+				await duvidas.askHorario(context, flow.alarmePrep.alarmeJaTomei1);
 				break;
 			case 'alarmeJaTomeiFinal':
-				await prepAPI.putUpdateReminderAfter(context.session.user.id, await duvidas.buildChoiceDuration(context.state.alarmeHora, context.state.alarmeMinuto));
+				await prepAPI.putUpdateReminderAfter(context.session.user.id, await help.dateHorario(context.state.alarmeHora));
 				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await alarmeFollowUp(context);
 				break;
