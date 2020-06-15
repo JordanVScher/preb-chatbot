@@ -677,45 +677,27 @@ describe('alarmePrep', () => {
 	});
 
 	describe('alarme - escolher hora antes', () => {
-		it('alarmeNaHora - página 1 e lista de horários', async () => {
+		it('alarmeNaHora - pede horario', async () => {
 			const context = cont.quickReplyContext('alarmeNaHora', 'alarmeNaHora');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askHorario' });
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+			await expect(context.setState).toBeCalledWith({ dialog: 'askHorario' });
+			await expect(duvidas.askHorario).toBeCalledWith(context, flow.alarmePrep.alarmeNaHora1);
 		});
 
-		it('alarmeNaHora - mais cedo', async () => {
-			const context = cont.quickReplyContext('pageaskHorario0', 'alarmeNaHora');
+		it('alarmeNaHora - recebe horario', async () => {
+			const context = cont.textContext('askHorario', 'askHorario');
 			await handler(context);
 
-			await expect(duvidas.receivePage).toBeCalledWith(context);
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
-		});
-
-		it('alarmeNaHora - mais tarde', async () => {
-			const context = cont.quickReplyContext('pageHorario2', 'alarmeNaHora');
-			await handler(context);
-
-			await expect(duvidas.receivePage).toBeCalledWith(context);
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
-		});
-
-		it('pageHorario - escolhe hora e vê minutos', async () => {
-			const context = cont.quickReplyContext('askHorario10', 'alarmeMinuto');
-			await handler(context);
-
-			await expect(context.setState).toBeCalledWith({ alarmeHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'alarmeMinuto' });
-			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora));
+			await expect(context.setState).toBeCalledWith({ dialog: 'askHorario' });
+			await expect(duvidas.checkHorario).toBeCalledWith(context, 'alarmeHora', 'alarmeFinal', 'askHorario');
 		});
 
 		it('alarmeFinal - encerra, manda request e vai pro menu', async () => {
 			const context = cont.quickReplyContext('alarmeFinal1', 'alarmeFinal');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
-			await expect(prepAPI.putUpdateReminderBefore)
-				.toBeCalledWith(context.session.user.id, await duvidas.buildChoiceDuration(context.state.alarmeHora, context.state.alarmeMinuto));
+			await expect(prepAPI.putUpdateReminderBefore).toBeCalledWith(context.session.user.id, await help.dateHorario(context.state.alarmeHora, context.state.alarmeMinuto));
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUp));
 		});

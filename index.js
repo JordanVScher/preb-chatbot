@@ -152,10 +152,6 @@ module.exports = async function App(context) {
 					await context.setState({ dialog: 'greetings', askDesafio: false });
 				} else if (context.state.lastQRpayload.startsWith('page')) {
 					await duvidas.receivePage(context);
-				} else if (context.state.lastQRpayload.startsWith('askHorario')) {
-					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askHorario', ''), dialog: 'alarmeMinuto' });
-				} else if (context.state.lastQRpayload.startsWith('alarmeFinal')) {
-					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeFinal', ''), dialog: 'alarmeFinal' });
 				} else if (context.state.lastQRpayload.startsWith('askProxima')) {
 					await context.setState({ askProxima: await context.state.lastQRpayload.replace('askProxima', ''), dialog: 'tomeiFinal' });
 				} else if (context.state.lastQRpayload.startsWith('alarmeFrasco')) {
@@ -220,6 +216,8 @@ module.exports = async function App(context) {
 				await duvidas.checkHorario(context, 'askNotiTomei', 'askNotiProxima', 'askNotiTomei');
 			} else if (context.state.dialog === 'askNotiProxima') {
 				await duvidas.checkHorario(context, 'askNotiProxima', 'notiTomeiFinal', 'askNotiProxima');
+			} else if (context.state.dialog === 'askHorario') {
+				await duvidas.checkHorario(context, 'alarmeHora', 'alarmeFinal', 'askHorario');
 			} else if (context.state.dialog === 'askJaTomei') {
 				await duvidas.checkHorario(context, 'alarmeHora', 'alarmeJaTomeiFinal', 'askJaTomei');
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
@@ -584,16 +582,13 @@ module.exports = async function App(context) {
 				await duvidas.alarmeCancelar(context, await prepAPI.putRecipientPrep(context.session.user.id, { cancel_prep_reminder: 1 }));
 				break;
 			case 'alarmeNaHora':
-				await context.setState({ alarmePage: 1, pageKey: 'askHorario' });
-				// fallsthrough
 			case 'askHorario':
-				await context.sendText(flow.alarmePrep.alarmeNaHora1, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
-				break;
 			case 'alarmeMinuto':
-				await context.sendText(flow.alarmePrep.alarmeNaHora2, await duvidas.alarmeMinuto(context.state.alarmeHora, 'alarmeFinal'));
+				await context.setState({ dialog: 'askHorario' });
+				await duvidas.askHorario(context, flow.alarmePrep.alarmeNaHora1);
 				break;
 			case 'alarmeFinal':
-				await prepAPI.putUpdateReminderBefore(context.session.user.id, await duvidas.buildChoiceDuration(context.state.alarmeHora, context.state.alarmeMinuto));
+				await prepAPI.putUpdateReminderBefore(context.session.user.id, await help.dateHorario(context.state.alarmeHora));
 				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await alarmeFollowUp(context);
 				break;
