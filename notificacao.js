@@ -20,7 +20,7 @@ async function checkTimeDifference(date) {
 	return false;
 }
 
-const joinedText = `${presquisaTexts.text1 || ''} ${presquisaTexts.text2 || ''}`;
+const joinedText = `${presquisaTexts.text1 || ''}\n${presquisaTexts.text2 || ''}`;
 // Criar alarme para disparar notificação para convidar usuário a participar da pesquisa.
 // Esse alarme deve ser disparado para quem não tem perfil de participante
 // Ou seja, quem é público de interesse e não marcou uma consulta nem deixou o contato
