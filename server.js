@@ -3,6 +3,7 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const express = require('express');
 const { bottender } = require('bottender');
+const { cronLog } = require('./cronjob');
 
 const app = bottender({	dev: true });
 
@@ -28,10 +29,11 @@ app.prepare().then(() => {
 	server.all('*', (req, res) => handle(req, res));
 
 
-	server.listen(port, (err) => {
+	server.listen(port, async (err) => {
 		if (err) throw err;
 		console.log(`Server is running on ${port} port...`);
 		console.log(`App: ${process.env.APP} & Page: ${process.env.PAGE} - ${process.env.SHARE_LINK}`);
 		console.log(`MA User: ${process.env.MA_USER}`);
+		await cronLog();
 	});
 });

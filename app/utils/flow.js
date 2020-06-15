@@ -81,7 +81,7 @@ module.exports = {
 	},
 	ofertaPesquisaSim: {
 		text0: 'Então, agora vou te contar sobre o projeto que eu trabalho',
-		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa junto com prevenção.\nComo? Tem eu, Amanda e meu bonde humano pra falar de PrEP, sexo, prevenção, inseguranças, teste de HIV, gel e xuca.',
+		text1: 'O projeto é pra novinhes boy gay ou bi, minas trans e travestis q querem ter prazer na transa sem pegar HIV ✌ Como? Tem eu, Amandinha pra falar de PrEP, sexo, prevenção, inseguranças, autoteste pra HIV, gel e xuca 👏👏',
 		text2: 'Qm toca o projeto é a USP, UFMG e UFBA! Seguro, 0800 e ainda rola um acué pra passagem e acué pro lanche! 💙',
 	},
 	TCLE: {
