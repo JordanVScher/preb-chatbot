@@ -74,6 +74,7 @@ async function cidadeDictionary(cityID, cityType) {
 
 	return null;
 }
+const instagramDictionary = { 1: '@nodeumatch', 2: '@preparasalvador', 3: '@vcprepsp' };
 
 const telefoneDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234 ou (71) 9.9640 9030', 3: '(11) 98209-2911' };
 const emergenciaDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234 ou (71) 9.9640 9030', 3: '(11) 98209-2911' };
@@ -332,4 +333,5 @@ module.exports = {
 	combinaCityDictionary,
 	combinaContactDictionary,
 	getCombinaContact,
+	instagramDictionary,
 };

@@ -5,6 +5,7 @@ const { sendMain } = require('./mainMenu');
 const { falarComHumano } = require('./mainMenu');
 const { getPhoneValid } = require('./helper');
 const { formatPhone } = require('./helper');
+const { instagramDictionary } = require('./helper');
 // const { startConsulta } = require('./consulta');
 // const { checkAppointment } = require('./consulta-aux');
 const { addNewUser } = require('./labels');
@@ -40,6 +41,15 @@ async function recrutamento(context) {
 		await sendMain(context);
 	}
 }
+
+async function showInstagram(context) {
+	const instagram = instagramDictionary[context.state.user.city];
+	if (instagram) {
+		await context.sendText(flow.TCLE.preInstagram);
+		await context.sendText(instagram);
+	}
+}
+
 async function TCLE(context) {
 	if (!context.state.preCadastroSignature) {
 		await context.setState({ dialog: '' });
@@ -51,9 +61,11 @@ async function TCLE(context) {
 		} else {
 			await context.sendText(flow.TCLE.text1);
 		}
+
 		await context.sendText(flow.TCLE.text2a);
 		await context.typing(1000 * 5);
 		await context.sendButtonTemplate(flow.TCLE.text2b, opt.Research_TCLE); // send info button
+		await showInstagram(context);
 		await context.sendText(flow.TCLE.text3, opt.Research_Termos); // ask for termos acceptance
 	} else {
 		await sendMain(context);

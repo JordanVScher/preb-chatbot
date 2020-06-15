@@ -6,6 +6,7 @@ const { getQR } = require('../app/utils/attach');
 const { sendMain } = require('../app/utils/mainMenu');
 const { falarComHumano } = require('../app/utils/mainMenu');
 const { addNewUser } = require('../app/utils/labels');
+const { instagramDictionary } = require('../app/utils/helper');
 
 jest.mock('../app/utils/flow');
 jest.mock('../app/utils/options');
@@ -126,6 +127,9 @@ it('recrutamento - é target_audience, é grupo de risco, já acabou recrutament
 it('TCLE - escolheu meContaDepois -> recebe mensagem da pesquisa', async () => {
 	const context = cont.quickReplyContext('TCLE', 'TCLE');
 	context.state = { meContaDepois: true };
+	context.state.user = { city: 1 };
+	const toSend = instagramDictionary[context.state.user.city];
+
 	await research.TCLE(context);
 
 	await expect(context.setState).toBeCalledWith({ dialog: '' });
@@ -138,12 +142,17 @@ it('TCLE - escolheu meContaDepois -> recebe mensagem da pesquisa', async () => {
 	await expect(context.typing).toBeCalledWith(1000 * 5);
 	await expect(context.sendButtonTemplate).toBeCalledWith(flow.TCLE.text2b, opt.Research_TCLE);
 
+	await expect(context.sendText).toBeCalledWith(flow.TCLE.preInstagram);
+	await expect(context.sendText).toBeCalledWith(toSend);
 	await expect(context.sendText).toBeCalledWith(flow.TCLE.text3, opt.Research_Termos);
 });
 
 it('TCLE -  não escolheu meContaDepois -> recebe calma aí', async () => {
 	const context = cont.quickReplyContext('TCLE', 'TCLE');
 	context.state = { meContaDepois: false };
+	context.state.user = { city: 2 };
+	const toSend = instagramDictionary[context.state.user.city];
+
 	await research.TCLE(context);
 
 	await expect(context.setState).toBeCalledWith({ dialog: '' });
@@ -154,6 +163,8 @@ it('TCLE -  não escolheu meContaDepois -> recebe calma aí', async () => {
 	await expect(context.typing).toBeCalledWith(1000 * 5);
 	await expect(context.sendButtonTemplate).toBeCalledWith(flow.TCLE.text2b, opt.Research_TCLE);
 
+	await expect(context.sendText).toBeCalledWith(flow.TCLE.preInstagram);
+	await expect(context.sendText).toBeCalledWith(toSend);
 	await expect(context.sendText).toBeCalledWith(flow.TCLE.text3, opt.Research_Termos);
 });
 
