@@ -631,8 +631,7 @@ module.exports = async function App(context) {
 				break;
 			case 'tomeiFinal':
 				await prepAPI.putUpdateNotificacao24(
-					context.session.user.id, await duvidas.buildChoiceDuration(context.state.askTomei),
-					await duvidas.buildChoiceDuration(null, context.state.askProxima),
+					context.session.user.id, await help.dateHorario(context.state.askTomei), await duvidas.buildChoiceDuration(null, context.state.askProxima),
 				);
 				await mainMenu.sendMain(context);
 				break;

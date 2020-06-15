@@ -823,7 +823,7 @@ describe('Tomei - tomeiPrep', () => {
 
 		await expect(context.setState).toBeCalledWith({ askProxima: await context.state.lastQRpayload.replace('askProxima', ''), dialog: 'tomeiFinal' });
 		await expect(prepAPI.putUpdateNotificacao24).toBeCalledWith(
-			context.session.user.id, await duvidas.buildChoiceDuration(context.state.askTomei), await duvidas.buildChoiceDuration(context.state.askProxima),
+			context.session.user.id, await help.dateHorario(context.state.askTomei), await duvidas.buildChoiceDuration(null, context.state.askProxima),
 		);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
@@ -1103,7 +1103,9 @@ describe('notificações', () => {
 			const context = cont.quickReplyContext('notiTomeiFinal', 'notiTomeiFinal');
 			await handler(context);
 
-			await expect(prepAPI.putUpdateNotificacao24).toBeCalled();
+			await expect(prepAPI.putUpdateNotificacao24).toBeCalledWith(
+				context.session.user.id, await help.dateHorario(context.state.askNotiTomei), await help.dateHorario(context.state.askNotiProxima),
+			);
 			await expect(context.setState).toBeCalledWith({ askProxima: context.state.askNotiProxima });
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
