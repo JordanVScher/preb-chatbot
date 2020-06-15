@@ -634,3 +634,51 @@ describe('naoTransouEnd', () => {
 		await expect(sendMain).toBeCalledWith(context);
 	});
 });
+
+describe('askHorario', () => {
+	it('Send default message', async () => {
+		const context = await cont.quickReplyContext();
+		await duvidas.askHorario(context);
+
+		await expect(context.sendText).toBeCalledWith(`${flow.askHorario.default}\n${flow.askHorario.example}`);
+	});
+
+	it('Send another message', async () => {
+		const msg = 'foobar';
+		const context = await cont.quickReplyContext();
+		await duvidas.askHorario(context, msg);
+
+		await expect(context.sendText).toBeCalledWith(`${msg}\n${flow.askHorario.example}`);
+	});
+});
+
+describe('checkHorario', () => {
+	const cases = [
+		{ title: 'no text - invalid', value: undefined, result: null },
+		{ title: 'no text - invalid, dont use default invalidDialog', value: undefined, result: null, invalidDialog: 'foobar' }, // eslint-disable-line
+		{ title: 'number - invalid', value: '12', result: null },
+		{ title: 'HH_MM - invalid', value: '12-00', result: null },
+		{ title: 'HH:MM:SS - invalid', value: '12:00:00', result: null },
+		{ title: '30:00 - invalid', value: '30:00', result: null },
+		{ title: '12:60 - invalid', value: '12:60', result: null },
+		{ title: '12:30 - valid', value: '12:30', result: '12:30' },
+	];
+
+	cases.forEach((e) => {
+		it(e.title, async () => {
+			const context = await cont.textContext();
+			context.state.whatWasTyped = e.value;
+			const stateName = 'foobar';
+			const successDialog = 'foobar';
+			const res = await duvidas.checkHorario(context, stateName, successDialog, e.invalidDialog);
+
+			await expect(res).toBe(e.result);
+			if (res) {
+				await expect(context.setState).toBeCalledWith({ [stateName]: e.value, dialog: successDialog });
+			} else {
+				await expect(context.sendText).toBeCalledWith(flow.askHorario.failure);
+				if (e.invalidDialog) await expect(context.setState).toBeCalledWith({ dialog: e.invalidDialog });
+			}
+		});
+	});
+});

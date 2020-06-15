@@ -257,6 +257,28 @@ async function naoTransouEnd(context) {
 	await sendMain(context);
 }
 
+async function askHorario(context, introText) {
+	let text = introText ? introText.trim() : flow.askHorario.default;
+	text += `\n${flow.askHorario.example}`;
+
+	await context.sendText(text);
+}
+
+async function checkHorario(context, stateName, successDialog, invalidDialog) {
+	const horarioRegex = new RegExp(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/g);
+	const horario = context.state.whatWasTyped;
+	const isValid = horarioRegex.test(horario);
+
+	if (isValid && horario) {
+		await context.setState({ [stateName]: horario, dialog: successDialog });
+		return horario;
+	}
+
+	await context.sendText(flow.askHorario.failure);
+	if (invalidDialog) await context.setState({ dialog: invalidDialog });
+	return null;
+}
+
 module.exports = {
 	showCombinaContact,
 	prepDuvidaFollowUp,
@@ -279,4 +301,6 @@ module.exports = {
 	alarmeAcabarFinal,
 	handleCorreioEndereco,
 	naoTransouEnd,
+	askHorario,
+	checkHorario,
 };

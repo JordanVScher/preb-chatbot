@@ -833,8 +833,14 @@ describe('Tomei - tomeiPrep', () => {
 		const context = cont.quickReplyContext('tomouPrep', 'tomouPrep');
 		await handler(context);
 
-		await expect(context.setState).toBeCalledWith({ alarmePage: 1, pageKey: 'askTomei' });
-		await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.horas, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+		await expect(duvidas.askHorario).toBeCalledWith(context, flow.tomeiPrep.horas);
+	});
+
+	it('tomouPrep - user enters horario', async () => {
+		const context = cont.textContext('10:30', 'tomouPrep');
+		await handler(context);
+
+		await expect(duvidas.checkHorario).toBeCalledWith(context, 'askTomei', 'tomeiHoraDepois', 'tomouPrep');
 	});
 
 	it('tomeiHoraDepois - escolheu opção, salva o dado e vê outras opções, formatadas diferente', async () => {

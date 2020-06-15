@@ -519,4 +519,9 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		2: 'Barril dobrado! Vc mora na terra do axé!',
 		3: 'Daora! Aposto q o casaco num sai da mochila!',
 	},
+	askHorario: {
+		default: 'Entre com as horas desejadas.',
+		example: 'Digite as horas no formato hora:minuto. Exemplo: 23:40, 09:10 e 00:05.',
+		failure: 'Não entendi esse horário, tente novamente.',
+	},
 };

@@ -101,7 +101,7 @@ module.exports = async function App(context) {
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
 			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
-				// await context.setState({ dialog: 'pesquisaPresencial' });
+				// await context.setState({ dialog: 'tomouPrep' });
 				// await context.setState({ dialog: 'showDays' });
 				// await context.setState({ dialog: 'verConsulta' });
 				// await context.setState({ dialog: 'leavePhone' });
@@ -161,8 +161,6 @@ module.exports = async function App(context) {
 					await context.setState({ alarmeHora: await context.state.lastQRpayload.replace('askJaTomei', ''), dialog: 'askJaTomeiMinuto' });
 				} else if (context.state.lastQRpayload.startsWith('alarmeJaTomeiFinal')) {
 					await context.setState({ alarmeMinuto: await context.state.lastQRpayload.replace('alarmeJaTomeiFinal', ''), dialog: 'alarmeJaTomeiFinal' });
-				} else if (context.state.lastQRpayload.startsWith('askTomei')) {
-					await context.setState({ askTomei: await context.state.lastQRpayload.replace('askTomei', ''), dialog: 'tomeiHoraDepois' });
 				} else if (context.state.lastQRpayload.startsWith('askProxima')) {
 					await context.setState({ askProxima: await context.state.lastQRpayload.replace('askProxima', ''), dialog: 'tomeiFinal' });
 				} else if (context.state.lastQRpayload.startsWith('askNotiTomei')) {
@@ -225,6 +223,8 @@ module.exports = async function App(context) {
 				await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 				console.log(`Imprimindo os dados do perfil: \n${JSON.stringify(context.state.politicianData, null, 2)}`);
 				await context.setState({ dialog: 'greetings' });
+			} else if (context.state.dialog === 'tomouPrep') {
+				await duvidas.checkHorario(context, 'askTomei', 'tomeiHoraDepois', 'tomouPrep');
 			} else if (context.state.whatWasTyped === process.env.TEST_KEYWORD) {
 				await context.setState({ dialog: 'mainMenu' });
 			} else if (context.state.whatWasTyped === process.env.PREP_TEST && process.env.ENV !== 'prod') {
@@ -633,10 +633,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.tomeiPrep.intro, await getQR(flow.tomeiPrep.introBtn));
 				break;
 			case 'tomouPrep':
-				await context.setState({ alarmePage: 1, pageKey: 'askTomei' });
-				// fallsthrough
-			case 'askTomei':
-				await context.sendText(flow.tomeiPrep.horas, await duvidas.alarmeHorario(context.state.alarmePage, context.state.pageKey, 1));
+				await duvidas.askHorario(context, flow.tomeiPrep.horas);
 				break;
 			case 'tomeiHoraDepois':
 			case 'askProxima':
