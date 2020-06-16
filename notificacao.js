@@ -65,5 +65,4 @@ async function notificacaoOfertaPesquisa() {
 	}
 }
 
-notificacaoOfertaPesquisa();
 module.exports = { notificacaoOfertaPesquisa };
