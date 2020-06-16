@@ -2,6 +2,7 @@ const { join } = require('./flow');
 const { getQR } = require('./attach');
 const { getRecipientPrep } = require('./prep_api');
 const { putUpdateVoucherFlag } = require('./prep_api');
+const { getValidVouchers } = require('./prep_api');
 const { linkIntegrationTokenLabel } = require('./labels');
 const { sendMain } = require('./mainMenu');
 
@@ -41,7 +42,17 @@ async function joinSus(context) {
 	await sendMain(context);
 }
 
+async function printCombinaVouchers(context) {
+	const { ENV } = process.env;
+	if (ENV !== 'local' || ENV !== 'homol') return;
+	const res = await getValidVouchers();
+	if (res && res.available_combina_vouchers) {
+		const text = res.available_combina_vouchers.join('\n');
+		if (text) await context.sendText(`Alguns vouchers válidos:\n${text}`);
+	}
+}
+
 
 module.exports = {
-	handlePrepToken, handleCombinaToken, joinSus
+	handlePrepToken, handleCombinaToken, joinSus, printCombinaVouchers,
 };

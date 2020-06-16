@@ -232,17 +232,14 @@ module.exports = async function App(context) {
 				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'sisprep');
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
 			} else if (context.state.whatWasTyped === process.env.COMBINA_TEST && process.env.ENV !== 'prod') {
-				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'combina');
+				await context.sendText('Por favor, faça esse processo através do Fluxo Já Faço Parte');
+				await joinToken.printCombinaVouchers(context);
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
 			} else if (context.state.whatWasTyped === process.env.SUS_TEST && process.env.ENV !== 'prod') {
 				await prepAPI.putUpdateVoucherFlag(context.session.user.id, 'sus');
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
 			} else if (context.state.whatWasTyped === process.env.COMBINA_VOUCHER_GET && process.env.ENV !== 'prod') {
-				const res = await prepAPI.getValidVouchers();
-				if (res && res.available_combina_vouchers) {
-					const text = res.available_combina_vouchers.join('\n');
-					if (text) await context.sendText(`Alguns vouchers válidos:\n${text}`);
-				}
+				await joinToken.printCombinaVouchers(context);
 				await context.setState({ dialog: 'mainMenu' });
 			} else {
 				await DF.dialogFlow(context);
