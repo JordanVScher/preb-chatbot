@@ -139,8 +139,22 @@ describe('handleQuizResposta and sentAnswer', () => {
 		await expect(context.setState).toBeCalledWith({ dialog: 'startQuiz' });
 	});
 
+	it('Finished publico_interesse, is_target_audience false, menor de 15 - go to falarComHumano', async () => {
+		context.state.categoryQuestion = 'publico_interesse';
+		context.state.currentQuestion = { code: 'A2' };
+		context.state.quizOpt = 14;
+		context.state.sentAnswer = { finished_quiz: 1, is_target_audience: 0 };
+
+		await quiz.handleQuizResposta(context);
+		await expect(aux.sendFollowUpMsgs).toBeCalledWith(context);
+		await expect(context.setState).toBeCalledWith({ startedQuiz: false, categoryQuestion: '' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'falarComHumano', publicoInteresseEnd: true, menorDeQuinze: true });
+	});
+
 	it('Finished publico_interesse, is_target_audience false - go to brincadeira', async () => {
 		context.state.categoryQuestion = 'publico_interesse';
+		context.state.currentQuestion = { code: 'foobab' };
+		context.state.quizOpt = 1;
 		context.state.sentAnswer = { finished_quiz: 1, is_target_audience: 0 };
 
 		await quiz.handleQuizResposta(context);

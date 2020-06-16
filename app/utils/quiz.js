@@ -36,6 +36,13 @@ async function handleQuizResposta(context) {
 	if (sentAnswer.finished_quiz === 1) await context.setState({ startedQuiz: false, categoryQuestion: '' });
 
 	// from here on out, the flow of the quiz actually changes, so remember to return something to stop the rest from executing
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.is_target_audience === 0
+		&& context.state.currentQuestion.code === 'A2' && parseInt(context.state.quizOpt, 10) < '15') {
+		await context.setState({ dialog: 'falarComHumano', publicoInteresseEnd: true, menorDeQuinze: true });
+		return false;
+	}
+
 	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.is_target_audience === 0) {
 		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
 		return false;
