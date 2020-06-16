@@ -9,9 +9,14 @@ const security_token = process.env.SECURITY_TOKEN_PREP;
 const security_token2 = process.env.SECURITY_TOKEN_PREP2;
 
 const makeRequest = async (opt) => {
-	if (opt.params && !opt.params.security_token) opt.params.security_token = security_token;
-	const result = await axios(opt);
-	return handleRequestAnswer(result);
+	try {
+		if (opt.params && !opt.params.security_token) opt.params.security_token = security_token;
+		const result = await axios(opt);
+		return handleRequestAnswer(result);
+	} catch (error) {
+		console.log('Erro na requisição:', { opt, error });
+		return {};
+	}
 };
 
 module.exports = {
@@ -114,7 +119,7 @@ module.exports = {
 
 	async postAppointment(fb_id, calendar_id, type, appointment_window_id, quota_number, datetime_start, datetime_end) {
 		return makeRequest({
-			url: `${apiUri}/api/chatbot/appointment/available-dates`,
+			url: `${apiUri}/api/chatbot/recipient/appointment`,
 			method: 'post',
 			params: {
 				fb_id, calendar_id, type, appointment_window_id, quota_number, datetime_start, datetime_end,

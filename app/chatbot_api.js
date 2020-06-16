@@ -7,9 +7,14 @@ const apiUri = process.env.MANDATOABERTO_API_URL;
 const security_token = process.env.SECURITY_TOKEN_MA;
 
 const makeRequest = async (opt) => {
-	if (opt.params) opt.params.security_token = security_token;
-	const result = await axios(opt);
-	return handleRequestAnswer(result);
+	try {
+		if (opt.params) opt.params.security_token = security_token;
+		const result = await axios(opt);
+		return handleRequestAnswer(result);
+	} catch (error) {
+		console.log('Erro na requisição:', { opt, error });
+		return {};
+	}
 };
 
 module.exports = {
