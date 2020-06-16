@@ -35,8 +35,10 @@ async function notificacaoOfertaPesquisa() {
 	for (let i = 0; i < listNames.length; i++) {
 		const fileName = listNames[i]; // get current filename
 		const file = jsonfile.readFileSync(sessionsFolder + fileName); // load file as a json
-		const userName = file._state.sessionUser.name;
-		const userID = file._state.sessionUser.id;
+
+		const sessionUser = file._state && file._state.sessionUser ? file._state.sessionUser : { name: '' };
+		const userName = sessionUser.name;
+		const userID = file.user.id;
 
 		if (file._state.whenBecameTargetAudience) { // check if user has a date from when he became part of target audience
 			const timeTest = await checkTimeDifference(new Date(file._state.whenBecameTargetAudience)); // check if enough time has passed since then to send the message
@@ -63,4 +65,5 @@ async function notificacaoOfertaPesquisa() {
 	}
 }
 
+notificacaoOfertaPesquisa();
 module.exports = { notificacaoOfertaPesquisa };
