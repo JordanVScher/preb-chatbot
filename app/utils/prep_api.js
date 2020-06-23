@@ -132,8 +132,7 @@ module.exports = {
 	},
 
 	async postIntegrationPrepToken(fb_id, integration_token) {
-		const res = await axios({ url: `${apiUri}/api/chatbot/recipient/integration-token`, method: 'post', params: { fb_id, integration_token } });
-		return !!(res.statusCode && res.statusCode.toString() === '200');
+		return makeRequest({ url: `${apiUri}/api/chatbot/recipient/integration-token`, method: 'post', params: { fb_id, integration_token } });
 	},
 
 	async putCombinaToken(fb_id, integration_token) {

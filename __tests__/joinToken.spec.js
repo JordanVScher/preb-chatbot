@@ -17,7 +17,7 @@ jest.mock('../app/utils/mainMenu');
 describe('handlePrepToken', () => {
 	it('success, not prep - goes to menu', async () => {
 		const context = cont.textContext('123123', 'joinToken');
-		await joinToken.handlePrepToken(context, true);
+		await joinToken.handlePrepToken(context, { id: 1 });
 
 		await expect(context.sendText).toBeCalledWith(join.askPrep.success);
 		await expect(putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'sisprep');
@@ -30,7 +30,7 @@ describe('handlePrepToken', () => {
 	it('success, is prep - sees message and goes to menu', async () => {
 		const context = cont.textContext('123123', 'joinToken');
 		context.state.user = { is_prep: 1 };
-		await joinToken.handlePrepToken(context, true);
+		await joinToken.handlePrepToken(context, { id: 1 });
 
 		await expect(context.sendText).toBeCalledWith(join.askPrep.success);
 		await expect(putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'sisprep');
@@ -42,7 +42,7 @@ describe('handlePrepToken', () => {
 
 	it('failure - try again', async () => {
 		const context = cont.textContext('foobar', 'joinToken');
-		await joinToken.handlePrepToken(context, false);
+		await joinToken.handlePrepToken(context, null);
 
 		await expect(context.sendText).toBeCalledWith(join.askPrep.fail1);
 		await expect(context.sendText).toBeCalledWith(join.askPrep.fail2, await getQR(join.askPrep));
