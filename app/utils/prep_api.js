@@ -11,7 +11,7 @@ const security_token2 = process.env.SECURITY_TOKEN_PREP2;
 const makeRequest = async (opt) => {
 	try {
 		if (opt.params && !opt.params.security_token) opt.params.security_token = security_token;
-		const result = await axios(opt);
+		const result = await axios(opt).then((res) => res).catch((err) => err.response);
 		return handleRequestAnswer(result);
 	} catch (error) {
 		console.log('Erro na requisição:', { opt, error });
