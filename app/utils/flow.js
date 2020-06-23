@@ -453,12 +453,12 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		},
 		alarmeNaHora1: 'Qual horário?',
 		alarmeNaHora2: 'E os minutos?',
-		alarmeFinal: 'Prontinho! Seu alarme foi configurado. Amanhã chamo para te lembrar!',
+		alarmeFinal: 'Pronto! Seu alarme foi configurado! Amanhã te chamo pra perguntar ou te lembrar de tomar os comprimidos.',
 		alarmeJaTomei1: 'Q horas vc costuma tomar sua PrEP?',
 		alarmeJaTomei2: 'E os minutos?',
-		alarmeFollowUp: 'Quer q eu te lembre quando o medicamento vai acabar?',
+		alarmeFollowUp: 'Quer q eu te lembre quando seu estoque de PrEP vai acabar?',
 		alarmeFollowUpBtn: {
-			menuOptions: ['Sim', 'Não quero'],
+			menuOptions: ['Sim', 'Não precisa'],
 			menuPostback: ['alarmeAcabar', 'mainMenu'],
 		},
 		alarmeAcabar: {
