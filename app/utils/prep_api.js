@@ -141,10 +141,11 @@ module.exports = {
 
 	async getCount(fb_id, type) {
 		try {
-			const result = await axios({ url: `${apiUri}/api/chatbot/recipient/count-${type}`, method: 'get', params: { fb_id } });
+			const result = await makeRequest({ url: `${apiUri}/api/chatbot/recipient/count-${type}`, method: 'get', params: { fb_id } });
 			const keys = Object.keys(result);
 			return result[keys[0]];
 		} catch (error) {
+			console.log('error', error);
 			return sentryError('Erro ao pegar o contador', { error, fb_id, type });
 		}
 	},
