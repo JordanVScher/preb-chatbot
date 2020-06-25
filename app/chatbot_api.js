@@ -58,12 +58,12 @@ module.exports = {
 		return makeRequest({ url: `${apiUri}/api/chatbot/poll`, method: 'get', params: { fb_page_id } });
 	},
 
-	async postPollAnswer(recipient_id, poll_question_option_id, origin) {
-		return makeRequest({ url: `${apiUri}/api/chatbot/poll-result`, method: 'post', params: { recipient_id, poll_question_option_id, origin } });
+	async postPollAnswer(fb_id, poll_question_option_id, origin) {
+		return makeRequest({ url: `${apiUri}/api/chatbot/poll-result`, method: 'post', params: { fb_id, poll_question_option_id, origin } });
 	},
 
-	async getPollAnswer(recipient_id, poll_id) {
-		return makeRequest({ url: `${apiUri}/api/chatbot/poll-result`, method: 'get', params: { recipient_id, poll_id } });
+	async getPollAnswer(fb_id, poll_id) {
+		return makeRequest({ url: `${apiUri}/api/chatbot/poll-result`, method: 'get', params: { fb_id, poll_id } });
 	},
 
 	async getDialog(politician_id, dialog_name) {
@@ -74,10 +74,10 @@ module.exports = {
 		return makeRequest({ url: `${apiUri}/api/chatbot/answer`, method: 'get', params: { politician_id, question_name } });
 	},
 
-	async postIssue(politician_id, recipient_id, message, entities = {}, issue_active) {
+	async postIssue(politician_id, fb_id, message, entities = {}, issue_active) {
 		if (!issue_active) return {};
 
-		const params = { politician_id, recipient_id, message };
+		const params = { politician_id, fb_id, message };
 
 		if (entities && Object.keys(entities) && Object.keys(entities).length > 0) {
 			entities = JSON.stringify(entities);
@@ -87,19 +87,19 @@ module.exports = {
 		return makeRequest({ url: `${apiUri}/api/chatbot/issue`, method: 'post', params });
 	},
 
-	async postIssueWithoutEntities(politician_id, recipient_id, message, issue_active) {
+	async postIssueWithoutEntities(politician_id, fb_id, message, issue_active) {
 		if (!issue_active) return {};
 		// message = encodeURI(message);
-		return makeRequest({ url: `${apiUri}/api/chatbot/issue`, method: 'post', params: { politician_id, recipient_id, message } });
+		return makeRequest({ url: `${apiUri}/api/chatbot/issue`, method: 'post', params: { politician_id, fb_id, message } });
 	},
 
-	async getknowledgeBase(politician_id, entities, recipient_id) {
+	async getknowledgeBase(politician_id, entities, fb_id) {
 		entities = JSON.stringify(entities);
-		return makeRequest({ url: `${apiUri}/api/chatbot/knowledge-base`, method: 'get', params: { politician_id, entities, recipient_id } });
+		return makeRequest({ url: `${apiUri}/api/chatbot/knowledge-base`, method: 'get', params: { politician_id, entities, fb_id } });
 	},
 
-	async getknowledgeBaseByName(politician_id, intentName, recipient_id) {
-		return makeRequest({ url: `${apiUri}/api/chatbot/knowledge-base`, method: 'get', params: { politician_id, entities: intentName, recipient_id } });
+	async getknowledgeBaseByName(politician_id, intentName, fb_id) {
+		return makeRequest({ url: `${apiUri}/api/chatbot/knowledge-base`, method: 'get', params: { politician_id, entities: intentName, fb_id } });
 	},
 
 	async postPrivateReply(entities, page_id, post_id, comment_id, permalink, user_id) {
@@ -130,8 +130,8 @@ module.exports = {
 		return makeRequest({ url: `${apiUri}/api/chatbot/ticket/type`, method: 'get', params: { chatbot_id } });
 	},
 
-	async getUserTickets(recipient_id) {
-		return makeRequest({ url: `${apiUri}/api/chatbot/ticket`, method: 'get', params: { recipient_id } });
+	async getUserTickets(fb_id) {
+		return makeRequest({ url: `${apiUri}/api/chatbot/ticket`, method: 'get', params: { fb_id } });
 	},
 
 	async putStatusTicket(TicketID, status) {
@@ -142,7 +142,7 @@ module.exports = {
 		return makeRequest({ url: `${apiUri}/api/chatbot/ticket/${TicketID}`, method: 'put', params: { message } });
 	},
 
-	async postNewTicket(chatbot_id, recipient_id, type_id, data, message = '', anonymous = 0, files = []) {
+	async postNewTicket(chatbot_id, fb_id, type_id, data, message = '', anonymous = 0, files = []) {
 		const aux = {};
 		if (files) files.forEach((e, i) => { aux[`ticket_attachment_${i}`] = e; });
 
@@ -150,7 +150,7 @@ module.exports = {
 			url: `${apiUri}/api/chatbot/ticket`,
 			method: 'post',
 			params: {
-				chatbot_id, recipient_id, type_id, message, data: JSON.stringify(data), anonymous, ...aux,
+				chatbot_id, fb_id, type_id, message, data: JSON.stringify(data), anonymous, ...aux,
 			},
 		});
 	},
