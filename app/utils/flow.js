@@ -338,7 +338,7 @@ Se o enjôo continuar intenso, seguido de vômitos ou ñ melhorar após 3-7 dias
 Se vc se incomodar muito com os gases:
 - Evite alimentos como feijão, repolho, batata doce, ovo cozido e refrigerantes.
 
-OBS: Chá de erva- doce pode ajudar!`,
+OBS: Chá de erva- docepode ajudar!`,
 			drpDiarreia: 'A PrEP não costuma causar diarreia forte, mas pode aumentar o número de evacuações e diminuir um pouco a consistência das fezes, em algumas pessoas.\n- Beber bastante água(mais de 2,5- 3l/ dia) e evitar alimentos que soltam o intestino pode ajudar',
 			drpDorCabeca: 'É Pouco frequente dor de cabeça relacionada à PrEP costuma ser leve e melhorar após 2-3 dias.',
 			drpMoleza: 'Sintoma raro, dura em geral 1.2 dias e costuma melhorar com repouso.',
@@ -349,7 +349,7 @@ OBS: Chá de erva- doce pode ajudar!`,
 		drpIST: {
 			text1: 'Sobre qual sintoma vc quer saber?',
 			drpBolhas1: 'Podem ser herpes, se forem feridas q formigam e coçam tbm. Podem aparecer na boca, pinto, cu ou outras partes do corpo.',
-			drpBolhas2: ' É legal ñ tocar, lavar bem as mãos e se for na boca, evitar compartilhar talheres, batons, copos.. Bjo e oral só dps de cicatrizar!',
+			drpBolhas2: ' É legal ñ tocar, lavar bem as mãos e se for na boca, evitar compartilhar talheres, batons, copos. Bjo e oral só dps de cicatrizar!',
 			drpFeridas: 'Podem ser sífilis, cancro mole, herpes ou outras coisas. É importante passar por avaliação com profissional de saúde pra investigar o q é e tratar de maneira correta!',
 			drpVerrugas: 'São causadas pelo vírus HPV e podem aparecer em até 8 meses após a infecção. Se vc viu verrugas na neca ou no saco, ânus, vagina ou boca, procure profissional de saúde!',
 			drpCorrimento: 'Geralmente são causadas por bactérias e pode ser Gonorreia ou Clamídia. Pode ocorrer de 3 a 20 dias após a relação sexual desprotegida (oral também conta). São altamente contagiosas!',

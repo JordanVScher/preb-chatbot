@@ -43,6 +43,17 @@ async function handleQuizResposta(context) {
 		return false;
 	}
 
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && context.state.currentQuestion.code === 'A6b') {
+		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
+		return false;
+	}
+
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.entrar_em_contato === 1) {
+		await context.setState({ dialog: 'falarComHumano', publicoInteresseEnd: true });
+		return false;
+	}
+
 	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.is_target_audience === 0) {
 		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
 		return false;
@@ -70,22 +81,18 @@ async function handleQuizResposta(context) {
 	}
 
 	if (categoryQuestion === 'triagem' && sentAnswer.finished_quiz === 1) {
-		if (context.state.sentAnswer.entrar_em_contato === 1) {
+		console.log('sentAnswer', sentAnswer);
+		if (sentAnswer.entrar_em_contato === 1) {
 			await context.setState({ dialog: 'triagemCQ_entrar' });
 			return false;
 		}
 
-		if (context.state.sentAnswer.ir_para_agendamento === 1) {
+		if (sentAnswer.ir_para_agendamento === 1) {
 			await context.setState({ dialog: 'falarComHumano' });
 			return false;
 		}
 
-		if (context.state.sentAnswer.ir_para_menu === 1) {
-			await context.setState({ dialog: 'mainMenu' });
-			return false;
-		}
-
-		if (context.state.sentAnswer.ir_para_menu === 0) {
+		if (sentAnswer.ir_para_agendamento === 0) {
 			await context.setState({ dialog: 'testagem' });
 			return false;
 		}
