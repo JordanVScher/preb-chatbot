@@ -37,26 +37,36 @@ async function checkMainMenu(context) {
 		opt.push(sobreAmanda);
 
 		if (context.state.publicoInteresseEnd) {
-			const index = opt.findIndex((x) => x.title === 'Quero Participar');
+			const index = opt.findIndex((x) => x.payload === 'beginQuiz');
 			if (context.state.user.is_target_audience === 0) {
 				if (!context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; } else
 				if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
 			}
 
+
 			if (context.state.user.is_target_audience === 1) {
+				// user is risk group and didnt answer recrutamento (bloco b)
+				if (!context.state.recrutamentoEnd && context.state.user.risk_group) {
+					opt.splice(index, 0, quizRecrutamento);
+				}
+
 				await context.setState({ temConsulta: await checkAppointment(context.session.user.id) });
 				if (!context.state.temConsulta && !context.state.leftContact) {
 					if (index) {
-						opt[index] = marcarConsulta;
+						opt.splice(index, 0, marcarConsulta);
 						opt.splice(index + 1, 0, deixarContato);
 					}
-				} else if (!context.state.recrutamentoEnd && context.state.user.risk_group) {
-					if (index) opt[index] = quizRecrutamento;
-				} else if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
+				} else if (!context.state.preCadastroSignature) {
+					opt.splice(index, 0, termos);
+				}
 
 				if (context.state.temConsulta) {
 					opt.splice(index + 1, 0, verConsulta);
 				}
+
+				// dont let the beginQuiz appear if it's target_audience
+				const index2 = opt.findIndex((x) => x.payload === 'beginQuiz');
+				if (index2) opt.splice(index2, 1);
 			}
 		}
 
