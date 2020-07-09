@@ -469,6 +469,14 @@ describe('deuRuimPrep', () => {
 		});
 	});
 
+	it('drpViolencia - explicação e prepDuvidaFollowUp', async () => {
+		const context = cont.quickReplyContext('drpViolencia', 'drpViolencia');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpViolencia);
+		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
+	});
+
 	describe('drpNaoTomei - Não tomei', () => {
 		it('intro, não combina - msg e quiz', async () => {
 			const context = cont.quickReplyContext('drpNaoTomei', 'drpNaoTomei');
@@ -621,6 +629,14 @@ describe('deuRuimNaoPrep', () => {
 
 			await expect(mainMenu.falarComHumano).toBeCalledWith(context, null, flow.deuRuimNaoPrep.drnpPEPNao.drnpTomeiCerto);
 		});
+	});
+
+	it('drnpViolencia - explicação e falar com humano', async () => {
+		const context = cont.quickReplyContext('drnpViolencia', 'drnpViolencia');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpViolencia);
+		await expect(mainMenu.falarComHumano).toBeCalledWith(context);
 	});
 });
 

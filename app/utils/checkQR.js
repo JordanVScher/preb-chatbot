@@ -20,14 +20,14 @@ async function checkMainMenu(context) {
 
 	// for preps
 	const duvidaPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasPrep' };
-	const deuRuimPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimPrep' };
+	const deuRuimPrep = { content_type: 'text', title: 'Deu ruim pra vc', payload: 'deuRuimPrep' };
 	const voltarTomarPrep = { content_type: 'text', title: 'Voltar a tomar PrEP', payload: 'voltarTomarPrep' };
 	const alarmePrep = { content_type: 'text', title: 'Alarme para PrEP', payload: 'alarmePrep' };
 	const tomeiPrep = { content_type: 'text', title: 'Tomei', payload: 'tomeiPrep' };
 	const autoteste = { content_type: 'text', title: 'Quero Autoteste', payload: 'autotesteIntro' };
 	// for not preps
 	const duvidaNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
-	const deuRuimNaoPrep = { content_type: 'text', title: 'Deu Ruim', payload: 'deuRuimNaoPrep' };
+	const deuRuimNaoPrep = { content_type: 'text', title: 'Deu ruim pra vc', payload: 'deuRuimNaoPrep' };
 
 	if (context.state.user.is_prep === null || context.state.user.is_prep === undefined) {
 		opt.push(baterPapo);

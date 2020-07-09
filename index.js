@@ -428,6 +428,10 @@ module.exports = async function App(context) {
 			case 'drpIST':
 				await context.sendText(flow.deuRuimPrep.drpIST.text1, await getQR(flow.deuRuimPrep.drpIST));
 				break;
+			case 'drpViolencia':
+				await context.sendText(flow.deuRuimPrep.drpViolencia);
+				await duvidas.prepDuvidaFollowUp(context);
+				break;
 			case 'drpBolhas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas1);
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas2);
@@ -491,6 +495,10 @@ module.exports = async function App(context) {
 				break;
 			case 'drnpPEPNao':
 				await context.sendText(flow.deuRuimNaoPrep.drnpPEPNao.text1, await getQR(flow.deuRuimNaoPrep.drnpPEPNao));
+				break;
+			case 'drnpViolencia':
+				await context.sendText(flow.deuRuimPrep.drpViolencia);
+				await mainMenu.falarComHumano(context);
 				break;
 			case 'drnpTomeiTudo':
 				await drnpFollowUpAgendamento(context, flow.deuRuimNaoPrep.drnpPEPNao.drnpTomeiTudo);
