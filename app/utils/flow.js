@@ -223,7 +223,7 @@ module.exports = {
 	join: {
 		end: 'agora q sei onde vc ta tomando prep, vou te oferecer alguns apoios pra te ajudar nisso',
 		intro: {
-			text1: 'Q bafooo! E por onde vc toma? Me conta tudo!',
+			text1: 'Que bafo! Por aki posso disponibilizar auto teste, tirar dúvidas, te agendar com humanes, te ajudar a lembrar de tomar prep e outras coisas, tanto pra vc e seus amigues. Me indica! Pra começar, me diz por onde vc toma?',
 			menuOptions: ['PrEP 15-19', 'Combina', 'SUS', 'Não sei', 'Eu não tomo PrEP'],
 			menuPostback: ['joinPrep', 'joinCombina', 'joinSUS', 'joinNaoSabe', 'joinNaoToma'],
 		},
