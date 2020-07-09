@@ -16,7 +16,7 @@ async function checkTimeDifference(date) {
 	const dateM = moment(date);
 	const diff = Math.abs(dateM.diff(Date.now(), 'minutes'));
 
-	if (diff > 5) return true;
+	if (diff >= 5) return true;
 	return false;
 }
 
@@ -26,7 +26,8 @@ const joinedText = `${presquisaTexts.text1 || ''}\n${presquisaTexts.text2 || ''}
 // Ou seja, quem é público de interesse e não marcou uma consulta nem deixou o contato
 // Utilizamos a chave whenBecameTargetAudience (setada no final do quiz, pra quem virou público de interesse)
 // Essa chave indica o momento em que o usuário se tornou público de interesse
-// Dessa forma, não corremos o risco do usuário se tornar públic de interesse e imediatamente receber essa notificação
+// Utilizamos o último momento em que o usua´rio foi atualizado (_updatedAt)
+// Para só enviar essa notificação depois que ele tiver parado de interagir com o chatbot
 
 
 async function notificacaoOfertaPesquisa() {
@@ -41,7 +42,7 @@ async function notificacaoOfertaPesquisa() {
 		const userID = file.user.id;
 
 		if (file._state.whenBecameTargetAudience) { // check if user has a date from when he became part of target audience
-			const timeTest = await checkTimeDifference(new Date(file._state.whenBecameTargetAudience)); // check if enough time has passed since then to send the message
+			const timeTest = await checkTimeDifference(new Date(file.user._updatedAt)); // check if enough time has passed since then to send the message
 
 			if (timeTest) {
 				file._state.user = await getRecipientPrep(userID); // update user recipient status from the api
@@ -64,5 +65,7 @@ async function notificacaoOfertaPesquisa() {
 		}
 	}
 }
+
+notificacaoOfertaPesquisa();
 
 module.exports = { notificacaoOfertaPesquisa };
