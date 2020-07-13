@@ -435,6 +435,7 @@ module.exports = async function App(context) {
 			case 'drpBolhas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas1);
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas2);
+				if (process.env.ENV !== 'local') await context.sendImage(flow.deuRuimPrep.drpIST.droBolhasImg);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpFeridas':
@@ -443,6 +444,7 @@ module.exports = async function App(context) {
 				break;
 			case 'drpVerrugas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpVerrugas);
+				if (process.env.ENV !== 'local') await context.sendImage(flow.deuRuimPrep.drpIST.drpVerrugasIMg);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpCorrimento':
@@ -478,7 +480,9 @@ module.exports = async function App(context) {
 				await context.sendText(flow.deuRuimNaoPrep.drnpIST.text1, await getQR(flow.deuRuimNaoPrep.drnpIST));
 				break;
 			case 'drnpBolhas':
-				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas);
+				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas1);
+				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas2);
+				if (process.env.ENV !== 'local') await context.sendImage(flow.deuRuimPrep.drpIST.droBolhasImg);
 				await mainMenu.falarComHumano(context);
 				break;
 			case 'drnpFeridas':
@@ -487,6 +491,7 @@ module.exports = async function App(context) {
 				break;
 			case 'drnpVerrugas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpVerrugas);
+				if (process.env.ENV !== 'local') await context.sendImage(flow.deuRuimPrep.drpIST.drpVerrugasIMg);
 				await mainMenu.falarComHumano(context);
 				break;
 			case 'drnpCorrimento':
