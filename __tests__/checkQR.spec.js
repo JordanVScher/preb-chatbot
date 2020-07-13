@@ -22,7 +22,7 @@ describe('checkMainMenu', () => {
 	// 	await expect(result.quick_replies[1].payload === 'beginQuiz').toBeTruthy();
 	// 	await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 	// 	await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
-	// 	await expect(result.quick_replies[4].title === 'Já Tô no Projeto').toBeTruthy();
+	// 	await expect(result.quick_replies[4].title === 'Já tô no Projeto').toBeTruthy();
 	// 	await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 	// });
 
@@ -54,7 +54,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[1].payload === 'querBrincadeira').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[4].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[4].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -69,7 +69,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[1].title === 'Termos').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[4].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[4].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -83,7 +83,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 		await expect(result.quick_replies[1].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[3].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[3].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -101,7 +101,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[2].title === 'Bate papo virtual').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[4].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[5].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[5].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[6].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -121,7 +121,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[3].payload === 'recrutamento').toBeTruthy();
 		await expect(result.quick_replies[4].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[5].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[6].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[6].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[7].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -140,7 +140,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[2].title === 'Bate papo virtual').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[4].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[5].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[5].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[6].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -161,7 +161,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[3].payload === 'recrutamento').toBeTruthy();
 		await expect(result.quick_replies[4].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[5].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[6].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[6].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[7].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -179,7 +179,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[2].title === 'Ver Consulta').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[4].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[5].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[5].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[6].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -197,7 +197,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[1].title === 'Ver Consulta').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[4].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[4].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -216,7 +216,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[2].payload === 'recrutamento').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[4].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[5].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[5].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[6].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -234,7 +234,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[2].title === 'Ver Consulta').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[4].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[5].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[5].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[6].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -251,7 +251,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[1].title === 'Termos').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[4].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[4].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -268,7 +268,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[1].title === 'Ver Consulta').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[3].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[4].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[4].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[5].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
@@ -284,7 +284,7 @@ describe('checkMainMenu', () => {
 		await expect(result.quick_replies[0].title === 'Bater Papo').toBeTruthy();
 		await expect(result.quick_replies[1].title === 'Prevenções').toBeTruthy();
 		await expect(result.quick_replies[2].title === 'Já Tomo PrEP').toBeTruthy();
-		await expect(result.quick_replies[3].title === 'Já Tô no Projeto').toBeTruthy();
+		await expect(result.quick_replies[3].title === 'Já tô no Projeto').toBeTruthy();
 		await expect(result.quick_replies[4].title === 'Sobre a Amanda').toBeTruthy();
 	});
 
