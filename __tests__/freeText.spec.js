@@ -154,14 +154,6 @@ describe('Dev Keywords', () => {
 		await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
 	});
 
-	it('COMBINA_TEST - Turns into combina', async () => {
-		const context = cont.textContext(process.env.COMBINA_TEST, 'mainMenu');
-		await handler(context);
-
-		await expect(prepAPI.putUpdateVoucherFlag).toBeCalledWith(context.session.user.id, 'combina');
-		await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
-	});
-
 	it('SUS_TEST - Turns into sus', async () => {
 		const context = cont.textContext(process.env.SUS_TEST, 'mainMenu');
 		await handler(context);

@@ -555,7 +555,8 @@ describe('deuRuimNaoPrep', () => {
 		const context = cont.quickReplyContext('drnpBolhas', 'drnpBolhas');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpBolhas);
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpBolhas1);
+		await expect(context.sendText).toBeCalledWith(flow.deuRuimPrep.drpIST.drpBolhas2);
 		await expect(mainMenu.falarComHumano).toBeCalledWith(context);
 	});
 
@@ -1133,5 +1134,24 @@ describe('notificações', () => {
 			await expect(context.sendText).toBeCalledWith(flow.tomeiPrep.notiNaoTransou);
 			await expect(mainMenu.sendMain).toBeCalledWith(context);
 		});
+	});
+});
+
+describe('noProjeto', () => {
+	it('intro - vê mensagem e opções', async () => {
+		const context = cont.quickReplyContext('noProjeto', 'noProjeto');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.noProjeto.text1, await getQR(flow.noProjeto));
+	});
+
+	it('noProjetoYes - faz requisição, atualiza dado, mostra mensagem e manda pro menu', async () => {
+		const context = cont.quickReplyContext('noProjetoYes', 'noProjetoYes');
+		await handler(context);
+
+		await expect(prepAPI.postTestPrep).toBeCalledWith(context.session.user.id, false);
+		await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
+		await expect(context.sendText).toBeCalledWith(flow.noProjeto.noProjetoYes);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 });

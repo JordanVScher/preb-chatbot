@@ -45,6 +45,12 @@ module.exports = {
 		on: 'Vou te chamando conforme vou sabendo de mais bafos!',
 		off: 'Sem problemas, beibe. Não te enviarei mais nenhuma notificação.',
 	},
+	noProjeto: {
+		text1: 'Você faz parte de alguma projeto mas não toma prep?',
+		noProjetoYes: 'agora q sei onde vc faz parte do projeto, vou te oferecer alguns apoios pra te ajudar',
+		menuOptions: ['Sim', 'Não, não faço parte'],
+		menuPostback: ['noProjetoYes', 'mainMenu'],
+	},
 	onTheResearch: {
 		text1: 'Vc é um close keriiiiiiiii! 😻',
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/51b7b4b8-2cac-45ff-bd37-1b777dd05189.gif',

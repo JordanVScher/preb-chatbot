@@ -944,6 +944,15 @@ module.exports = async function App(context) {
 				}
 				await mainMenu.sendMain(context);
 				break;
+			case 'noProjeto':
+				await context.sendText(flow.noProjeto.text1, await getQR(flow.noProjeto));
+				break;
+			case 'noProjetoYes':
+				await prepAPI.postTestPrep(context.session.user.id, false);
+				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
+				await context.sendText(flow.noProjeto.noProjetoYes);
+				await mainMenu.sendMain(context);
+				break;
 			} // end switch case
 		}
 	} catch (error) {

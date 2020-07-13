@@ -12,6 +12,7 @@ async function checkMainMenu(context) {
 	const join = { content_type: 'text', title: 'Já Tomo PrEP', payload: 'join' };
 	const seePrepToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seePrepToken' };
 	const sobreAmanda = { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' };
+	const noProjeto = { content_type: 'text', title: 'Já Tô no Projeto', payload: 'noProjeto' };
 	const termos = { content_type: 'text', title: 'Termos', payload: 'TCLE' };
 	// const pesquisa = { content_type: 'text', title: 'Pesquisa', payload: 'ofertaPesquisaStart' };
 	const marcarConsulta = { content_type: 'text', title: 'Bate papo presencial', payload: 'pesquisaPresencial' };
@@ -34,6 +35,7 @@ async function checkMainMenu(context) {
 		opt.push(quiz);
 		opt.push(prevencoes);
 		opt.push(join);
+		opt.push(noProjeto);
 		opt.push(sobreAmanda);
 
 		if (context.state.publicoInteresseEnd) {

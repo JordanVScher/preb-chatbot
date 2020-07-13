@@ -81,7 +81,6 @@ async function handleQuizResposta(context) {
 	}
 
 	if (categoryQuestion === 'triagem' && sentAnswer.finished_quiz === 1) {
-		console.log('sentAnswer', sentAnswer);
 		if (sentAnswer.entrar_em_contato === 1) {
 			await context.setState({ dialog: 'triagemCQ_entrar' });
 			return false;
