@@ -371,7 +371,7 @@ OBS: Chá de erva- docepode ajudar!`,
 		text1: 'Partiu! Clica aí na opção da sua dúvida e te explico tuduuuu!',
 		drnpMedoTestar: 'Ter medo de fazer o teste é super comum, bee! O jeito mais fácil de perder o medo é encarar e ñ ter mais dúvidas sobre a sua sorologia!',
 		followUpTriagem: 'Vamo lá! Escolhe a opção q vc tem dúvida e vou te ajudar!',
-		menuOptions: ['Me arrisquei', 'Medo de me testar?', 'Pau/cu estranho', 'PEP não foi boa?', 'Sofri Violência'],
+		menuOptions: ['Me arrisquei', 'Medo de me testar?', 'pau/cu tá estranho', 'PEP não foi boa?', 'Sofri Violência'],
 		menuPostback: ['drnpArrisquei', 'drnpMedoTestar', 'drnpIST', 'drnpPEPNao', 'drnpViolencia'],
 		drnpPEPNao: {
 			text1: 'o que aconteceu?',
