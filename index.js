@@ -52,7 +52,6 @@ async function contactFollowUp(context) {
 }
 
 const opcaoAutoteste = async (context) => context.sendText(flow.autoteste.offerType, await getQR(flow.autoteste.offerTypeBtn));
-const inicioJoin = async (context) => context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
 const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
 const inicioTriagemSQ = async (context) => context.sendText(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
 // const drnpFollowUpTriagem = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
@@ -295,7 +294,10 @@ module.exports = async function App(context) {
 				await quiz.answerQuiz(context);
 				break;
 			case 'join':
-				await inicioJoin(context);
+				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
+				break;
+			case 'join2':
+				await context.sendText(flow.join.intro.text2, await getQR(flow.join.intro));
 				break;
 			case 'joinPrep': // já faço parte
 				await context.sendText(flow.join.joinPrep.text1);
@@ -332,7 +334,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.join.joinNaoSabe.prep);
 				await context.sendText(flow.join.joinNaoSabe.combina);
 				await context.sendText(flow.join.joinNaoSabe.sus);
-				await inicioJoin(context);
+				await context.sendText(flow.join.intro.text2, await getQR(flow.join.intro));
 				break;
 			case 'duvidasPrep':
 				await context.sendText(flow.duvidasPrep.text1, await getQR(flow.duvidasPrep));

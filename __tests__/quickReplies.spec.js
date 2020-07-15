@@ -138,6 +138,13 @@ describe('join - já tomo prep', () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.intro.text1, await getQR(flow.join.intro));
 	});
 
+	it('voltou - outro texto e botões', async () => {
+		const context = cont.quickReplyContext('join2', 'join2');
+		await handler(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.join.intro.text2, await getQR(flow.join.intro));
+	});
+
 	it('joinPrep - explicação e espera token', async () => {
 		const context = cont.quickReplyContext('joinPrep', 'joinPrep');
 		await handler(context);
@@ -222,7 +229,7 @@ describe('join - já tomo prep', () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.joinNaoSabe.prep);
 		await expect(context.sendText).toBeCalledWith(flow.join.joinNaoSabe.combina);
 		await expect(context.sendText).toBeCalledWith(flow.join.joinNaoSabe.sus);
-		await expect(context.sendText).toBeCalledWith(flow.join.intro.text1, await getQR(flow.join.intro));
+		await expect(context.sendText).toBeCalledWith(flow.join.intro.text2, await getQR(flow.join.intro));
 	});
 
 	it('joinNaoToma - vai pro greetings e manda o desafio', async () => {
