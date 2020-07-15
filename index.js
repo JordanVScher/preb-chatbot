@@ -173,7 +173,7 @@ module.exports = async function App(context) {
 				console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			}
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '', lastPBpayload: '' });
-			if (context.state.dialog === 'alarmeAcabar' || context.state.dialog === 'notiAlarmeB_Sim') {
+			if (['alarmeAcabarErro', 'alarmeAcabar', 'notiAlarmeB_Sim'].includes(context.state.dialog)) {
 				await duvidas.alarmeDate(context);
 			} else if (context.state.dialog === 'leavePhoneTwo' || context.state.dialog === 'phoneInvalid') {
 				await research.checkPhone(context);
@@ -615,6 +615,9 @@ module.exports = async function App(context) {
 				break;
 			case 'alarmeAcabar':
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text1);
+				break;
+			case 'alarmeAcabarErro':
+				await context.sendText(flow.alarmePrep.alarmeAcabar.invalid);
 				break;
 			case 'alarmeConfirmaData':
 				await context.sendText(flow.alarmePrep.alarmeConfirmaData, await getQR(flow.alarmePrep.alarmeConfirmaDataBtn));

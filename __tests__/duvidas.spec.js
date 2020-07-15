@@ -380,8 +380,7 @@ describe('alarmeDate', () => {
 		const date = await duvidas.alarmeDate(context);
 
 		await expect(date).toBeFalsy();
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.invalid);
-		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabar' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabarErro' });
 	});
 
 	it('formato válido mas valor inválido - vê erro e tenta de novo', async () => {

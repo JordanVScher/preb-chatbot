@@ -758,12 +758,12 @@ describe('alarmeAcabar - avisar quando acabar os comprimidos', () => {
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text1);
 	});
 
-	it('alarmeAcabar - entra data inválida', async () => {
-		const context = cont.textContext('foobar', 'alarmeAcabar');
+	it('alarmeAcabarErro - entra data inválida', async () => {
+		const context = cont.textContext('foobar', 'alarmeAcabarErro');
 		await handler(context);
 
 		await expect(duvidas.alarmeDate).toBeCalledWith(context);
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text1);
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.invalid);
 	});
 
 	it('alarmeAcabar - vê opções de frascos', async () => {

@@ -472,7 +472,7 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		},
 		alarmeAcabar: {
 			text1: 'Coloque a data da sua última consulta no formato DD/MM/AAAA',
-			invalid: 'Data inválida!',
+			invalid: 'acho q não entendi! escreve pra mim a data da sua última consulta no formato DD/MM/AAAA',
 			text2: 'Quantos frascos vc retirou nesta data?',
 			menuOptions: ['1 Frasco', '2 Frascos', '3 Frascos'],
 			menuPostback: ['alarmeFrasco1', 'alarmeFrasco2', 'alarmeFrasco3'],
