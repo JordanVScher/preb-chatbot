@@ -3,7 +3,7 @@ module.exports = {
 	getStarted: 'Sou A-manda Selfie, primeira travesti robôa do Brasil! Sou assistente digital do projeto PrEP 1519! Vou te ajudar no acesso a informações, insumos e serviços de saúde sexual!',
 	greetings: {
 		text1: 'Inhai gatinhe!!',
-		text2: 'Meu nome é A-manda Selfie, a primeira travesti robôa do Brasil!',
+		text2: 'Sou A-manda Selfie, primeira travesti robôa do Brasil! Sou assistente digital do projeto PrEP 1519! Vou te ajudar no acesso a informações, insumos e serviços de saúde sexual!',
 	},
 	aboutAmanda: {
 		gif: 'https://gallery.mailchimp.com/926cb477483bcd8122304bc56/images/85ab320e-7b33-4063-b615-a70b53cfa233.gif',
