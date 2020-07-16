@@ -51,7 +51,6 @@ async function contactFollowUp(context) {
 	// }
 }
 
-const opcaoAutoteste = async (context) => context.sendText(flow.autoteste.offerType, await getQR(flow.autoteste.offerTypeBtn));
 const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
 const inicioTriagemSQ = async (context) => context.sendText(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
 // const drnpFollowUpTriagem = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
@@ -384,7 +383,7 @@ module.exports = async function App(context) {
 			case 'dnpMeTestar':
 				await context.sendText(flow.duvidasNaoPrep.dnpMeTestar);
 				await context.sendText(flow.autoteste.intro);
-				await opcaoAutoteste(context);
+				await duvidas.opcaoAutoteste(context);
 				break;
 			case 'deuRuimPrep':
 				await context.sendText(flow.deuRuimPrep.text1, await checkQR.checkDeuRuimPrep(context, await getQR(flow.deuRuimPrep)));
@@ -546,7 +545,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.autoteste.intro);
 				// fallsthrough
 			case 'autoteste':
-				await opcaoAutoteste(context);
+				await duvidas.opcaoAutoteste(context);
 				break;
 			case 'autoCorreio':
 				await context.sendText(flow.autoteste.autoCorreio);

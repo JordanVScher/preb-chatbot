@@ -155,6 +155,20 @@ async function alarmeAcabarFinal(context, res) {
 	await sendMain(context);
 }
 
+async function opcaoAutoteste(context) {
+	const autoCorreio = { content_type: 'text', title: 'Pelo correio', payload: 'autoCorreio' };
+	const autoServico = { content_type: 'text', title: 'Pegar no serviço', payload: 'autoServico' };
+	const voltar = { content_type: 'text', title: 'Voltar', payload: 'mainMenu' };
+	const autoTenteBtn = [];
+
+	await context.setState({ user: { city: null } });
+	autoTenteBtn.push(autoCorreio);
+	if (context.state.user && context.state.user.city) autoTenteBtn.push(autoServico);
+	autoTenteBtn.push(voltar);
+
+	await context.sendText(flow.autoteste.offerType, { quick_replies: autoTenteBtn });
+}
+
 async function buildTestagem(cityID, newRule) {
 	const { types } = flow.testagem;
 	const rules = newRule || flow.testagem.rules[cityID];
@@ -304,4 +318,5 @@ module.exports = {
 	naoTransouEnd,
 	askHorario,
 	checkHorario,
+	opcaoAutoteste,
 };
