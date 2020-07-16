@@ -881,6 +881,7 @@ module.exports = async function App(context) {
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text1);
 				break;
 			case 'notiAlarmeB_Nao':
+				await context.sendText(flow.notifications.notiAlarmeB_Nao);
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiAlarmeC_Ok':

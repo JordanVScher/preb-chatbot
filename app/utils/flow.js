@@ -44,6 +44,7 @@ module.exports = {
 	notifications: {
 		on: 'Vou te chamando conforme vou sabendo de mais bafos!',
 		off: 'Sem problemas, beibe. Não te enviarei mais nenhuma notificação.',
+		notiAlarmeB_Nao: 'Então vai lá tomar bobinhe! Daqui a poko vou te avisar denovo 😎😘',
 	},
 	noProjeto: {
 		text1: 'Esse botão é para quem já faz parte do projeto PrEP1519, mas não toma PrEP, é o seu caso?',
