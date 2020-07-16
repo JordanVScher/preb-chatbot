@@ -91,6 +91,7 @@ async function checkMainMenu(context) {
 		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep, autoteste];
 	}
 
+	opt.reverse();
 	return { quick_replies: opt };
 }
 
