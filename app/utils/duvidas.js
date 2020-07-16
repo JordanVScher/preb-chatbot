@@ -182,10 +182,12 @@ async function sendAutotesteMsg(context) {
 	}
 }
 
-async function buildServicoInfo(cityID = '', cityType = '') {
+async function buildServicoInfo(cityID, cityType) {
 	let text = '';
+	const cID = cityID && cityID.toString() ? cityID.toString() : '';
+	const cType = cityType && cityType.toString() ? cityType.toString() : '';
 
-	const address = await help.cidadeDictionary(cityID.toString(), cityType.toString());
+	const address = await help.cidadeDictionary(cID, cType);
 	if (address) text += `Endereço: ${address}\n`;
 
 	const phone = help.telefoneDictionary[cityID];
