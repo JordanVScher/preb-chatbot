@@ -117,6 +117,7 @@ module.exports = async function App(context) {
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id, context.state.lastQRpayload, context.state.lastQRpayload); // eslint-disable-line max-len
 				await prepAPI.logFlowChange(context.session.user.id, context.state.lastQRpayload, context.state.lastQRpayload);
 
+				console.log(`${context.state.sessionUser.name} clicou em ${context.state.lastQRpayload}`);
 				if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
 					await context.setState({ selectedDate: context.state.lastQRpayload.slice(9, -1) });
 					await context.setState({ dialog: 'setEventHour' });
