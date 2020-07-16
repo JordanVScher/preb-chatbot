@@ -162,7 +162,7 @@ async function checkSP(context) {
 
 async function startConsulta(context) {
 	// user must be part of target__audience and have never had an appointment nor have left his contact info
-	if (context.state.user.is_target_audience && ((await aux.checkAppointment(context.session.user.id) === false) && !context.state.leftContact)) {
+	if (context.state.user.voucher_type || (context.state.user.is_target_audience && ((await aux.checkAppointment(context.session.user.id) === false) && !context.state.leftContact))) {
 		if (context.state.sendExtraMessages === true) {
 			// because of "outras datas" we cant show the extraMessages again, but we still have to show the next ones
 			await context.setState({ sendExtraMessages2: true, sendExtraMessages: false });

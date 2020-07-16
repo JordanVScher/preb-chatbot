@@ -47,9 +47,9 @@ module.exports = {
 	},
 	noProjeto: {
 		text1: 'esse botão é pra quem já faz parte do nosso projeto mas ainda não toma prep',
-		noProjetoYes: 'agora q sei onde vc faz parte do projeto, vou te oferecer alguns apoios pra te ajudar',
-		menuOptions: ['Sim', 'Não, não faço parte'],
-		menuPostback: ['noProjetoYes', 'mainMenu'],
+		noProjetoYes: 'agora q sei qie vc faz parte do projeto, vou te oferecer alguns apoios pra te ajudar',
+		menuOptions: ['Não tomo Prep', 'Já tomo Prep', 'Não, não faço parte'],
+		menuPostback: ['noProjetoYes', 'join', 'mainMenu'],
 	},
 	onTheResearch: {
 		text1: 'Vc é um close keriiiiiiiii! 😻',
@@ -475,8 +475,8 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 			text1: 'Coloque a data da sua última consulta no formato DD/MM/AAAA',
 			invalid: 'acho q não entendi! escreve pra mim a data da sua última consulta no formato DD/MM/AAAA',
 			text2: 'Quantos frascos vc retirou nesta data?',
-			menuOptions: ['1 Frasco', '2 Frascos', '3 Frascos'],
-			menuPostback: ['alarmeFrasco1', 'alarmeFrasco2', 'alarmeFrasco3'],
+			menuOptions: ['1 Frasco', '2 Frascos', '3 Frascos', '4 Frascos'],
+			menuPostback: ['alarmeFrasco1', 'alarmeFrasco2', 'alarmeFrasco3', 'alarmeFrasco4'],
 			text3: 'Okay, nos meus cálculos seus comprimidos vão acabar dia <DATE>, te lembro 15 dias antes!',
 			fallback: 'Okay, irei te avisar quando seus comprimidor vão acabar.',
 		},

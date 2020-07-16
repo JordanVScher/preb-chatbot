@@ -20,7 +20,6 @@ async function falarComHumano(context, nextDialog, text) {
 	const btn = await getQR(flow.falarComHumano);
 	// if user is menorDeQuinze, remove Falar com Humano option
 	if (context.state.menorDeQuinze === true) btn.quick_replies.shift();
-
 	await context.sendText(toSend, btn);
 }
 

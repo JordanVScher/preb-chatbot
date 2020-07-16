@@ -105,6 +105,7 @@ module.exports = async function App(context) {
 				// await context.setState({ dialog: 'leavePhone' });
 				// await context.setState({ dialog: 'calendarTest' });
 				// await context.setState({ dialog: 'addRecrutamentoTimer' });
+				// await context.setState({ dialog: 'alarmeAcabar' });
 			} else {
 				await context.setState({ dialog: context.state.lastPBpayload });
 			}
