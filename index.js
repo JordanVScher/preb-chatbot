@@ -150,7 +150,7 @@ module.exports = async function App(context) {
 					await context.setState({ cityId: await context.state.lastQRpayload.replace('city', '') });
 					await context.setState({ dialog: 'showDays' });
 				} else if (context.state.lastQRpayload === 'joinNaoToma') {
-					await context.setState({ dialog: 'greetings', askDesafio: false });
+					await context.setState({ dialog: 'mainMenu', askDesafio: false });
 				} else if (context.state.lastQRpayload.startsWith('page')) {
 					await duvidas.receivePage(context);
 				} else if (context.state.lastQRpayload.startsWith('askProxima')) {

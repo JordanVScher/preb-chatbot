@@ -40,7 +40,7 @@ module.exports = {
 							{
 								type: 'postback',
 								title: 'Ir para o início',
-								payload: 'greetings',
+								payload: 'mainMenu',
 							},
 							{
 								type: 'nested',
