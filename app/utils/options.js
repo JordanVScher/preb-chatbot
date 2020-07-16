@@ -29,6 +29,7 @@ module.exports = {
 			{ content_type: 'text', title: 'Sim', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
 			{ content_type: 'text', title: 'Já Tomo PrEP', payload: 'join' },
+			{ content_type: 'text', title: 'Já tô no Projeto', payload: 'noProjeto' },
 		],
 	},
 	desafioAceito: {

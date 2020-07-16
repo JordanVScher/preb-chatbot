@@ -46,8 +46,8 @@ module.exports = {
 		off: 'Sem problemas, beibe. Não te enviarei mais nenhuma notificação.',
 	},
 	noProjeto: {
-		text1: 'esse botão é pra quem já faz parte do nosso projeto mas ainda não toma prep',
-		noProjetoYes: 'agora q sei qie vc faz parte do projeto, vou te oferecer alguns apoios pra te ajudar',
+		text1: 'Esse botão é pra quem já faz parte do nosso projeto mas ainda não toma prep',
+		noProjetoYes: 'Agora que sei que vc já faz parte, vou te oferecer alguns apoios pra te ajudar',
 		menuOptions: ['Não tomo Prep', 'Já tomo Prep', 'Não, não faço parte'],
 		menuPostback: ['noProjetoYes', 'join', 'mainMenu'],
 	},
