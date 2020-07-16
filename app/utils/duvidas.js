@@ -161,7 +161,6 @@ async function opcaoAutoteste(context) {
 	const voltar = { content_type: 'text', title: 'Voltar', payload: 'mainMenu' };
 	const autoTenteBtn = [];
 
-	await context.setState({ user: { city: null } });
 	autoTenteBtn.push(autoCorreio);
 	if (context.state.user && context.state.user.city) autoTenteBtn.push(autoServico);
 	autoTenteBtn.push(voltar);
@@ -204,8 +203,12 @@ async function buildServicoInfo(cityID, cityType) {
 	const address = await help.cidadeDictionary(cID, cType);
 	if (address) text += `Endereço: ${address}\n`;
 
-	const phone = help.telefoneDictionary[cityID];
-	if (phone) text += `Telefone: ${phone}`;
+	const phone = help.telefoneDictionary[cID];
+	if (phone) text += `Telefone: ${phone}\n`;
+
+	const horario = await help.horarioDictionary(cID, cType);
+	if (horario) text += `Horário: ${horario}`;
+
 
 	return text;
 }
@@ -213,6 +216,7 @@ async function buildServicoInfo(cityID, cityType) {
 
 async function sendAutoServicoMsg(context, cityType) {
 	await context.setState({ autotesteServicoMsg: await buildServicoInfo(context.state.user.city, cityType) });
+
 	if (context.state.autotesteServicoMsg) await context.sendText(context.state.autotesteServicoMsg);
 	await context.sendText(flow.autoteste.autoServicoEnd);
 	await sendMain(context);

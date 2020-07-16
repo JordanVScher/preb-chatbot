@@ -74,6 +74,20 @@ async function cidadeDictionary(cityID, cityType) {
 
 	return null;
 }
+
+async function horarioDictionary(cityID, cityType) {
+	if (cityID.toString() === '1') return '';
+	if (cityID.toString() === '2') return '';
+	if (cityID.toString() === '3') { // SP has two locations, if we dont know the type send both locations, type 0 is a special case,
+		const one = 'manda um zap pra gente marcar o melhor horário para a retirada do seu autoteste.';
+		const two = '10h as 19h de segunda a sexta';
+		if (cityType && cityType.toString() === '1') return one;
+		if (cityType && cityType.toString() === '2') return two;
+		return `${one} ou ${two}`;
+	}
+
+	return null;
+}
 const instagramDictionary = { 1: '@nodeumatch', 2: '@preparasalvador', 3: '@vcprepsp' };
 
 const telefoneDictionary = { 1: '(31) 99726-9307', 2: '(71) 99102-2234 ou (71) 9.9640 9030', 3: '(11) 98209-2911' };
@@ -321,6 +335,7 @@ module.exports = {
 	weekDayName,
 	cidadeDictionary,
 	telefoneDictionary,
+	horarioDictionary,
 	locationDictionary,
 	buildPhoneMsg,
 	emergenciaDictionary,
