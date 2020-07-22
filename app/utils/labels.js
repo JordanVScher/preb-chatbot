@@ -180,7 +180,9 @@ async function addNewUser(context) {
 			await prepAPI.postRecipientPrep(context.session.user.id, context.state.politicianData.user_id, context.state.sessionUser.name);
 			await context.setState({ user: {} });
 		} else {
-			await context.setState({ has_alarm: context.state.user.prep_reminder_after || context.state.user.prep_reminder_before });
+			await context.setState({
+				has_alarm: context.state.user.prep_reminder_after || context.state.user.prep_reminder_before || context.state.user.prep_reminder_running_out,
+			});
 		}
 
 		return true;
