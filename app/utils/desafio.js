@@ -52,6 +52,11 @@ async function sendFollowUp(context, type, categoryQuestion) {
 }
 
 async function followUp(context) {
+	if (context.state.user.voucher_type || context.state.user.combina_city) {
+		await sendMain(context); // send regular menu
+		return false;
+	}
+
 	if (context.state.goBackToQuiz === true) { await offerQuiz(context); return false; } // if user was on quiz, ask user to go back, categoryQuestion should already be known by then
 
 	if (context.state.user.is_target_audience === null) { await sendFollowUp(context, 'publico-interesse', 'publico_interesse'); return false; } // if we dont have is_target_audience, ask to send user to publico_interesse

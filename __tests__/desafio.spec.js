@@ -52,6 +52,22 @@ it('offerQuiz - user já começou quiz, oferece de novo', async () => {
 	await expect(context.sendText).toBeCalledWith(flow.desafio.started, opt.answer.sendQuiz);
 });
 
+it('Follow up - user tem voucher, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.user = { voucher_type: 'sus' };
+	await desafio.followUp(context);
+
+	await expect(sendMain).toBeCalledWith(context);
+});
+
+it('Follow up - user tem combina_city, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.user = { combina_city: 'SP' };
+	await desafio.followUp(context);
+
+	await expect(sendMain).toBeCalledWith(context);
+});
+
 it('Follow up - user estava no quiz publico_interesse, perguntamos se quer voltar ao quiz publico_interesse', async () => {
 	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.categoryQuestion = 'publico_interesse'; context.state.goBackToQuiz = true; context.state.startedQuiz = true;
@@ -131,8 +147,6 @@ it('Follow up - user não é publico_interesse e não acabou brincadeira, pergun
 	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
 
 	await expect(context.sendText).toBeCalledWith(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
-
-
 });
 
 it('Follow up - user não é publico_interesse e não acabou brincadeira, perguntamos mais de 3 vezes, vai pro menu', async () => {
