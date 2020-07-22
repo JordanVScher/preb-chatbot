@@ -76,8 +76,8 @@ async function cidadeDictionary(cityID, cityType) {
 }
 
 async function horarioDictionary(cityID, cityType) {
-	if (cityID.toString() === '1') return '';
-	if (cityID.toString() === '2') return '';
+	if (cityID.toString() === '1') return 'segundas feira das 17h as 19h e terças feira das 16h as 18h';
+	if (cityID.toString() === '2') return '9h30m até 16h';
 	if (cityID.toString() === '3') { // SP has two locations, if we dont know the type send both locations, type 0 is a special case,
 		const one = 'manda um zap pra gente marcar o melhor horário para a retirada do seu autoteste.';
 		const two = '10h as 19h de segunda a sexta';
