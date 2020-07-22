@@ -241,7 +241,7 @@ module.exports = {
 			menuPostback: ['join2'],
 		},
 		askPrep: {
-			text1: 'Inhaiii! Pra vc q adquiriu lindamente seu voucher no serviço, digita ele aqui pra mim amore!',
+			text1: 'Inhaiii! Pra vc q adquiriu lindamente seu voucher no serviço, digita ele aqui pra mim amore! Ou se não lembrar peça esse numero para a equipe de humanes onde você é atendido e clica no botão abaixo para voltar ao menu',
 			success: 'Eitaaa, te encontrei no systema, q tudo!!',
 			fail1: 'Vish, kd tu nesse systema? Vamo denovo? Digita aí o número do voucher.',
 			fail2: 'Ou se não lembrar peça esse numero para a equipe de humanes onde você é atendido e clica no botão abaixo para voltar ao menu',
@@ -257,7 +257,7 @@ module.exports = {
 			menuPostback: ['joinCombinaAsk', 'join2'],
 		},
 		joinCombinaAsk: {
-			text1: 'Inhaiii! Pra vc q adquiriu lindamente seu voucher no serviço, digita ele aqui pra mim amore!',
+			text1: 'Inhaiii! Pra vc q adquiriu lindamente seu voucher no serviço, digita ele aqui pra mim amore! Ou se não lembrar peça esse numero para a equipe de humanes onde você é atendido e clica no botão abaixo para voltar ao menu',
 			success: 'Eitaaa, te encontrei no systema, q tudo!!',
 			fail1: 'Vish, kd tu nesse systema? Vamo denovo? Digita aí o número do voucher.',
 			fail2: 'Ou se não lembrar peça esse numero para a equipe de humanes onde você é atendido e clica no botão abaixo para voltar ao menu',
