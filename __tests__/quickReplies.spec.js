@@ -236,12 +236,9 @@ describe('join - já tomo prep', () => {
 		const context = cont.quickReplyContext('joinNaoToma', 'greetings');
 		await handler(context);
 
-		await expect(context.setState).toBeCalledWith({ dialog: 'greetings', askDesafio: false });
 		await expect(context.sendText).toBeCalledWith(flow.greetings.text1);
 		await expect(context.sendText).toBeCalledWith(flow.greetings.text2);
-
-		await expect(context.setState).toBeCalledWith({ askDesafio: true });
-		await expect(context.sendText).toBeCalledWith(flow.asksDesafio.intro, opt.asksDesafio);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 });
 
@@ -344,7 +341,8 @@ describe('duvidasNaoPrep', () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.duvidasNaoPrep.dnpMeTestar);
-		await expect(context.sendText).toBeCalledWith(flow.autoteste.offerType, await getQR(flow.autoteste.offerTypeBtn));
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.intro);
+		await expect(duvidas.opcaoAutoteste).toBeCalledWith(context);
 	});
 });
 
@@ -719,9 +717,11 @@ describe('alarmePrep', () => {
 
 		it('alarmeFinal - encerra, manda request e vai pro menu', async () => {
 			const context = cont.quickReplyContext('alarmeFinal1', 'alarmeFinal');
+			context.state.reminderSet = {};
 			await handler(context);
 
-			await expect(prepAPI.putUpdateReminderBefore).toBeCalledWith(context.session.user.id, await help.dateHorario(context.state.alarmeHora, context.state.alarmeMinuto));
+			await expect(context.setState).toBeCalledWith({ reminderSet: { prep_reminder_before: 1, prep_reminder_before_interval: await help.dateHorario(context.state.alarmeHora) } });
+			await expect(prepAPI.putUpdateReminderBefore).toBeCalledWith(context.session.user.id, context.state.reminderSet.prep_reminder_before_interval);
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUp));
 		});
@@ -748,9 +748,11 @@ describe('alarmePrep', () => {
 
 		it('alarmeJaTomeiFinal - encerra, manda request e vai pro menu', async () => {
 			const context = cont.quickReplyContext('alarmeJaTomeiFinal1', 'alarmeJaTomeiFinal');
+			context.state.reminderSet = {};
 			await handler(context);
 
-			await expect(prepAPI.putUpdateReminderAfter).toBeCalledWith(context.session.user.id, await help.dateHorario(context.state.alarmeHora));
+			await expect(context.setState).toBeCalledWith({ reminderSet: { prep_reminder_after: 1, prep_reminder_after_interval: await help.dateHorario(context.state.alarmeHora) } });
+			await expect(prepAPI.putUpdateReminderAfter).toBeCalledWith(context.session.user.id, context.state.reminderSet.prep_reminder_after_interval);
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFinal);
 			await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUp));
 		});
@@ -796,9 +798,11 @@ describe('alarmeAcabar - avisar quando acabar os comprimidos', () => {
 
 	it('alarmeAcabarFinal - escolheu opção, faz request e encerra', async () => {
 		const context = cont.quickReplyContext('alarmeFrasco1', 'alarmeAcabarFinal');
+		context.state.reminderSet = {};
 		await handler(context);
 
-		await expect(duvidas.alarmeAcabarFinal).toBeCalledWith(context, await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco));
+		await expect(duvidas.alarmeAcabarFinal).toBeCalledWith(context,
+			await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco, context.state.reminderSet));
 	});
 });
 
@@ -911,14 +915,14 @@ describe('autoteste', () => {
 		await handler(context);
 
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.intro);
-		await expect(context.sendText).toBeCalledWith(flow.autoteste.offerType, await getQR(flow.autoteste.offerTypeBtn));
+		await expect(duvidas.opcaoAutoteste).toBeCalledWith(context);
 	});
 
 	it('da triagem - offer options without intro', async () => {
 		const context = cont.quickReplyContext('autoteste', 'autoteste');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.autoteste.offerType, await getQR(flow.autoteste.offerTypeBtn));
+		await expect(duvidas.opcaoAutoteste).toBeCalledWith(context);
 	});
 
 	it('autoCorreio - ask endereço', async () => {

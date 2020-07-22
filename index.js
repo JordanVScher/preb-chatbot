@@ -602,7 +602,8 @@ module.exports = async function App(context) {
 				await duvidas.askHorario(context, flow.alarmePrep.alarmeNaHora1);
 				break;
 			case 'alarmeFinal':
-				await prepAPI.putUpdateReminderBefore(context.session.user.id, await help.dateHorario(context.state.alarmeHora));
+				await context.setState({ reminderSet: { prep_reminder_before: 1, prep_reminder_before_interval: await help.dateHorario(context.state.alarmeHora) } });
+				await prepAPI.putUpdateReminderBefore(context.session.user.id, context.state.reminderSet.prep_reminder_before_interval);
 				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await alarmeFollowUp(context);
 				break;
@@ -613,7 +614,8 @@ module.exports = async function App(context) {
 				await duvidas.askHorario(context, flow.alarmePrep.alarmeJaTomei1);
 				break;
 			case 'alarmeJaTomeiFinal':
-				await prepAPI.putUpdateReminderAfter(context.session.user.id, await help.dateHorario(context.state.alarmeHora));
+				await context.setState({ reminderSet: { prep_reminder_after: 1, prep_reminder_after_interval: await help.dateHorario(context.state.alarmeHora) } });
+				await prepAPI.putUpdateReminderAfter(context.session.user.id, context.state.reminderSet.prep_reminder_after_interval);
 				await context.sendText(flow.alarmePrep.alarmeFinal);
 				await alarmeFollowUp(context);
 				break;
@@ -633,7 +635,8 @@ module.exports = async function App(context) {
 				await context.sendText(flow.alarmePrep.alarmeAcabar.text2, await getQR(flow.alarmePrep.alarmeAcabar));
 				break;
 			case 'alarmeAcabarFinal':
-				await duvidas.alarmeAcabarFinal(context, await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco));
+				await duvidas.alarmeAcabarFinal(context,
+					await prepAPI.putUpdateAlarme(context.session.user.id, context.state.dataUltimaConsulta, context.state.alarmeFrasco, context.state.reminderSet));
 				break;
 			case 'tomeiPrep':
 				await context.sendText(flow.tomeiPrep.intro, await getQR(flow.tomeiPrep.introBtn));
