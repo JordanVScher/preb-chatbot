@@ -232,7 +232,7 @@ describe('join - já tomo prep', () => {
 		await expect(context.sendText).toBeCalledWith(flow.join.intro.text2, await getQR(flow.join.intro));
 	});
 
-	it('joinNaoToma - vai pro greetings e manda o desafio', async () => {
+	it('joinNaoToma - vai pro greetings somente', async () => {
 		const context = cont.quickReplyContext('joinNaoToma', 'greetings');
 		await handler(context);
 
