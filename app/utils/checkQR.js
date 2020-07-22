@@ -2,6 +2,21 @@ const { moment } = require('./helper');
 const { combinaCityDictionary } = require('./helper');
 const { checkAppointment } = require('./consulta-aux');
 
+function mainMenuFixedOrder(qr) {
+	if (qr[0].payload === 'aboutAmanda'
+		&& qr[1].payload === 'noProjeto'
+		&& qr[2].payload === 'join'
+		&& qr[3].payload === 'seePreventions'
+		&& qr[4].title === 'Quero Participar'
+		&& qr[5].payload === 'baterPapo'
+	) {
+		return [qr[4], qr[2], qr[1], qr[3], qr[0], qr[5]];
+	}
+
+	return qr;
+}
+
+
 async function checkMainMenu(context) {
 	let opt = [];
 	const baterPapo = { content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' };
@@ -29,6 +44,8 @@ async function checkMainMenu(context) {
 	// for not preps
 	const duvidaNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
 	const deuRuimNaoPrep = { content_type: 'text', title: 'Deu ruim pra vc', payload: 'deuRuimNaoPrep' };
+
+	// Quero participar; Já tomo PrEP; Já to no projeto; Prevenções, sobre a Amanda, Bater Papo
 
 	if (context.state.user.is_prep === null || context.state.user.is_prep === undefined) {
 		opt.push(baterPapo);
@@ -92,7 +109,7 @@ async function checkMainMenu(context) {
 	}
 
 	opt.reverse();
-	return { quick_replies: opt };
+	return { quick_replies: mainMenuFixedOrder(opt) };
 }
 
 async function buildAlarmeBtn(hasAlarm) {
