@@ -116,7 +116,7 @@ async function checkDate(date) {
 	if (monthDiff < -6) return 'A data da sua consulta passada não pode ser de mais de 6 meses atrás.';
 
 	const daysDiff = data.diff(today, 'days');
-	if (daysDiff > -15) return true; // data só é válida se aconteceu antes de 15 dias
+	if (daysDiff > -15) return { confirma: true, date }; // data só é válida se aconteceu antes de 15 dias
 
 	return date;
 }
@@ -126,8 +126,8 @@ async function alarmeDate(context) {
 	if (date) date = await checkDate(date);
 	if (!date || typeof date === 'string') {
 		await context.setState({ dialog: 'alarmeAcabarErro' });
-	} else if (typeof date === 'boolean') {
-		await context.setState({ dialog: 'alarmeConfirmaData' });
+	} else if (date && date.confirma) {
+		await context.setState({ dialog: 'alarmeConfirmaData', dataUltimaConsulta: help.moment(date.date).format('YYYY-MM-DD') });
 	} else {
 		await context.setState({ dialog: 'alarmeAcabarFrascos', dataUltimaConsulta: help.moment(date).format('YYYY-MM-DD') });
 	}
@@ -159,18 +159,20 @@ async function alarmeAcabarFinal(context, res) {
 		if (now > whenPillsEnd || isSameDayEnd) { // quando o dia que acaba é hoje ou antes de hoje
 			await context.sendText(flow.alarmePrep.alarmeAcabar.text5);
 			await putResetRunningOut(context.session.user.id, context.state.reminderSet);
+			await falarComHumano(context);
 		} else if (now > whenToWarn || isSameDayWarn) { // quando a data de avisar é hoje ou antes de hoje
 			const format = await help.moment(whenPillsEnd).format('DD/MM/YYYY');
 			await context.sendText(flow.alarmePrep.alarmeAcabar.text4.replace('<DATE>', format));
 			await putResetRunningOut(context.session.user.id, context.state.reminderSet);
+			await falarComHumano(context);
 		} else if (whenToWarn > now) { // dia pra avisar que acaba cai depois de hoje
 			await context.sendText(flow.alarmePrep.alarmeAcabar.text3.replace('<DATE>', data));
+			await sendMain(context);
 		}
 	} else {
 		await context.sendText(flow.alarmePrep.alarmeAcabar.fallback);
+		await sendMain(context);
 	}
-
-	await sendMain(context);
 }
 
 async function opcaoAutoteste(context) {

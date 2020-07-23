@@ -359,12 +359,13 @@ describe('checkDate', () => {
 		await expect(typeof res).toBe('string');
 	});
 
-	it('data within 6 months, within 15 days - boolean', async () => {
+	it('data within 6 months, within 15 days - object with confirma', async () => {
 		const data = new Date();
 		data.setDate(data.getDate() - 5);
 
 		const res = await duvidas.checkDate(data);
-		await expect(typeof res).toBe('boolean');
+		await expect(typeof res).toBe('object');
+		await expect(res.confirma).toBeTruthy();
 	});
 
 	it('data within 6 months, before 15 days - date', async () => {
@@ -394,6 +395,7 @@ describe('alarmeDate', () => {
 		const date = await duvidas.alarmeDate(context);
 
 		await expect(typeof date).toBe('string');
+
 		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabarErro' });
 	});
 
@@ -404,8 +406,10 @@ describe('alarmeDate', () => {
 
 		const date = await duvidas.alarmeDate(context);
 
-		await expect(typeof date).toBe('boolean');
-		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeConfirmaData' });
+
+		await expect(typeof date).toBe('object');
+		await expect(date.confirma).toBeTruthy();
+		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeConfirmaData', dataUltimaConsulta: help.moment(date.date).format('YYYY-MM-DD') });
 	});
 
 	it('formato válido, valor válido e passaram mais de 15 dias - salva data e vê opções de frascos', async () => {
@@ -422,7 +426,7 @@ describe('alarmeDate', () => {
 });
 
 describe('alarmeAcabarFinal', () => {
-	it('Tem data na resposta, já acabou os comprimidos - manda msg falando que já acabou os comprimidos', async () => {
+	it('Tem data na resposta, já acabou os comprimidos - manda msg falando que já acabou os comprimidos e falarComHumano', async () => {
 		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
 		const data = new Date();
 		data.setDate(data.getDate() - 30);
@@ -432,10 +436,10 @@ describe('alarmeAcabarFinal', () => {
 
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text5);
 		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
-		await expect(sendMain).toBeCalledWith(context);
+		await expect(falarComHumano).toBeCalledWith(context);
 	});
 
-	it('Tem data na resposta, mesmo dia que acaba os comprimidos - manda msg falando que já acabou os comprimidos', async () => {
+	it('Tem data na resposta, mesmo dia que acaba os comprimidos - manda msg falando que já acabou os comprimidos e falarComHumano', async () => {
 		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
 		const data = new Date();
 		data.setDate(data.getDate() - 15);
@@ -445,10 +449,10 @@ describe('alarmeAcabarFinal', () => {
 
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text5);
 		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
-		await expect(sendMain).toBeCalledWith(context);
+		await expect(falarComHumano).toBeCalledWith(context);
 	});
 
-	it('Tem data na resposta, aviso antes de hoje - manda msg com a data de quando vai acabar', async () => {
+	it('Tem data na resposta, aviso antes de hoje - manda msg com a data de quando vai acabar e falarComHumano', async () => {
 		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
 		const data = new Date();
 		data.setDate(data.getDate() - 1);
@@ -462,10 +466,10 @@ describe('alarmeAcabarFinal', () => {
 
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text4.replace('<DATE>', whenItEndsString));
 		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
-		await expect(sendMain).toBeCalledWith(context);
+		await expect(falarComHumano).toBeCalledWith(context);
 	});
 
-	it('Tem data na resposta, aviso cai hoje - manda msg com a data de quando vai acabar', async () => {
+	it('Tem data na resposta, aviso cai hoje - manda msg com a data de quando vai acabar e falarComHumano', async () => {
 		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
 		const data = new Date();
 		data.setDate(data.getDate());
@@ -479,7 +483,7 @@ describe('alarmeAcabarFinal', () => {
 
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text4.replace('<DATE>', whenItEndsString));
 		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
-		await expect(sendMain).toBeCalledWith(context);
+		await expect(falarComHumano).toBeCalledWith(context);
 	});
 
 	it('Tem data na resposta, depois de hoje - manda msg avisando quando vai avisar ', async () => {

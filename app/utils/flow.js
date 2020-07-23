@@ -486,7 +486,7 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		alarmeConfirmaData: 'Vc digitou a data correta?',
 		alarmeConfirmaDataBtn: {
 			menuOptions: ['Não', 'Sim'],
-			menuPostback: ['alarmeAcabar', 'alarmeSemMedicacao'],
+			menuPostback: ['alarmeAcabar', 'alarmeAcabarFrascos'],
 		},
 		alarmeSemMedicacao: 'Vc deve tá quase sem medicação...',
 		alarmeSemMedicacaoExtra: 'Axo q vc já tá ficando sem comprimidos, chama meus migles no whats ou liga q vão te ajudar a ñ ficar sem PrEP.',
