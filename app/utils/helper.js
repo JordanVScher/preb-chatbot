@@ -326,6 +326,13 @@ async function dateHorario(horario) {
 	return { date: ts, string: ts.toISOString().slice(11, 19) };
 }
 
+async function checkSameDay(date1, date2) {
+	const moment1 = moment(date1);
+	const moment2 = moment(date2);
+
+	return (moment1.isSame(moment2, 'day'));
+}
+
 module.exports = {
 	Sentry,
 	moment,
@@ -362,4 +369,5 @@ module.exports = {
 	getCombinaContact,
 	instagramDictionary,
 	dateHorario,
+	checkSameDay,
 };

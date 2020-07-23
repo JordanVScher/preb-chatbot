@@ -6,6 +6,8 @@ const { sendMain } = require('../app/utils/mainMenu');
 const { falarComHumano } = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
 const { putUpdateNotificacao22 } = require('../app/utils/prep_api');
+const { putResetRunningOut } = require('../app/utils/prep_api');
+
 
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
@@ -392,8 +394,7 @@ describe('alarmeDate', () => {
 		const date = await duvidas.alarmeDate(context);
 
 		await expect(typeof date).toBe('string');
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.invalid);
-		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabar' });
+		await expect(context.setState).toBeCalledWith({ dialog: 'alarmeAcabarErro' });
 	});
 
 	it('formato válido e valor válido, mas foi a menos de 15 dias - pede para confirmar', async () => {
@@ -421,11 +422,74 @@ describe('alarmeDate', () => {
 });
 
 describe('alarmeAcabarFinal', () => {
-	it('Tem data na resposta - manda msg com a data', async () => {
+	it('Tem data na resposta, já acabou os comprimidos - manda msg falando que já acabou os comprimidos', async () => {
 		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
-		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: '01-01-1970' });
+		const data = new Date();
+		data.setDate(data.getDate() - 30);
+		const dataString = await help.moment(data).format('DD/MM/YYYY');
 
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text3.replace('<DATE>', '01/01/1970'));
+		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text5);
+		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('Tem data na resposta, mesmo dia que acaba os comprimidos - manda msg falando que já acabou os comprimidos', async () => {
+		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
+		const data = new Date();
+		data.setDate(data.getDate() - 15);
+		const dataString = await help.moment(data).format('DD/MM/YYYY');
+
+		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text5);
+		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('Tem data na resposta, aviso antes de hoje - manda msg com a data de quando vai acabar', async () => {
+		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
+		const data = new Date();
+		data.setDate(data.getDate() - 1);
+		const dataString = await help.moment(data).format('DD/MM/YYYY');
+
+		const whenItEnds = new Date();
+		whenItEnds.setDate(whenItEnds.getDate() + 14);
+		const whenItEndsString = await help.moment(whenItEnds).format('DD/MM/YYYY');
+
+		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text4.replace('<DATE>', whenItEndsString));
+		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('Tem data na resposta, aviso cai hoje - manda msg com a data de quando vai acabar', async () => {
+		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
+		const data = new Date();
+		data.setDate(data.getDate());
+		const dataString = await help.moment(data).format('DD/MM/YYYY');
+
+		const whenItEnds = new Date();
+		whenItEnds.setDate(whenItEnds.getDate() + 15);
+		const whenItEndsString = await help.moment(whenItEnds).format('DD/MM/YYYY');
+
+		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text4.replace('<DATE>', whenItEndsString));
+		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('Tem data na resposta, depois de hoje - manda msg avisando quando vai avisar ', async () => {
+		const context = await cont.quickReplyContext('alarmeAcabarFinal', 'alarmeAcabarFinal');
+		const data = new Date();
+		data.setDate(data.getDate() + 1);
+		const dataString = await help.moment(data).format('DD/MM/YYYY');
+		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text3.replace('<DATE>', dataString));
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
@@ -566,6 +630,7 @@ describe('alarmeCancelar', () => {
 		const context = await cont.quickReplyContext('alarmeCancelar', 'alarmeCancelar');
 		await duvidas.alarmeCancelar(context, { id: 1 });
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeCancelarSuccess);
+		await context.setState({ reminderSet: {} });
 		await expect(sendMain).toBeCalledWith(context);
 	});
 

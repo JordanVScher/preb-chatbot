@@ -44,10 +44,21 @@ module.exports = {
 		return makeRequest({ url: `${apiUri}/api/chatbot/recipient`, method: 'put', params: { fb_id, prep_reminder_after: 1, prep_reminder_after_interval: string } });
 	},
 
-	async putUpdateAlarme(fb_id, data, frascos, reminderSet) {
+	async putUpdateAlarme(fb_id, data, frascos, reminderSet = {}) {
 		const params = {
 			fb_id, prep_reminder_running_out: 1, prep_reminder_running_out_date: data, prep_reminder_running_out_count: frascos,
 		};
+
+		if (reminderSet.prep_reminder_before) params.prep_reminder_before = reminderSet.prep_reminder_before;
+		if (reminderSet.prep_reminder_before_interval) params.prep_reminder_before_interval = reminderSet.prep_reminder_before_interval.string;
+		if (reminderSet.prep_reminder_after) params.prep_reminder_after = reminderSet.prep_reminder_after;
+		if (reminderSet.prep_reminder_after_interval) params.prep_reminder_after_interval = reminderSet.prep_reminder_after_interval.string;
+
+		return makeRequest({ url: `${apiUri}/api/chatbot/recipient`, method: 'put', params });
+	},
+
+	async putResetRunningOut(fb_id, reminderSet = {}) {
+		const params = { fb_id, prep_reminder_running_out: 0 };
 
 		if (reminderSet.prep_reminder_before) params.prep_reminder_before = reminderSet.prep_reminder_before;
 		if (reminderSet.prep_reminder_before_interval) params.prep_reminder_before_interval = reminderSet.prep_reminder_before_interval.string;

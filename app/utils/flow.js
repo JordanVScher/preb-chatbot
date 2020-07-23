@@ -478,8 +478,10 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 			text2: 'Quantos frascos vc retirou nesta data?',
 			menuOptions: ['1 Frasco', '2 Frascos', '3 Frascos', '4 Frascos'],
 			menuPostback: ['alarmeFrasco1', 'alarmeFrasco2', 'alarmeFrasco3', 'alarmeFrasco4'],
-			text3: 'Okay, nos meus cálculos seus comprimidos vão acabar dia <DATE>, te lembro 15 dias antes!',
-			fallback: 'Okay, irei te avisar quando seus comprimidor vão acabar.',
+			text3: 'Okay, nos meus cálculos tenho que te avisar no dia <DATE>!',
+			text4: 'Deve estar acabando! Pelos meus cálculos, seus comprimidos acabam em <DATE>!',
+			text5: 'Seus comprimidos já acabaram! Agende uma nova consulta o mais cedo possível!',
+			fallback: 'Obs, tive um erro e não consegui salvar sua notificação',
 		},
 		alarmeConfirmaData: 'Vc digitou a data correta?',
 		alarmeConfirmaDataBtn: {

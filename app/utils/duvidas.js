@@ -4,6 +4,7 @@ const { sendMain } = require('./mainMenu');
 const { falarComHumano } = require('./mainMenu');
 const help = require('./helper');
 const { putUpdateNotificacao22 } = require('./prep_api');
+const { putResetRunningOut } = require('./prep_api');
 
 async function showCombinaContact(context) {
 	const msg = await help.getCombinaContact(context.state.user.combina_city);
@@ -147,7 +148,24 @@ async function alarmeSemMedicacao(context) {
 async function alarmeAcabarFinal(context, res) {
 	if (res && res.running_out_wait_until && typeof res.running_out_wait_until === 'string') {
 		const data = res.running_out_wait_until.replace(/-/g, '/');
-		await context.sendText(flow.alarmePrep.alarmeAcabar.text3.replace('<DATE>', data));
+		const now = new Date();
+		const whenToWarn = await formatDate(data);
+		const whenPillsEnd = await formatDate(data);
+		whenPillsEnd.setDate(whenPillsEnd.getDate() + 15);
+
+		const isSameDayWarn = await help.checkSameDay(now, whenToWarn);
+		const isSameDayEnd = await help.checkSameDay(now, whenPillsEnd);
+
+		if (now > whenPillsEnd || isSameDayEnd) { // quando o dia que acaba é hoje ou antes de hoje
+			await context.sendText(flow.alarmePrep.alarmeAcabar.text5);
+			await putResetRunningOut(context.session.user.id, context.state.reminderSet);
+		} else if (now > whenToWarn || isSameDayWarn) { // quando a data de avisar é hoje ou antes de hoje
+			const format = await help.moment(whenPillsEnd).format('DD/MM/YYYY');
+			await context.sendText(flow.alarmePrep.alarmeAcabar.text4.replace('<DATE>', format));
+			await putResetRunningOut(context.session.user.id, context.state.reminderSet);
+		} else if (whenToWarn > now) { // dia pra avisar que acaba cai depois de hoje
+			await context.sendText(flow.alarmePrep.alarmeAcabar.text3.replace('<DATE>', data));
+		}
 	} else {
 		await context.sendText(flow.alarmePrep.alarmeAcabar.fallback);
 	}
@@ -244,6 +262,7 @@ async function sendAlarmeIntro(context, btn, hasAlarm) {
 async function alarmeCancelar(context, { id }) {
 	if (id) {
 		await context.sendText(flow.alarmePrep.alarmeCancelarSuccess);
+		await context.setState({ reminderSet: {} });
 	} else {
 		await context.sendText(flow.alarmePrep.alarmeCancelarFailure);
 	}
