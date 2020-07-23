@@ -12,7 +12,7 @@ const checkQR = require('../app/utils/checkQR');
 const mainMenu = require('../app/utils/mainMenu');
 const joinToken = require('../app/utils/joinToken');
 const help = require('../app/utils/helper');
-const { sendMail } = require('../app/utils/mailer');
+const mailer = require('../app/utils/mailer');
 const { getQR } = require('../app/utils/attach');
 
 jest.mock('../app/utils/helper');
@@ -952,7 +952,7 @@ describe('autoteste', () => {
 		await handler(context);
 
 		await expect(prepAPI.postAutoTeste).toBeCalledWith(context.session.user.id, context.state.autoCorreioEndereco, context.state.autoCorreioContato);
-		await expect(sendMail).toBeCalledWith('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context));
+		await expect(mailer.sendMailCorreio).toBeCalledWith('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context), context.state.user.city);
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioEnd);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});

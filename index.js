@@ -13,7 +13,7 @@ const timer = require('./app/utils/timer');
 const checkQR = require('./app/utils/checkQR');
 const joinToken = require('./app/utils/joinToken');
 const duvidas = require('./app/utils/duvidas');
-const { sendMail } = require('./app/utils/mailer');
+const mailer = require('./app/utils/mailer');
 const { getQR } = require('./app/utils/attach');
 const { addNewUser } = require('./app/utils/labels');
 const { sentryError } = require('./app/utils/error');
@@ -561,7 +561,7 @@ module.exports = async function App(context) {
 				break;
 			case 'autoCorreioEnd':
 				await prepAPI.postAutoTeste(context.session.user.id, context.state.autoCorreioEndereco, context.state.autoCorreioContato);
-				await sendMail('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context));
+				await mailer.sendMailCorreio('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context), context.state.user.city);
 				await context.sendText(flow.autoteste.autoCorreioEnd);
 				await mainMenu.sendMain(context);
 				break;
@@ -733,7 +733,7 @@ module.exports = async function App(context) {
 				if (!res || !res.id || res.error) { sentryError('Erro ao salvar telefone do recipient no prep', { res, phone: context.state.phone, user: context.state.user }); }
 				await context.setState({ leftContact: true });
 				await context.sendText(flow.leavePhone.success);
-				await sendMail('AMANDA - Novo telefone de contato', await help.buildMail(context, 'Whatsapp', context.state.phone), context.state.user.city);
+				await mailer.sendMail('AMANDA - Novo telefone de contato', await help.buildMail(context, 'Whatsapp', context.state.phone), context.state.user.city);
 				await contactFollowUp(context);
 				break;
 			}
@@ -745,7 +745,7 @@ module.exports = async function App(context) {
 				if (!res || !res.id || res.error) { sentryError('Erro ao salvar instagram do recipient no prep', { res, phone: context.state.phone, user: context.state.user }); }
 				await context.setState({ leftContact: true });
 				await context.sendText(flow.leavePhone.success);
-				await sendMail('AMANDA - Novo instagram de contato', await help.buildMail(context, 'Instagram', context.state.insta), context.state.user.city);
+				await mailer.sendMail('AMANDA - Novo instagram de contato', await help.buildMail(context, 'Instagram', context.state.insta), context.state.user.city);
 				await contactFollowUp(context);
 				break;
 			}

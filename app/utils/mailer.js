@@ -15,6 +15,12 @@ const mails = {
 	3: process.env.MAILCONTATO3,
 };
 
+const correioMails = {
+	1: process.env.MAILCORREIO1,
+	2: process.env.MAILCORREIO2,
+	3: process.env.MAILCORREIO3,
+};
+
 const transporter = nodemailer.createTransport({
 	service,
 	host,
@@ -66,6 +72,27 @@ async function sendMail(subject, text, cityId) {
 	}
 }
 
+async function sendMailCorreio(subject, text, cityId) {
+	let to = '';
+
+	if (process.env.ENV === 'prod' || process.env.ENV === 'homol') {
+		to = correioMails[cityId];
+	} else {
+		to = process.env.MAILTESTE;
+	}
+
+	const options = {
+		from, to, subject, text,
+	};
+
+	try {
+		const info = await transporter.sendMail(options);
+		console.log(`'${subject}' para ${to}:`, info.messageId);
+	} catch (err) {
+		await sendMailError(`Error seding mail to ${to} => \n\n`, console.log(JSON.stringify(err, null, 2)));
+	}
+}
+
 
 async function sendHTMLMail(subject, to, html, anexo) {
 	const options = {
@@ -82,5 +109,5 @@ async function sendHTMLMail(subject, to, html, anexo) {
 }
 
 module.exports = {
-	sendMail, sendMailError, sendHTMLMail,
+	sendMail, sendMailError, sendHTMLMail, sendMailCorreio,
 };
