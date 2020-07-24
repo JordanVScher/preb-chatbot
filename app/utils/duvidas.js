@@ -182,7 +182,8 @@ async function opcaoAutoteste(context) {
 	const autoTenteBtn = [];
 
 	autoTenteBtn.push(autoCorreio);
-	if (context.state.user && context.state.user.city) autoTenteBtn.push(autoServico);
+
+	if (context.state.user && context.state.user.voucher_type !== 'combina') autoTenteBtn.push(autoServico);
 	autoTenteBtn.push(voltar);
 
 	await context.sendText(flow.autoteste.offerType, { quick_replies: autoTenteBtn });
