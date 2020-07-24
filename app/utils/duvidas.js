@@ -5,6 +5,7 @@ const { falarComHumano } = require('./mainMenu');
 const help = require('./helper');
 const { putUpdateNotificacao22 } = require('./prep_api');
 const { putResetRunningOut } = require('./prep_api');
+const { sendMailCorreio } = require('./mailer');
 
 async function showCombinaContact(context) {
 	const msg = await help.getCombinaContact(context.state.user.combina_city);
@@ -234,6 +235,17 @@ async function buildServicoInfo(cityID, cityType) {
 	return text;
 }
 
+async function sendAutoServiçoMail(context) {
+	let text = 'O usuário abaixo viu informações clicou no botão de Pegar no Serviço';
+
+	if (context.state.sessionUser.name) text += `\n\nNome: ${context.state.sessionUser.name}`;
+	if (context.state.sessionUser.id) text += `\nFacebook ID: ${context.state.sessionUser.id}`;
+	if (context.state.user.voucher_type) text += `\nVoucher: ${context.state.user.voucher_type}`;
+	if (context.state.phone) text += `\nTelefone: ${context.state.phone}`;
+	if (context.state.insta) text += `\nInstagram: ${context.state.insta}`;
+
+	await sendMailCorreio('Usuário interessado em Auto Serviço', text, context.state.user.city);
+}
 
 async function sendAutoServicoMsg(context, cityType) {
 	await context.setState({ autotesteServicoMsg: await buildServicoInfo(context.state.user.city, cityType) });
@@ -241,6 +253,7 @@ async function sendAutoServicoMsg(context, cityType) {
 	if (context.state.autotesteServicoMsg) await context.sendText(context.state.autotesteServicoMsg);
 	await context.sendText(flow.autoteste.autoServicoEnd);
 	await sendMain(context);
+	await sendAutoServiçoMail(context);
 }
 
 async function autotesteServico(context) {

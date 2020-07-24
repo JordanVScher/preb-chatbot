@@ -7,11 +7,13 @@ const { falarComHumano } = require('../app/utils/mainMenu');
 const { getQR } = require('../app/utils/attach');
 const { putUpdateNotificacao22 } = require('../app/utils/prep_api');
 const { putResetRunningOut } = require('../app/utils/prep_api');
+const { sendMailCorreio } = require('../app/utils/mailer');
 
 
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/attach');
 jest.mock('../app/utils/prep_api');
+jest.mock('../app/utils/mailer');
 
 describe('prepDuvidaFollowUp', () => {
 	const txt = 'foobar';
@@ -526,7 +528,7 @@ describe('autotesteServico', () => {
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoServicoSisprepSP, await getQR(flow.autoteste.autoServicoSisprepSPBtn));
 	});
 
-	it('sus e não-SP - mostra os dados, encerra e vai pro menu', async () => {
+	it('sus e não-SP - mostra os dados, encerra e vai pro menu e manda e-mail pra avisar', async () => {
 		const context = await cont.textContext('autoServico', 'autoServico');
 		context.state.user = { voucher_type: 'sus', city: '1' };
 		context.state.autotesteServicoMsg = 'foobar';
@@ -536,6 +538,7 @@ describe('autotesteServico', () => {
 		await expect(context.sendText).toBeCalledWith(context.state.autotesteServicoMsg);
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoServicoEnd);
 		await expect(sendMain).toBeCalledWith(context);
+		await expect(sendMailCorreio).toBeCalled();
 	});
 });
 
