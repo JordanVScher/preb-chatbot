@@ -16,6 +16,7 @@ const mails = {
 };
 
 const correioMails = {
+	0: process.env.MAILCORREIO0,
 	1: process.env.MAILCORREIO1,
 	2: process.env.MAILCORREIO2,
 	3: process.env.MAILCORREIO3,
@@ -77,6 +78,7 @@ async function sendMailCorreio(subject, text, cityId) {
 
 	if (process.env.ENV === 'prod' || process.env.ENV === 'homol') {
 		to = correioMails[cityId];
+		if (!to) to = correioMails[0]; // eslint-disable-line
 	} else {
 		to = process.env.MAILTESTE;
 	}
@@ -92,7 +94,6 @@ async function sendMailCorreio(subject, text, cityId) {
 		await sendMailError(`Error seding mail to ${to} => \n\n`, console.log(JSON.stringify(err, null, 2)));
 	}
 }
-
 
 async function sendHTMLMail(subject, to, html, anexo) {
 	const options = {
