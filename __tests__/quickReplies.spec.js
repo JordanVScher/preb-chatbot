@@ -1,6 +1,6 @@
 const cont = require('./context');
 const flow = require('../app/utils/flow');
-const opt = require('../app/utils/options');
+// const opt = require('../app/utils/options');
 const handler = require('../index');
 const MaAPI = require('../app/chatbot_api');
 const quiz = require('../app/utils/quiz');
@@ -482,7 +482,7 @@ describe('deuRuimPrep', () => {
 		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
-	describe('drpNaoTomei - Não tomei', () => {
+	describe('drpNaoTomei - Não tomei Prep', () => {
 		it('intro, não combina - msg e quiz', async () => {
 			const context = cont.quickReplyContext('drpNaoTomei', 'drpNaoTomei');
 			await handler(context);

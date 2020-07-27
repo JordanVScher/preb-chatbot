@@ -403,7 +403,7 @@ it('autotesteOption - city 3 - nothing changes', async () => {
 describe('checkDeuRuimPrep', () => {
 	const options = deuRuimPrep;
 
-	it('on sisprep - see Não Tomei option', async () => {
+	it('on sisprep - see Não Tomei Prep option', async () => {
 		const context = cont.quickReplyContext('deuRuimPrep', 'deuRuimPrep');
 		context.state.user.voucher_type = 'sisprep';
 
@@ -416,7 +416,7 @@ describe('checkDeuRuimPrep', () => {
 		await expect(found && found.title).toBeTruthy();
 	});
 
-	it('on combina - see Não Tomei option', async () => {
+	it('on combina - see Não Tomei Prep option', async () => {
 		const context = cont.quickReplyContext('deuRuimPrep', 'deuRuimPrep');
 		context.state.user.voucher_type = 'combina';
 
@@ -429,7 +429,7 @@ describe('checkDeuRuimPrep', () => {
 		await expect(found && found.title).toBeTruthy();
 	});
 
-	it('on sus - dont see Não Tomei option', async () => {
+	it('on sus - dont see Não Tomei Prep option', async () => {
 		const context = cont.quickReplyContext('deuRuimPrep', 'deuRuimPrep');
 		context.state.user.voucher_type = 'sus';
 
