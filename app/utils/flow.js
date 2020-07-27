@@ -323,7 +323,7 @@ https://projetocombina.wordpress.com/`,
 	},
 	deuRuimPrep: {
 		text1: 'Deu ruim! Vou te dar algumas opções pra te ajudar a resolver algum possivel problema. Sobre o q vc qr falar?',
-		menuOptions: ['Não Tomei Prep', 'IST', 'Efeitos Colaterais', 'Amigos', 'Parceiros', 'Família', 'Sofri Violência'],
+		menuOptions: ['Não Tomei PrEP', 'IST', 'Efeitos Colaterais', 'Amigos', 'Parceiros', 'Família', 'Sofri Violência'],
 		menuPostback: ['drpNaoTomei', 'drpIST', 'drpEfeitos', 'drpAmigos', 'drpParceiros', 'drpFamilia', 'drpViolencia'],
 		drpFamilia1: 'É uó falar com as pessoas da nossa família e ñ podermos nos abrir... Também não é fácil conversar sobre sexualidade com nossos pais. Aí vc pensa: como contar de uma forma que eles vão entender e me apoiar? Principalmente quando falamos de prevenção!',
 		drpFamilia2: 'Se vc já sabe que usar PrEP, fazer testagens etc são importantes, minha dica é: Procure conversar primeiro com alguém da família q vc tem proximidade e depois, se sentir confortável, fale com as outras pessoas envolvidas. Agora se alguém descobriu e deu ruim, fale com a gente, podemos te ajudar!',
@@ -494,7 +494,7 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 	tomeiPrep: {
 		intro: 'Vc tomou os dois comprimidos iniciais?',
 		introBtn: {
-			menuOptions: ['Sim', 'Não tomei Prep'],
+			menuOptions: ['Sim', 'Não tomei PrEP'],
 			menuPostback: ['tomouPrep', 'NaoTomouPrep'],
 		},
 		horas: 'Que horas?',

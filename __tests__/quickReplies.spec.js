@@ -482,7 +482,7 @@ describe('deuRuimPrep', () => {
 		await expect(duvidas.prepDuvidaFollowUp).toBeCalledWith(context);
 	});
 
-	describe('drpNaoTomei - Não tomei Prep', () => {
+	describe('drpNaoTomei - Não tomei PrEP', () => {
 		it('intro, não combina - msg e quiz', async () => {
 			const context = cont.quickReplyContext('drpNaoTomei', 'drpNaoTomei');
 			await handler(context);
