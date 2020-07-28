@@ -60,6 +60,8 @@ async function checkMainMenu(context) {
 			if (context.state.user.is_target_audience === 0) {
 				if (!context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; } else
 				if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
+				const indexJoin = opt.findIndex((x) => x.payload === 'join'); if (indexJoin) opt.splice(indexJoin, 1);
+				const indexProjeto = opt.findIndex((x) => x.payload === 'noProjeto'); if (indexProjeto) opt.splice(indexProjeto, 1);
 			}
 
 
