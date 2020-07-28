@@ -60,7 +60,7 @@ async function handleQuizResposta(context) {
 	}
 
 	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.entrar_em_contato === 0) {
-		await context.setState({ dialog: 'querBrincadeira', publicoInteresseEnd: true, naoPublico: true });
+		await context.setState({ dialog: 'offerBrincadeira2', publicoInteresseEnd: true, naoPublico: true });
 		return false;
 	}
 

@@ -103,6 +103,11 @@ module.exports = {
 		menuOptions: ['Quiz', 'Conversar'],
 		menuPostback: ['querBrincadeira', 'offerConversar'],
 	},
+	offerBrincadeira2: {
+		text1: 'Adorei te conhecer! Tá afim de fazer um QUIZ pra saber Q DIVA VC É NA SARRAÇÃO?',
+		menuOptions: ['Quero', 'Agora não'],
+		menuPostback: ['querBrincadeira', 'mainMenu'],
+	},
 	recrutamento: {
 		text1: 'Blz! Qro te conhecer melhor! Tenho umas perguntas e tudo q vc responder é SI-GI-LO-SO, ok?',
 		menuOptions: ['Bora', 'Não'],
@@ -147,7 +152,7 @@ module.exports = {
 		salvadorMsg: 'Traga seu documento e cartão SUS. Caso não tenha entre em contato pelo telefone informado para receber orientações.',
 		cityMessages: {
 			1: 'Legal! O projeto prep 1519 funciona no centro de referencia da juventude CRJ fica na praça da estação, pertinho da estação central do metrô. Rua Guaicurus 50. ',
-			2: '', // TEXTO de Salvador ainda pendente
+			2: 'No segundo andar do Casarão da Diversidade que fica na rua do Tijolo nº 08 - Pelourinho, perto do Elevador Lacerda.',
 			3: 'O bate papo pode ser na Casa 1 q fica na Rua Adoniran Barbosa, 151 próximo do metrô São Joaquim ou no CTA Henfil na Rua Libero Badaró, 144 próximo do metrô Anhangabau!',
 		},
 	},
@@ -176,7 +181,7 @@ module.exports = {
 		autoCorreioContato: 'Me deixa um contato, pode ser e-mail, insta ou whats!',
 		autoCorreioEnd: 'Close! Vamo entrar em contato com vc pra confirmar! Bjs!',
 		autoServicoCombina: 'Ahazou! Passa no serviço q vc faz acompanhamento de PrEP pra retirar!',
-		autoServicoSUS: 'Passa no serviço q vc faz acompanhamento de PrEP pra retirar: http://www.aids.gov.br/pt-br/autoteste/onde-obter-um-autoteste-de-hiv',
+		autoServicoSUS: 'Pode ser importante procurar um serviço! Eu tenho um link bafo do SUS pro Brasil todo, cata: http://www.aids.gov.br/pt-br/acesso_a_informacao/servicos-de-saude',
 		autoServicoSisprepSP: 'Qual serviço vc prefere retirar seu autoteste?',
 		autoServicoSisprepSPBtn: {
 			menuOptions: ['CTA Henfil', 'Casa 1'],
@@ -279,7 +284,7 @@ module.exports = {
 		},
 	},
 	duvidasPrep: {
-		text1: 'Bora acabar agora com essas dúvidas sobre PrEP? Escolhe aí e eu te explico tudinhu!',
+		text1: 'Bora acabar agora com essas duvidas sobre Prep? Escolhe ai e eu te explico tuduuu! ',
 		dpDrogas: 'Usar hormônios não influencia no efeito da PrEP! Mas se vc tá se hormonizando é close avaliar o caso de acordo com suas doses com um profissional do projeto!',
 		dpHormonios: 'Se vc tá se hormonizando, é close vc avaliar seu caso de acordo com suas doses, mas usar hormônios ñ influencia no efeito da PrEP!',
 		dpEsqueci: 'Se ontem vc esqueceu de tomar e hj rolou sem camisinha, tome o comprimido assim que se lembrar, q vai ficar tudo bapho! Esquecer um dia só ñ corta o efeito, mas, se vc ficar mais de 2 dias sem tomar e não usar camisinha em alguma relação, aí ñ funciona e talvez vc precise tomar PEP.',
@@ -305,7 +310,7 @@ https://projetocombina.wordpress.com/`,
 	},
 	duvidasNaoPrep: {
 		text1: 'Bora acabar agora com essas duvidas sobre Prep? Escolhe ai e eu te explico tuduuu!',
-		dnpDrogas: 'Beber álcool e usar outras drogas ñ influencia no efeito da PrEP. É um luxo!',
+		dnpDrogas: 'Beber álcool e usar outras drogas não influencia no efeito da PrEP. Mas caso fique colocada n vai esquecer de tomar a PrEP!',
 		dnpHormonios: 'Se vc tá se hormonizando, é close vc avaliar seu caso de acordo com suas doses, mas usar hormônios ñ influencia no efeito da PrEP!',
 		dnpMeTestar: 'O medo some quando vc se testa e tira o peso da dúvida, vc já ouviu falar no autoteste? Vou te explicar esse bafo!',
 		end: 'Se ainda quiser falar mais sobre isso, tem meus amigues humanes. O que acha?',
@@ -465,7 +470,7 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		},
 		alarmeNaHora1: 'Qual horário?',
 		alarmeNaHora2: 'E os minutos?',
-		alarmeFinal: 'Pronto! Seu alarme foi configurado! Amanhã te chamo pra perguntar ou te lembrar de tomar os comprimidos.',
+		alarmeFinal: 'Pronto! Seu alarme foi configurado! Vou te chamar pra perguntar ou te lembrar de tomar os comprimidos!',
 		alarmeJaTomei1: 'Q horas vc costuma tomar sua PrEP?',
 		alarmeJaTomei2: 'E os minutos?',
 		alarmeFollowUp: 'Quer q eu te lembre quando seu estoque de PrEP vai acabar?',
@@ -528,7 +533,7 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		text1: 'Vamo conversar com meus amigues humanes?',
 		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],
 		menuPostback: ['pesquisaPresencial', 'pesquisaVirtual', 'pesquisaNao'],
-		sus: 'Passa no serviço que você faz acompanhamento pra retirar: http://www.aids.gov.br/pt-br/autoteste/onde-obter-um-autoteste-de-hiv',
+		sus: 'Pode ser importante procurar um serviço! Eu tenho um link bafo do SUS pro Brasil todo, cata: http://www.aids.gov.br/pt-br/acesso_a_informacao/servicos-de-saude',
 		combina: 'Para mais informações, entre em contato em:',
 	},
 	quizCityMsg: {

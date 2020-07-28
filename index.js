@@ -749,6 +749,9 @@ module.exports = async function App(context) {
 			case 'offerBrincadeira':
 				await context.sendText(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
 				break;
+			case 'offerBrincadeira2':
+				await context.sendText(flow.offerBrincadeira2.text1, await getQR(flow.offerBrincadeira2));
+				break;
 			case 'querBrincadeira':
 				await quiz.answerQuiz(context, 'quiz_brincadeira');
 				break;
