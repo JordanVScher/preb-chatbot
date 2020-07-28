@@ -113,16 +113,6 @@ async function buildPhoneMsg(cityId, introText, phones, extraMsg) {
 	return text;
 }
 
-async function buildContatoMsg(cityID) {
-	let msg = '';
-	msg += locationDictionary[cityID];
-	msg += `\n\nTelefone: ${telefoneDictionary[cityID]}`;
-	msg += `\nTelefone de Emergência: ${emergenciaDictionary[cityID]}`;
-	msg += `\nEndereço: ${extraMessageDictionary[cityID]}`;
-
-	return msg;
-}
-
 async function formatHour(hour) {
 	if (hour.toString().length === 1) { return `0${hour}`; }
 	return hour;
@@ -354,7 +344,6 @@ module.exports = {
 	buildMailAutoTeste,
 	buildConsultaFinal,
 	getPhoneValid,
-	buildContatoMsg,
 	buildLabels,
 	accents,
 	siglaMap,

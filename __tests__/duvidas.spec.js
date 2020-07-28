@@ -519,6 +519,16 @@ describe('autotesteServico', () => {
 		await expect(sendMain).toBeCalledWith(context);
 	});
 
+	it('sus - vê msg e vai para menu', async () => {
+		const context = await cont.textContext('autoServico', 'autoServico');
+		context.state.user = { voucher_type: 'sus' };
+
+		await duvidas.autotesteServico(context);
+
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoServicoSUS);
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
 	it('sisprep e SP - oferece duas opções de local', async () => {
 		const context = await cont.textContext('autoServico', 'autoServico');
 		context.state.user = { voucher_type: 'sisprep', city: '3' };
@@ -528,9 +538,9 @@ describe('autotesteServico', () => {
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoServicoSisprepSP, await getQR(flow.autoteste.autoServicoSisprepSPBtn));
 	});
 
-	it('sus e não-SP - mostra os dados, encerra e vai pro menu e manda e-mail pra avisar', async () => {
+	it('sisprep e não-SP - mostra os dados, encerra e vai pro menu e manda e-mail pra avisar', async () => {
 		const context = await cont.textContext('autoServico', 'autoServico');
-		context.state.user = { voucher_type: 'sus', city: '1' };
+		context.state.user = { voucher_type: 'sisprep', city: '1' };
 		context.state.autotesteServicoMsg = 'foobar';
 
 		await duvidas.autotesteServico(context);

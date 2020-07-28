@@ -43,14 +43,8 @@ async function handleQuizResposta(context) {
 		return false;
 	}
 
-	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && context.state.currentQuestion.code === 'A6b') {
-		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
-		return false;
-	}
-
-
 	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.entrar_em_contato === 1) {
-		await context.setState({ dialog: 'falarComHumano', publicoInteresseEnd: true });
+		await context.setState({ dialog: 'falarComHumano', publicoInteresseEnd: true, naoPublico: true });
 		return false;
 	}
 
@@ -62,6 +56,11 @@ async function handleQuizResposta(context) {
 	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz && sentAnswer.is_target_audience) {
 		await context.setState({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true });
 		await context.setState({ whenBecameTargetAudience: new Date() });
+		return false;
+	}
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.entrar_em_contato === 0) {
+		await context.setState({ dialog: 'querBrincadeira', publicoInteresseEnd: true, naoPublico: true });
 		return false;
 	}
 

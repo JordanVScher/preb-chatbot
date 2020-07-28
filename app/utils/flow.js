@@ -176,6 +176,7 @@ module.exports = {
 		autoCorreioContato: 'Me deixa um contato, pode ser e-mail, insta ou whats!',
 		autoCorreioEnd: 'Close! Vamo entrar em contato com vc pra confirmar! Bjs!',
 		autoServicoCombina: 'Ahazou! Passa no serviço q vc faz acompanhamento de PrEP pra retirar!',
+		autoServicoSUS: 'Passa no serviço q vc faz acompanhamento de PrEP pra retirar: http://www.aids.gov.br/pt-br/autoteste/onde-obter-um-autoteste-de-hiv',
 		autoServicoSisprepSP: 'Qual serviço vc prefere retirar seu autoteste?',
 		autoServicoSisprepSPBtn: {
 			menuOptions: ['CTA Henfil', 'Casa 1'],
@@ -347,7 +348,7 @@ Se o enjôo continuar intenso, seguido de vômitos ou ñ melhorar após 3-7 dias
 Se vc se incomodar muito com os gases:
 - Evite alimentos como feijão, repolho, batata doce, ovo cozido e refrigerantes.
 
-OBS: Chá de erva- docepode ajudar!`,
+OBS: Chá de erva-doce pode ajudar!`,
 			drpDiarreia: 'A PrEP não costuma causar diarreia forte, mas pode aumentar o número de evacuações e diminuir um pouco a consistência das fezes, em algumas pessoas.\n- Beber bastante água(mais de 2,5- 3l/ dia) e evitar alimentos que soltam o intestino pode ajudar',
 			drpDorCabeca: 'É Pouco frequente dor de cabeça relacionada à PrEP costuma ser leve e melhorar após 2-3 dias.',
 			drpMoleza: 'Sintoma raro, dura em geral 1.2 dias e costuma melhorar com repouso.',
@@ -385,7 +386,7 @@ OBS: Chá de erva- docepode ajudar!`,
 			drnpExposicao2: 'E ainda ñ existem dados suficientes pra quem tá se hormonizando, então, é mais recomendado vc procurar um serviço de saúde pra estender a PEP.',
 			drnpExposicao3: 'Vamo agendar pra pensar isso melhor?',
 			drnpTomeiCerto: 'Pra terminar o seguimento de PEP, é importante fazer um teste 30 dias após a exposição.\nBora marcar esse babado?',
-			followUpAgendamento: 'Partiu! Bora falar com humanes! Q opção é melhor pra vc??',
+			followUpAgendamento: 'Bora falar com humanes! O que você prefere?',
 			menuOptions: ['Não tomei tudo', 'Não me senti bem', 'Perdi o medicamento', 'Tive nova exposição', 'Tomei certo e agora?'],
 			menuPostback: ['drnpTomeiTudo', 'drnpNaoSentiBem', 'drnpPerdi', 'drnpExposicao', 'drnpTomeiCerto'],
 		},

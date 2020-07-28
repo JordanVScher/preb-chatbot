@@ -756,16 +756,6 @@ module.exports = async function App(context) {
 			case 'dontLeaveContact':
 				await contactFollowUp(context);
 				break;
-			case 'getContact':
-				await context.setState({ contatoMsg: await help.buildContatoMsg(context.state.user.city) });
-				if (context.state.contatoMsg) {
-					await context.sendText(context.state.contatoMsg);
-					await context.typing(1000 * 5);
-					await mainMenu.sendMain(context);
-				} else {
-					await mainMenu.sendMain(context);
-				}
-				break;
 			case 'offerConversar':
 			case 'recrutamento':
 				await research.recrutamento(context);
