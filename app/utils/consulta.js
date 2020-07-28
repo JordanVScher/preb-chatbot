@@ -8,6 +8,7 @@ const checkQR = require('./checkQR');
 const aux = require('./consulta-aux');
 const { sendMain } = require('./mainMenu');
 const { sentryError } = require('./error');
+const mainMenu = require('./mainMenu');
 
 async function sendSalvador(context) {
 	if (context.state.user && context.state.user.city && context.state.user.city.toString() === '2') { await context.sendText(flow.consulta.salvadorMsg); }
@@ -163,6 +164,15 @@ async function checkSP(context) {
 
 async function startConsulta(context) {
 	// user must be part of target__audience and have never had an appointment nor have left his contact info
+
+	if (context.state.user.voucher_type === 'combina') {
+		await mainMenu.falarComCombina(context);
+		return;
+	} if (context.state.user.voucher_type === 'sus') {
+		await mainMenu.falarComSUS(context);
+		return;
+	}
+
 
 	if (context.state.user.voucher_type || context.state.user.is_prep
  || (context.state.user.is_target_audience && ((await aux.checkAppointment(context.session.user.id) === false) && !context.state.leftContact))) {

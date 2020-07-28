@@ -1,6 +1,7 @@
 const Sentry = require('@sentry/node');
 const moment = require('moment');
 const accents = require('remove-accents');
+const encodeUrl = require('encodeurl');
 const flow = require('./flow');
 
 // Sentry - error reporting
@@ -186,6 +187,26 @@ function buildMailAutoTeste(context) {
 	return text;
 }
 
+
+function buildWhatsappLink(phone, msg) {
+	if (!phone || !msg) return null;
+	const template = 'https://api.whatsapp.com/send?phone=<PHONE>&text=<TEXT>';
+	const res = [];
+
+	const format = phone.replace(/[^a-zA-Z0-9]/g, '');
+	const phones = format.split('ou');
+	const newMessage = encodeUrl(msg);
+
+	phones.forEach((e) => {
+		let aux = template;
+		aux = aux.replace('<PHONE>', e).replace('<TEXT>', newMessage);
+		res.push(aux);
+	});
+
+
+	return res;
+}
+
 function buildPhoneText(calendar, cidadeID) {
 	let text = calendar ? calendar.phone : '';
 	if (!text) text = telefoneDictionary[cidadeID];
@@ -293,9 +314,15 @@ function getCombinaContact(combinaCity) {
 
 	const city = combinaCity;
 	const phone = combinaContactDictionary[cityID];
-	if (cityID && phone) return `${city}: 📞 ${phone}`;
+	if (cityID && phone) {
+		let aux = flow.falarComHumano.combina;
+		aux += `\n\n${city}: 📞 ${phone}`;
+		aux += `\nWhatsapp: ${buildWhatsappLink(phone, flow.whatsappText.combina)}`;
+		return aux;
+	}
 
-	let res = '';
+
+	let res = `${flow.falarComHumano.combina}\n\n`;
 	const keys = Object.keys(combinaCityDictionary);
 	keys.forEach((e) => {
 		res += `${combinaCityDictionary[e]}: 📞 ${combinaContactDictionary[e]}\n`;

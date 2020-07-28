@@ -21,39 +21,18 @@ const { buildNormalErrorMsg } = require('./app/utils/error');
 
 async function vouPensarMelhorFollowUp(context) {
 	await mainMenu.sendMain(context);
-
-	// if (context.state.nextDialog === 'ofertaPesquisaEnd') {
-	// 	await research.ofertaPesquisaEnd(context);
-	// } else {
-	// 	await mainMenu.sendMain(context);
-	// }
 }
 
 async function meContaDepoisFollowUp(context) {
 	await mainMenu.sendMain(context);
-	// if (context.state.nextDialog === 'ofertaPesquisaEnd') {
-	// 	await context.setState({ meContaDepois: true });
-	// 	await research.ofertaPesquisaSim(context);
-	// } else {
-	// 	await mainMenu.sendMain(context);
-	// }
 }
 
 async function contactFollowUp(context) {
 	await mainMenu.sendMain(context);
-
-	// if (context.state.nextDialog === 'ofertaPesquisaEnd') {
-	// 	await research.ofertaPesquisaEnd(context);
-	// } else if (context.state.nextDialog === 'calendario') {
-	// 	await consulta.startConsulta(context);
-	// } else {
-	// 	await mainMenu.sendMain(context);
-	// }
 }
 
 const inicioDuvidasNaoPrep = async (context) => context.sendText(flow.duvidasNaoPrep.text1, await getQR(flow.duvidasNaoPrep));
 const inicioTriagemSQ = async (context) => context.sendText(flow.triagemSQ.intro, await getQR(flow.triagemSQ));
-// const drnpFollowUpTriagem = async (context) => mainMenu.falarComHumano(context, null, flow.deuRuimNaoPrep.followUpTriagem);
 const drnpFollowUpAgendamento = async (context, text) => mainMenu.falarComHumano(context, null, text || flow.deuRuimNaoPrep.drnpPEPNao.followUpAgendamento);
 const alarmeFollowUp = async (context) => context.sendText(flow.alarmePrep.alarmeFollowUp, await getQR(flow.alarmePrep.alarmeFollowUpBtn));
 
@@ -97,7 +76,9 @@ module.exports = async function App(context) {
 		if (context.event.isPostback) {
 			await context.setState({ lastPBpayload: context.event.postback.payload, lastQRpayload: '' });
 			await context.setState({ onTextQuiz: false, sendExtraMessages: false, paginationDate: 1, paginationHour: 1, goBackToQuiz: false }); // eslint-disable-line
-			if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
+			if (context.state && context.state.dialog === 'joinCombinaCity') {
+				await context.setState({ dialog: 'joinCombinaCity' });
+			} else if (!context.state.dialog || context.state.dialog === '' || context.state.lastPBpayload === 'greetings') { // because of the message that comes from the comment private-reply
 				await context.setState({ dialog: 'greetings' });
 				// await context.setState({ dialog: 'notiAlarmeB_Sim' });
 				// await context.setState({ dialog: 'alarmeAcabarFinal' });
@@ -243,6 +224,8 @@ module.exports = async function App(context) {
 			} else if (context.state.whatWasTyped === process.env.COMBINA_VOUCHER_GET && process.env.ENV !== 'prod') {
 				await joinToken.printCombinaVouchers(context);
 				await context.setState({ dialog: 'mainMenu' });
+			} else if (context.state.dialog === 'joinCombinaCity') {
+				await context.setState({ dialog: 'joinCombinaCity' });
 			} else {
 				await DF.dialogFlow(context);
 			}

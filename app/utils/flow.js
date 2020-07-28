@@ -528,6 +528,8 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		text1: 'Vamo conversar com meus amigues humanes?',
 		menuOptions: ['Bate papo presencial', 'Bate papo virtual', 'Vou pensar melhor'],
 		menuPostback: ['pesquisaPresencial', 'pesquisaVirtual', 'pesquisaNao'],
+		sus: 'Passa no serviço que você faz acompanhamento pra retirar: http://www.aids.gov.br/pt-br/autoteste/onde-obter-um-autoteste-de-hiv',
+		combina: 'Para mais informações, entre em contato em:',
 	},
 	quizCityMsg: {
 		1: 'Ô trem! Terra boa demais da conta, sô!',
@@ -538,5 +540,9 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		default: 'Entre com as horas desejadas.',
 		example: 'Digite as horas no formato hora:minuto. Exemplo: 23:40, 09:10 e 00:05.',
 		failure: 'Não entendi esse horário, tente novamente.',
+	},
+	whatsappText: {
+		agendamento: 'Oi, eu vim da Amanda Selfie',
+		combina: 'Oi, eu vim da Amanda Selfie',
 	},
 };
