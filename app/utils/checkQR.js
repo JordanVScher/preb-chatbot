@@ -95,6 +95,7 @@ async function checkMainMenu(context) {
 
 		if (context.state.user.integration_token) { // replace token options if user has one
 			const index = opt.findIndex((x) => x.payload === 'join'); if (index) opt[index] = seePrepToken;
+			const index2 = opt.findIndex((x) => x.payload === 'noProjeto');	if (index2) opt.splice(index2, 1);
 		}
 	} else if (context.state.user.is_prep === 1) {
 		if (context.state.user.voucher_type === 'sisprep') {
