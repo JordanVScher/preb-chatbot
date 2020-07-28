@@ -542,7 +542,7 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		failure: 'Não entendi esse horário, tente novamente.',
 	},
 	whatsappText: {
-		agendamento: 'Oi, eu vim da Amanda Selfie',
-		combina: 'Oi, eu vim da Amanda Selfie',
+		agendamento: 'Oie! Vim através da Amanda!',
+		combina: 'Oie! Vim através da Amanda!',
 	},
 };

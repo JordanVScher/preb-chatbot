@@ -31,6 +31,24 @@ async function separateString(someString) {
 	return { firstString, secondString };
 }
 
+function buildWhatsappLink(phone, msg) {
+	if (!phone || !msg) return null;
+	const template = 'https://api.whatsapp.com/send?phone=<PHONE>&text=<TEXT>';
+	const res = [];
+
+	const format = phone.replace(/[^a-zA-Z0-9]/g, '');
+	const phones = format.split('ou');
+	const newMessage = encodeUrl(msg);
+
+	phones.forEach((e) => {
+		let aux = template;
+		aux = aux.replace('<PHONE>', e).replace('<TEXT>', newMessage);
+		res.push(aux);
+	});
+
+	return res.join('\nou\n');
+}
+
 async function formatDialogFlow(text) {
 	let result = text.toLowerCase();
 	result = await accents.remove(result);
@@ -105,6 +123,8 @@ async function buildPhoneMsg(cityId, introText, phones, extraMsg) {
 
 	if (cityId && validOptions.includes(cityId.toString())) { // check if cityID is a valid option
 		text += `\n${locationDictionary[cityId]}: ${phones[cityId]}`;
+		const whatsapp = buildWhatsappLink(phones[cityId], flow.whatsappText.agendamento);
+		if (whatsapp) text += `\nWhatsapp: ${whatsapp}`;
 	} else { // if it isnt send every valid phone number
 		validOptions.forEach((element) => { text += `\n${locationDictionary[element]}: ${phones[element]}`; });
 	}
@@ -188,25 +208,6 @@ function buildMailAutoTeste(context) {
 }
 
 
-function buildWhatsappLink(phone, msg) {
-	if (!phone || !msg) return null;
-	const template = 'https://api.whatsapp.com/send?phone=<PHONE>&text=<TEXT>';
-	const res = [];
-
-	const format = phone.replace(/[^a-zA-Z0-9]/g, '');
-	const phones = format.split('ou');
-	const newMessage = encodeUrl(msg);
-
-	phones.forEach((e) => {
-		let aux = template;
-		aux = aux.replace('<PHONE>', e).replace('<TEXT>', newMessage);
-		res.push(aux);
-	});
-
-
-	return res;
-}
-
 function buildPhoneText(calendar, cidadeID) {
 	let text = calendar ? calendar.phone : '';
 	if (!text) text = telefoneDictionary[cidadeID];
@@ -216,11 +217,15 @@ function buildPhoneText(calendar, cidadeID) {
 
 async function buildConsultaFinal(state, chosenHour) {
 	let result = '';
+	let whatsapp = '';
 	const phone = buildPhoneText(chosenHour.calendar, state.user.city);
+	if (phone) whatsapp = buildWhatsappLink(phone, flow.whatsappText.agendamento);
+
 
 	result += `🏠: ${buildCidadeText(chosenHour.calendar)}\n`;
 	result += `⏰: ${await formatDate(chosenHour.datetime_start, chosenHour.time)}\n`;
 	if (phone) result += `📞: ${phone}\n`;
+	if (whatsapp) result += `Whatsapp: ${whatsapp}`;
 	return result.trim();
 }
 

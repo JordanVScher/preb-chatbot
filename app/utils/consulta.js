@@ -135,7 +135,7 @@ async function checkSP(context) {
 		const extraMsg = flow.consulta.cityMessages[cidade];
 		const { calendars } = await prepApi.getAvailableCities();
 
-		if (!cidade) { // if user has no cidade send him back to the menu
+		if (!cidade || cidade === '4') { // if user has no cidade send him back to the menu
 			await sendMain(context);
 		} else if (cidade.toString() === '3') { // ask location for SP
 			const spLocations = calendars.filter((x) => x.state === 'SP');
