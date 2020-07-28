@@ -42,7 +42,7 @@ function buildWhatsappLink(phone, msg) {
 
 	phones.forEach((e) => {
 		let aux = template;
-		aux = aux.replace('<PHONE>', e).replace('<TEXT>', newMessage);
+		aux = aux.replace('<PHONE>', `55${e}`).replace('<TEXT>', newMessage);
 		res.push(aux);
 	});
 
