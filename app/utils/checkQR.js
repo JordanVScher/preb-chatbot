@@ -58,10 +58,10 @@ async function checkMainMenu(context) {
 		if (context.state.publicoInteresseEnd) {
 			const index = opt.findIndex((x) => x.payload === 'beginQuiz');
 			if (context.state.user.is_target_audience === 0) {
-				if (!context.state.quizBrincadeiraEnd) { if (index) opt[index] = quizBrincadeira; } else
-				if (!context.state.preCadastroSignature) { if (index) opt[index] = termos; }
-				const indexJoin = opt.findIndex((x) => x.payload === 'join'); if (indexJoin) opt.splice(indexJoin, 1);
-				const indexProjeto = opt.findIndex((x) => x.payload === 'noProjeto'); if (indexProjeto) opt.splice(indexProjeto, 1);
+				if (!context.state.quizBrincadeiraEnd) { if (typeof index === 'number') opt[index] = quizBrincadeira; } else
+				if (!context.state.preCadastroSignature) { if (typeof index === 'number') opt[index] = termos; }
+				const indexJoin = opt.findIndex((x) => x.payload === 'join'); if (typeof indexJoin === 'number') opt.splice(indexJoin, 1);
+				const indexProjeto = opt.findIndex((x) => x.payload === 'noProjeto'); if (typeof indexProjeto === 'number') opt.splice(indexProjeto, 1);
 			}
 
 
@@ -96,8 +96,8 @@ async function checkMainMenu(context) {
 			|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter((x) => x.title !== 'Quero Participar'); } // dont show quiz option if user has finished the quiz
 
 		if (context.state.user.integration_token) { // replace token options if user has one
-			const index = opt.findIndex((x) => x.payload === 'join'); if (index) opt[index] = seePrepToken;
-			const index2 = opt.findIndex((x) => x.payload === 'noProjeto');	if (index2) opt.splice(index2, 1);
+			const index = opt.findIndex((x) => x.payload === 'join'); if (typeof index === 'number') opt[index] = seePrepToken;
+			const index2 = opt.findIndex((x) => x.payload === 'noProjeto'); if (typeof index2 === 'number') opt.splice(index2, 1);
 		}
 	} else if (context.state.user.is_prep === 1) {
 		if (context.state.user.voucher_type === 'sisprep') {
@@ -112,6 +112,9 @@ async function checkMainMenu(context) {
 	}
 
 	opt.reverse();
+
+	const sobreIndex = opt.findIndex((x) => x.payload === 'aboutAmanda'); if (typeof sobreIndex === 'number') opt.push(opt.splice(sobreIndex, 1)[0]);
+
 	return { quick_replies: mainMenuFixedOrder(opt) };
 }
 
