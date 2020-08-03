@@ -75,7 +75,11 @@ async function getAssociatedLabels(PSID) {
 		const aux = await getUserLabels(PSID, next);
 		const { data } = aux;
 
-		next = aux.paging.next;
+		if (aux && aux.paging && aux.paging.next) {
+			next = aux.paging.next;
+		} else {
+			next = false;
+		}
 
 		if (data) result.push(...data);
 	} while (next);
