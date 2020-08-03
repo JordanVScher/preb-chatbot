@@ -1,7 +1,9 @@
 const { MessengerClient } = require('messaging-api-messenger');
 const { sentryError } = require('./helper');
 
-const config = require('../../bottender.config').channels.messenger;
+let config = require('../../bottender.config').channels.messenger;
+
+if (!config) config = {};
 
 const client = MessengerClient.connect({
 	accessToken: config.accessToken,
