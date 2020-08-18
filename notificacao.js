@@ -6,6 +6,7 @@ const { getRecipientPrep } = require('./app/utils/prep_api');
 const { sentryError } = require('./app/utils/error');
 const { getQR } = require('./app/utils/attach');
 const { moment } = require('./app/utils/helper');
+const { findConvidado } = require('./app/utils/helper');
 const { sendBroadcast } = require('./app/utils/broadcast');
 const presquisaTexts = require('./app/utils/flow').ofertaPesquisaSim;
 const { falarComHumano } = require('./app/utils/flow');
@@ -40,8 +41,9 @@ async function notificacaoOfertaPesquisa() {
 		const sessionUser = file._state && file._state.sessionUser ? file._state.sessionUser : { name: '' };
 		const userName = sessionUser.name;
 		const userID = file.user.id;
+		const convidado = findConvidado(userName);
 
-		if (file._state.whenBecameTargetAudience) { // check if user has a date from when he became part of target audience
+		if (file._state.whenBecameTargetAudience && !convidado) { // check if user has a date from when he became part of target audience
 			const timeTest = await checkTimeDifference(new Date(file.user._updatedAt)); // check if enough time has passed since then to send the message
 
 			if (timeTest) {

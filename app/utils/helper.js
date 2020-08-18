@@ -355,6 +355,11 @@ async function checkSameDay(date1, date2) {
 	return (moment1.isSame(moment2, 'day'));
 }
 
+function findConvidado(username) {
+	const match = username.match(/Convidado\s\d{4}$/, 'i');
+	return !!match;
+}
+
 module.exports = {
 	Sentry,
 	moment,
@@ -391,4 +396,5 @@ module.exports = {
 	instagramDictionary,
 	dateHorario,
 	checkSameDay,
+	findConvidado,
 };
