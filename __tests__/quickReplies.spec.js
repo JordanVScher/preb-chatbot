@@ -673,7 +673,7 @@ describe('alarmePrep', () => {
 		const context = cont.quickReplyContext('alarmeDiaria', 'alarmeDiaria');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo, await getQR(flow.alarmePrep.comoAjudoBtn));
+		await expect(duvidas.askHorario).toBeCalledWith(context, flow.alarmePrep.alarmeNaHora1);
 	});
 
 	it('alarmeCancelar - chama alarmeCancelar com request', async () => {
@@ -695,7 +695,6 @@ describe('alarmePrep', () => {
 			const context = cont.quickReplyContext('alarmeNaHora', 'alarmeNaHora');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ dialog: 'askHorario' });
 			await expect(duvidas.askHorario).toBeCalledWith(context, flow.alarmePrep.alarmeNaHora1);
 		});
 
@@ -703,7 +702,6 @@ describe('alarmePrep', () => {
 			const context = cont.textContext('askHorario', 'askHorario');
 			await handler(context);
 
-			await expect(context.setState).toBeCalledWith({ dialog: 'askHorario' });
 			await expect(duvidas.checkHorario).toBeCalledWith(context, 'alarmeHora', 'alarmeFinal', 'askHorario');
 		});
 

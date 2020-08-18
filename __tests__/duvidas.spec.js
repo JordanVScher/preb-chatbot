@@ -81,7 +81,9 @@ describe('alarmeConfigurar', () => {
 		context.state.user.voucher_type = 'foobar';
 
 		await duvidas.alarmeConfigurar(context);
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.comoAjudo, await getQR(flow.alarmePrep.comoAjudoBtn));
+		// calls askHorario
+		await expect(context.setState).toBeCalledWith({ dialog: 'askHorario' });
+		await expect(context.sendText).toBeCalled();
 	});
 });
 

@@ -565,7 +565,7 @@ module.exports = async function App(context) {
 				await mainMenu.sendMain(context);
 				break;
 			case 'alarmeDiaria':
-				await context.sendText(flow.alarmePrep.comoAjudo, await getQR(flow.alarmePrep.comoAjudoBtn));
+				await duvidas.askHorario(context, flow.alarmePrep.alarmeNaHora1);
 				break;
 			case 'alarmeCancelarConfirma': {
 				let msg = await help.buildAlarmeMsg(context.state.user) || '';
@@ -579,7 +579,6 @@ module.exports = async function App(context) {
 			case 'alarmeNaHora':
 			case 'askHorario':
 			case 'alarmeMinuto':
-				await context.setState({ dialog: 'askHorario' });
 				await duvidas.askHorario(context, flow.alarmePrep.alarmeNaHora1);
 				break;
 			case 'alarmeFinal':

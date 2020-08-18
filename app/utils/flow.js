@@ -459,11 +459,11 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 			menuPostback: ['alarmeSobDemanda', 'alarmeDiaria'],
 		},
 		sobDemanda: 'Vou te ajudar a tomar o esquema certinho dos comprimidos. Clica no botão "TOMEI", no seu menu principal, quando vc tomar a dose dupla antes de transar.',
-		comoAjudo: 'Me diga como você prefere me configurar:',
-		comoAjudoBtn: {
-			menuOptions: ['Lembrar pra tomar', 'Perguntar se tomei'],
-			menuPostback: ['alarmeNaHora', 'alarmeJaTomei'],
-		},
+		// comoAjudo: 'Me diga como você prefere me configurar:',
+		// comoAjudoBtn: {
+		// 	menuOptions: ['Lembrar pra tomar', 'Perguntar se tomei'],
+		// 	menuPostback: ['alarmeNaHora', 'alarmeJaTomei'],
+		// },
 		alarmeNaHora1: 'Qual horário?',
 		alarmeNaHora2: 'E os minutos?',
 		alarmeFinal: 'Pronto! Seu alarme foi configurado! Vou te chamar pra perguntar ou te lembrar de tomar os comprimidos!',

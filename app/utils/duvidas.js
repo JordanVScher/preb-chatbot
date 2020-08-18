@@ -33,14 +33,6 @@ async function prepDuvidaFollowUp(context, txt) {
 	}
 }
 
-async function alarmeConfigurar(context) {
-	if (context.state.user.voucher_type === 'combina') {
-		await context.sendText(flow.alarmePrep.comoTomando, await getQR(flow.alarmePrep.comoTomandoBtn));
-	} else {
-		await context.sendText(flow.alarmePrep.comoAjudo, await getQR(flow.alarmePrep.comoAjudoBtn));
-	}
-}
-
 async function alarmeHorario(page = 1, btnParam, textType = 1) {
 	if (page < 0) { page = 2; }
 	if (page > 2) { page = 0; }
@@ -315,6 +307,8 @@ async function naoTransouEnd(context) {
 }
 
 async function askHorario(context, introText) {
+	await context.setState({ dialog: 'askHorario' });
+
 	let text = introText ? introText.trim() : flow.askHorario.default;
 	text += `\n${flow.askHorario.example}`;
 
@@ -334,6 +328,15 @@ async function checkHorario(context, stateName, successDialog, invalidDialog) {
 	await context.sendText(flow.askHorario.failure);
 	if (invalidDialog) await context.setState({ dialog: invalidDialog });
 	return null;
+}
+
+
+async function alarmeConfigurar(context) {
+	if (context.state.user.voucher_type === 'combina') {
+		await context.sendText(flow.alarmePrep.comoTomando, await getQR(flow.alarmePrep.comoTomandoBtn));
+	} else {
+		await askHorario(context, flow.alarmePrep.alarmeNaHora1);
+	}
 }
 
 module.exports = {
