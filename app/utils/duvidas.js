@@ -141,10 +141,10 @@ async function alarmeSemMedicacao(context) {
 async function alarmeAcabarFinal(context, res) {
 	if (res && res.running_out_wait_until && typeof res.running_out_wait_until === 'string') {
 		const data = res.running_out_wait_until.replace(/-/g, '/');
+		const data2 = res.running_out_date.replace(/-/g, '/');
 		const now = new Date();
 		const whenToWarn = await formatDate(data);
-		const whenPillsEnd = await formatDate(data);
-		whenPillsEnd.setDate(whenPillsEnd.getDate() + 15);
+		const whenPillsEnd = await formatDate(data2);
 
 		const isSameDayWarn = await help.checkSameDay(now, whenToWarn);
 		const isSameDayEnd = await help.checkSameDay(now, whenPillsEnd);

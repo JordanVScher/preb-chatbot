@@ -435,8 +435,15 @@ describe('alarmeAcabarFinal', () => {
 		const data = new Date();
 		data.setDate(data.getDate() - 30);
 		const dataString = await help.moment(data).format('DD/MM/YYYY');
+		const data2 = data;
+		data2.setDate(data2.getDate() + 15);
+		const whenItEndsString = await help.moment(data2).format('DD/MM/YYYY');
 
-		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+		await duvidas.alarmeAcabarFinal(context, {
+			id: 1,
+			running_out_wait_until: dataString,
+			running_out_date: whenItEndsString,
+		});
 
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text5);
 		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
@@ -448,8 +455,15 @@ describe('alarmeAcabarFinal', () => {
 		const data = new Date();
 		data.setDate(data.getDate() - 15);
 		const dataString = await help.moment(data).format('DD/MM/YYYY');
+		const data2 = data;
+		data2.setDate(data2.getDate() + 15);
+		const whenItEndsString = await help.moment(data2).format('DD/MM/YYYY');
 
-		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+		await duvidas.alarmeAcabarFinal(context, {
+			id: 1,
+			running_out_wait_until: dataString,
+			running_out_date: whenItEndsString,
+		});
 
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text5);
 		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
@@ -461,12 +475,15 @@ describe('alarmeAcabarFinal', () => {
 		const data = new Date();
 		data.setDate(data.getDate() - 1);
 		const dataString = await help.moment(data).format('DD/MM/YYYY');
+		const data2 = data;
+		data2.setDate(data2.getDate() + 15);
+		const whenItEndsString = await help.moment(data2).format('DD/MM/YYYY');
 
-		const whenItEnds = new Date();
-		whenItEnds.setDate(whenItEnds.getDate() + 14);
-		const whenItEndsString = await help.moment(whenItEnds).format('DD/MM/YYYY');
-
-		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+		await duvidas.alarmeAcabarFinal(context, {
+			id: 1,
+			running_out_wait_until: dataString,
+			running_out_date: whenItEndsString,
+		});
 
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text4.replace('<DATE>', whenItEndsString));
 		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
@@ -479,11 +496,16 @@ describe('alarmeAcabarFinal', () => {
 		data.setDate(data.getDate());
 		const dataString = await help.moment(data).format('DD/MM/YYYY');
 
-		const whenItEnds = new Date();
-		whenItEnds.setDate(whenItEnds.getDate() + 15);
-		const whenItEndsString = await help.moment(whenItEnds).format('DD/MM/YYYY');
+		const data2 = data;
+		data2.setDate(data2.getDate() + 15);
+		const whenItEndsString = await help.moment(data2).format('DD/MM/YYYY');
 
-		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+
+		await duvidas.alarmeAcabarFinal(context, {
+			id: 1,
+			running_out_wait_until: dataString,
+			running_out_date: whenItEndsString,
+		});
 
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text4.replace('<DATE>', whenItEndsString));
 		await expect(putResetRunningOut).toBeCalledWith(context.session.user.id, context.state.reminderSet);
@@ -495,7 +517,15 @@ describe('alarmeAcabarFinal', () => {
 		const data = new Date();
 		data.setDate(data.getDate() + 1);
 		const dataString = await help.moment(data).format('DD/MM/YYYY');
-		await duvidas.alarmeAcabarFinal(context, { id: 1, running_out_wait_until: dataString });
+		const data2 = data;
+		data2.setDate(data2.getDate() + 15);
+		const whenItEndsString = await help.moment(data2).format('DD/MM/YYYY');
+
+		await duvidas.alarmeAcabarFinal(context, {
+			id: 1,
+			running_out_wait_until: dataString,
+			running_out_date: whenItEndsString,
+		});
 
 		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.alarmeAcabar.text3.replace('<DATE>', dataString));
 		await expect(sendMain).toBeCalledWith(context);
