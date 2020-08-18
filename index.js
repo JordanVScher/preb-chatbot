@@ -561,11 +561,7 @@ module.exports = async function App(context) {
 				await duvidas.alarmeConfigurar(context);
 				break;
 			case 'alarmeSobDemanda':
-				await context.sendText(flow.alarmePrep.sobDemanda, await getQR(flow.alarmePrep.sobDemandaBtn));
-				break;
-			case 'alarmeDemandaTudoBem':
-				await prepAPI.putRecipientPrep(context.session.user.id, { prep_reminder_on_demand: 1 });
-				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
+				await context.sendText(flow.alarmePrep.sobDemanda);
 				await mainMenu.sendMain(context);
 				break;
 			case 'alarmeDiaria':

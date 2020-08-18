@@ -665,15 +665,7 @@ describe('alarmePrep', () => {
 		const context = cont.quickReplyContext('alarmeSobDemanda', 'alarmeSobDemanda');
 		await handler(context);
 
-		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.sobDemanda, await getQR(flow.alarmePrep.sobDemandaBtn));
-	});
-
-	it('alarmeDemandaTudoBem - request e menu', async () => {
-		const context = cont.quickReplyContext('alarmeDemandaTudoBem', 'alarmeDemandaTudoBem');
-		await handler(context);
-
-		await expect(prepAPI.putRecipientPrep).toBeCalledWith(context.session.user.id, { prep_reminder_on_demand: 1 });
-		await expect(context.setState).toBeCalledWith({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
+		await expect(context.sendText).toBeCalledWith(flow.alarmePrep.sobDemanda);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
 
