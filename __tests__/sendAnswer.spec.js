@@ -28,7 +28,7 @@ it('send Answer - answer and image', async () => {
 	await expect(context.sendText).toBeCalledWith(context.state.resultTexts.secondString);
 
 	await expect(context.state.currentTheme.saved_attachment_type === 'image').toBeTruthy();
-	await expect(context.sendImage).toBeCalledWith({ attachment_id: context.state.currentTheme.saved_attachment_id });
+	await expect(context.Image).toBeCalledWith({ attachment_id: context.state.currentTheme.saved_attachment_id });
 	await expect(context.state.currentTheme.saved_attachment_type === 'video').toBeFalsy();
 	await expect(context.state.currentTheme.saved_attachment_type === 'audio').toBeFalsy();
 	await expect(context.state.currentTheme.saved_attachment_type === 'file').toBeFalsy();
@@ -50,7 +50,7 @@ it('send Answer - no answer text and video', async () => {
 
 	await expect(context.state.currentTheme.saved_attachment_type === 'image').toBeFalsy();
 	await expect(context.state.currentTheme.saved_attachment_type === 'video').toBeTruthy();
-	await expect(context.sendVideo).toBeCalledWith({ attachment_id: context.state.currentTheme.saved_attachment_id });
+	await expect(context.Video).toBeCalledWith({ attachment_id: context.state.currentTheme.saved_attachment_id });
 	await expect(context.state.currentTheme.saved_attachment_type === 'audio').toBeFalsy();
 	await expect(context.state.currentTheme.saved_attachment_type === 'file').toBeFalsy();
 

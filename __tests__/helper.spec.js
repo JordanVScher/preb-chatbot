@@ -244,3 +244,28 @@ describe('checkValidAddress', () => {
 		await expect(res).toBe(address);
 	});
 });
+
+describe('findConvidado', () => {
+	const testCases = [
+		{ name: 'Empty String - failure', username: '', res: false },
+		{ name: 'null - failure', username: null, res: false },
+		{ name: 'undefined - failure', username: undefined, res: false },
+		{ name: 'Object - failure', username: {}, res: false },
+		{ name: 'Number - failure', username: 1234, res: false },
+		{ name: 'Foobar - failure', username: 'foobar', res: false },
+		{ name: 'Convidado - failure', username: 'Convidado', res: false },
+		{ name: 'Convidado1234 - failure', username: 'Convidado1234', res: false },
+		{ name: 'Convidado_1234 - failure', username: 'Convidado_1234', res: false },
+		{ name: 'Convidado 123 - failure', username: 'Convidado 123', res: false },
+		{ name: 'Convidado 12345 - failure', username: 'Convidado 12345', res: false },
+		{ name: 'convidado 1234 - failure', username: 'convidado 1234', res: false },
+		{ name: 'Convidado 1234 - success', username: 'Convidado 1234', res: true },
+	];
+
+	testCases.forEach((test) => {
+		it(test.name, async () => {
+			const res = help.findConvidado(test.username);
+			await expect(res).toBe(test.res);
+		});
+	});
+});

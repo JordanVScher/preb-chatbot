@@ -356,8 +356,52 @@ async function checkSameDay(date1, date2) {
 }
 
 function findConvidado(username) {
+	if (!username || typeof username !== 'string') return false;
+
 	const match = username.match(/Convidado\s\d{4}$/, 'i');
 	return !!match;
+}
+
+async function Image(url) {
+	try {
+		if (findConvidado(this.state.sessionUser.name) === false) {
+			await this.sendImage(url);
+		}
+	} catch (error) {
+		Sentry.captureMessage('Não foi possível enviar imagem', { url, state: this.state });
+	}
+}
+
+async function Video(url) {
+	try {
+		console.log('url', url);
+
+		if (findConvidado(this.state.sessionUser.name) === false) {
+			await this.sendVideo(url);
+		}
+	} catch (error) {
+		Sentry.captureMessage('Não foi possível enviar vídeo', { url, state: this.state });
+	}
+}
+
+async function Audio(url) {
+	try {
+		if (findConvidado(this.state.sessionUser.name) === false) {
+			await this.sendAudio(url);
+		}
+	} catch (error) {
+		Sentry.captureMessage('Não foi possível enviar áudio', { url, state: this.state });
+	}
+}
+
+async function File(url) {
+	try {
+		if (findConvidado(this.state.sessionUser.name) === false) {
+			await this.sendFile(url);
+		}
+	} catch (error) {
+		Sentry.captureMessage('Não foi possível enviar arquivo', { url, state: this.state });
+	}
 }
 
 module.exports = {
@@ -397,4 +441,8 @@ module.exports = {
 	dateHorario,
 	checkSameDay,
 	findConvidado,
+	Image,
+	Video,
+	Audio,
+	File,
 };

@@ -19,7 +19,7 @@ async function sendFollowUpMsgs(context) {
 			} else {
 				await context.sendText(context.state.sentAnswer.followup_messages[i]);
 				if (context.state.resultImageUrl && context.state.resultImageUrl.length > 0) {
-					await context.sendImage(context.state.resultImageUrl); // send fun_questions result
+					await context.Image(context.state.resultImageUrl); // send fun_questions result
 					await context.setState({ resultImageUrl: '' });
 				}
 			}

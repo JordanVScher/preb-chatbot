@@ -48,6 +48,10 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 		typingOff: jest.fn(),
 		typing: jest.fn(),
 		getUserProfile: jest.fn(),
+		Image: jest.fn(),
+		Audio: jest.fn(),
+		Video: jest.fn(),
+		File: jest.fn(),
 	};
 }
 
@@ -99,6 +103,10 @@ function postbackContext(payload, title, dialog = 'prompt', lastActivity = new D
 		typingOff: jest.fn(),
 		typing: jest.fn(),
 		getUserProfile: jest.fn(),
+		Image: jest.fn(),
+		Audio: jest.fn(),
+		Video: jest.fn(),
+		File: jest.fn(),
 	};
 }
 
@@ -153,6 +161,10 @@ function textContext(text, dialog, lastActivity = new Date()) {
 		typingOff: jest.fn(),
 		typing: jest.fn(),
 		getUserProfile: jest.fn(),
+		Image: jest.fn(),
+		Audio: jest.fn(),
+		Video: jest.fn(),
+		File: jest.fn(),
 	};
 }
 

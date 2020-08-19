@@ -44,6 +44,10 @@ async function startInteration(fbID) {
 
 module.exports = async function App(context) {
 	try {
+		context.Image = help.Image;
+		context.Video = help.Video;
+		context.Audio = help.Audio;
+		context.File = help.File;
 		await context.setState({ sessionUser: { ...await context.getUserProfile() } });
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 		await addNewUser(context);
@@ -424,7 +428,7 @@ module.exports = async function App(context) {
 			case 'drpBolhas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas1);
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas2);
-				if (process.env.ENV !== 'local') await context.sendImage(flow.deuRuimPrep.drpIST.droBolhasImg);
+				if (process.env.ENV !== 'local') await context.Image(flow.deuRuimPrep.drpIST.droBolhasImg);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpFeridas':
@@ -433,7 +437,7 @@ module.exports = async function App(context) {
 				break;
 			case 'drpVerrugas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpVerrugas);
-				if (process.env.ENV !== 'local') await context.sendImage(flow.deuRuimPrep.drpIST.drpVerrugasIMg);
+				if (process.env.ENV !== 'local') await context.Image(flow.deuRuimPrep.drpIST.drpVerrugasIMg);
 				await duvidas.prepDuvidaFollowUp(context);
 				break;
 			case 'drpCorrimento':
@@ -471,7 +475,7 @@ module.exports = async function App(context) {
 			case 'drnpBolhas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas1);
 				await context.sendText(flow.deuRuimPrep.drpIST.drpBolhas2);
-				if (process.env.ENV !== 'local') await context.sendImage(flow.deuRuimPrep.drpIST.droBolhasImg);
+				if (process.env.ENV !== 'local') await context.Image(flow.deuRuimPrep.drpIST.droBolhasImg);
 				await mainMenu.falarComHumano(context);
 				break;
 			case 'drnpFeridas':
@@ -480,7 +484,7 @@ module.exports = async function App(context) {
 				break;
 			case 'drnpVerrugas':
 				await context.sendText(flow.deuRuimPrep.drpIST.drpVerrugas);
-				if (process.env.ENV !== 'local') await context.sendImage(flow.deuRuimPrep.drpIST.drpVerrugasIMg);
+				if (process.env.ENV !== 'local') await context.Image(flow.deuRuimPrep.drpIST.drpVerrugasIMg);
 				await mainMenu.falarComHumano(context);
 				break;
 			case 'drnpCorrimento':
@@ -835,7 +839,7 @@ module.exports = async function App(context) {
 				await quiz.answerQuiz(context, 'triagem');
 				break;
 			case 'aboutAmanda':
-				await context.sendImage(flow.aboutAmanda.gif);
+				await context.Image(flow.aboutAmanda.gif);
 				await context.sendText(flow.aboutAmanda.msgOne);
 				await context.sendText(flow.aboutAmanda.msgTwo);
 				await desafio.followUp(context);
