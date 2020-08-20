@@ -42,14 +42,10 @@ async function startInteration(fbID) {
 	if (!status || !status[0] || status[0].closed_at !== null) await prepAPI.postRecipientInteraction(fbID);
 }
 
-module.exports = async function App(context) {
+async function setUser(context) {
 	try {
-		context.Image = help.Image;
-		context.Video = help.Video;
-		context.Audio = help.Audio;
-		context.File = help.File;
-		await context.setState({ sessionUser: { ...await context.getUserProfile() } });
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
+		await context.setState({ sessionUser: { ...await context.getUserProfile() } });
 		await addNewUser(context);
 		await startInteration(context.session.user.id);
 		// console.log(context.state.politicianData);
@@ -61,7 +57,19 @@ module.exports = async function App(context) {
 			picture: context.state.sessionUser.profilePic,
 			extra_fields: await help.buildLabels(context.state.user.system_labels),
 		});
+	} catch (error) {
+		await sentryError('Erro no setUser', { error, state: context.state, session: context.session });
+	}
+}
 
+module.exports = async function App(context) {
+	try {
+		context.Image = help.Image;
+		context.Video = help.Video;
+		context.Audio = help.Audio;
+		context.File = help.File;
+
+		setUser(context);
 		// console.log('context.state.user', context.state.user);
 		// console.log('context.state.user.system_labels', await help.buildLabels(context.state.user.system_labels));
 		await timer.deleteTimers(context.session.user.id);
@@ -947,10 +955,11 @@ module.exports = async function App(context) {
 		}
 	} catch (error) {
 		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
-		await sentryError(await buildNormalErrorMsg(context.state.sessionUser.name, error.stack, context.state));
+		const name = context.state.sessionUser ? context.state.sessionUser.name : context.session.user.id;
+		await sentryError(await buildNormalErrorMsg(name, error.stack, context.state));
 		if (process.env.ENV !== 'local') {
 			await help.Sentry.configureScope(async (scope) => { // sending to sentry
-				scope.setUser({ username: context.state.sessionUser.name });
+				scope.setUser({ username: name });
 				scope.setExtra('state', context.state);
 				throw error;
 			});

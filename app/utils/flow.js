@@ -546,4 +546,10 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 		agendamento: 'Oie! Vim através da Amanda!',
 		combina: 'Oie! Vim através da Amanda!',
 	},
+	linksExample: {
+		Image: 'https://jestjs.io/img/jest.png',
+		Audio: 'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3',
+		Video: 'https://file-examples-com.github.io/uploads/2018/04/file_example_AVI_480_750kB.avi',
+		File: 'https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwigmZPgzqfrAhVCpFkKHSu_CS4QFjAFegQIBhAB&url=http%3A%2F%2Fwww.pdf995.com%2Fsamples%2Fpdf.pdf&usg=AOvVaw3HFvAQ7GNf5QjsUo05ot-j',
+	},
 };
