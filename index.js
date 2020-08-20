@@ -42,10 +42,31 @@ async function startInteration(fbID) {
 	if (!status || !status[0] || status[0].closed_at !== null) await prepAPI.postRecipientInteraction(fbID);
 }
 
+async function getUserProfile(context) {
+	const defaultSessionUser = {
+		name: context.session.user.id,
+		profilePic: '',
+	};
+
+	try {
+		const profile = await context.getUserProfile();
+		await context.setState({ sessionUser: { ...profile } });
+	} catch (error) {
+		console.log('getUserProfile error', error);
+		await context.setState({ sessionUser: defaultSessionUser });
+		await help.Sentry.configureScope(async (scope) => { // sending to sentry
+			scope.setUser({ username: context.session.user.id });
+			scope.setExtra('state', context.state);
+			throw error;
+		});
+	}
+}
+
+
 async function setUser(context) {
 	try {
 		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
-		await context.setState({ sessionUser: { ...await context.getUserProfile() } });
+		await getUserProfile(context);
 		await addNewUser(context);
 		await startInteration(context.session.user.id);
 		// console.log(context.state.politicianData);
@@ -58,9 +79,11 @@ async function setUser(context) {
 			extra_fields: await help.buildLabels(context.state.user.system_labels),
 		});
 	} catch (error) {
-		const { sessionUser } = context.state;
-		if (!sessionUser || !sessionUser.name) await context.setState({ sessionUser: { name: context.session.user.id } });
-		await sentryError('Erro no setUser', { error, state: context.state, session: context.session });
+		await help.Sentry.configureScope(async (scope) => { // sending to sentry
+			scope.setUser({ username: context.state.sessionUser.name });
+			scope.setExtra('state', context.state);
+			throw error;
+		});
 	}
 }
 
