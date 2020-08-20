@@ -58,6 +58,7 @@ async function setUser(context) {
 			extra_fields: await help.buildLabels(context.state.user.system_labels),
 		});
 	} catch (error) {
+		await context.setState({ sessionUser: { name: 'context.session.user.id' } });
 		await sentryError('Erro no setUser', { error, state: context.state, session: context.session });
 	}
 }
