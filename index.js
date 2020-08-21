@@ -53,13 +53,16 @@ async function getUserProfile(context) {
 
 	try {
 		const profile = await context.getUserProfile();
-		console.log('profile', profile);
+
 		if (profile && profile.name && profile.id) {
 			await context.setState({ id: profile.id });
 			await context.setState({ name: profile.name });
 			await context.setState({ firstName: profile.firstName });
 			await context.setState({ lastName: profile.lastName });
 			await context.setState({ profilePic: profile.profilePic });
+
+			const convidado = await help.findConvidado(context.state.name);
+			await context.setState({ convidado });
 		}
 	} catch (error) {
 		console.log('getUserProfile error', error);
