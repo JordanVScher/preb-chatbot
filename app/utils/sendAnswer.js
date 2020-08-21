@@ -34,7 +34,7 @@ module.exports.sendAnswer = async (context) => { // send answer from posicioname
 			}
 		} catch (error) {
 			await Sentry.configureScope(async (scope) => { // sending to sentry
-				scope.setUser({ username: context.state.sessionUser.name });
+				scope.setUser({ username: context.state.name });
 				scope.setExtra('state', context.state);
 				throw error;
 			});

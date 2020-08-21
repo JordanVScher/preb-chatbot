@@ -22,7 +22,7 @@ async function createIssue(context) {
 			{}, context.state.politicianData.issue_active);
 		if (process.env.ENV !== 'local') {
 			await Sentry.configureScope(async (scope) => { // sending to sentry
-				scope.setUser({ username: context.state.sessionUser.name });
+				scope.setUser({ username: context.state.name });
 				scope.setExtra('state', context.state);
 				scope.setExtra('intent', context.state.intentName);
 				scope.setExtra('knowledge', context.state.knowledge);

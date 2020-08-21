@@ -178,10 +178,10 @@ function buildCidadeText(consulta) {
 function buildMail(context, tipo, dado) {
 	let text = 'Olá, equipe PrEP.\n\n';
 	text += 'O usuário <NOME>, deixou um contato para que nossa equipe entre em contato com ele(a).\n\n';
-	text = text.replace('<NOME>', context.state.sessionUser.name);
+	text = text.replace('<NOME>', context.state.name);
 	text += 'Segue abaixo os dados:\n\n';
 
-	text += `Nome: ${context.state.sessionUser.name}\n`;
+	text += `Nome: ${context.state.name}\n`;
 	if (context.state.user.integration_token) { text += `Voucher: ${context.state.user.integration_token}\n`; }
 	if (tipo && dado) { text += `${tipo}: ${dado}\n`; }
 	text += 'Assunto: Agendamento\n';
@@ -192,10 +192,10 @@ function buildMail(context, tipo, dado) {
 function buildMailAutoTeste(context) {
 	let text = 'Olá, equipe PrEP.\n\n';
 	text += 'O usuário <NOME>, deixou um endereço e contato pedindo uma autoteste pelo correio.\n\n';
-	text = text.replace('<NOME>', context.state.sessionUser.name);
+	text = text.replace('<NOME>', context.state.name);
 	text += 'Segue abaixo os dados:\n\n';
 
-	text += `Nome: ${context.state.sessionUser.name}\n`;
+	text += `Nome: ${context.state.name}\n`;
 	if (context.state.user.phone) text += `Telefone: ${context.state.user.phone}\n`;
 	if (context.state.user.instagram) text += `Instagram: ${context.state.user.instagram}\n`;
 	if (context.state.user.integration_token) text += `Voucher: ${context.state.user.integration_token}\n`;
@@ -364,7 +364,7 @@ function findConvidado(username) {
 
 async function Image(url) {
 	try {
-		if (findConvidado(this.state.sessionUser.name) === false) {
+		if (findConvidado(this.state.name) === false) {
 			await this.sendImage(url);
 		}
 	} catch (error) {
@@ -376,7 +376,7 @@ async function Video(url) {
 	try {
 		console.log('url', url);
 
-		if (findConvidado(this.state.sessionUser.name) === false) {
+		if (findConvidado(this.state.name) === false) {
 			await this.sendVideo(url);
 		}
 	} catch (error) {
@@ -386,7 +386,7 @@ async function Video(url) {
 
 async function Audio(url) {
 	try {
-		if (findConvidado(this.state.sessionUser.name) === false) {
+		if (findConvidado(this.state.name) === false) {
 			await this.sendAudio(url);
 		}
 	} catch (error) {
@@ -396,7 +396,7 @@ async function Audio(url) {
 
 async function File(url) {
 	try {
-		if (findConvidado(this.state.sessionUser.name) === false) {
+		if (findConvidado(this.state.name) === false) {
 			await this.sendFile(url);
 		}
 	} catch (error) {

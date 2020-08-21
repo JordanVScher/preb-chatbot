@@ -43,17 +43,31 @@ async function startInteration(fbID) {
 }
 
 async function getUserProfile(context) {
-	const defaultSessionUser = {
+	const defaultUser = {
+		id: context.session.user.id,
 		name: context.session.user.id,
+		firstName: context.session.user.id,
+		lastName: context.session.user.id,
 		profilePic: '',
 	};
 
 	try {
 		const profile = await context.getUserProfile();
-		await context.setState({ sessionUser: { ...profile } });
+		console.log('profile', profile);
+		if (profile && profile.name && profile.id) {
+			await context.setState({ id: profile.id });
+			await context.setState({ name: profile.name });
+			await context.setState({ firstName: profile.firstName });
+			await context.setState({ lastName: profile.lastName });
+			await context.setState({ profilePic: profile.profilePic });
+		}
 	} catch (error) {
 		console.log('getUserProfile error', error);
-		await context.setState({ sessionUser: defaultSessionUser });
+		await context.setState({ id: defaultUser.id });
+		await context.setState({ name: defaultUser.name });
+		await context.setState({ firstName: defaultUser.firstName });
+		await context.setState({ lastName: defaultUser.lastName });
+		await context.setState({ profilePic: defaultUser.profilePic });
 		await help.Sentry.configureScope(async (scope) => { // sending to sentry
 			scope.setUser({ username: context.session.user.id });
 			scope.setExtra('state', context.state);
@@ -73,14 +87,14 @@ async function setUser(context) {
 		// we update context data at every interaction (post ony on the first time)
 		await MaAPI.postRecipientMA(context.state.politicianData.user_id, {
 			fb_id: context.session.user.id,
-			name: context.state.sessionUser.name,
+			name: context.state.name,
 			origin_dialog: 'greetings',
-			picture: context.state.sessionUser.profilePic,
+			picture: context.state.profilePic,
 			extra_fields: await help.buildLabels(context.state.user.system_labels),
 		});
 	} catch (error) {
 		await help.Sentry.configureScope(async (scope) => { // sending to sentry
-			scope.setUser({ username: context.state.sessionUser.name });
+			scope.setUser({ username: context.state.name });
 			scope.setExtra('state', context.state);
 			throw error;
 		});
@@ -98,6 +112,7 @@ module.exports = async function App(context) {
 		// console.log('context.state.user', context.state.user);
 		// console.log('context.state.user.system_labels', await help.buildLabels(context.state.user.system_labels));
 		await timer.deleteTimers(context.session.user.id);
+
 
 		// we need to check the key on the api to know if the timer was sent already
 		if (context.state.recrutamentoTimer === true) {
@@ -136,7 +151,7 @@ module.exports = async function App(context) {
 				await MaAPI.logFlowChange(context.session.user.id, context.state.politicianData.user_id, context.state.lastQRpayload, context.state.lastQRpayload); // eslint-disable-line max-len
 				await prepAPI.logFlowChange(context.session.user.id, context.state.lastQRpayload, context.state.lastQRpayload);
 
-				console.log(`${context.state.sessionUser.name} clicou em ${context.state.lastQRpayload}`);
+				console.log(`${context.state.name} clicou em ${context.state.lastQRpayload}`);
 				if (context.state.lastQRpayload.slice(0, 9) === 'eventDate') { // handling user clicking on a date in setEvent
 					await context.setState({ selectedDate: context.state.lastQRpayload.slice(9, -1) });
 					await context.setState({ dialog: 'setEventHour' });
@@ -189,7 +204,7 @@ module.exports = async function App(context) {
 		} else if (context.event.isText) {
 			if (process.env.ENV === 'prod') {
 				console.log('--------------------------');
-				console.log(`${context.state.sessionUser.name} digitou ${context.event.message.text}`);
+				console.log(`${context.state.name} digitou ${context.event.message.text}`);
 				console.log('Usa dialogflow?', context.state.politicianData.use_dialogflow);
 			}
 			await context.setState({ whatWasTyped: context.event.message.text, lastQRpayload: '', lastPBpayload: '' });
@@ -980,11 +995,10 @@ module.exports = async function App(context) {
 		}
 	} catch (error) {
 		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
-		const name = context.state.sessionUser ? context.state.sessionUser.name : context.session.user.id;
-		await sentryError(await buildNormalErrorMsg(name, error.stack, context.state));
+		await sentryError(await buildNormalErrorMsg(context.state.name, error.stack, context.state));
 		if (process.env.ENV !== 'local') {
 			await help.Sentry.configureScope(async (scope) => { // sending to sentry
-				scope.setUser({ username: name });
+				scope.setUser({ username: context.state.name });
 				scope.setExtra('state', context.state);
 				throw error;
 			});

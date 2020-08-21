@@ -38,8 +38,7 @@ async function notificacaoOfertaPesquisa() {
 		const fileName = listNames[i]; // get current filename
 		const file = jsonfile.readFileSync(sessionsFolder + fileName); // load file as a json
 
-		const sessionUser = file._state && file._state.sessionUser ? file._state.sessionUser : { name: '' };
-		const userName = sessionUser.name;
+		const userName = file._state.name;
 		const userID = file.user.id;
 		const convidado = findConvidado(userName);
 
@@ -67,7 +66,5 @@ async function notificacaoOfertaPesquisa() {
 		}
 	}
 }
-
-notificacaoOfertaPesquisa();
 
 module.exports = { notificacaoOfertaPesquisa };

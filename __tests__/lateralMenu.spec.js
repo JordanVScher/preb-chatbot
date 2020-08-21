@@ -22,15 +22,14 @@ it('Voltar para o inicio - menu', async () => {
 	const context = cont.postbackContext('greetings', 'Voltar para o inicio', 'greetings');
 	await handler(context);
 
-	await expect(context.setState).toBeCalledWith({ sessionUser: { ...await context.getUserProfile() } });
 	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
 	await expect(addNewUser).toBeCalledWith(context);
 
 	await expect(MaAPI.postRecipientMA).toBeCalledWith(context.state.politicianData.user_id, {
 		fb_id: context.session.user.id,
-		name: context.state.sessionUser.name,
+		name: context.state.name,
 		origin_dialog: 'greetings',
-		picture: context.state.sessionUser.profilePic,
+		picture: context.state.profilePic,
 		extra_fields: await help.buildLabels(context.state.user.system_labels),
 	});
 

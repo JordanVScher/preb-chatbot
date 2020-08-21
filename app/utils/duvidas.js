@@ -230,8 +230,8 @@ async function buildServicoInfo(cityID, cityType) {
 async function sendAutoServiçoMail(context) {
 	let text = 'O usuário abaixo viu informações clicou no botão de Pegar no Serviço';
 
-	if (context.state.sessionUser.name) text += `\n\nNome: ${context.state.sessionUser.name}`;
-	if (context.state.sessionUser.id) text += `\nFacebook ID: ${context.state.sessionUser.id}`;
+	if (context.state.name) text += `\n\nNome: ${context.state.name}`;
+	if (context.state.id) text += `\nFacebook ID: ${context.state.id}`;
 	if (context.state.user.voucher_type) text += `\nVoucher: ${context.state.user.voucher_type}`;
 	if (context.state.phone) text += `\nTelefone: ${context.state.phone}`;
 	if (context.state.insta) text += `\nInstagram: ${context.state.insta}`;
