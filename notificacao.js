@@ -41,9 +41,7 @@ async function notificacaoOfertaPesquisa() {
 		const userName = file._state.name;
 		const userID = file.user.id;
 		const convidado = findConvidado(userName);
-		console.log('convidado', convidado);
-		console.log('file._state', file._state);
-		console.log(JSON.stringify(file._state, null, 2));
+
 		if (file._state.whenBecameTargetAudience && !convidado) { // check if user has a date from when he became part of target audience
 			const timeTest = await checkTimeDifference(new Date(file.user._updatedAt)); // check if enough time has passed since then to send the message
 
