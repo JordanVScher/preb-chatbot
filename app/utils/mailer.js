@@ -73,14 +73,17 @@ async function sendMail(subject, text, cityId) {
 	}
 }
 
-async function sendMailCorreio(subject, text, cityId) {
+async function sendMailCorreio(subject, text, cityId, eMail) {
 	let to = '';
 
-	if (process.env.ENV === 'prod' || process.env.ENV === 'homol') {
-		to = correioMails[cityId];
+	if (eMail) to = eMail;
+	if (!to) {
+		if (process.env.ENV === 'prod' || process.env.ENV === 'homol') {
+			to = correioMails[cityId];
 		if (!to) to = correioMails[0]; // eslint-disable-line
-	} else {
-		to = process.env.MAILTESTE;
+		} else {
+			to = process.env.MAILTESTE;
+		}
 	}
 
 	const options = {

@@ -601,11 +601,16 @@ module.exports = async function App(context) {
 			case 'autoCorreioConfirma':
 				await context.sendText(flow.autoteste.autoCorreioConfirma.replace('<CONTATO>', context.state.autoCorreioContato), await getQR(flow.autoteste.autoCorreioConfirmaBtn));
 				break;
-			case 'autoCorreioEnd':
+			case 'autoCorreioEnd': {
 				await prepAPI.postAutoTeste(context.session.user.id, context.state.autoCorreioEndereco, context.state.autoCorreioContato);
-				await mailer.sendMailCorreio('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context), context.state.user.city);
+				let eMail = null;
+				if (context.state.user.voucher_type === 'combina') eMail = process.env.MAILAUTOTESTECOMBINA;
+				await mailer.sendMailCorreio(
+					'AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context), context.state.user.city, eMail,
+				);
 				await context.sendText(flow.autoteste.autoCorreioEnd);
 				await mainMenu.sendMain(context);
+			}
 				break;
 			case 'autoServico':
 				await duvidas.autotesteServico(context);

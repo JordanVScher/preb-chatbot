@@ -937,12 +937,24 @@ describe('autoteste', () => {
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioContato);
 	});
 
-	it('autoCorreioEnd - make endereço request, send msg and go to main main', async () => {
+	it('autoCorreioEnd - make endereço request, send msg and go to main menu', async () => {
 		const context = cont.quickReplyContext('autoCorreioEnd', 'autoCorreioEnd');
 		await handler(context);
 
 		await expect(prepAPI.postAutoTeste).toBeCalledWith(context.session.user.id, context.state.autoCorreioEndereco, context.state.autoCorreioContato);
-		await expect(mailer.sendMailCorreio).toBeCalledWith('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context), context.state.user.city);
+		await expect(mailer.sendMailCorreio).toBeCalledWith('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context), context.state.user.city, null);
+		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioEnd);
+		await expect(mainMenu.sendMain).toBeCalledWith(context);
+	});
+
+	it('autoCorreioEnd - combina load e-mail, make endereço request, send msg and go to main menu', async () => {
+		const context = cont.quickReplyContext('autoCorreioEnd', 'autoCorreioEnd');
+		context.state.user = { voucher_type: 'combina' };
+		const expectedEmail = process.env.MAILAUTOTESTECOMBINA;
+		await handler(context);
+
+		await expect(prepAPI.postAutoTeste).toBeCalledWith(context.session.user.id, context.state.autoCorreioEndereco, context.state.autoCorreioContato);
+		await expect(mailer.sendMailCorreio).toBeCalledWith('AMANDA - Novo autoteste por correio', await help.buildMailAutoTeste(context), context.state.user.city, expectedEmail);
 		await expect(context.sendText).toBeCalledWith(flow.autoteste.autoCorreioEnd);
 		await expect(mainMenu.sendMain).toBeCalledWith(context);
 	});
