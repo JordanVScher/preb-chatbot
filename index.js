@@ -1006,14 +1006,19 @@ module.exports = async function App(context) {
 			} // end switch case
 		}
 	} catch (error) {
-		await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
-		await sentryError(await buildNormalErrorMsg(context.state.name, error.stack, context.state));
-		if (process.env.ENV !== 'local') {
-			await help.Sentry.configureScope(async (scope) => { // sending to sentry
-				scope.setUser({ username: context.state.name });
-				scope.setExtra('state', context.state);
-				throw error;
-			});
+		if (help.findConvidado(context.state.name) === true) {
+			console.log('Erro com o ', context.state.name);
+			console.log(error);
+		} else {
+			await context.sendText(flow.error.text1, await checkQR.getErrorQR(context.state.lastQRpayload)); // warning user
+			await sentryError(await buildNormalErrorMsg(context.state.name, error.stack, context.state));
+			if (process.env.ENV !== 'local') {
+				await help.Sentry.configureScope(async (scope) => { // sending to sentry
+					scope.setUser({ username: context.state.name });
+					scope.setExtra('state', context.state);
+					throw error;
+				});
+			}
 		}
 	} // catch
 };
