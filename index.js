@@ -82,7 +82,7 @@ async function getUserProfile(context) {
 
 async function setUser(context) {
 	try {
-		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
+		await context.setState({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) || {}, ignore: false });
 		await getUserProfile(context);
 		await addNewUser(context);
 		await startInteration(context.session.user.id);
@@ -111,7 +111,7 @@ module.exports = async function App(context) {
 		context.Audio = help.Audio;
 		context.File = help.File;
 
-		setUser(context);
+		await setUser(context);
 		// console.log('context.state.user', context.state.user);
 		// console.log('context.state.user.system_labels', await help.buildLabels(context.state.user.system_labels));
 		await timer.deleteTimers(context.session.user.id);

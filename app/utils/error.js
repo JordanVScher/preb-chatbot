@@ -1,4 +1,4 @@
-const { Sentry } = require('./helper');
+const { Sentry, moment } = require('./helper');
 const { sendHTMLMail } = require('./mailer');
 
 async function buildNormalErrorMsg(nome, err, state) {
@@ -24,8 +24,12 @@ async function handleErrorApi(options, res, statusCode, err) {
 	if (res) msg += `\nResposta: ${JSON.stringify(res, null, 2)}`;
 	if (err) msg += `\nErro: ${err.stack || err}`;
 
-	// console.log('----------------------------------------------', `\n${msg}`, '\n\n');
+	if (process.env.DEBUG === '1') console.log('----------------------------------------------', `\n${msg}`, '\n\n');
 
+	const momento = moment().format();
+
+	const shortLog = `${momento}: ${options.method.toUpperCase()} - ${options.url} ${statusCode}`;
+	console.log(shortLog);
 	if ((res && (res.error || res.form_error)) || (!res && err)) {
 		if (process.env.ENV !== 'local') {
 			msg += `\nEnv: ${process.env.ENV}`;

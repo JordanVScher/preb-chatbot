@@ -167,8 +167,7 @@ async function linkIntegrationTokenLabel(context) {
 		const token = context.state.user ? context.state.user.integration_token : null;
 		if (token) {
 			const res = await linkUserToCustomLabel(context.session.user.id, token);
-			console.log('res do linkIntegrationTokenLabel', res);
-			// if (!res || res.error) await sentryError('Erro ao criar label do token', { fb_id: context.session.user.id, token, error: res.error });
+			if (!res || res.error) await sentryError('Erro ao criar label do token', { fb_id: context.session.user.id, token, error: res.error });
 		}
 	} catch (error) {
 		sentryError('Erro em linkIntegrationTokenLabel', error);
