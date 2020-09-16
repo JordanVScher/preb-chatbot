@@ -1,6 +1,5 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-const { Sentry } = require('./helper');
 
 
 const user = process.env.MAIL_USER;
@@ -16,6 +15,13 @@ const mails = {
 	3: process.env.MAILCONTATO3,
 };
 
+const correioMails = {
+	0: process.env.MAILCORREIO0,
+	1: process.env.MAILCORREIO1,
+	2: process.env.MAILCORREIO2,
+	3: process.env.MAILCORREIO3,
+};
+
 const transporter = nodemailer.createTransport({
 	service,
 	host,
@@ -27,6 +33,23 @@ const transporter = nodemailer.createTransport({
 	tls: { rejectUnauthorized: false },
 	debug: true,
 });
+
+async function sendMailError(msg, double) {
+	const text = double ? msg.replace(/(?:\r\n|\r|\n)/g, '\n\n') : msg;
+	const to = process.env.MAILERROR.split(',');
+	const subject = `Erro no Prep - ${process.env.ENV}`;
+	const options = {
+		from, to, subject, text,
+	};
+
+	try {
+		const info = await transporter.sendMail(options);
+		console.log(`'${subject}' para ${to}:`, info.messageId);
+		console.log('sendMailError', text);
+	} catch (err) {
+		console.log(`Error sending mail to ${to} => `, err);
+	}
+}
 
 
 async function sendMail(subject, text, cityId) {
@@ -46,15 +69,23 @@ async function sendMail(subject, text, cityId) {
 		const info = await transporter.sendMail(options);
 		console.log(`'${subject}' para ${to}:`, info.messageId);
 	} catch (err) {
-		console.log(`Error seding mail to ${to} => `, err);
-		Sentry.captureMessage('Error sending mail');
+		await sendMailError(`Error seding mail to ${to} => \n\n`, console.log(JSON.stringify(err, null, 2)));
 	}
 }
 
-async function sendMailError(msg, double) {
-	const text = double ? msg.replace(/(?:\r\n|\r|\n)/g, '\n\n') : msg;
-	const to = process.env.MAILERROR.split(',');
-	const subject = `Erro no Prep - ${process.env.ENV}`;
+async function sendMailCorreio(subject, text, cityId, eMail) {
+	let to = '';
+
+	if (eMail) to = eMail;
+	if (!to) {
+		if (process.env.ENV === 'prod' || process.env.ENV === 'homol') {
+			to = correioMails[cityId];
+		if (!to) to = correioMails[0]; // eslint-disable-line
+		} else {
+			to = process.env.MAILTESTE;
+		}
+	}
+
 	const options = {
 		from, to, subject, text,
 	};
@@ -63,20 +94,24 @@ async function sendMailError(msg, double) {
 		const info = await transporter.sendMail(options);
 		console.log(`'${subject}' para ${to}:`, info.messageId);
 	} catch (err) {
-		console.log(`Error sending mail to ${to} => `, err);
-		Sentry.captureMessage('Error sending error mail');
+		await sendMailError(`Error seding mail to ${to} => \n\n`, console.log(JSON.stringify(err, null, 2)));
 	}
 }
 
-async function sentryError(msg) {
-	console.log(msg);
-	if (process.env.ENV !== 'local') {
-		await Sentry.captureMessage(msg);
-		await sendMailError(msg, true);
+async function sendHTMLMail(subject, to, html, anexo) {
+	const options = {
+		from, to, subject, html, attachments: anexo,
+	};
+
+
+	try {
+		const info = await transporter.sendMail(options);
+		console.log(`'${subject}' para ${to}:`, info.messageId);
+	} catch (err) {
+		await sendMailError(`Error seding mail to ${to} => \n\n`, console.log(JSON.stringify(err, null, 2)));
 	}
-	return false;
 }
 
 module.exports = {
-	sendMail, sendMailError, sentryError,
+	sendMail, sendMailError, sendHTMLMail, sendMailCorreio,
 };

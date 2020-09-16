@@ -4,324 +4,364 @@ const cont = require('./context');
 const desafio = require('../app/utils/desafio');
 const flow = require('../app/utils/flow');
 const opt = require('../app/utils/options');
-// const { checkAnsweredQuiz } = require('../app/utils/checkQR');
 const prepApi = require('../app/utils/prep_api');
-const mainMenu = require('../app/utils/mainMenu');
-const help = require('../app/utils/helper');
-const { sendCarouselSus } = require('../app/utils/carousel');
-const triagem = require('../app/utils/triagem');
+const { sendMain } = require('../app/utils/mainMenu');
+const { checkAppointment } = require('../app/utils/consulta-aux');
+const research = require('../app/utils/research');
+const { getQR } = require('../app/utils/attach');
+const { sentryError } = require('../app/utils/error');
 
 jest.mock('../app/utils/flow');
+jest.mock('../app/utils/error');
+jest.mock('../app/utils/research');
 jest.mock('../app/utils/options');
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/checkQR');
 jest.mock('../app/utils/mainMenu');
 jest.mock('../app/utils/helper');
-jest.mock('../app/utils/carousel');
-jest.mock('../app/utils/triagem');
+jest.mock('../app/utils/consulta');
+jest.mock('../app/utils/attach');
 
-it('desafioAceito', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	await desafio.desafioAceito(context);
-	await expect(context.sendText).toBeCalledWith(flow.desafioAceito.text1, opt.desafioAceito);
-});
-
-it('desafioRecusado', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	await desafio.desafioRecusado(context);
-	await expect(context.sendText).toBeCalledWith(flow.desafioRecusado.text1);
-	await expect(mainMenu.sendMain).toBeCalledWith(context);
-});
-
-it('sendQuiz - count less than 3 - started quiz', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.quizCounter = { count_quiz: 2 };
-	context.state.startedQuiz = true;
-	await desafio.sendQuiz(context);
-
-
-	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
-	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeFalsy();
-	await expect(prepApi.postCountQuiz).toBeCalledWith(context.session.user.id);
-	await expect(context.state.startedQuiz === true).toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.desafio.text1, opt.answer.sendQuiz);
-});
-
-// it('sendQuiz - count less than 3 - started quiz - stoppedHalfway', async () => {
-// 	const context = cont.quickReplyContext('0', 'prompt');
-// 	context.state.quizCounter = { count_quiz: 2 };
-// 	context.state.startedQuiz = true; context.state.stoppedHalfway = true;
-// 	await desafio.sendQuiz(context);
-
-// 	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
-// 	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
-// 	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeFalsy();
-// 	await expect(prepApi.postCountQuiz).toBeCalledWith(context.session.user.id);
-// 	await expect(context.state.startedQuiz === true).toBeTruthy();
-// 	await expect(context.state.stoppedHalfway === true).toBeTruthy();
-// 	await expect(context.sendText).toBeCalledWith(flow.desafio.text4, opt.answer.sendQuiz);
-// });
-
-it('sendQuiz - count less than 3 - didnt start quiz', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.quizCounter = { count_quiz: 2 };
+it('offerQuiz - user nunca começou quiz, oferece pela primeira vez', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
 	context.state.startedQuiz = false;
-	await desafio.sendQuiz(context);
+	await desafio.offerQuiz(context);
 
-	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
-	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeFalsy();
-	await expect(prepApi.postCountQuiz).toBeCalledWith(context.session.user.id);
 	await expect(context.state.startedQuiz === true).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.desafio.text3, opt.answer.sendQuiz);
+	await expect(context.sendText).toBeCalledWith(flow.desafio.willStart, opt.answer.sendQuiz);
 });
 
-it('sendQuiz - count 3 ', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.quizCounter = { count_quiz: 3 };
-	await desafio.sendQuiz(context);
-	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) });
-	await expect(context.setState).toBeCalledWith({ categoryQuestion: 'quiz' });
-	await expect(context.state.quizCounter && context.state.quizCounter.count_quiz >= 3).toBeTruthy();
-	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
+it('offerQuiz - user nunca começou quiz, oferece pela primeira vez e atualiza categoria do quiz', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.startedQuiz = false; const categoryQuestion = 'recrutamento';
+	await desafio.offerQuiz(context, categoryQuestion);
+
+	await expect(categoryQuestion).toBeTruthy();
+	await expect(context.setState).toBeCalledWith({ categoryQuestion });
+
+	await expect(context.state.startedQuiz === true).toBeFalsy();
+	await expect(context.sendText).toBeCalledWith(flow.desafio.willStart, opt.answer.sendQuiz);
 });
 
-it('sendResearch - count less than 3 ', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.researchCounter = { count_invited_research: 2 };
-	await desafio.sendResearch(context);
+it('offerQuiz - user já começou quiz, oferece de novo', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.startedQuiz = true;
+	await desafio.offerQuiz(context);
 
-	await expect(context.setState).toBeCalledWith({ researchCounter: await prepApi.getCountResearch(context.session.user.id) });
-	await expect(context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3).toBeFalsy();
-	await expect(prepApi.postCountResearch).toBeCalledWith(context.session.user.id);
-	await expect(context.sendText).toBeCalledWith(flow.desafio.text4, opt.answer.sendResearch);
+	await expect(context.state.startedQuiz === true).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.desafio.started, opt.answer.sendQuiz);
 });
 
-it('sendResearch - count 3 ', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.researchCounter = { count_invited_research: 3 };
-	await desafio.sendResearch(context);
+it('Follow up - user tem voucher, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.user = { voucher_type: 'sus' };
+	await desafio.followUp(context);
 
-	await expect(context.setState).toBeCalledWith({ researchCounter: await prepApi.getCountResearch(context.session.user.id) });
-	await expect(context.state.researchCounter && context.state.researchCounter.count_invited_research >= 3).toBeTruthy();
-	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
+	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('sendConsulta - has consulta', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.consulta = { appointments: [{ datetime_start: '' }] };
-	await desafio.sendConsulta(context);
+it('Follow up - user tem combina_city, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.user = { combina_city: 'SP' };
+	await desafio.followUp(context);
 
-	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeTruthy();
-	// await expect(context.sendText).toBeCalledWith(flow.triagem.consulta2, opt.answer.sendConsulta);
-
-	await expect(context.sendText).toBeCalledWith(flow.triagem.consulta1);
-	for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
-		await expect(context.sendText).toBeCalledWith(''
-			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-			+ `\n⏰: ${await help.formatDate(iterator.datetime_start, iterator.time)}`
-			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
-	}
-
-	await expect(context.sendText).toBeCalledWith(flow.triagem.cta);
-	await expect(mainMenu.sendMain).toBeCalledWith(context);
+	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('sendConsulta - no consulta', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	await desafio.sendConsulta(context);
+it('Follow up - user estava no quiz publico_interesse, perguntamos se quer voltar ao quiz publico_interesse', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'publico_interesse'; context.state.goBackToQuiz = true; context.state.startedQuiz = true;
+	await desafio.followUp(context);
 
-	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0).toBeFalsy();
-
-	await expect(context.sendText).toBeCalledWith(flow.triagem.consulta2, opt.answer.sendConsulta);
+	await expect(context.state.goBackToQuiz === true).toBeTruthy();
+	await expect(context.state.startedQuiz === true).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.desafio.started, opt.answer.sendQuiz);
 });
 
-it('asksDesafio - finishedQuiz', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.startedQuiz = true; context.state.user = { finished_quiz: 1 };
-	await desafio.asksDesafio(context);
+it('Follow up - user estava no quiz brincadeira, perguntamos se quer voltar ao quiz brincadeira', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = true; context.state.startedQuiz = true;
+	await desafio.followUp(context);
 
-	await expect(context.state.startedQuiz === true || context.state.user.finished_quiz === 1).toBeTruthy();
-	await expect(mainMenu.sendMain).toBeCalledWith(context);
+	await expect(context.state.goBackToQuiz === true).toBeTruthy();
+	await expect(context.state.startedQuiz === true).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.desafio.started, opt.answer.sendQuiz);
 });
 
-it('asksDesafio - startedQuiz', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.startedQuiz = true; context.state.user = { finished_quiz: 0 };
-	await desafio.asksDesafio(context);
+it('Follow up - user estava no quiz recrutamento, perguntamos se quer voltar ao quiz recrutamento', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = true; context.state.startedQuiz = true;
+	await desafio.followUp(context);
 
-	await expect(context.state.startedQuiz === true || context.state.user.finished_quiz === 1).toBeTruthy();
-	await expect(mainMenu.sendMain).toBeCalledWith(context);
+	await expect(context.state.goBackToQuiz === true).toBeTruthy();
+	await expect(context.state.startedQuiz === true).toBeTruthy();
+	await expect(context.sendText).toBeCalledWith(flow.desafio.started, opt.answer.sendQuiz);
 });
 
-it('asksDesafio - didnt startedQuiz', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.startedQuiz = false; context.state.user = { finished_quiz: 0 };
-	await desafio.asksDesafio(context);
+it('Follow up - user não acabou publico_interesse, perguntamos se quer terminar publico_interesse (menos de 3 vezes)', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'publico_interesse'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: null }; context.state.currentCounter = 0;
+	const type = 'publico-interesse'; const categoryQuestion = 'publico_interesse';
+	await desafio.followUp(context, type, categoryQuestion);
 
-	await expect(context.state.startedQuiz === true || context.state.user.finished_quiz === 1).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.asksDesafio.text1, opt.asksDesafio);
+	await expect(context.state.goBackToQuiz === true).toBeFalsy();
+	await expect(context.state.user.is_target_audience === null).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
+	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
+
+	await expect(context.setState).toBeCalledWith({ categoryQuestion });
+	await expect(context.sendText).toBeCalledWith(flow.desafio.started, opt.answer.sendQuiz);
 });
 
-it('checkAconselhamento - duvida and prep', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.intentType = 'duvida';
-	context.state.user = { is_prep: 1 };
-	await desafio.checkAconselhamento(context);
+it('Follow up - user não acabou publico_interesse, perguntamos mais de 3 vezes, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'publico_interesse'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: null }; context.state.currentCounter = 3;
+	const type = 'publico-interesse'; const categoryQuestion = 'publico_interesse';
+	await desafio.followUp(context, type, categoryQuestion);
 
-	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id);
-	await expect(context.state.intentType === 'duvida').toBeTruthy();
-	await expect(context.state.user.is_prep === 1).toBeTruthy();
-	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
+	await expect(context.state.goBackToQuiz === true).toBeFalsy();
+	await expect(context.state.user.is_target_audience === null).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
+	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('checkAconselhamento - duvida and not prep', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.intentType = 'duvida';
-	context.state.user = { is_prep: 0 };
-	await desafio.checkAconselhamento(context);
+it('Follow up - user não é publico_interesse e não acabou brincadeira, perguntamos se quer fazer quiz brincadeira (menos de 3 vezes)', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 0; context.state.quizBrincadeiraEnd = false;
+	const type = 'quiz-brincadeira'; const categoryQuestion = 'quiz_brincadeira';
+	await desafio.followUp(context, type, categoryQuestion);
 
-	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id);
-	await expect(context.state.intentType === 'duvida').toBeTruthy();
-	await expect(context.state.user.is_prep === 1).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.triagem.invite, opt.answer.isPrep);
+	await expect(context.state.goBackToQuiz === true).toBeFalsy();
+	await expect(context.state.user.is_target_audience === 0).toBeTruthy();
+	await expect(!context.state.quizBrincadeiraEnd).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
+	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
+
+	await expect(context.sendText).toBeCalledWith(flow.offerBrincadeira.text1, await getQR(flow.offerBrincadeira));
 });
 
-it('checkAconselhamento - not duvida and prep', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.user = { is_prep: 1 };
-	await desafio.checkAconselhamento(context);
+it('Follow up - user não é publico_interesse e não acabou brincadeira, perguntamos mais de 3 vezes, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 4; context.state.quizBrincadeiraEnd = false;
+	const type = 'quiz-brincadeira'; const categoryQuestion = 'quiz_brincadeira';
+	await desafio.followUp(context, type, categoryQuestion);
 
-	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id);
-	await expect(context.state.intentType === 'duvida').toBeFalsy();
-	await expect(context.state.user.is_prep === 1).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) }); // sendConsulta
+	await expect(context.state.goBackToQuiz === true).toBeFalsy();
+	await expect(context.state.user.is_target_audience === 0).toBeTruthy();
+	await expect(!context.state.quizBrincadeiraEnd).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
+	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('checkAconselhamento - not duvida and not prep', async () => {
-	const context = cont.quickReplyContext('0', 'prompt');
-	context.state.user = { is_prep: 0 };
-	await desafio.checkAconselhamento(context);
+it('Follow up - user não é publico_interesse e acabou brincadeira mas não assinou termos, perguntamos se quer assinar (menos de 3 vezes)', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 0;
+	context.state.quizBrincadeiraEnd = true; context.state.preCadastroSignature = false;
+	const type = 'share';
+	await desafio.followUp(context, type);
 
-	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id);
-	await expect(context.state.intentType === 'duvida').toBeFalsy();
-	await expect(context.state.user.is_prep === 1).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.triagem.send);
-	await expect(triagem.getTriagem).toBeCalledWith(context);
+	await expect(context.state.user.is_target_audience === 0).toBeTruthy();
+	await expect(!context.state.quizBrincadeiraEnd).toBeFalsy();
+	await expect(!context.state.preCadastroSignature).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
+	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
+
+	await expect(research.TCLE).toBeCalledWith(context);
 });
 
-it('followUpIntent - not target audience, no category', async () => {
-	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
-	context.state.user = { is_target_audience: 0 };
-	context.state.categoryQuestion = '';
-	context.state.intentName = 'teste';
-	await desafio.followUpIntent(context);
+it('Follow up - user não é publico_interesse e acabou brincadeira mas não assinou termos, perguntamos mais de 3 vezes, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 4;
+	context.state.quizBrincadeiraEnd = true; context.state.preCadastroSignature = false;
+	const type = 'share';
+	await desafio.followUp(context, type);
 
-	await expect(context.setState).toBeCalledWith({ intentType: await help.separateIntent(context.state.intentName), dialog: 'prompt' });
-	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.state.user.is_target_audience === 0).toBeTruthy();
+	await expect(!context.state.quizBrincadeiraEnd).toBeFalsy();
+	await expect(!context.state.preCadastroSignature).toBeTruthy();
 
-	await expect(context.state.user.is_target_audience === 1).toBeFalsy();
-	await expect(context.state.categoryQuestion).toBeFalsy();
-
-	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // sendQuiz
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
+	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('followUpIntent - not target audience, didnt finish quiz', async () => {
-	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
-	context.state.user = { is_target_audience: 0 };
-	context.state.currentQuestion = { code: 'A5' };
-	context.state.categoryQuestion = 'quiz';
-	context.state.intentName = 'teste';
-	await desafio.followUpIntent(context);
+it('Follow up - user não é publico_interesse acabou brincadeira e assinou termos, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'quiz_brincadeira'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 0 }; context.state.currentCounter = 4;
+	context.state.quizBrincadeiraEnd = true; context.state.preCadastroSignature = true;
+	await desafio.followUp(context);
 
-	await expect(context.setState).toBeCalledWith({ intentType: await help.separateIntent(context.state.intentName), dialog: 'prompt' });
-	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
+	await expect(context.state.user.is_target_audience === 0).toBeTruthy();
+	await expect(!context.state.quizBrincadeiraEnd).toBeFalsy();
+	await expect(!context.state.preCadastroSignature).toBeFalsy();
 
-	await expect(context.state.user.is_target_audience === 1).toBeFalsy();
-	await expect(context.state.categoryQuestion).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	await expect(!context.state.currentQuestion || context.state.currentQuestion.code === null).toBeFalsy();
-	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // sendQuiz
+	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('followUpIntent - not target audience, didnt finish quiz', async () => {
-	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
-	context.state.user = { is_target_audience: 0 };
-	context.state.categoryQuestion = 'quiz';
-	await desafio.followUpIntent(context);
-
-	await expect(context.setState).toBeCalledWith({ intentType: await help.separateIntent(context.state.intentName), dialog: 'prompt' });
-	await expect(context.setState).toBeCalledWith({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-
-	await expect(context.state.user.is_target_audience === 1).toBeFalsy();
-	await expect(context.setState).toBeCalledWith({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	await expect(!context.state.currentQuestion || context.state.currentQuestion.code === null).toBeTruthy();
-	await expect(mainMenu.sendShareAndMenu).toBeCalledWith(context);
-});
-
-it('followUpIntent - user already part on research', async () => {
-	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
-	context.state.user = { is_part_of_research: 1, is_target_audience: 1 };
-	await desafio.followUpIntent(context);
+it('Follow up - user é publico_interesse, não marcou consulta nem deixou contato, oferecemos pesquisa (menos de 3)', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 0;
+	context.state.temConsulta = null; const type = 'research-invite';
+	await desafio.followUp(context, type);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.state.user.is_part_of_research === 1).toBeTruthy();
-	await expect(prepApi.resetTriagem).toBeCalledWith(context.session.user.id); // checkAconselhamento
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
+	await expect(!context.state.temConsulta && !context.state.leftContact).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
+	await expect(research.ofertaPesquisaStart).toBeCalledWith(context, flow.ofertaPesquisaStart.offer);
 });
 
-it('followUpIntent - not research, didnt finish quiz and servico', async () => {
-	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
-	context.state.user = { is_part_of_research: 0, is_target_audience: 1, finished_quiz: 0 };
-	context.state.intentType = 'serviço';
-	await desafio.followUpIntent(context);
+it('Follow up - user é publico_interesse, não marcou consulta nem deixou contato, oferecemos pesquisa mais de 3 vezes, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 3;
+	context.state.temConsulta = false; const type = 'research-invite';
+	await desafio.followUp(context, type);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
-	await expect(context.state.intentType === 'serviço').toBeTruthy();
-	await expect(context.sendText).toBeCalledWith(flow.triagem.posto);
-	await expect(context.state.user.finished_quiz === 0).toBeTruthy();
-	await expect(context.setState).toBeCalledWith({ quizCounter: await prepApi.getCountQuiz(context.session.user.id) }); // sendQuiz
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
+	await expect(!context.state.temConsulta && !context.state.leftContact).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
+	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('followUpIntent - not research, finished quiz and eligible ', async () => {
-	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
-	context.state.user = { is_part_of_research: 0, is_target_audience: 1, is_eligible_for_research: 1, finished_quiz: 1	}; // eslint-disable-line
-	await desafio.followUpIntent(context);
+it('Follow up - user é publico_interesse e de risco, já marcou consulta mas não acabou recrutamento, perguntamos se quer terminar recrutamento (menos de 3)', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 1, risk_group: 1 }; context.state.currentCounter = 0;
+	context.state.temConsulta = true; context.state.recrutamentoEnd = false;
+	const type = 'recrutamento'; const categoryQuestion = 'recrutamento';
+	await desafio.followUp(context, type, categoryQuestion);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
-	await expect(context.state.intentType === 'serviço').toBeFalsy();
-	await expect(context.state.user.finished_quiz === 0).toBeFalsy();
-	await expect(context.setState).toBeCalledWith({ researchCounter: await prepApi.getCountResearch(context.session.user.id) }); // sendResearch
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
+	await expect(!context.state.temConsulta && !context.state.leftContact).toBeFalsy();
+	await expect(!context.state.recrutamentoEnd && context.state.user.risk_group).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
+	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
+
+	await expect(context.sendText).toBeCalledWith(flow.recrutamento.text1, await getQR(flow.recrutamento));
 });
 
-it('followUpIntent - not research, finished quiz, eligible and problema ', async () => {
-	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
-	context.state.user = { is_part_of_research: 0, is_target_audience: 1, is_eligible_for_research: 1, finished_quiz: 1	}; // eslint-disable-line
-	context.state.intentType = 'problema';
-	await desafio.followUpIntent(context);
+it('Follow up - user é publico_interesse e de risco, deixou contato mas não acabou recrutamento, perguntamos mais de 3 vezes, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 1, risk_group: 1 }; context.state.currentCounter = 3;
+	context.state.temConsulta = false; context.state.leftContact = true; context.state.recrutamentoEnd = false;
+	const type = 'recrutamento'; const categoryQuestion = 'recrutamento';
+	await desafio.followUp(context, type, categoryQuestion);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
-	await expect(context.state.intentType === 'serviço').toBeFalsy();
-	await expect(context.state.user.finished_quiz === 0).toBeFalsy();
-	await expect(context.state.intentType === 'problema').toBeTruthy();
-	// await expect(context.sendText).toBeCalledWith(await help.buildEmergenciaMsg(context.state.user.city, flow.triagem.whatsapp));
-	await expect(context.setState).toBeCalledWith({ researchCounter: await prepApi.getCountResearch(context.session.user.id) }); // sendResearch
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
+	await expect(!context.state.temConsulta && !context.state.leftContact).toBeFalsy();
+	await expect(!context.state.recrutamentoEnd && context.state.user.risk_group).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
+	await expect(sendMain).toBeCalledWith(context);
 });
 
-it('followUpIntent - not research, finished quiz and not eligible  ', async () => {
-	const context = cont.quickReplyContext('aboutAmanda', 'mainMenu');
-	context.state.user = { is_part_of_research: 0, is_target_audience: 1, is_eligible_for_research: 0, finished_quiz: 1	}; // eslint-disable-line
-	await desafio.followUpIntent(context);
+it('Follow up - user é publico_interesse mas não é de risco, deixou contato e assinou termos, não recebe recrutamento, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 1, risk_group: 0 }; context.state.currentCounter = 3;
+	context.state.temConsulta = false; context.state.leftContact = true; context.state.recrutamentoEnd = false;
+	const type = 'recrutamento'; const categoryQuestion = 'recrutamento'; context.state.preCadastroSignature = true;
+	await desafio.followUp(context, type, categoryQuestion);
 
 	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
-	await expect(context.state.user.is_part_of_research === 1).toBeFalsy();
-	await expect(context.state.intentType === 'serviço').toBeFalsy();
-	await expect(context.state.user.finished_quiz === 0).toBeFalsy();
-	await expect(context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1).toBeTruthy();
-	await expect(sendCarouselSus).toBeCalledWith(context, opt.sus);
+	await expect(context.setState).toBeCalledWith({ temConsulta: await checkAppointment(context.session.user.id) });
+	await expect(!context.state.temConsulta && !context.state.leftContact).toBeFalsy();
+	await expect(!context.state.recrutamentoEnd && context.state.user.risk_group).toBeFalsy();
+
+	await expect(sendMain).toBeCalledWith(context);
+});
+
+it('Follow up - user é publico_interesse, marcou agendamento e terminou recrutamento, mas não assinou termos, perguntamos se quer assinar (menos de 3)', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 2;
+	context.state.temConsulta = true; context.state.recrutamentoEnd = true; context.state.preCadastroSignature = false;
+	const type = 'share';
+	await desafio.followUp(context, type);
+
+	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
+	await expect(!context.state.temConsulta && !context.state.leftContact).toBeFalsy();
+	await expect(!context.state.recrutamentoEnd).toBeFalsy();
+	await expect(!context.state.preCadastroSignature).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
+	await expect(prepApi.postCount).toBeCalledWith(context.session.user.id, type);
+
+	await expect(research.TCLE).toBeCalledWith(context);
+});
+
+it('Follow up - user é publico_interesse, marcou agendamento e terminou recrutamento, mas não assinou termos, perguntamos mais de 3 vezes, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 5;
+	context.state.temConsulta = true; context.state.recrutamentoEnd = true; context.state.preCadastroSignature = false;
+	const type = 'share';
+	await desafio.followUp(context, type);
+
+	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
+	await expect(!context.state.temConsulta && !context.state.leftContact).toBeFalsy();
+	await expect(!context.state.recrutamentoEnd).toBeFalsy();
+	await expect(!context.state.preCadastroSignature).toBeTruthy();
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeTruthy();
+	await expect(sendMain).toBeCalledWith(context);
+});
+
+it('Follow up - user é publico_interesse, marcou agendamento, terminou recrutamento e assinou termos, vai pro menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test');
+	context.state.categoryQuestion = 'recrutamento'; context.state.goBackToQuiz = false; context.state.startedQuiz = true;
+	context.state.user = { is_target_audience: 1 }; context.state.currentCounter = 5;
+	context.state.temConsulta = true; context.state.recrutamentoEnd = true; context.state.preCadastroSignature = true;
+	const type = 'share';
+	await desafio.followUp(context, type);
+
+	await expect(context.state.user.is_target_audience === 1).toBeTruthy();
+	await expect(!context.state.temConsulta && !context.state.leftContact).toBeFalsy();
+	await expect(!context.state.recrutamentoEnd).toBeFalsy();
+	await expect(!context.state.preCadastroSignature).toBeFalsy();
+
+	await expect(sendMain).toBeCalledWith(context);
+});
+
+it('Send Follow up - tipo de contator/followup desconhecido, avisa o erro internamente e manda usuário para o menu', async () => {
+	const context = cont.textContext('oi, isso é um teste', 'test'); const type = 'error'; context.state.currentCounter = { error: 'foobar' };
+	await desafio.sendFollowUp(context, type);
+
+	await expect(context.setState).toBeCalledWith({ currentCounter: await prepApi.getCount(context.session.user.id, type), currentCounterType: type });
+	await expect(context.state.currentCounter >= 3).toBeFalsy();
+
+	await expect(sentryError).toBeCalled();
+	await expect(sendMain).toBeCalledWith(context);
 });

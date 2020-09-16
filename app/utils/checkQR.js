@@ -1,125 +1,143 @@
-const prepApi = require('./prep_api');
 const { moment } = require('./helper');
+const { combinaCityDictionary } = require('./helper');
+const { checkAppointment } = require('./consulta-aux');
 
-// check if user has already answered the quiz to remove the quick_reply option from the menu UNUSED
-async function checkAnsweredQuiz(context, options) {
-	let newOptions = options.quick_replies; // getting array out of the QR object
-	// console.log('antes', newOptions);
-
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-	if (newOptions.find(x => x.payload === 'beginQuiz') && context.state.user.finished_quiz === 1) { // no more questions to answer
-		newOptions = await newOptions.filter(obj => obj.payload !== 'beginQuiz'); // remove quiz option
+function mainMenuFixedOrder(qr) {
+	if (qr[0].payload === 'aboutAmanda'
+		&& qr[1].payload === 'noProjeto'
+		&& qr[2].payload === 'join'
+		&& qr[3].payload === 'seePreventions'
+		&& qr[4].title === 'Quero Participar'
+		&& qr[5].payload === 'baterPapo'
+	) {
+		return [qr[4], qr[2], qr[1], qr[3], qr[0], qr[5]];
 	}
 
-	// if Options has the consulta options we have to check if the user is able to scheduled appointments
-	if (newOptions.find(x => x.payload === 'showDays') || newOptions.find(x => x.payload === 'verConsulta')) { // checks if we have the options
-		if (context.state.user.is_eligible_for_research === 1) { // if user is eligible he can schedule appointments
-			await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
-			if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
-				newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option to schedule appointment because he scheduled one already
-			} else { // if he has one we can show it to him
-				newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option to see consulta for there isn't any consulta available
-			}
-		} else { // user shouldn't be able to see these options if he is not eligible
-			newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option
-			newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option
-		}
-	}
-
-	// console.log('depois', newOptions);
-	return { quick_replies: newOptions }; // putting the filtered array on a QR object
+	return qr;
 }
 
-async function checkConsulta(context, options) {
-	let newOptions = options.quick_replies; // getting array out of the QR object
-
-	await context.setState({ user: await prepApi.getRecipientPrep(context.session.user.id) });
-
-	if (context.state.user.is_eligible_for_research === 1) {
-		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
-		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
-			newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-showDays'); // remove option to schedule appointment because he scheduled one already
-			newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option to schedule appointment because he scheduled one already
-		} else { // if he has one we can show it to him
-			newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta'); // remove option to see consulta for there isn't any consulta available
-			newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option to see consulta for there isn't any consulta available
-		}
-	} else { // user shouldn't be able to see these options if he is not eligible
-		newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-verConsulta'); // remove option
-		newOptions = await newOptions.filter(obj => obj.payload !== 'verConsulta'); // remove option
-		newOptions = await newOptions.filter(obj => obj.payload !== 'Sign-showDays'); // remove option
-		newOptions = await newOptions.filter(obj => obj.payload !== 'showDays'); // remove option
-	}
-
-	return { quick_replies: newOptions };
-}
-
-// async function replaceTitle(options, toFind, newTitle) {
-// 	const result = options;
-
-// 	const objIndex = result.findIndex((obj => obj.title === toFind));
-// 	if (objIndex && objIndex >= 0) { result[objIndex].title = newTitle; }
-
-// 	return result;
-// }
 
 async function checkMainMenu(context) {
-	await context.setState({ sendExtraMessages: false });
-	let newOptions = [];
-	newOptions.push({ content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' });
-	// console.log(context.state.user);
+	let opt = [];
+	const baterPapo = { content_type: 'text', title: 'Bater Papo', payload: 'baterPapo' };
+	const quiz = { content_type: 'text', title: 'Quero Participar', payload: 'beginQuiz' };
+	const quizRecrutamento = { content_type: 'text', title: 'Quero Participar', payload: 'recrutamento' };
+	const quizBrincadeira = { content_type: 'text', title: 'Quero Participar', payload: 'querBrincadeira' };
+	const prevencoes = { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' };
+	const join = { content_type: 'text', title: 'Já Tomo PrEP', payload: 'join' };
+	const seePrepToken = { content_type: 'text', title: 'Ver meu Voucher', payload: 'seePrepToken' };
+	const sobreAmanda = { content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' };
+	const noProjeto = { content_type: 'text', title: 'Já tô no Projeto', payload: 'noProjeto' };
+	const termos = { content_type: 'text', title: 'Termos', payload: 'TCLE' };
+	// const pesquisa = { content_type: 'text', title: 'Pesquisa', payload: 'ofertaPesquisaStart' };
+	const marcarConsulta = { content_type: 'text', title: 'Bate papo presencial', payload: 'pesquisaPresencial' };
+	const deixarContato = { content_type: 'text', title: 'Bate papo virtual', payload: 'pesquisaVirtual' };
+	const verConsulta = { content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' };
 
+	// for preps
+	const duvidaPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasPrep' };
+	const deuRuimPrep = { content_type: 'text', title: 'Deu ruim pra vc', payload: 'deuRuimPrep' };
+	const voltarTomarPrep = { content_type: 'text', title: 'Voltar a tomar PrEP', payload: 'voltarTomarPrep' };
+	const alarmePrep = { content_type: 'text', title: 'Alarme para PrEP', payload: 'alarmePrep' };
+	const tomeiPrep = { content_type: 'text', title: 'Tomei', payload: 'tomeiPrep' };
+	const autoteste = { content_type: 'text', title: 'Quero Autoteste', payload: 'autotesteIntro' };
+	// for not preps
+	const duvidaNaoPrep = { content_type: 'text', title: 'Dúvidas', payload: 'duvidasNaoPrep' };
+	const deuRuimNaoPrep = { content_type: 'text', title: 'Deu ruim pra vc', payload: 'deuRuimNaoPrep' };
 
-	if (context.state.user.is_target_audience === 1) { // check if user is part of target audience
-		if (context.state.user.is_part_of_research === 1) { // 1
-			await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) }); // checks if user has a scheduled appointment already
-			if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) { // user can only have one appointment
-				newOptions.push({ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' });
-			} else {
-				newOptions.push({ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' });
+	// Quero participar; Já tomo PrEP; Já to no projeto; Prevenções, sobre a Amanda, Bater Papo
+
+	if (context.state.user.is_prep === null || context.state.user.is_prep === undefined) {
+		opt.push(baterPapo);
+		opt.push(quiz);
+		opt.push(prevencoes);
+		opt.push(join);
+		opt.push(noProjeto);
+		opt.push(sobreAmanda);
+
+		if (context.state.publicoInteresseEnd) {
+			const index = opt.findIndex((x) => x.payload === 'beginQuiz');
+			if (context.state.user.is_target_audience === 0) {
+				if (!context.state.quizBrincadeiraEnd) { if (typeof index === 'number') opt[index] = quizBrincadeira; } else
+				if (!context.state.preCadastroSignature) { if (typeof index === 'number') opt[index] = termos; }
+				const indexJoin = opt.findIndex((x) => x.payload === 'join'); if (typeof indexJoin === 'number') opt.splice(indexJoin, 1);
+				const indexProjeto = opt.findIndex((x) => x.payload === 'noProjeto'); if (typeof indexProjeto === 'number') opt.splice(indexProjeto, 1);
 			}
-		} else if (context.state.user.is_eligible_for_research === 1 && context.state.user.finished_quiz === 1 && context.state.user.is_part_of_research !== 1) { // 1 1
-			newOptions.push({ content_type: 'text', title: 'Pesquisa', payload: 'askResearch' });
-		} else if (context.state.user.is_eligible_for_research === 0 && context.state.user.finished_quiz === 1) { // 0 1
-			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
-		} else if (context.state.user.finished_quiz === 0) { // 0
-			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
-			newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+
+
+			if (context.state.user.is_target_audience === 1) {
+				// user is risk group and didnt answer recrutamento (bloco b)
+				if (!context.state.recrutamentoEnd && context.state.user.risk_group) {
+					opt.splice(index, 0, quizRecrutamento);
+				}
+
+				await context.setState({ temConsulta: await checkAppointment(context.session.user.id) });
+				if (!context.state.temConsulta && !context.state.leftContact) {
+					if (index) {
+						opt.splice(index, 0, marcarConsulta);
+						opt.splice(index + 1, 0, deixarContato);
+					}
+				} else if (!context.state.preCadastroSignature) {
+					opt.splice(index, 0, termos);
+				}
+
+				if (context.state.temConsulta) {
+					opt.splice(index + 1, 0, verConsulta);
+				}
+
+				// dont let the beginQuiz appear if it's target_audience
+				const index2 = opt.findIndex((x) => x.payload === 'beginQuiz');
+				if (index2) opt.splice(index2, 1);
+			}
 		}
-	} else { // not on target audience, may send quiz if there's still any fun_question to be answered
-		await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion || 'quiz') });
-		if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.currentQuestion && context.state.currentQuestion.code !== null && context.state.categoryQuestion === 'fun_questions') {
-			newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
+
+		// dont show quiz option if either of brincadeira and recrutamento are answered, also dont show quiz if user is taget_audiece but is not in the risk group
+		if (context.state.publicoInteresseEnd && (context.state.quizBrincadeiraEnd || (context.state.recrutamentoEnd
+			|| (context.state.user.is_target_audience && !context.state.user.risk_group)))) { opt = await opt.filter((x) => x.title !== 'Quero Participar'); } // dont show quiz option if user has finished the quiz
+
+		if (context.state.user.integration_token) { // replace token options if user has one
+			const index = opt.findIndex((x) => x.payload === 'join'); if (typeof index === 'number') opt[index] = seePrepToken;
+			const index2 = opt.findIndex((x) => x.payload === 'noProjeto'); if (typeof index2 === 'number') opt.splice(index2, 1);
 		}
+	} else if (context.state.user.is_prep === 1) {
+		if (context.state.user.voucher_type === 'sisprep') {
+			opt = [baterPapo, duvidaPrep, deuRuimPrep, autoteste, voltarTomarPrep, alarmePrep];
+		} else if (context.state.user.voucher_type === 'combina') {
+			opt = [baterPapo, duvidaPrep, deuRuimPrep, autoteste, voltarTomarPrep, alarmePrep, tomeiPrep];
+		} else {
+			opt = [baterPapo, duvidaPrep, deuRuimPrep, voltarTomarPrep, alarmePrep];
+		}
+	} else if (context.state.user.is_prep === 0) {
+		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep, autoteste];
 	}
 
-	if (!newOptions.find(x => x.payload === 'beginQuiz') && context.state.user.finished_quiz === 0) {
-		newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' });
-	}
+	opt.reverse();
 
-	if (context.state.user.integration_token) {
-		newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
-		newOptions.push({ content_type: 'text', title: 'Ver meu Voucher', payload: 'seeToken' }); // if user already has an integration token we remove the option to enter the token and show the option to see it
-	} else {
-		newOptions = await newOptions.filter(obj => obj.payload !== 'joinToken'); // remove quiz option
-		newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
-	}
+	const sobreIndex = opt.findIndex((x) => x.payload === 'aboutAmanda'); if (typeof sobreIndex === 'number') opt.push(opt.splice(sobreIndex, 1)[0]);
 
-	newOptions.splice(2, 0, { content_type: 'text', title: 'Prevenções', payload: 'seePreventions' });
+	return { quick_replies: mainMenuFixedOrder(opt) };
+}
 
-	if (context.state.user.is_part_of_research === 1 && context.state.user.is_prep === 1) {
-		newOptions.push({ content_type: 'text', title: 'Medicação', payload: 'medicaçao' });
-	}
+async function buildAlarmeBtn(hasAlarm) {
+	const depois = { content_type: 'text', title: 'Voltar', payload: 'mainMenu' };
+	const config = { content_type: 'text', title: 'Configurar Alarme', payload: 'alarmeConfigurar' };
+	const cancelar = { content_type: 'text', title: 'Cancelar Alarme', payload: 'alarmeCancelarConfirma' };
 
-	newOptions.push({ content_type: 'text', title: 'Sobre a Amanda', payload: 'aboutAmanda' });
-	// if (context.state.stoppedHalfway === true) {
-	// 	newOptions = await replaceTitle(newOptions, 'Quiz', 'Participar');
-	// }
+	if (hasAlarm) return { quick_replies: [config, cancelar] };
+	return { quick_replies: [depois, config] };
+}
 
-	// newOptions.push({ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' }); // -- for testing the quiz
-	// newOptions.push({ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' });
+async function buildCombinaCity() {
+	const opt = [];
+	const cities = combinaCityDictionary;
 
-	return { quick_replies: newOptions }; // putting the filtered array on a QR object
+	const ids = Object.keys(cities);
+
+	ids.forEach((e) => {
+		opt.push({ content_type: 'text', title: cities[e], payload: `combinaCity${e}` });
+	});
+
+	return { quick_replies: opt };
 }
 
 async function checkMedication(prepSince) { // eslint-disable-line
@@ -142,17 +160,25 @@ async function checkMedication(prepSince) { // eslint-disable-line
 	return { quick_replies: newOptions }; // putting the filtered array on a QR object
 }
 
-async function autoTesteOption(options, cityId) {
+async function autotesteOption(options, cityId) {
 	let newOptions = options.quick_replies;
 	// no need to filter out cityId = 3
 	if (cityId && cityId.toString() === '1') { // belo horizonte
-		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
-		newOptions = await newOptions.filter(obj => obj.payload !== 'ong');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'rua');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'ong');
 	} else if (cityId && cityId.toString() === '2') { // salvador
-		newOptions = await newOptions.filter(obj => obj.payload !== 'rua');
-		newOptions = await newOptions.filter(obj => obj.payload !== 'auto');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'rua');
+		newOptions = await newOptions.filter((obj) => obj.payload !== 'auto');
 	}
 	return { quick_replies: newOptions };
+}
+
+// only users that are on sisprep and combina can see the drpNaoTomei option
+async function checkDeuRuimPrep(context, opt) {
+	if (['sisprep', 'combina'].includes(context.state.user.voucher_type) === false) {
+		opt.quick_replies = opt.quick_replies.filter((x) => x.payload !== 'drpNaoTomei');
+	}
+	return opt;
 }
 
 async function getErrorQR(lastPostback) { // eslint-disable-line
@@ -243,12 +269,13 @@ async function sendShare(context, links, results, imagem) {
 }
 
 module.exports = {
-	checkAnsweredQuiz,
 	checkMainMenu,
-	checkConsulta,
 	checkMedication,
-	autoTesteOption,
+	autotesteOption,
 	getErrorQR,
 	buildButton,
 	sendShare,
+	checkDeuRuimPrep,
+	buildAlarmeBtn,
+	buildCombinaCity,
 };

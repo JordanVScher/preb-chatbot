@@ -1,4 +1,11 @@
 const help = require('./helper');
+const { getAppointment } = require('./prep_api');
+
+async function checkAppointment(fbID) {
+	const res = await getAppointment(fbID);
+	if (res && res.appointments && res.appointments.length > 0) return true;
+	return false;
+}
 
 function formatDate(date) {
 	let day = date.getDate();
@@ -23,7 +30,7 @@ async function separateDaysQR(dates, next, pageNumber) {
 		dateOptions.push({ content_type: 'text', title: formatDate(date), payload: `dia${element.ymd}` });
 	});
 
-	if (next && next && next.length > 0) { // if there's still dates to send, add a button to load them
+	if (next && next.length > 0) { // if there's still dates to send, add a button to load them
 		dateOptions.push({ content_type: 'text', title: 'Próximo', payload: 'nextDay' });
 	} else { // no more dates, show extra option
 		dateOptions.push({ content_type: 'text', title: 'Outras Datas', payload: 'outrasDatas' });
@@ -64,16 +71,16 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 
 	if (dates.length < 10) { // less han 10 options, no need for pagination
 		for (const element of dates) { // eslint-disable-line
-			await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
+			await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `horaConsulta${element.quota}` });
 		}
-		result.push({ content_type: 'text', title: 'Outros Horários', payload: 'outrosHorarios' });
+		result.push({ content_type: 'text', title: 'Nenhum desses', payload: 'outrosHorarios' });
 		return result; // return object with the result array
 	} // pagination
 
 	if (!pageNumber || pageNumber === 1) { // on the first page
 		for (const element of dates) { // eslint-disable-line
 			if (result.length <= 8) { // grab only the first 9 elements
-				await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
+				await result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `horaConsulta${element.quota}` });
 			}
 		}
 		result.push({ content_type: 'text', title: 'Próximo', payload: `nextHour${ymd}` }); // add next button
@@ -84,7 +91,7 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 		for (const element of dates) { // eslint-disable-line
 			// get the index of only the elements after the first 9 elements (multiplied by the page number) and limit the number of elements in the array
 			if (index >= 9 * (pageNumber - 1) && result.length <= 8) {
-				result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
+				result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `horaConsulta${element.quota}` });
 				lastQuota = element.quota; // update added last quota
 			}
 			index += 1;
@@ -97,7 +104,7 @@ async function separateHoursQR(dates, ymd, pageNumber) {
 	}
 
 	if (result[result.length - 1].title !== 'Próximo') { // no more dates, show extra option
-		result.push({ content_type: 'text', title: 'Outros Horários', payload: 'outrosHorarios' });
+		result.push({ content_type: 'text', title: 'Nenhum desses', payload: 'outrosHorarios' });
 	}
 
 	return result;
@@ -151,4 +158,5 @@ module.exports = {
 	cleanDates,
 	orderByDate,
 	separateDaysIntoPages,
+	checkAppointment,
 };

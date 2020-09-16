@@ -1,7 +1,7 @@
 module.exports = {
 	greetings: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Quiz', payload: 'beginQuiz' },
+			{ content_type: 'text', title: 'Quero Participar', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' },
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
 		],
@@ -19,16 +19,17 @@ module.exports = {
 	},
 	desafio: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Vamos!', payload: 'beginQuiz' },
+			{ content_type: 'text', title: 'Sim', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
-			{ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
+			{ content_type: 'text', title: 'Já Tomo PrEP', payload: 'join' },
 		],
 	},
 	asksDesafio: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Vamos!', payload: 'beginQuiz' },
+			{ content_type: 'text', title: 'Sim', payload: 'beginQuiz' },
 			{ content_type: 'text', title: 'Agora não', payload: 'desafioRecusado' },
-			{ content_type: 'text', title: 'Já Faço Parte', payload: 'joinToken' },
+			{ content_type: 'text', title: 'Já Tomo PrEP', payload: 'join' },
+			{ content_type: 'text', title: 'Já tô no Projeto', payload: 'noProjeto' },
 		],
 	},
 	desafioAceito: {
@@ -41,11 +42,6 @@ module.exports = {
 		quick_replies: [
 			{ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' },
 			{ content_type: 'text', title: 'Ver Consulta', payload: 'verConsulta' },
-		],
-	},
-	joinToken: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Não tenho Voucher', payload: 'mainMenu' },
 		],
 	},
 	artigoLink: [{
@@ -63,32 +59,25 @@ module.exports = {
 		url: 'https://www.prep1519.org',
 		title: 'Saber Mais',
 	}],
+	Research_TCLE: [{
+		type: 'web_url',
+		url: 'https://www.prep1519.org',
+		title: 'Infos e Contatos',
+	}],
+	Research_Termos: { // é esse que usa só
+		quick_replies: [
+			{ content_type: 'text', title: 'Li e Aceito', payload: 'termosAccept' },
+			{ content_type: 'text', title: 'Não aceito', payload: 'termosDontAccept' },
+		],
+	},
 	duvidaRemedio: [{
 		type: 'web_url',
 		url: 'http://www.aids.gov.br/system/tdf/pub/2017/65141/folder_essencial_prep_08_2017.pdf?file=1&type=node&id=65141&force=1',
 		title: 'Baixar Panfleto',
 	}],
-	leavePhone: {
-		quick_replies: [
-			{ content_type: 'text', title: 'insta', payload: 'leaveInsta' },
-			{ content_type: 'text', title: 'whats', payload: 'leavePhoneTwo' },
-		],
-	},
 	leavePhone2: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Não deixar telefone', payload: 'mainMenu' },
-		],
-	},
-	termos: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Li e aceito!', payload: 'aceitaTermos' },
-			{ content_type: 'text', title: 'Não aceito!', payload: 'naoAceitaTermos' },
-		],
-	},
-	termos2: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Li e aceito!', payload: 'aceitaTermos2' },
-			{ content_type: 'text', title: 'Não aceito!', payload: 'naoAceitaTermos' },
 		],
 	},
 	saberMais: {
@@ -97,17 +86,12 @@ module.exports = {
 			{ content_type: 'text', title: 'Não', payload: 'firstNoResearch' },
 		],
 	},
-	saidYes: {
-		quick_replies: [
-			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-showDays' },
-			{ content_type: 'text', title: 'Li e Aceito', payload: 'Sign-verConsulta' },
-			{ content_type: 'text', title: 'Não aceito', payload: 'showDays' },
-			{ content_type: 'text', title: 'Não aceito', payload: 'verConsulta' }],
-	},
 	outrasDatas: {
 		quick_replies: [
-			{ content_type: 'text', title: 'Lista de Datas', payload: 'listaDatas' },
-			{ content_type: 'text', title: 'Voltar pro Menu', payload: 'mainMenu' },
+			{ content_type: 'text', title: 'Instagram', payload: 'leaveInsta' },
+			{ content_type: 'text', title: 'WhatsApp', payload: 'leavePhoneTwo' },
+			{ content_type: 'text', title: 'Não deixar contato', payload: 'dontLeaveContact' },
+			// { content_type: 'text', title: 'Lista de Datas', payload: 'listaDatas' },
 		],
 	},
 	prevention: {
@@ -134,12 +118,6 @@ module.exports = {
 				{ content_type: 'text', title: 'Não quero', payload: 'noResearchAfter' },
 			],
 		},
-		isPrep: {
-			quick_replies: [
-				{ content_type: 'text', title: 'Sim', payload: 'sendToTriagem' },
-				{ content_type: 'text', title: 'Não', payload: 'sendFollowUp' },
-			],
-		},
 		sendConsulta: {
 			quick_replies: [
 				{ content_type: 'text', title: 'Marcar Consulta', payload: 'showDays' },
@@ -147,6 +125,12 @@ module.exports = {
 				{ content_type: 'text', title: 'Voltar', payload: 'mainMenu' },
 			],
 		},
+	},
+	askTypeSP: {
+		quick_replies: [
+			{ content_type: 'text', title: 'Casa 1', payload: 'askTypeSP1' },
+			{ content_type: 'text', title: 'CTA Henfil', payload: 'askTypeSP2' },
+		],
 	},
 	triagem1: {
 		quick_replies: [
@@ -157,7 +141,7 @@ module.exports = {
 	triagem2: {
 		quick_replies: [
 			{ content_type: 'text', title: 'Agendar', payload: 'checarConsulta' },
-			{ content_type: 'text', title: 'Testagem', payload: 'autoTeste' },
+			{ content_type: 'text', title: 'Testagem', payload: 'autoteste' },
 			{ content_type: 'text', title: 'Agora não', payload: 'mainMenu' },
 		],
 	},

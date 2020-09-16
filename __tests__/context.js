@@ -11,6 +11,11 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 				user_id: 2000,
 				use_dialogflow: 1,
 			},
+			name: 'Foo Bar',
+			firstName: 'Foo',
+			lastName: 'Bar',
+			profilePic: 'foobar',
+			id: 1000,
 		},
 		session: {
 			lastActivity,
@@ -39,6 +44,12 @@ function quickReplyContext(payload, dialog, lastActivity = new Date()) {
 		sendAudio: jest.fn(),
 		typingOn: jest.fn(),
 		typingOff: jest.fn(),
+		typing: jest.fn(),
+		getUserProfile: jest.fn(),
+		Image: jest.fn(),
+		Audio: jest.fn(),
+		Video: jest.fn(),
+		File: jest.fn(),
 	};
 }
 
@@ -53,6 +64,11 @@ function postbackContext(payload, title, dialog = 'prompt', lastActivity = new D
 				user_id: 2000,
 				use_dialogflow: 1,
 			},
+			name: 'Foo Bar',
+			firstName: 'Foo',
+			lastName: 'Bar',
+			profilePic: 'foobar',
+			id: 1000,
 		},
 		session: {
 			lastActivity,
@@ -81,6 +97,12 @@ function postbackContext(payload, title, dialog = 'prompt', lastActivity = new D
 		sendAudio: jest.fn(),
 		typingOn: jest.fn(),
 		typingOff: jest.fn(),
+		typing: jest.fn(),
+		getUserProfile: jest.fn(),
+		Image: jest.fn(),
+		Audio: jest.fn(),
+		Video: jest.fn(),
+		File: jest.fn(),
 	};
 }
 
@@ -95,6 +117,11 @@ function textContext(text, dialog, lastActivity = new Date()) {
 				user_id: 2000,
 				use_dialogflow: 1,
 			},
+			name: 'Foo Bar',
+			firstName: 'Foo',
+			lastName: 'Bar',
+			profilePic: 'foobar',
+			id: 1000,
 			whatWasTyped: text,
 			toSend: text,
 			apiaiResp: { result: { metadata: { intentName: 'teste' } } },
@@ -126,6 +153,12 @@ function textContext(text, dialog, lastActivity = new Date()) {
 		sendAudio: jest.fn(),
 		typingOn: jest.fn(),
 		typingOff: jest.fn(),
+		typing: jest.fn(),
+		getUserProfile: jest.fn(),
+		Image: jest.fn(),
+		Audio: jest.fn(),
+		Video: jest.fn(),
+		File: jest.fn(),
 	};
 }
 

@@ -2,121 +2,135 @@ const prepApi = require('./prep_api');
 const aux = require('./quiz_aux');
 const flow = require('./flow');
 const { addCityLabel } = require('./labels');
-const { Sentry } = require('./helper');
+const help = require('./helper');
+const { sentryError } = require('./error');
 
 // loads next question and shows it to the user
-async function answerQuizA(context) {
-	await context.typingOn();
-	// if the user never started the quiz (or if the user already ended the quiz once === '') the category is 'quiz'
-	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') { await context.setState({ categoryQuestion: 'quiz' }); }
+async function answerQuiz(context, newCategory) {
+	if (newCategory) await context.setState({ categoryQuestion: newCategory });
+
+	if (!context.state.startedQuiz) await context.setState({ startedQuiz: true }); // if we passed here we started a new quiz
+	// if the user never started the quiz the category is 'publico_interesse'
+	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') await context.setState({ categoryQuestion: 'publico_interesse' });
 
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
-	console.log('categoryQuestion', context.state.categoryQuestion);
-
-	// user already answered the quiz (user shouldn't be here)
-	if ((!context.state.currentQuestion || context.state.currentQuestion.code === null) && (context.state.sentAnswer && !context.state.sentAnswer.form_error)) {
-		await aux.sendTermos(context);
-	} else { // user is still answering the quiz
-		// showing question and answer options
-
-		if (context.state.currentQuestion.code === 'AC9') {
-			await context.sendText(flow.onTheResearch.text1);
-			await context.sendImage(flow.onTheResearch.gif);
-			await context.sendText(flow.onTheResearch.text2);
-			await context.sendText(flow.onTheResearch.text3);
-			// quer saber mais sobre o nosso projeto -> agora é uma pergunta do quiz
-		}
-
-		if (context.state.currentQuestion.type === 'multiple_choice') { // eslint-disable-line
-			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion, 'quiz'));
-		} else if (context.state.currentQuestion.type === 'open_text') {
-			await context.setState({ onTextQuiz: true });
-			await context.sendText(context.state.currentQuestion.text);
-		}
-		await context.typingOff();
-	} // -- answering quiz else
+	await aux.sendQuizQuestion(context, 'quiz');
 }
 
-async function handleAnswerA(context, quizOpt) {
-	// context.state.currentQuestion.code -> the code for the current question
-	// quizOpt -> the quiz option the user clicked/wrote
-	// try {
-	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
-	// } catch (err) {
-	// await context.sendText(flow.quiz.form_error);
-	// await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
-	// }
-	console.log(`\nResultado do post da pergunta ${context.state.currentQuestion.code} - ${quizOpt}:`, context.state.sentAnswer, '\n');
-	await context.setState({ onTextQuiz: false });
-	// if we know user is not target audience he can only see the fun_questions or now on
-	if (context.state.sentAnswer && context.state.sentAnswer.is_target_audience === 0) {
-		await context.setState({ categoryQuestion: 'fun_questions' });
+async function handleQuizResposta(context) {
+	const { categoryQuestion } = context.state;
+	const { sentAnswer } = context.state;
+
+	// after city question show extra message and save city labels
+	if (context.state.currentQuestion.code === 'A1') {
+		const textToSend = flow.quizCityMsg[context.state.quizOpt];
+		if (textToSend) await context.sendText(textToSend);
+		await addCityLabel(context.session.user.id, context.state.quizOpt);
 	}
-	if (context.state.sentAnswer.error || !context.state.sentAnswer) { // error
+
+	// add registration form link to send later
+	if (sentAnswer.offline_pre_registration_form) await context.setState({ registrationForm: sentAnswer.offline_pre_registration_form });
+
+
+	await aux.sendFollowUpMsgs(context);
+	if (sentAnswer.finished_quiz === 1) await context.setState({ startedQuiz: false, categoryQuestion: '' });
+
+	// from here on out, the flow of the quiz actually changes, so remember to return something to stop the rest from executing
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.is_target_audience === 0
+		&& context.state.currentQuestion.code === 'A2' && parseInt(context.state.quizOpt, 10) < '15') {
+		await context.setState({ dialog: 'falarComHumano', publicoInteresseEnd: true, menorDeQuinze: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.entrar_em_contato === 1) {
+		await context.setState({ dialog: 'falarComHumano', publicoInteresseEnd: true, naoPublico: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.is_target_audience === 0) {
+		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz && sentAnswer.is_target_audience) {
+		await context.setState({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true });
+		await context.setState({ whenBecameTargetAudience: new Date() });
+		return false;
+	}
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.entrar_em_contato === 0) {
+		await context.setState({ dialog: 'offerBrincadeira2', publicoInteresseEnd: true, naoPublico: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'quiz_brincadeira' && sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'preTCLE', quizBrincadeiraEnd: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'recrutamento' && sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'preTCLE', recrutamentoEnd: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'deu_ruim_nao_tomei' && sentAnswer.finished_quiz === 1) { // check if the quiz is over
+		await context.setState({ dialog: 'deuRuimPrepFim' });
+		return false;
+	}
+
+	if (categoryQuestion === 'triagem' && sentAnswer.finished_quiz === 1) {
+		if (sentAnswer.entrar_em_contato === 1) {
+			await context.setState({ dialog: 'triagemCQ_entrar' });
+			return false;
+		}
+
+		if (sentAnswer.ir_para_agendamento === 1) {
+			await context.setState({ dialog: 'falarComHumano' });
+			return false;
+		}
+
+		if (sentAnswer.ir_para_agendamento === 0) {
+			await context.setState({ dialog: 'testagem' });
+			return false;
+		}
+	}
+
+	if (categoryQuestion === 'duvidas_nao_prep' && sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'falarComHumano' });
+		return false;
+	}
+
+	if (context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
+		await context.setState({ dialog: 'startQuiz' });
+		return false;
+	}
+
+	return true;
+}
+
+async function handleAnswer(context, quizOpt) {
+	await context.setState({ onTextQuiz: false, onButtonQuiz: false, quizOpt });
+
+	if (process.env.ENV === 'local') await context.sendText(JSON.stringify({ category: context.state.categoryQuestion, code: context.state.currentQuestion.code, answer_value: context.state.quizOpt }, null, 2));
+	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, context.state.quizOpt) });
+	if (process.env.ENV === 'local') await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2));
+
+	// error sending message to API, send user to same question and send error to the devs
+	if (!context.state.sentAnswer || context.state.sentAnswer.error) {
 		await context.sendText(flow.quiz.form_error);
-		await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
-
-		if (process.env.ENV !== 'local') {
-			await Sentry.configureScope(async (scope) => { // sending to sentry
-				scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
-				scope.setExtra('intent', context.state.currentQuestion);
-				scope.setExtra('quizOpt', quizOpt);
-				scope.setExtra('sentAnswer', context.state.sentAnswer);
-				scope.setExtra('state', context.state);
-				await Sentry.captureMessage('Houve um erro ao enviar resposta no quiz');
-			});
-		}
-	} else {
-		if (context.state.sentAnswer.followup_messages) {
-			for (let i = 0; i < context.state.sentAnswer.followup_messages.length; i++) { // eslint-disable-line no-plusplus
-				if (context.state.sentAnswer.followup_messages[i].includes('.png')) {
-					await context.setState({ resultImageUrl: context.state.sentAnswer.followup_messages[i] }); // not over, sends user to next question
-				} else {
-					await context.sendText(context.state.sentAnswer.followup_messages[i]);
-					if (i === 1 && context.state.currentQuestion.code === 'AC7') {
-						if (context.state.resultImageUrl && context.state.resultImageUrl.length > 0) {
-							await context.sendImage(context.state.resultImageUrl);
-							await context.setState({ resultImageUrl: '' });
-						}
-					}
-				}
-			}
-		}
-
-		// saving city labels
-		if (context.state.currentQuestion.code === 'A1') {
-			await addCityLabel(context.session.user.id, quizOpt);
-		}
-
-		if (context.state.sentAnswer.offline_pre_registration_form) {
-			await context.setState({ registrationForm: context.state.sentAnswer.offline_pre_registration_form });
-		}
-
-		if (context.state.currentQuestion.code === 'AC9') {
-			if (quizOpt.toString() === '1') {
-				await context.setState({ dialog: 'firstJoinResearch' });
-			} else {
-				await context.setState({ dialog: 'firstNoResearch' });
-			}
-		} else if (context.state.currentQuestion.code === 'AC8' && quizOpt.toString() === '2') {
-			await context.setState({ dialog: 'stopHalfway' });
-		} else if (context.state.sentAnswer.form_error
-			|| (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid')) { // input format is wrong (text)
-			await context.sendText(flow.quiz.invalid); // Date is: YYYY-MM-DD
-			await context.setState({ dialog: 'startQuizA' }); // re-asks same question
-		} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
-			if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
-				await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
-			} else if ((context.state.sentAnswer.finished_quiz === 1 && context.state.sentAnswer.is_target_audience === 0)
-				|| (!context.state.sentAnswer.finished_quiz && context.state.user.is_target_audience === 0)) {
-				await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
-			} else {
-				await aux.sendTermos(context);
-			}
-		}
-		/* eslint-enable no-lonely-if */
+		await context.setState({ dialog: 'startQuiz' });
+		if (process.env.ENV !== 'local') await sentryError('PREP - Erro ao salvar resposta do Quiz', { sentAnswer: context.state.sentAnswer, quizOpt: context.state.quizOpt, state: context.state });
+		return false;
 	}
+	// Invalid input format, make user try again on same question. // Date is: YYYY-MM-DD
+	if (context.state.sentAnswer.form_error || (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid')) { // input format is wrong (text)
+		await context.sendText(flow.quiz.invalid);
+		await context.setState({ dialog: 'startQuiz' }); // re-asks same question
+		return false;
+	}
+
+	return handleQuizResposta(context);
 }
 
 
@@ -126,12 +140,32 @@ async function AnswerExtraQuestion(context) {
 	const index = context.state.lastQRpayload.replace('extraQuestion', '');
 	const answer = context.state.currentQuestion.extra_quick_replies[index].text;
 	await context.sendText(answer);
-	await context.setState({ dialog: 'startQuizA' }); // re-asks same question
+	await context.setState({ dialog: 'startQuiz' }); // re-asks same question
 	return answer;
 }
 
+// allows user to type the text on a button to choose that option
+async function handleText(context) {
+	if (!context.state.whatWasTyped) return null;
+	let text = context.state.whatWasTyped.toLowerCase();
+	text = await help.accents.remove(text);
+	let getIndex = null;
+	context.state.buttonTexts.forEach((e, i) => {
+		if (e.trim() === text.trim() && getIndex === null) { // user text has to be the same as the button text
+		// if (e.includes(text) && getIndex === null) { // user text has to be belong to the button
+			getIndex = i + 1;
+		}
+	});
+
+	if (getIndex === null) return null;
+	return getIndex;
+}
+
 module.exports = {
-	answerQuizA,
-	handleAnswerA,
+	answerQuiz,
+	handleAnswer,
 	AnswerExtraQuestion,
+	handleText,
+	checkFinishQuiz: aux.checkFinishQuiz,
+	handleQuizResposta,
 };

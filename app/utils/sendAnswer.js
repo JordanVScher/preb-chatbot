@@ -11,9 +11,7 @@ module.exports.sendAnswer = async (context) => { // send answer from posicioname
 	// console.log('currentTheme', currentTheme);
 	if (context.state.currentTheme && ((context.state.currentTheme.answer && context.state.currentTheme.answer.length > 0)
 		|| (context.state.currentTheme.saved_attachment_type !== null && context.state.currentTheme.saved_attachment_id !== null))) {
-		await MaAPI.setIntentStatus(context.state.politicianData.user_id, context.session.user.id, context.state.currentIntent, 1);
 		await MaAPI.logAskedEntity(context.session.user.id, context.state.politicianData.user_id, context.state.currentTheme.entities[0].id);
-
 		if (context.state.currentTheme.answer) { // if there's a text asnwer we send it
 			await context.setState({ resultTexts: await separateString(context.state.currentTheme.answer) });
 			if (context.state.resultTexts && context.state.resultTexts.firstString) {
@@ -23,20 +21,20 @@ module.exports.sendAnswer = async (context) => { // send answer from posicioname
 		}
 		try {
 			if (context.state.currentTheme.saved_attachment_type === 'image') { // if attachment is image
-				await context.sendImage({ attachment_id: context.state.currentTheme.saved_attachment_id });
+				await context.Image({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
 			if (context.state.currentTheme.saved_attachment_type === 'video') { // if attachment is video
-				await context.sendVideo({ attachment_id: context.state.currentTheme.saved_attachment_id });
+				await context.Video({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
 			if (context.state.currentTheme.saved_attachment_type === 'audio') { // if attachment is audio
-				await context.sendAudio({ attachment_id: context.state.currentTheme.saved_attachment_id });
+				await context.Audio({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
 			if (context.state.currentTheme.saved_attachment_type === 'file') { // if attachment is audio
-				await context.sendFile({ attachment_id: context.state.currentTheme.saved_attachment_id });
+				await context.File({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
 		} catch (error) {
 			await Sentry.configureScope(async (scope) => { // sending to sentry
-				scope.setUser({ username: `${context.session.user.first_name} ${context.session.user.last_name}` });
+				scope.setUser({ username: context.state.name });
 				scope.setExtra('state', context.state);
 				throw error;
 			});
