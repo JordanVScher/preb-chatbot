@@ -22,7 +22,7 @@ it('Voltar para o inicio - menu', async () => {
 	const context = cont.postbackContext('greetings', 'Voltar para o inicio', 'greetings');
 	await handler(context);
 
-	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id), ignore: false });
+	await expect(context.setState).toBeCalledWith({ politicianData: await MaAPI.getPoliticianData(context.event.rawEvent.recipient.id) || {}, ignore: false });
 	await expect(addNewUser).toBeCalledWith(context);
 
 	await expect(MaAPI.postRecipientMA).toBeCalledWith(context.state.politicianData.user_id, {
