@@ -21,16 +21,16 @@ module.exports.sendAnswer = async (context) => { // send answer from posicioname
 		}
 		try {
 			if (context.state.currentTheme.saved_attachment_type === 'image') { // if attachment is image
-				await context.Image({ attachment_id: context.state.currentTheme.saved_attachment_id });
+				await context.sendImage({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
 			if (context.state.currentTheme.saved_attachment_type === 'video') { // if attachment is video
-				await context.Video({ attachment_id: context.state.currentTheme.saved_attachment_id });
+				await context.sendVideo({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
 			if (context.state.currentTheme.saved_attachment_type === 'audio') { // if attachment is audio
-				await context.Audio({ attachment_id: context.state.currentTheme.saved_attachment_id });
+				await context.sendAudio({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
 			if (context.state.currentTheme.saved_attachment_type === 'file') { // if attachment is audio
-				await context.File({ attachment_id: context.state.currentTheme.saved_attachment_id });
+				await context.sendFile({ attachment_id: context.state.currentTheme.saved_attachment_id });
 			}
 		} catch (error) {
 			await Sentry.configureScope(async (scope) => { // sending to sentry
