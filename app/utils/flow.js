@@ -285,7 +285,7 @@ module.exports = {
 	},
 	duvidasPrep: {
 		text1: 'Bora acabar agora com essas duvidas sobre Prep? Escolhe ai e eu te explico tuduuu! ',
-		dpDrogas: 'Usar hormônios não influencia no efeito da PrEP! Mas se vc tá se hormonizando é close avaliar o caso de acordo com suas doses com um profissional do projeto!',
+		dpDrogas: 'Beber álcool e usar outras drogas ñ influencia no efeito da PrEP É um luxo!',
 		dpHormonios: 'Se vc tá se hormonizando, é close vc avaliar seu caso de acordo com suas doses, mas usar hormônios ñ influencia no efeito da PrEP!',
 		dpEsqueci: 'Se ontem vc esqueceu de tomar e hj rolou sem camisinha, tome o comprimido assim que se lembrar, q vai ficar tudo bapho! Esquecer um dia só ñ corta o efeito, mas, se vc ficar mais de 2 dias sem tomar e não usar camisinha em alguma relação, aí ñ funciona e talvez vc precise tomar PEP.',
 		dpInfo: `Aqui vc encontra links sobre o uso de PrEP q podem te interessar!
@@ -451,7 +451,7 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 			menuOptions: ['Quero Cancelar', 'Reconfigurar', 'Voltar'],
 			menuPostback: ['alarmeCancelar', 'alarmeConfigurar', 'mainMenu'],
 		},
-		alarmeCancelarSuccess: 'Seu alarme foi cancelado com sucesso.',
+		alarmeCancelarSuccess: 'Arrasou, more!',
 		alarmeCancelarFailure: 'Ops, tive um erro e não consegui cancelar seu alarme. Tente novamente mais tarde.',
 		comoTomando: 'Como tá tomando?',
 		comoTomandoBtn: {
