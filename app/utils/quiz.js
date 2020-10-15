@@ -1,41 +1,138 @@
-const prepApi = require('./prep_api.js');
+const prepApi = require('./prep_api');
 const aux = require('./quiz_aux');
-
+const flow = require('./flow');
+const { addCityLabel } = require('./labels');
+const help = require('./helper');
+const { sentryError } = require('./error');
 
 // loads next question and shows it to the user
-async function answerQuizA(context) {
-	await context.typingOn();
+async function answerQuiz(context, newCategory) {
+	if (newCategory) await context.setState({ categoryQuestion: newCategory });
+
+	if (!context.state.startedQuiz) await context.setState({ startedQuiz: true }); // if we passed here we started a new quiz
+	// if the user never started the quiz the category is 'publico_interesse'
+	if (!context.state.categoryQuestion || context.state.categoryQuestion === '') await context.setState({ categoryQuestion: 'publico_interesse' });
+
 	await context.setState({ currentQuestion: await prepApi.getPendinQuestion(context.session.user.id, context.state.categoryQuestion) });
-	console.log('\nA nova pergunta do get', context.state.currentQuestion, '\n');
-	await aux.handleFlags(context, context.state.currentQuestion);
-
-
-	if (context.state.currentQuestion && context.state.currentQuestion.code === null) { // user already answered the quiz (user shouldn't be here)
-		await aux.endQuizA(context); // quiz is over
-	} else { /* eslint-disable no-lonely-if */ // user is still answering the quiz
-		if (context.state.categoryQuestion === 'quiz') { // send encouragement only on the regular quiz
-			if (context.state.currentQuestion.count_more === 10) { // encouragement message
-				await context.sendText('Estamos indo bem, força! 💪💪');
-			} else if (context.state.currentQuestion.count_more === 5) {
-				await context.sendText('Calma, só mais algumas perguntinhas e a gente acaba 🌟🌟');
-			} else if (context.state.currentQuestion.count_more === 2) {
-				await context.sendText('Boa, estamos na reta final ✨✨');
-			}
-		}
-
-		await aux.handleAC5(context);
-
-		// showing question and answer options
-		await context.setState({ onTextQuiz: true });
-		if (context.state.currentQuestion.type === 'multiple_choice') {
-			await context.sendText(context.state.currentQuestion.text, await aux.buildMultipleChoice(context.state.currentQuestion));
-		} else if (context.state.currentQuestion.type === 'open_text') {
-			await context.sendText(context.state.currentQuestion.text);
-		}
-		await context.typingOff();
-		/* eslint-enable no-lonely-if */
-	} // -- answering quiz else
+	await aux.sendQuizQuestion(context, 'quiz');
 }
+
+async function handleQuizResposta(context) {
+	const { categoryQuestion } = context.state;
+	const { sentAnswer } = context.state;
+
+	// after city question show extra message and save city labels
+	if (context.state.currentQuestion.code === 'A1') {
+		const textToSend = flow.quizCityMsg[context.state.quizOpt];
+		if (textToSend) await context.sendText(textToSend);
+		await addCityLabel(context.session.user.id, context.state.quizOpt);
+	}
+
+	// add registration form link to send later
+	if (sentAnswer.offline_pre_registration_form) await context.setState({ registrationForm: sentAnswer.offline_pre_registration_form });
+
+
+	await aux.sendFollowUpMsgs(context);
+	if (sentAnswer.finished_quiz === 1) await context.setState({ startedQuiz: false, categoryQuestion: '' });
+
+	// from here on out, the flow of the quiz actually changes, so remember to return something to stop the rest from executing
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.is_target_audience === 0
+		&& context.state.currentQuestion.code === 'A2' && parseInt(context.state.quizOpt, 10) < '15') {
+		await context.setState({ dialog: 'falarComHumano', publicoInteresseEnd: true, menorDeQuinze: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.entrar_em_contato === 1) {
+		await context.setState({ dialog: 'falarComHumano', publicoInteresseEnd: true, naoPublico: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.is_target_audience === 0) {
+		await context.setState({ dialog: 'offerBrincadeira', publicoInteresseEnd: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz && sentAnswer.is_target_audience) {
+		await context.setState({ dialog: 'ofertaPesquisaStart', publicoInteresseEnd: true });
+		await context.setState({ whenBecameTargetAudience: new Date() });
+		return false;
+	}
+
+	if (categoryQuestion === 'publico_interesse' && sentAnswer.finished_quiz === 1 && sentAnswer.entrar_em_contato === 0) {
+		await context.setState({ dialog: 'offerBrincadeira2', publicoInteresseEnd: true, naoPublico: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'quiz_brincadeira' && sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'preTCLE', quizBrincadeiraEnd: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'recrutamento' && sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'preTCLE', recrutamentoEnd: true });
+		return false;
+	}
+
+	if (categoryQuestion === 'deu_ruim_nao_tomei' && sentAnswer.finished_quiz === 1) { // check if the quiz is over
+		await context.setState({ dialog: 'deuRuimPrepFim' });
+		return false;
+	}
+
+	if (categoryQuestion === 'triagem' && sentAnswer.finished_quiz === 1) {
+		if (sentAnswer.entrar_em_contato === 1) {
+			await context.setState({ dialog: 'triagemCQ_entrar' });
+			return false;
+		}
+
+		if (sentAnswer.ir_para_agendamento === 1) {
+			await context.setState({ dialog: 'falarComHumano' });
+			return false;
+		}
+
+		if (sentAnswer.ir_para_agendamento === 0) {
+			await context.setState({ dialog: 'testagem' });
+			return false;
+		}
+	}
+
+	if (categoryQuestion === 'duvidas_nao_prep' && sentAnswer.finished_quiz === 1) {
+		await context.setState({ dialog: 'falarComHumano' });
+		return false;
+	}
+
+	if (context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
+		await context.setState({ dialog: 'startQuiz' });
+		return false;
+	}
+
+	return true;
+}
+
+async function handleAnswer(context, quizOpt) {
+	await context.setState({ onTextQuiz: false, onButtonQuiz: false, quizOpt });
+
+	if (process.env.ENV === 'local') await context.sendText(JSON.stringify({ category: context.state.categoryQuestion, code: context.state.currentQuestion.code, answer_value: context.state.quizOpt }, null, 2));
+	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, context.state.quizOpt) });
+	if (process.env.ENV === 'local') await context.sendText(JSON.stringify(context.state.sentAnswer, null, 2));
+
+	// error sending message to API, send user to same question and send error to the devs
+	if (!context.state.sentAnswer || context.state.sentAnswer.error) {
+		await context.sendText(flow.quiz.form_error);
+		await context.setState({ dialog: 'startQuiz' });
+		if (process.env.ENV !== 'local') await sentryError('PREP - Erro ao salvar resposta do Quiz', { sentAnswer: context.state.sentAnswer, quizOpt: context.state.quizOpt, state: context.state });
+		return false;
+	}
+	// Invalid input format, make user try again on same question. // Date is: YYYY-MM-DD
+	if (context.state.sentAnswer.form_error || (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid')) { // input format is wrong (text)
+		await context.sendText(flow.quiz.invalid);
+		await context.setState({ dialog: 'startQuiz' }); // re-asks same question
+		return false;
+	}
+
+	return handleQuizResposta(context);
+}
+
 
 // extra questions -> explanation of obscure terms
 // sends the answer to the question and sends user back to the question
@@ -43,35 +140,32 @@ async function AnswerExtraQuestion(context) {
 	const index = context.state.lastQRpayload.replace('extraQuestion', '');
 	const answer = context.state.currentQuestion.extra_quick_replies[index].text;
 	await context.sendText(answer);
-	await context.setState({ dialog: 'startQuizA' }); // re-asks same question
+	await context.setState({ dialog: 'startQuiz' }); // re-asks same question
+	return answer;
 }
 
-async function handleAnswerA(context, quizOpt) {
-	await context.setState({ onTextQuiz: false });
-	// context.state.currentQuestion.code -> the code for the current question
-	// quizOpt -> the quiz option the user clicked/wrote
-	await context.setState({ sentAnswer: await prepApi.postQuizAnswer(context.session.user.id, context.state.categoryQuestion, context.state.currentQuestion.code, quizOpt) });
-	console.log('\nResultado do post da pergunta', context.state.sentAnswer, '\n');
-
-	if (context.state.sentAnswer.error === 'Internal server error') { // error
-		await context.sendText('Ops, tive um erro interno');
-	} else if (context.state.sentAnswer.form_error && context.state.sentAnswer.form_error.answer_value && context.state.sentAnswer.form_error.answer_value === 'invalid') { // input format is wrong (text)
-		await context.sendText('Formato inválido! Tente novamente!');
-		// Date is: YYYY-MM-DD
-		await context.setState({ dialog: 'startQuizA' }); // re-asks same question
-	} else { /* eslint-disable no-lonely-if */ // no error, answer was saved successfully
-		await aux.handleFlags(context, context.state.sentAnswer);
-
-		if (context.state.sentAnswer && context.state.sentAnswer.finished_quiz === 0) { // check if the quiz is over
-			await context.setState({ finished_quiz: false });
-			await context.setState({ dialog: 'startQuizA' }); // not over, sends user to next question
-		} else {
-			await aux.endQuizA(context); // quiz is over
+// allows user to type the text on a button to choose that option
+async function handleText(context) {
+	if (!context.state.whatWasTyped) return null;
+	let text = context.state.whatWasTyped.toLowerCase();
+	text = await help.accents.remove(text);
+	let getIndex = null;
+	context.state.buttonTexts.forEach((e, i) => {
+		if (e.trim() === text.trim() && getIndex === null) { // user text has to be the same as the button text
+		// if (e.includes(text) && getIndex === null) { // user text has to be belong to the button
+			getIndex = i + 1;
 		}
-		/* eslint-enable no-lonely-if */
-	}
+	});
+
+	if (getIndex === null) return null;
+	return getIndex;
 }
 
-module.exports.answerQuizA = answerQuizA;
-module.exports.handleAnswerA = handleAnswerA;
-module.exports.AnswerExtraQuestion = AnswerExtraQuestion;
+module.exports = {
+	answerQuiz,
+	handleAnswer,
+	AnswerExtraQuestion,
+	handleText,
+	checkFinishQuiz: aux.checkFinishQuiz,
+	handleQuizResposta,
+};

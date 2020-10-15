@@ -4,200 +4,213 @@ const flow = require('./flow');
 const opt = require('./options');
 const help = require('./helper');
 const prepApi = require('./prep_api');
+const checkQR = require('./checkQR');
+const aux = require('./consulta-aux');
 const { sendMain } = require('./mainMenu');
+const { sentryError } = require('./error');
+const mainMenu = require('./mainMenu');
+
+async function sendSalvador(context) {
+	if (context.state.user && context.state.user.city && context.state.user.city.toString() === '2') { await context.sendText(flow.consulta.salvadorMsg); }
+}
+
+async function sendExtraMessages(context) {
+	// await context.setState({ sendExtraMessages2: true });
+	if (context.state.sendExtraMessages2 === true) {
+		await context.setState({ sendExtraMessages2: false, sendExtraMessages: false });
+		// console.log('offline_pre_registration_form', context.state.registrationForm);
+		if (context.state.registrationForm && context.state.registrationForm.length > 0) {
+			try {
+				await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton(context.state.registrationForm, 'Pré-Cadastro'));
+			} catch (error) {
+				await context.sendButtonTemplate(flow.quizYes.text2, await checkQR.buildButton('https://sisprep1519.org/api', 'Pré-Cadastro'));
+				await sentryError('Consulta - Não foi possível enviar o form de registro', context.state);
+			}
+		}
+	}
+}
+
+async function sendConsultas(context) {
+		for (const iterator of context.state.consulta.appointments) { // eslint-disable-line
+		const msg = await help.buildConsultaFinal(context.state, iterator);
+		await context.sendText(msg);
+	}
+
+	if (context.state.voucher && context.state.voucher.length > 0) {
+		await context.sendText(`Seu identificador: ${context.state.voucher}`);
+	}
+	await sendSalvador(context);
+}
 
 async function verConsulta(context) {
-	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	console.log(context.state.consulta);
-
-	if (context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0) {
-		for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
-			await context.sendText(`${flow.consulta.success}`
-			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-			+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`
-			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+	if (context.state.user.is_target_audience) {
+		await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
+		if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
+			await sendConsultas(context);
+			await context.sendText(flow.consulta.view);
+			await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
+		} else {
+			await context.sendText(flow.verConsulta.zero);
 		}
-		await context.sendText('Não falte!');
 	} else {
-		await context.sendText(flow.verConsulta.zero, opt.saidYes);
+		await sendMain(context);
 	}
-}
-
-async function separateDaysQR(dates) {
-	if (dates.length <= 10) { // less han 10 options, no need for pagination
-		const result = [];
-		dates.forEach(async (element) => {
-			const date = new Date(`${element.ymd}T00:00:00`); // new date from ymd
-			result.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.appointment_window_id}` });
-		});
-		return { 0: result }; // return object with the result array
-	} // else
-
-	// more than 10 options, we need pagination
-	let page = 0; // the page number
-	let set = [];
-	const result = {};
-
-	dates.forEach(async (element, index) => {// eslint-disable-line
-		if (page > 0 && set.length === 0) {
-			set.push({ content_type: 'text', title: 'Anterior', payload: `nextDay${page - 1}` }); // adding previous button to set
-		}
-
-		const date = new Date(`${element.hours[0].datetime_start}`);
-		set.push({ content_type: 'text', title: `${date.getDate()}/${date.getMonth() + 1} - ${help.weekDayName[date.getDay()]}`, payload: `dia${element.appointment_window_id}` });
-
-
-		if (set.length % 9 === 0) { // time to add 'next' button at the 10th position
-		// % 9 -> next is the "tenth" position for the set OR what remains before completing 10 positions for the new set (e.g. ->  47 - 40 = 7)
-		// console.log('entrei aqui', index + 1);
-
-			set.push({ content_type: 'text', title: 'Próximo', payload: `nextDay${page + 1}` }); // adding next button to set
-			result[page] = set; // adding set/page to result
-			page += 1; // next page
-			set = []; // cleaning set
-		}
-	});
-
-	if (set.length > 0) { // check if there's any left over options that didn't make the cut
-		result[page] = set; // adding set/page to result
-		page += 1; // next page
-		set = []; // cleaning set
-	}
-
-	return result;
-}
-
-async function nextDay(context, page) {
-	await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays[page] });
-}
-
-async function nextHour(context, page) {
-	await context.sendText(flow.consulta.hour, { quick_replies: context.state.freeHours[page] });
-}
-
-async function formatHour(hour) {
-	let result = hour;
-	result = result.slice(0, 5);
-	result = `${result}${hour.slice(8, 16)}`;
-
-	return result;
-}
-
-async function separateHoursQR(dates) {
-	if (dates.length <= 10) { // less han 10 options, no need for pagination
-		const result = [];
-		dates.forEach(async (element) => {
-			result.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
-		});
-		return { 0: result }; // return object with the result array
-	} // else
-
-	// more than 10 options, we need pagination
-	let page = 0; // the page number
-	let set = [];
-	const result = {};
-
-	dates.forEach(async (element, index) => {// eslint-disable-line
-		if (page > 0 && set.length === 0) {
-			set.push({ content_type: 'text', title: 'Anterior', payload: `nextHour${page - 1}` }); // adding previous button to set
-		}
-		set.push({ content_type: 'text', title: `As ${await formatHour(element.time)}`, payload: `hora${element.quota}` });
-
-		if (set.length % 9 === 0) { // time to add 'next' button at the 10th position
-			// % 9 -> next is the "tenth" position for the set OR what remains before completing 10 positions for the new set (e.g. ->  47 - 40 = 7)
-			// console.log('entrei aqui', index + 1);
-
-			set.push({ content_type: 'text', title: 'Próximo', payload: `nextHour${page + 1}` }); // adding next button to set
-			result[page] = set; // adding set/page to result
-			page += 1; // next page
-			set = []; // cleaning set
-		}
-	});
-	if (set.length > 0) { // check if there's any left over options that didn't make the cut
-		result[page] = set; // adding set/page to result
-		page += 1; // next page
-		set = []; // cleaning set
-	}
-
-	return result;
-}
-
-
-// removes dates that don't have any available hours
-async function cleanDates(dates) {
-	const result = [];
-	dates.forEach(async (element) => {
-		if (element.hours.length !== 0) { result.push(element); }
-	});
-
-	return result;
-}
-
-async function showCities(context) {
-	await context.setState({ cities: await prepApi.getAvailableCities() });
-	const options = [];
-
-	context.state.cities.calendars.forEach(async (element) => {
-		options.push({ content_type: 'text', title: element.city, payload: `city${element.id}` });
-	});
-
-	await context.sendText(flow.consulta.city, { quick_replies: options });
 }
 
 async function showDays(context) { // shows available days
-	// await context.setState({ freeTime: example }); // all the free time slots we have
-	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.cityId) }); // getting whole calendar
-	// console.log('Calendário Carregado', JSON.stringify(context.state.calendar, undefined, 2));
+	await context.setState({ calendarCurrent: context.state.calendar[context.state.paginationDate], calendarNext: context.state.calendar[context.state.paginationDate + 1] });
+	await context.setState({ freeDays: await aux.separateDaysQR(context.state.calendarCurrent, context.state.calendarNext, context.state.paginationDate) });
 
-	await context.setState({ freeTime: await cleanDates(context.state.calendar.dates) }); // all the free time slots we have
-
-	await context.setState({ freeDays: await separateDaysQR(context.state.freeTime) });
-	if (context.state.freeDays && context.state.freeDays['0'] && context.state.freeDays['0'] && context.state.freeDays['0'].length > 0) {
-		await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays['0'] });
+	if (context.state.freeDays && context.state.freeDays.length > 0) {
+		await context.sendText(flow.consulta.date, { quick_replies: context.state.freeDays });
 	} else {
 		await context.sendText(flow.consulta.fail1, opt.consultaFail);
+		await sentryError('Consulta - Não foi possível exibir os dias', context.state);
 	}
 }
 
-async function showHours(context, windowId) {
-	// context.state.freeTime -> // all the free time slots we have
-
-	await context.setState({ chosenDay: context.state.freeTime.find(date => date.appointment_window_id === parseInt(windowId, 10)) });
-	await context.setState({ freeHours: await separateHoursQR(context.state.chosenDay.hours) });
-	if (context.state.freeHours && context.state.freeHours['0'] && context.state.freeHours['0'] && context.state.freeHours['0'].length > 0) {
-		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours['0'] });
+async function showHours(context, ymd) {
+	await context.setState({ chosenDay: context.state.calendarCurrent.find((date) => date.ymd === ymd) }); // any day chosen from freeDays is in the calendarCurrent
+	await context.setState({ freeHours: await aux.separateHoursQR(context.state.chosenDay.hours, ymd, context.state.paginationHour) });
+	if (context.state.freeHours && context.state.freeHours.length > 0) {
+		await context.sendText(flow.consulta.hours, { quick_replies: context.state.freeHours });
 	} else {
 		await context.sendText(flow.consulta.fail2, opt.consultaFail);
+		await sentryError('Consulta - Não foi possível exibir as horas', context.state);
 	}
 }
 
 async function finalDate(context, quota) { // where we actually schedule the consulta
-	await context.setState({ chosenHour: context.state.chosenDay.hours.find(hour => hour.quota === parseInt(quota, 10)) });
-	// console.log('chosenHour', context.state.chosenHour);
+	await context.setState({ paginationDate: 1, paginationHour: 1, dialog: '' }); // resetting pagination
+	await context.setState({ chosenHour: context.state.chosenDay.hours.find((hour) => hour.quota === parseInt(quota, 10)) });
 
-	const response = await prepApi.postAppointment(
-		context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta, context.state.chosenDay.appointment_window_id,
-		context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
-	);
+	await context.setState({
+		appointmentResponse: await prepApi.postAppointment(
+			context.session.user.id, context.state.calendar.google_id, context.state.categoryConsulta || 'recrutamento',
+			context.state.chosenDay.appointment_window_id, context.state.chosenHour.quota, context.state.chosenHour.datetime_start, context.state.chosenHour.datetime_end,
+		),
+	});
 
-	console.log('response', response);
+	await context.setState({ calendar: '' });
 
+	if (context.state.appointmentResponse && context.state.appointmentResponse.id && !context.state.appointmentResponse.form_error) {
+		const { appointments } = await prepApi.getAppointment(context.session.user.id);
+		const consulta = appointments.find((x) => x.id === context.state.appointmentResponse.id);
 
-	if (response.id) {
-		await context.sendText(`${flow.consulta.success}`
-			+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-			+ `\n⏰:  ${help.formatDate(context.state.chosenHour.datetime_start)}`
-			+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
+		const msg = `${flow.consulta.success}\n${await help.buildConsultaFinal(context.state, consulta)}`;
+		await context.sendText(msg);
+		await context.sendText(flow.consulta.view);
+		await sendSalvador(context);
+		await sendExtraMessages(context);
+		await context.typing(1000 * 3);
+
+		// after consulta, go to menu
 		await sendMain(context);
+		// if (context.state.nextDialog === 'ofertaPesquisaEnd') {
+		// 	await context.setState({ dialog: 'ofertaPesquisaEnd' });
+		// } else if (context.state.nextDialog === 'TCLE') {
+		// 	await context.setState({ dialog: 'TCLE' });
+		// } else {
+		// 	await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
+		// }
 	} else {
 		await context.sendText(flow.consulta.fail3, opt.consultaFail);
+		console.log('context.state.appointmentResponse', context.state.appointmentResponse);
+		await sentryError('Consulta - Não foi possível marcar a consulta', context.state);
 	}
 }
 
-module.exports.verConsulta = verConsulta;
-module.exports.showDays = showDays;
-module.exports.showCities = showCities;
-module.exports.nextDay = nextDay;
-module.exports.nextHour = nextHour;
-module.exports.showHours = showHours;
-module.exports.finalDate = finalDate;
+async function loadCalendar(context) {
+	/* load and prepare calendar */
+	await context.setState({ paginationDate: 1, paginationHour: 1 }); // resetting pagination
+	await context.setState({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.calendarID, context.state.paginationDate) }); // getting calendar
+	await context.setState({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) }); // order from closest date to fartest
+	await context.setState({ calendar: await aux.cleanDates(context.state.calendar) });
+	await context.setState({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
+}
+
+async function checkSP(context) {
+	try {
+		const cidade = context.state.user.city;
+		const extraMsg = flow.consulta.cityMessages[cidade];
+		const { calendars } = await prepApi.getAvailableCities();
+
+		if (!cidade || cidade === '4') { // if user has no cidade send him back to the menu
+			await sendMain(context);
+		} else if (cidade.toString() === '3') { // ask location for SP
+			const spLocations = calendars.filter((x) => x.state === 'SP');
+			const options = [];
+			spLocations.forEach((e) => {
+				options.push({
+					content_type: 'text', title: e.name, payload: `askTypeSP${e.id}`,
+				});
+			});
+
+			await context.sendText(extraMsg || 'Onde você prefere fazer?', { quick_replies: options });
+		} else { // if its not SP send location and follow up with the regular
+			if (extraMsg) await context.sendText(extraMsg);
+			const calendar = await calendars.find((x) => x.state === help.siglaMap[cidade]);
+			await context.setState({ calendarID: calendar.id });
+			await loadCalendar(context);
+			await showDays(context, true);
+		}
+	} catch (error) {
+		console.log('error', error);
+		await sentryError(error, context.state);
+		await sendMain(context);
+	}
+}
+
+
+async function startConsulta(context) {
+	// user must be part of target__audience and have never had an appointment nor have left his contact info
+
+	if (context.state.user.voucher_type === 'combina') {
+		await mainMenu.falarComCombina(context);
+		return;
+	} if (context.state.user.voucher_type === 'sus') {
+		await mainMenu.falarComSUS(context);
+		return;
+	}
+
+
+	if (context.state.user.voucher_type || context.state.user.is_prep
+ || (context.state.user.is_target_audience && ((await aux.checkAppointment(context.session.user.id) === false) && !context.state.leftContact))) {
+		if (context.state.sendExtraMessages === true) {
+			// because of "outras datas" we cant show the extraMessages again, but we still have to show the next ones
+			await context.setState({ sendExtraMessages2: true, sendExtraMessages: false });
+			await context.sendText(flow.quizYes.text3.replace('<LOCAL>', help.extraMessageDictionary[context.state.user.city]));
+			await context.sendText(flow.quizYes.text4);
+			await context.setState({ sendExtraMessages: false });
+		}
+
+		await checkSP(context);
+	} else {
+		await sendMain(context);
+	}
+}
+
+async function checarConsulta(context) {
+	await context.setState({ consulta: await prepApi.getAppointment(context.session.user.id) });
+	if (context.state.consulta && context.state.consulta.appointments && context.state.consulta.appointments.length > 0) {
+		await context.sendText(flow.consulta.checar1);
+		await sendConsultas(context);
+		await context.sendText(flow.mainMenu.text1, await checkQR.checkMainMenu(context));
+	} else {
+		await loadCalendar(context);
+	}
+}
+
+module.exports = {
+	verConsulta,
+	showDays,
+	showHours,
+	finalDate,
+	checarConsulta,
+	loadCalendar,
+	startConsulta,
+	checkSP,
+	sendConsultas,
+	sendSalvador,
+	checkAppointment: aux.checkAppointment,
+};

@@ -1,54 +1,69 @@
 const cont = require('./context');
 const consulta = require('../app/utils/consulta');
-const opt = require('../app/utils/options');
+const aux = require('../app/utils/consulta-aux');
+// const opt = require('../app/utils/options');
 const flow = require('../app/utils/flow');
 const prepApi = require('../app/utils/prep_api');
-const help = require('../app/utils/helper');
+// const help = require('../app/utils/helper');
+const { sendMain } = require('../app/utils/mainMenu');
 
 jest.mock('../app/utils/options');
 jest.mock('../app/utils/helper');
 jest.mock('../app/utils/prep_api');
 jest.mock('../app/utils/flow');
+jest.mock('../app/utils/checkQR');
+jest.mock('../app/utils/mainMenu');
+jest.mock('../app/utils/consulta-aux');
 
-it('verConsulta - no appointments', async () => {
-	const context = cont.quickReplyContext('verConsulta', 'greetings');
-	context.state.consultas = {};
-	await consulta.verConsulta(context);
+describe('sendSalvador', () => {
+	it('city 2 - send salvador msg', async () => {
+		const context = cont.quickReplyContext();
+		context.state.user = { city: 2 };
+		await consulta.sendSalvador(context);
 
-	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeFalsy();
-	await expect(context.sendText).toBeCalledWith(flow.verConsulta.zero, opt.saidYes);
+		await expect(context.sendText).toBeCalledWith(flow.consulta.salvadorMsg);
+		await expect(flow.consulta.salvadorMsg).toBeTruthy();
+	});
+
+	it('city 3 - dont send salvador msg', async () => {
+		const context = cont.quickReplyContext();
+		context.state.user = { city: 3 };
+		await consulta.sendSalvador(context);
+
+		await expect(context.sendText).not.toBeCalledWith(flow.consulta.salvadorMsg);
+	});
 });
 
-it('verConsulta - one appointment', async () => {
-	const context = cont.quickReplyContext('verConsulta', 'greetings');
-	context.state.consultas = { appointments: [{ datetime_start: '' }] };
-	await consulta.verConsulta(context);
+it('loadCalendar', async () => {
+	const context = cont.quickReplyContext();
+	context.state.calendar = { dates: [] };
 
-	await expect(context.setState).toBeCalledWith({ consulta: await prepApi.getAppointment(context.session.user.id) });
-	await expect(context.state.consultas && context.state.consultas.appointments && context.state.consultas.appointments.length > 0).toBeTruthy();
-	for (const iterator of context.state.consultas.appointments) { // eslint-disable-line
-		await expect(context.sendText).toBeCalledWith(`${flow.consulta.success}`
-		+ `\n🏠: ${help.cidadeDictionary[context.state.cityId]}`
-		+ `\n⏰: ${help.formatDate(iterator.datetime_start)}`
-		+ `\n📞: ${help.telefoneDictionary[context.state.cityId]}`);
-	}
-});// טך
+	await consulta.loadCalendar(context);
 
-it('nextDay', async () => {
-	const context = cont.quickReplyContext('verConsulta', 'greetings');
-	const page = 0;
-	context.state.freeDays = [];
-	await consulta.nextDay(context);
-
-	await expect(context.sendText).toBeCalledWith(flow.consulta.date, { quick_replies: context.state.freeDays[page] });
+	await expect(context.setState).toBeCalledWith({ paginationDate: 1, paginationHour: 1 });
+	await expect(context.setState).toBeCalledWith({ calendar: await prepApi.getAvailableDates(context.session.user.id, context.state.calendarID, context.state.paginationDate) });
+	await expect(context.setState).toBeCalledWith({ calendar: await context.state.calendar.dates.sort((obj1, obj2) => new Date(obj1.ymd) - new Date(obj2.ymd)) });
+	await expect(context.setState).toBeCalledWith({ calendar: await aux.cleanDates(context.state.calendar) });
+	await expect(context.setState).toBeCalledWith({ calendar: await aux.separateDaysIntoPages(context.state.calendar) });
 });
 
-it('nextHour', async () => {
-	const context = cont.quickReplyContext('marcarConsulta', 'greetings');
-	const page = 0;
-	context.state.freeHours = [];
-	await consulta.nextHour(context);
+describe('startConsulta', () => {
+	it('user is not target_audience - cant schedule consulta', async () => {
+		const context = cont.quickReplyContext();
+		context.state.user = { is_target_audience: 0 };
 
-	await expect(context.sendText).toBeCalledWith(flow.consulta.hour, { quick_replies: context.state.freeHours[page] });
+		await consulta.startConsulta(context);
+
+		await expect(sendMain).toBeCalledWith(context);
+	});
+
+	it('user has left contact info - cant schedule consulta', async () => {
+		const context = cont.quickReplyContext();
+		context.state.user = { is_target_audience: 1 };
+		context.state.leftContact = true;
+
+		await consulta.startConsulta(context);
+
+		await expect(sendMain).toBeCalledWith(context);
+	});
 });

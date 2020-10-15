@@ -4,8 +4,7 @@ module.exports.regularMultipleChoice = {
 	extra_quick_replies: null,
 	has_more: 1,
 	multiple_choices: { 1: 'Sim', 2: 'Não' },
-	text:
-        'Você vai?',
+	text: 'Você vai?',
 	type: 'multiple_choice',
 };
 
@@ -14,10 +13,20 @@ module.exports.extraMultiple = {
 	count_more: 14,
 	extra_quick_replies: [{ label: 'Não sei o que é', text: 'Tente descobrir' }],
 	has_more: 1,
-	multiple_choices: {
-		1: 'Sempre!', 2: 'Às vezes', 3: 'Já fui', 4: 'Nunca!',
-	},
+	multiple_choices: { 1: 'Sim', 2: 'Não' },
 	text: 'Você vai?',
+	type: 'multiple_choice',
+};
+
+module.exports.onHalfwayPoint = {
+	code: 'AC8',
+	count_more: 14,
+	extra_quick_replies: [{ label: 'Não sei o que é', text: 'Tente descobrir' }],
+	has_more: 1,
+	multiple_choices: {
+		1: 'Bora!', 2: 'Agora não',
+	},
+	text: 'Aceita participar?',
 	type: 'multiple_choice',
 };
 
@@ -39,10 +48,16 @@ module.exports.nullQuestion = {
 	has_more: null,
 };
 
-
 module.exports.notFinished = { finished_quiz: 0, id: 75 };
+module.exports.finishedIsTarget = { finished_quiz: 1, id: 75, is_target_audience: 0 };
 module.exports.finished = {
-	finished_quiz: 1, id: 76, is_eligible_for_research: 1,	is_part_of_research: 1,
+	finished_quiz: 1, id: 76, is_eligible_for_research: 1, is_part_of_research: 1, offline_pre_registration_form: 'foobar.com',
+};
+module.exports.finishedNotPart = {
+	finished_quiz: 1, id: 76, is_target_audience: 0,
+};
+module.exports.halfway = {
+	finished_quiz: 1, id: 76, is_target_audience: 0, followup_messages: ['image.png', 'foo', 'bar'],
 };
 module.exports.serverError = { error: 'Internal server error' };
 module.exports.invalidValue = { form_error: { answer_value: 'invalid' } };

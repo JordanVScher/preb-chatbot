@@ -1,57 +1,112 @@
 const flow = require('./flow');
 const opt = require('./options');
-const checkQR = require('./checkQR');
-const { postIntegrationToken } = require('./prep_api');
+const { getQR } = require('./attach');
+const { sendMain } = require('./mainMenu');
+const { falarComHumano } = require('./mainMenu');
+const { getPhoneValid } = require('./helper');
+const { formatPhone } = require('./helper');
+const { instagramDictionary } = require('./helper');
+// const { startConsulta } = require('./consulta');
+// const { checkAppointment } = require('./consulta-aux');
+const { addNewUser } = require('./labels');
 
-
-async function handleToken(context) {
-	const answer = await postIntegrationToken(context.session.user.id, context.state.whatWasTyped);
-	if (answer.form_error) { // check if there was any errors
-		await context.sendText(flow.joinToken.fail);
-		await context.setState({ dialog: 'joinToken' });
+async function checkPhone(context) {
+	const phone = await getPhoneValid(context.state.whatWasTyped);
+	if (phone) {
+		await context.setState({ dialog: 'phoneValid', phone: await formatPhone(phone, context.state.user.city) });
 	} else {
-		await context.sendText(flow.joinToken.success);
-		await context.setState({ dialog: 'mainMenu' });
+		await context.setState({ dialog: 'phoneInvalid', phone: '' });
 	}
 }
 
-async function onTheResearch(context) {
-	await context.setState({ dialog: 'onTheResearch' });
-	await context.sendText(flow.onTheResearch.text1);
-	await context.sendImage(flow.onTheResearch.gif);
-	await context.sendText(flow.onTheResearch.text2);
+async function ofertaPesquisaStart(context, text) {
+	await context.setState({ nextDialog: 'ofertaPesquisaEnd' });
+	await context.sendText(text || flow.ofertaPesquisaStart.text1, await getQR(flow.ofertaPesquisaStart));
 }
 
-async function notOnResearch(context) {
-	await context.setState({ dialog: 'NotOnResearch' });
-	await context.sendText(flow.NotOnResearch.text1);
+async function ofertaPesquisaSim(context) {
+	await context.setState({ nextDialog: 'ofertaPesquisaEnd' });
+	if (context.state.meContaDepois !== true) {
+		await context.sendText(flow.ofertaPesquisaSim.text1);
+		await context.typing(1000 * 5);
+		await context.sendText(flow.ofertaPesquisaSim.text2);
+	}
+	await falarComHumano(context, 'ofertaPesquisaEnd');
 }
 
-async function notEligible(context) { // não passou nas 3 primeiras perguntas
-	await context.setState({ dialog: 'NotEligible' });
-	await context.sendText(flow.notEligible.text1);
-	await context.sendText(flow.notEligible.text2, await checkQR.checkMainMenu(context, opt.mainMenu));
+async function recrutamento(context) {
+	if (context.state.user.is_target_audience && context.state.user.risk_group && !context.state.recrutamentoEnd) {
+		await context.sendText(flow.recrutamento.text1, await getQR(flow.recrutamento));
+	} else {
+		await sendMain(context);
+	}
 }
 
-async function researchSaidNo(context) {
-	await context.sendButtonTemplate(flow.quizNo.text1, opt.artigoLink);
-	await context.sendText(flow.quizNo.text2, opt.saidNo);
+async function showInstagram(context) {
+	const instagram = instagramDictionary[context.state.user.city];
+	if (instagram) {
+		await context.sendText(flow.TCLE.preInstagram);
+		await context.sendText(instagram);
+	}
 }
 
-async function researchSaidYes(context) {
-	await context.sendButtonTemplate(flow.quizYes.text1, opt.artigoLink);
-	await context.sendButtonTemplate(flow.quizYes.text2, opt.artigoLink);
-	await context.sendText(flow.quizYes.text3, await checkQR.checkAnsweredQuiz(context, opt.saidYes));
+async function TCLE(context) {
+	if (!context.state.preCadastroSignature) {
+		await context.setState({ dialog: '' });
+		if (context.state.meContaDepois) { // se usuário escolheu "me conta depois"
+			await context.sendText(flow.ofertaPesquisaSim.text0);
+			await context.sendText(flow.ofertaPesquisaSim.text1);
+			await context.typing(1000 * 20);
+			await context.setState({ meContaDepois: false });
+		} else {
+			await context.sendText(flow.TCLE.text1);
+		}
+
+		await context.sendText(flow.TCLE.text2a);
+		await context.typing(1000 * 5);
+		await context.sendButtonTemplate(flow.TCLE.text2b, opt.Research_TCLE); // send info button
+		await showInstagram(context);
+		await context.sendText(flow.TCLE.text3, opt.Research_Termos); // ask for termos acceptance
+	} else {
+		await sendMain(context);
+	}
 }
 
-async function notPart(context) {
-	await context.setState({ dialog: 'noResearch' });
+// temConsulta = await checkAppointment(context.session.user.id)
+async function preTCLE(context, temConsulta) { // eslint-disable-line no-unused-vars
+	await addNewUser(context);
+	if (context.state.user.is_eligible_for_research) { // é elegível pra pesquisa
+		await context.sendText(flow.preTCLE.eligible);
+	} else if (!context.state.user.is_eligible_for_research) { // não é elegivel pra pesquisa
+		await context.sendText(flow.preTCLE.not_eligible);
+	}
+
+	await TCLE(context);
+	// if (!context.state.user.is_target_audience) { // não é público de interesse
+	// 	await TCLE(context);
+	// } else if (context.state.leftContact || temConsulta) { // é público de interesse, já fez agendamento ou deixou contato
+	// 	await TCLE(context);
+	// } else { // é público de interesse, não fez agendamento nem deixou contato
+	// 	await context.setState({ nextDialog: 'TCLE', dialog: '' });
+	// 	await startConsulta(context);
+	// }
 }
 
-module.exports.onTheResearch = onTheResearch;
-module.exports.notOnResearch = notOnResearch;
-module.exports.notEligible = notEligible;
-module.exports.researchSaidNo = researchSaidNo;
-module.exports.researchSaidYes = researchSaidYes;
-module.exports.handleToken = handleToken;
-module.exports.notPart = notPart;
+
+async function ofertaPesquisaEnd(context) {
+	await context.setState({ nextDialog: '', dialog: '' });
+	if (context.state.user.is_target_audience) { // é público de interesse
+		if (context.state.user.risk_group) { // é público de interesse com risco
+			await context.setState({ nextDialog: 'preTCLE' });
+			await recrutamento(context);
+		} else { // é público de interesse sem risco
+			await preTCLE(context);
+		}
+	} else { // não é público de interesse
+		await sendMain(context);
+	}
+}
+
+module.exports = {
+	checkPhone, ofertaPesquisaStart, ofertaPesquisaSim, ofertaPesquisaEnd, TCLE, preTCLE, recrutamento,
+};
