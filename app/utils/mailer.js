@@ -13,6 +13,8 @@ const mails = {
 	1: process.env.MAILCONTATO1,
 	2: process.env.MAILCONTATO2,
 	3: process.env.MAILCONTATO3,
+	4: process.env.MAILCONTATO4,
+	5: process.env.MAILCONTATO5,
 };
 
 const correioMails = {
