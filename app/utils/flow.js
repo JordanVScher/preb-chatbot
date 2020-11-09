@@ -33,7 +33,12 @@ module.exports = {
 		text1: 'Escreve aí que eu vou tentar tirar as suas dúvidas',
 	},
 	issueText: {
-		success: 'M.O.R.T.A kerida 😀 sorry rsrs 👾 as vzs é babado pq minha inteligência artificial funciona assim: qnto + a gnt conversa, mais yo apriendo 😍 se ñ entendirr é pq oq vc falou ñ tá na minha base de dados 😅, mas sou ligeira viu & logo tô te respondendo ❣ PS: se tu tivé usando facebook lite, infelizment esse app ñ liberou meus botoezinios, ou seja, me chama por outro app ou pelo computador okRR? 👅',
+		success: [
+			'M.O.R.T.A kerida 😀 sorry rsrs 👾 as vzs é babado pq minha inteligência artificial funciona assim: qnto + a gnt conversa, mais yo apriendo 😍 se ñ entendirr é pq oq vc falou ñ tá na minha base de dados 😅, mas sou ligeira viu & logo tô te respondendo ❣ PS: se tu tivé usando facebook lite, infelizment esse app ñ liberou meus botoezinios, ou seja, me chama por outro app ou pelo computador okRR?',
+			'Pera, o q vc disse? 😅 Não entendi, mas logo eu te respondo, vou dar uma atualizada no meu banco de dados, mas se vc usa o app LITE do facebook e o erro continuar, me chama no computador ou notebook!',
+			'Vou ter q reiniciar aqui pra te responder pq agora não entendi, sorry, em breve terei resposta pra isso! Se tu tiver usando FACEBOOK LITE, meus botões não funcionam, mas me chama pelo computador que eu fico aqui 24h!',
+			'Eita, acho q não te entendi, se os botões não aparecem pra ti, deve ser pq usa FACEBOOK LITE, me chama no computador ou por outro app! Se falou algo e eu não detectei, logo logo te respondo!'	
+		],
 		failure: 'Hmm..não entendi. Topa escrever novamente?',
 	},
 	followUp: {

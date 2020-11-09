@@ -32,7 +32,7 @@ async function createIssue(context) {
 
 
 		if (issueResponse && issueResponse.id) {
-			await context.sendText(issueText.success);
+			await context.sendText(issueText.success[Math.floor(Math.random() * issueText.success.length)]);
 			console.log(`Created issue - Yes: ${JSON.stringify(issueResponse, null, 2)}`);
 			return true;
 		}
