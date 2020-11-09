@@ -451,7 +451,7 @@ Lembre-se q vc tá protegide contra o HIV em 99% das chances só depois de tomar
 			menuOptions: ['Quero Cancelar', 'Reconfigurar', 'Voltar'],
 			menuPostback: ['alarmeCancelar', 'alarmeConfigurar', 'mainMenu'],
 		},
-		alarmeCancelarSuccess: 'Arrasou, more!',
+		alarmeCancelarSuccess: 'Arrasou, more! Alarme cancelado!',
 		alarmeCancelarFailure: 'Ops, tive um erro e não consegui cancelar seu alarme. Tente novamente mais tarde.',
 		comoTomando: 'Como tá tomando?',
 		comoTomandoBtn: {
