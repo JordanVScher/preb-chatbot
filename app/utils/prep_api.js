@@ -85,7 +85,7 @@ module.exports = {
 	},
 
 	async postTestPrep(fb_id, prep) {
-		return makeRequest({ url: `${apiUri}/api/internal/set-profile`, method: 'post', params: { fb_id, profile: prep ? 'prep' : 'not-prep' } });
+		return makeRequest({ url: `${apiUri}/api/internal/set-profile`, method: 'post', params: { fb_id, profile: prep ? 'prep' : 'not-prep', security_token: security_token2 } });
 	},
 
 	async postParticipar(fb_id, is_part_of_research) {
