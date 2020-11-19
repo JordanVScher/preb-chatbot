@@ -254,7 +254,7 @@ module.exports = async function App(context) {
 			} else if (context.state.whatWasTyped === process.env.PREP_TEST && process.env.ENV !== 'prod') {
 				await prepAPI.postTestPrep(context.session.user.id, true);
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
-			} else if (context.state.whatWasTyped === process.env.N_PREP_TEST && process.env.ENV !== 'prod') {
+			} else if (context.state.whatWasTyped === process.env.N_PREP_TEST) {
 				await prepAPI.postTestPrep(context.session.user.id, false);
 				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id), dialog: 'mainMenu' });
 			} else if (context.state.whatWasTyped === process.env.SISPREP_TEST && process.env.ENV !== 'prod') {
