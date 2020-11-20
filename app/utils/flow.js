@@ -158,7 +158,7 @@ module.exports = {
 		cityMessages: {
 			1: 'Legal! O projeto prep 1519 funciona no centro de referencia da juventude CRJ fica na praça da estação, pertinho da estação central do metrô. Rua Guaicurus 50. ',
 			2: 'No segundo andar do Casarão da Diversidade que fica na rua do Tijolo nº 08 - Pelourinho, perto do Elevador Lacerda.',
-			3: 'O bate papo pode ser na Casa 1 q fica na Rua Adoniran Barbosa, 151 próximo do metrô São Joaquim ou no CTA Henfil na Rua Libero Badaró, 144 próximo do metrô Anhangabau!',
+			3: 'O bate papo pode ser no CTA Henfil na Rua Libero Badaró, 144 próximo do metrô Anhangabau!',
 		},
 	},
 	prevention: {
