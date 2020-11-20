@@ -137,17 +137,19 @@ async function checkSP(context) {
 
 		if (!cidade || cidade === '4') { // if user has no cidade send him back to the menu
 			await sendMain(context);
-		} else if (cidade.toString() === '3') { // ask location for SP
-			const spLocations = calendars.filter((x) => x.state === 'SP');
-			const options = [];
-			spLocations.forEach((e) => {
-				options.push({
-					content_type: 'text', title: e.name, payload: `askTypeSP${e.id}`,
-				});
-			});
+		} 
+		// else if (cidade.toString() === '3') { // ask location for SP
+		// 	const spLocations = calendars.filter((x) => x.state === 'SP');
+		// 	const options = [];
+		// 	spLocations.forEach((e) => {
+		// 		options.push({
+		// 			content_type: 'text', title: e.name, payload: `askTypeSP${e.id}`,
+		// 		});
+		// 	});
 
-			await context.sendText(extraMsg || 'Onde você prefere fazer?', { quick_replies: options });
-		} else { // if its not SP send location and follow up with the regular
+		// 	await context.sendText(extraMsg || 'Onde você prefere fazer?', { quick_replies: options });
+		// }
+		else { // if its not SP send location and follow up with the regular
 			if (extraMsg) await context.sendText(extraMsg);
 			const calendar = await calendars.find((x) => x.state === help.siglaMap[cidade]);
 			await context.setState({ calendarID: calendar.id });
