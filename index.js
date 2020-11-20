@@ -905,9 +905,9 @@ module.exports = async function App(context) {
 				await mainMenu.sendMain(context);
 				break;
 			case 'notiAlarmeB_Sim':
-				await context.sendText(flow.alarmePrep.alarmeAcabar.text1);
+				// await context.sendText(flow.alarmePrep.alarmeAcabar.text1);
 				// await prepAPI.putRecipientPrep(context.session.user.id, { rolou_consulta: true });
-				// await mainMenu.sendMain(context);
+				await mainMenu.sendMain(context);
 				break;
 			case 'notiAlarmeB_Nao':
 				await context.sendText(flow.notifications.notiAlarmeB_Nao);
