@@ -290,7 +290,7 @@ module.exports = {
 	},
 	duvidasPrep: {
 		text1: 'Bora acabar agora com essas duvidas sobre Prep? Escolhe ai e eu te explico tuduuu! ',
-		dpDrogas: 'Beber álcool e usar outras drogas ñ influencia no efeito da PrEP É um luxo!',
+		dpDrogas: 'Beber álcool e usar outras drogas não influencia no efeito da PrEP. Mas caso fique colocada n vai esquecer de tomar a PrEP!',
 		dpHormonios: 'Se vc tá se hormonizando, é close vc avaliar seu caso de acordo com suas doses, mas usar hormônios ñ influencia no efeito da PrEP!',
 		dpEsqueci: 'Se ontem vc esqueceu de tomar e hj rolou sem camisinha, tome o comprimido assim que se lembrar, q vai ficar tudo bapho! Esquecer um dia só ñ corta o efeito, mas, se vc ficar mais de 2 dias sem tomar e não usar camisinha em alguma relação, aí ñ funciona e talvez vc precise tomar PEP.',
 		dpInfo: `Aqui vc encontra links sobre o uso de PrEP q podem te interessar!
