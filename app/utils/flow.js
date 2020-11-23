@@ -189,7 +189,7 @@ module.exports = {
 		autoServicoSUS: 'Pode ser importante procurar um serviço! Eu tenho um link bafo do SUS pro Brasil todo, cata: http://www.aids.gov.br/pt-br/acesso_a_informacao/servicos-de-saude',
 		autoServicoSisprepSP: 'Qual serviço vc prefere retirar seu autoteste?',
 		autoServicoSisprepSPBtn: {
-			menuOptions: ['CTA Henfil', 'Casa 1'],
+			menuOptions: ['CTA Henfil'],
 			menuPostback: ['autoServicoSisprepSP2', 'autoServicoSisprepSP1'],
 		},
 		autoServicoEnd: 'Close! Vamo te esperar! Você pode fazer esse teste onde vc quiser, inclusive fazer no serviço numa sala sozinhe ou com ajuda de profissional! Até lá vc decide! Bjs!',
