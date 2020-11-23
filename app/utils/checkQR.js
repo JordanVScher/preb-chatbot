@@ -105,7 +105,7 @@ async function checkMainMenu(context) {
 		} else if (context.state.user.voucher_type === 'combina') {
 			opt = [baterPapo, duvidaPrep, deuRuimPrep, autoteste, voltarTomarPrep, alarmePrep, tomeiPrep];
 		} else {
-			opt = [baterPapo, duvidaPrep, deuRuimPrep, voltarTomarPrep, alarmePrep];
+			opt = [baterPapo, duvidaPrep, deuRuimPrep, autoteste, voltarTomarPrep, alarmePrep];
 		}
 	} else if (context.state.user.is_prep === 0) {
 		opt = [baterPapo, duvidaNaoPrep, deuRuimNaoPrep, autoteste];
