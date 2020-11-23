@@ -174,7 +174,7 @@ async function opcaoAutoteste(context) {
 	const voltar = { content_type: 'text', title: 'Voltar', payload: 'mainMenu' };
 	const autoTenteBtn = [];
 
-	autoTenteBtn.push(autoCorreio);
+	if (context.state.user.voucher_type !== 'sus') autoTenteBtn.push(autoCorreio);
 
 	if (context.state.user && context.state.user.voucher_type !== 'combina') autoTenteBtn.push(autoServico);
 	autoTenteBtn.push(voltar);
