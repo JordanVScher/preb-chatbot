@@ -991,6 +991,9 @@ module.exports = async function App(context) {
 				await context.sendText(flow.noProjeto.noProjetoYes);
 				await mainMenu.sendMain(context);
 				break;
+			case 'noProjetoNo':
+				await mainMenu.sendMain(context);
+				break;
 			} // end switch case
 		}
 	} catch (error) {
