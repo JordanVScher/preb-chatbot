@@ -307,10 +307,10 @@ const combinaCityDictionary = {
 const combinaContactDictionary = {
 	1: '(11) 94005-0601', //	CRT São Paulo
 	2: '(11) 94701-5901', //	Campos Elíseos - SP
-	3: '(11) 94701-5248', //	Fortaleza
-	4: '(11) 94701-4561', //	Porto Alegre
-	5: '(11) 94701-6803', //	Ribeirão Preto
-	6: '(11) 94007-0011', //	Curitiba
+	3: '(85) 94701-5248', //	Fortaleza
+	4: '(54) 94701-4561', //	Porto Alegre
+	5: '(16) 94701-6803', //	Ribeirão Preto
+	6: '(41) 94007-0011', //	Curitiba
 };
 
 
