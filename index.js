@@ -992,6 +992,8 @@ module.exports = async function App(context) {
 				await mainMenu.sendMain(context);
 				break;
 			case 'noProjetoNo':
+				await prepAPI.postTestPrep(context.session.user.id, false);
+				await context.sendText(flow.noProjeto.noProjetoYes);
 				await mainMenu.sendMain(context);
 				break;
 			} // end switch case
