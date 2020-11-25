@@ -993,6 +993,7 @@ module.exports = async function App(context) {
 				break;
 			case 'noProjetoNo':
 				await prepAPI.postTestPrep(context.session.user.id, false);
+				await context.setState({ user: await prepAPI.getRecipientPrep(context.session.user.id) });
 				await context.sendText(flow.noProjeto.noProjetoYes);
 				await mainMenu.sendMain(context);
 				break;
