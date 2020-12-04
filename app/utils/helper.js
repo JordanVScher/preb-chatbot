@@ -296,7 +296,7 @@ function getTomarHoras(context) {
 }
 
 const combinaCityDictionary = {
-	1: 'CRT São Paulo',
+	1: `CRT São Paulo`,
 	2: 'Campos Elíseos - SP',
 	3: 'Fortaleza',
 	4: 'Porto Alegre',
@@ -313,16 +313,31 @@ const combinaContactDictionary = {
 	6: '(41) 94007-0011', //	Curitiba
 };
 
+const combinaText = {
+	1: `\n\nCRT São Paulo: 📞 (11) 3896-1200\nEndereço: 🏠 Av. Dr. Arnaldo, 165 - Pacaembu, São Paulo - SP, 01246-900`, //	CRT São Paulo
+	2: '\n\nCampos Elíseos - SP: 📞 (11) 94701-5901', //	Campos Elíseos - SP
+	3: '\n\nFortaleza: 📞 (85) 3101-2352\nEndereço: 🏠 R. Nestor Barbosa, 315 - Parquelândia, Fortaleza - CE, 60455-610', //	Fortaleza
+	4: '\n\nPorto Alegre: 📞 (51) 3314-5200\nEndereço: 🏠 R. Mostardeiro, 17 - Rio Branco, Porto Alegre - RS, 90430-001', //	Porto Alegre
+	5: '\n\nRibeirão Preto (UBDS Central): 📞 (16) 94701-6803\nEndereço: 🏠 Av. Jerônimo Gonçalves, 466 - (16) 3605-5000' + //	Ribeirão Preto
+	   '\n\nRibeirão Preto (UPA 13 de Maio): 📞 (16) 99612-3203\nEndereço: 🏠 Av. Treze de Maio, 353\n(Verificar funcionamento normal devido à COVID-19)' + 
+	   '\n\nRibeirão Preto (Hospital das Clínicas): 📞 (16) 3602-1000\nEndereço: 🏠 R. Ten. Catão Roxo, 3900\n(Apenas para pessoas que não são de Ribeirão Preto, ou não são cadastrados no sistema de saúde da cidade)	   ', 
+	6: '\n\nCuritiba: 📞 (41) 3281-1000\nEndereço: 🏠 R. Ubaldino do Amaral, 545, Alto da Xv' //	Curitiba
+};
 
 function getCombinaContact(combinaCity) {
 	const cityID = Object.keys(combinaCityDictionary).find((key) => combinaCityDictionary[key] === combinaCity);
 
-	const city = combinaCity;
+	const city  = combinaCity;
 	const phone = combinaContactDictionary[cityID];
+	const text  = combinaText[cityID];
+
 	if (cityID && phone) {
 		let aux = flow.falarComHumano.combina;
-		aux += `\n\n${city}: 📞 ${phone}`;
-		aux += `\nWhatsapp: ${buildWhatsappLink(phone, flow.whatsappText.combina)}`;
+		// aux += `\n\n${city}: 📞 ${phone}`;
+		// aux += `\nEndereço: 🏠 ${address}`;
+		// aux += `\nWhatsapp: ${buildWhatsappLink(phone, flow.whatsappText.combina)}`;
+		aux += text;
+		aux += `\nVeja tbm o site do MS: http://www.aids.gov.br/pt-br/onde-encontrar-pep`;
 		return aux;
 	}
 
