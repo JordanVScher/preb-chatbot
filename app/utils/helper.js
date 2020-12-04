@@ -315,7 +315,7 @@ const combinaContactDictionary = {
 
 const combinaText = {
 	1: `\n\nCRT São Paulo: 📞 (11) 3896-1200\nEndereço: 🏠 Av. Dr. Arnaldo, 165 - Pacaembu, São Paulo - SP, 01246-900`, //	CRT São Paulo
-	2: '\n\nCampos Elíseos - SP: 📞 (11) 94701-5901', //	Campos Elíseos - SP
+	2: '\n\nCampos Elíseos - SP: 📞 (11) 3896-1200\nEndereço: 🏠 Av. Dr. Arnaldo, 165 - Pacaembu, São Paulo - SP, 01246-900', //	Campos Elíseos - SP
 	3: '\n\nFortaleza: 📞 (85) 3101-2352\nEndereço: 🏠 R. Nestor Barbosa, 315 - Parquelândia, Fortaleza - CE, 60455-610', //	Fortaleza
 	4: '\n\nPorto Alegre: 📞 (51) 3314-5200\nEndereço: 🏠 R. Mostardeiro, 17 - Rio Branco, Porto Alegre - RS, 90430-001', //	Porto Alegre
 	5: '\n\nRibeirão Preto (UBDS Central): 📞 (16) 94701-6803\nEndereço: 🏠 Av. Jerônimo Gonçalves, 466 - (16) 3605-5000' + //	Ribeirão Preto
