@@ -54,8 +54,10 @@ module.exports = {
 	noProjeto: {
 		text1: 'Esse botão é para quem já faz parte do projeto PrEP1519, mas não toma PrEP, é o seu caso?',
 		noProjetoYes: 'Agora que sei que vc já faz parte, vou te oferecer alguns apoios pra te ajudar',
-		menuOptions: ['Não tomo Prep', 'Já tomo Prep', 'Não, não faço parte'],
-		menuPostback: ['noProjetoNo', 'join', 'mainMenu'],
+		menuOptions: ['PrEP 15-19', 'Combina', 'SUS', 'Não sei', 'Voltar'],
+		menuPostback: ['joinPrep', 'joinCombina', 'joinSUS', 'joinNaoSabe', 'joinNaoToma'],
+		// menuOptions: ['Não tomo Prep', 'Já tomo Prep', 'Não, não faço parte'],
+		// menuPostback: ['noProjetoNo', 'join', 'mainMenu'],
 	},
 	onTheResearch: {
 		text1: 'Vc é um close keriiiiiiiii! 😻',
