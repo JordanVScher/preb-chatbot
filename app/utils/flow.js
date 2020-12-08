@@ -245,8 +245,8 @@ module.exports = {
 		intro: {
 			text1: 'Que bafo! Por aki posso disponibilizar auto teste, tirar dúvidas, te agendar com humanes, te ajudar a lembrar de tomar prep e outras coisas, tanto pra vc e seus amigues. Me indica! Pra começar, me diz por onde vc toma?',
 			text2: 'Me diz por onde vc toma?',
-			menuOptions: ['PrEP 15-19', 'Combina', 'SUS', 'Não sei', 'Eu não tomo PrEP', 'Voltar'],
-			menuPostback: ['joinPrep', 'joinCombina', 'joinSUS', 'joinNaoSabe', 'noProjeto', 'joinNaoToma'],
+			menuOptions: ['PrEP 15-19', 'Combina', 'SUS', 'Não sei', 'Voltar'],
+			menuPostback: ['joinPrep', 'joinCombina', 'joinSUS', 'joinNaoSabe', 'joinNaoToma'],
 		},
 		joinPrep: {
 			text1: 'PrEP 15-19 é um projeto para reduzir a incidência de HIV entre jovens gays ou bissexuais cisgêneros, travestis e mulheres trans entre 15 e 19 anos. O Bapho é saber se a galera conhece e aceita usar a PrEP e também outros métodos de prevenção às ISTs!',
