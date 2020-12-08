@@ -983,7 +983,7 @@ module.exports = async function App(context) {
 				await mainMenu.sendMain(context);
 				break;
 			case 'noProjeto':
-				await context.sendText(flow.join.intro.text1, await getQR(flow.join.intro));
+				await context.sendText(flow.join.intro.text1, await getQR(flow.noProjeto));
 				// await context.sendText(flow.noProjeto.text1, await getQR(flow.noProjeto));
 				break;
 			case 'noProjetoYes':
