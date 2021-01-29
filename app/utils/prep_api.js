@@ -78,6 +78,10 @@ module.exports = {
 
 	async postRecipientTookMedicine(fb_id, yes_prep = 1) {
 		return makeRequest({ url: `${apiUri}/api/chatbot/recipient/prep-reminder-yes`, method: 'post', params: { fb_id, yes_prep } });
+    },
+    
+    async postRecipientDidNotTookMedicine(fb_id, yes_prep = 0) {
+		return makeRequest({ url: `${apiUri}/api/chatbot/recipient/prep-reminder-no`, method: 'post', params: { fb_id, yes_prep } });
 	},
 
 	async postAutoTeste(fb_id, address, contact) {
