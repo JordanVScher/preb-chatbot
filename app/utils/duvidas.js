@@ -309,7 +309,7 @@ async function naoTransouEnd(context) {
 async function askHorario(context, introText) {
 
   if (context.state.dialog === 'tomouPrep') {
-    await context.setState({ dialog: 'askJaTomei' });
+    await context.setState({ dialog: 'tomouPrep' });
   }
   else {
     await context.setState({ dialog: 'askHorario' });
