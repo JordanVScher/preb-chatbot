@@ -307,10 +307,13 @@ async function naoTransouEnd(context) {
 }
 
 async function askHorario(context, introText) {
-  console.log('===DEBUG==\n');
-  console.log(context)
-  console.log('===DEBUG==\n');
-  await context.setState({ dialog: 'askHorario' });
+
+  if (context.state.dialog === 'tomouPrep') {
+    await context.setState({ dialog: 'askJaTomei' });
+  }
+  else {
+    await context.setState({ dialog: 'askHorario' });
+  }
 
   let text = introText ? introText.trim() : flow.askHorario.default;
   text += `\n${flow.askHorario.example}`;
