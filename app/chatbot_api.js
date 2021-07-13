@@ -9,7 +9,7 @@ const security_token = process.env.SECURITY_TOKEN_MA;
 const makeRequest = async (opt) => {
   try {
     if (opt.params) opt.params.security_token = security_token;
-    const result = await axios(opt).then((res) => res).catch((err) => err.response);
+    const result = axios(opt).then((res) => res).catch((err) => err.response);
     console.log('req para MA');
     console.log(result);
     return handleRequestAnswer(result);
